@@ -16,8 +16,8 @@
                     </span> Account Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="/create_account">Create Account</a></li>
-                    <li><a href="/view_account">View Account Details</a></li>
+                    <li><a href="{{ route('account.add') }}">Create Account</a></li>
+                    <li><a href="{{ route('account.showAll') }}">View Account Details</a></li>
                 </ul>
             </li>
 
@@ -28,8 +28,8 @@
                     </span> Prisoner Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="/add_prisoner">Add/Update Prisoner</a></li>
-                    <li><a href="/view_prisoner">View Prisoner Profile</a></li>
+                    <li><a href="{{ route('prisoner.add') }}">Add/Update Prisoner</a></li>
+                    <li><a href="{{ route('prisoner.showAll') }}">View Prisoner Profile</a></li>
                     <li><a href="/assign_room">Assign Prisoner to Room</a></li>
                 </ul>
             </li>
