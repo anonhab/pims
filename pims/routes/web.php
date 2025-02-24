@@ -1,134 +1,60 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('dashboard');
-});
- 
+use App\Http\Controllers\PrisonController;
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\PrisonerController;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\AppointmentController;
+use App\Http\Controllers\MedicalReportController;
+use App\Http\Controllers\VisitorController;
+use App\Http\Controllers\TrainingProgramController;
+use App\Http\Controllers\JobController;
+use App\Http\Controllers\CertificationController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\BackupController;
+use App\Http\Controllers\LawyerController;
+use App\Http\Controllers\RoomController;
+use App\Http\Controllers\VisitingTimeRequestController;
+use App\Models\Account;
 
 // Dashboard
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
 
-// Account Management
-Route::get('/create_account', function () {
-    return view('create_account');
-});
-Route::get('/view_account', function () {
-    return view('view_account');
-});
+// Resource Routes
+Route::resource('accounts', AccountController::class);
+Route::get('/accounts', [AccountController::class, 'show_all'])->name('account.showAll');
+Route::get('/accountadd', [AccountController::class, 'account_add'])->name('account.add');
+Route::delete('/accounts/{user_id}', [AccountController::class, 'destroy'])->name('accounts.destroy');
 
-// Prisoner Management
-Route::get('/add_prisoner', function () {
-    return view('add_prisoner');
-});
-Route::get('/view_prisoner', function () {
-    return view('view_prisoner');
-});
-Route::get('/assign_room', function () {
-    return view('assign_room');
-});
+Route::resource('prisoners', PrisonerController::class);
+Route::get('/prisoners', [PrisonerController::class, 'show_all'])->name('prisoner.showAll');
+Route::get('/prisonersadd', [PrisonerController::class, 'prisoner_add'])->name('prisoner.add');
+Route::delete('/prisoner/{id}', [PrisonerController::class, 'destroy'])->name('prisoner.destroy');
+Route::post('/prisoner/{id}/status', [PrisonerController::class, 'updateStatus'])->name('prisoner.updateStatus');
 
-// Request Management
-Route::get('/create_request', function () {
-    return view('create_request');
-});
-Route::get('/view_requests', function () {
-    return view('view_requests');
-});
+// routes/api.php
+Route::get('/prisoner/{id}', [PrisonerController::class, 'show']);
 
-// Appointment Management
-Route::get('/create_appointment', function () {
-    return view('create_appointment');
-});
-Route::get('/view_appointments', function () {
-    return view('view_appointments');
-});
 
-// Medical Management
-Route::get('/create_medical_report', function () {
-    return view('create_medical_report');
-});
-Route::get('/view_medical_reports', function () {
-    return view('view_medical_reports');
-});
 
-// Visitor Registration
-Route::get('/register_visitor', function () {
-    return view('register_visitor');
-});
-Route::get('/view_visitor_registrations', function () {
-    return view('view_visitor_registrations');
-});
+Route::delete('/prisoner/{id}', [PrisonerController::class, 'destroy'])->name('prisoner.destroy');
+Route::delete('prisoner/{id}', [PrisonerController::class, 'destroy'])->name('prisoner.destroy');
 
-// Training Programs
-Route::get('/create_training_program', function () {
-    return view('create_training_program');
-});
-Route::get('/view_training_programs', function () {
-    return view('view_training_programs');
-});
-
-// Job Management
-Route::get('/assign_job', function () {
-    return view('assign_job');
-});
-Route::get('/view_jobs', function () {
-    return view('view_jobs');
-});
-
-// Certification Management
-Route::get('/assign_certification', function () {
-    return view('assign_certification');
-});
-Route::get('/view_certifications', function () {
-    return view('view_certifications');
-});
-
-// Report Generation
-Route::get('/generate_report', function () {
-    return view('generate_report');
-});
-Route::get('/view_reports', function () {
-    return view('view_reports');
-});
-
-// Backup and Recovery
-Route::get('/initiate_backup', function () {
-    return view('initiate_backup');
-});
-Route::get('/view_backup_recovery_logs', function () {
-    return view('view_backup_recovery_logs');
-});
-
-// Lawyer Management
-Route::get('/add_lawyer', function () {
-    return view('add_lawyer');
-});
-Route::get('/view_lawyers', function () {
-    return view('view_lawyers');
-});
-Route::get('/assign_lawyer', function () {
-    return view('assign_lawyer');
-});
-
-// Room Allocation
-Route::get('/allocate_room', function () {
-    return view('allocate_room');
-});
-Route::get('/view_room_allocations', function () {
-    return view('view_room_allocations');
-});
-
-// Prison Management
-Route::get('/add_prison', function () {
-    return view('add_prison');
-});
-Route::get('/view_prison', function () {
-    return view('view_prison');
-});
+Route::resource('requests', RequestController::class);
+Route::resource('appointments', AppointmentController::class);
+Route::resource('medical_reports', MedicalReportController::class);
+Route::resource('visitors', VisitorController::class);
+Route::resource('training_programs', TrainingProgramController::class);
+Route::resource('jobs', JobController::class);
+Route::resource('certifications', CertificationController::class);
+Route::resource('reports', ReportController::class);
+Route::resource('backups', BackupController::class);
+Route::resource('lawyers', LawyerController::class);
+Route::resource('rooms', RoomController::class);
+Route::resource('visiting_time_requests', VisitingTimeRequestController::class);
+Route::resource('prisons', PrisonController::class);
 
 // Visiting Time Requests
 Route::get('/create_visiting_time_request', function () {

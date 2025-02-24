@@ -170,3 +170,25 @@
         });
     });
 </script>
+<script>
+    // Function to hide the flash messages after 3 seconds
+    setTimeout(function() {
+        var successAlert = document.getElementById('success-alert');
+        var errorAlert = document.getElementById('error-alert');
+        var warningAlert = document.getElementById('warning-alert');
+        var infoAlert = document.getElementById('info-alert');
+
+        if (successAlert) {
+            successAlert.style.display = 'none';
+        }
+        if (errorAlert) {
+            errorAlert.style.display = 'none';
+        }
+        if (warningAlert) {
+            warningAlert.style.display = 'none';
+        }
+        if (infoAlert) {
+            infoAlert.style.display = 'none';
+        }
+    }, 3000); // 3000ms = 3 seconds
+</script>

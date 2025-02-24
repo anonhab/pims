@@ -10,6 +10,7 @@
     <meta name="language" content="en-EN">
     <meta name="author" content="Abdul Manaf">
     <meta name="google-adsense-account" content="ca-pub-7864475889913507">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link href="https://fonts.googleapis.com/icon?family=Poppins" rel="stylesheet">
     <link rel="stylesheet"

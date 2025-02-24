@@ -16,7 +16,6 @@
                 <h4 class="title is-4">Prisoners</h4>  
             </div>
 
-
             <div class="content-body">
                 <div class="card">
                     <div class="card-filter">
@@ -75,93 +74,36 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>Central Prison</td>
-                                    <td>New York</td>
-                                    <td>500</td>
-                                    <td>Officer Smith</td>
-                                    <td>+1234567890</td>
-                                    <td>central.prison@example.com</td>
-                                    <td>Maximum security facility</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="1">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 2 -->
-                                <tr>
-                                    <td>2</td>
-                                    <td>West Facility</td>
-                                    <td>Los Angeles</td>
-                                    <td>350</td>
-                                    <td>Officer Johnson</td>
-                                    <td>+0987654321</td>
-                                    <td>west.facility@example.com</td>
-                                    <td>Medium security</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="2">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 3 -->
-                                <tr>
-                                    <td>3</td>
-                                    <td>East Detention</td>
-                                    <td>Chicago</td>
-                                    <td>400</td>
-                                    <td>Officer Brown</td>
-                                    <td>+1122334455</td>
-                                    <td>east.detention@example.com</td>
-                                    <td>Minimum security</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="3">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
+                            @foreach($prisons as $index => $prison)
+                        <tr>
+                            <td>{{ $index + 1 }}</td>
+                            <td>{{ $prison->name }}</td>
+                            <td>{{ $prison->location }}</td>
+                            <td>{{ $prison->capacity }}</td>
+                            <td>{{ $prison->managed_by }}</td>
+                            <td>{{ $prison->contact_phone }}</td>
+                            <td>{{ $prison->contact_email }}</td>
+                            <td>{{ $prison->additional_notes }}</td>
+                            <td class="has-text-centered">
+                                <div class="field is-grouped action">
+                                    <p class="control">
+                                        <a href=" #" class="button is-rounded is-text">
+                                            <span class="icon">
+                                                <i class="fa fa-edit"></i>
+                                            </span>
+                                        </a>
+                                    </p>
+                                    <p class="control">
+                                        <a href=" #" class="button is-rounded is-text action-delete" data-id="{{ $prison->id }}">
+                                            <span class="icon">
+                                                <i class="fa fa-trash"></i>
+                                            </span>
+                                        </a>
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
                             </tbody>
                         </table>
                     </div>
