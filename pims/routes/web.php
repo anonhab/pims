@@ -19,6 +19,11 @@ use App\Models\Account;
 
 // Dashboard
 Route::get('/dashboard', function () {
+    $person =[
+        "name" => "Amare",
+        "email" => "yigzawamare733@gmail.com",
+    ];
+    dump($person);
     return view('dashboard');
 });
 
