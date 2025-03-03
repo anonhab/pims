@@ -21,7 +21,9 @@ use App\Models\Account;
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
-
+Route::get('/', function () {
+    return view('dashboard');
+});
 // Resource Routes
 Route::resource('accounts', AccountController::class);
 Route::get('/accounts', [AccountController::class, 'show_all'])->name('account.showAll');
@@ -43,6 +45,7 @@ Route::delete('/prisoner/{id}', [PrisonerController::class, 'destroy'])->name('p
 Route::delete('prisoner/{id}', [PrisonerController::class, 'destroy'])->name('prisoner.destroy');
 
 Route::resource('requests', RequestController::class);
+Route::get('/accounts', [RequestController::class, 'show_all'])->name('requests.showAll');
 Route::resource('appointments', AppointmentController::class);
 Route::resource('medical_reports', MedicalReportController::class);
 Route::resource('visitors', VisitorController::class);
