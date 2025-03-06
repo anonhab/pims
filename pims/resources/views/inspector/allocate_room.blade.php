@@ -5,17 +5,17 @@
         <!--   NAV -->
         @include('includes.nav')
         <div class="columns" id="app-content">
-        @include('includes.menu')
+        @include('inspector.menu')
     
 
             <div class="column is-10" id="page-content">
                     <div class="content-header">
-        <h4 class="title is-4">Allocate Room/h4>        
+         
     </div>
 
     <section class="section">
         <div class="container">
-            <h1 class="title has-text-centered">Room Allocation Management</h1>
+            <h1 class="title has-text-centered">Room Allocation </h1>
     
             <form>
                 <div class="columns">

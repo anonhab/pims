@@ -5,7 +5,7 @@
         <!--   NAV -->
         @include('includes.nav')
         <div class="columns" id="app-content">
-        @include('includes.menu')
+        @include('sysadmin.menu')
     
 
             <div class="column is-10" id="page-content">

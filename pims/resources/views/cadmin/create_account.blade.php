@@ -23,7 +23,7 @@
 
     <!--   NAV --> @include('includes.nav')
     <div class="columns" id="app-content">
-        @include('includes.menu')
+        @include('cadmin.menu')
 
 
         <div class="column is-10" id="page-content">
@@ -35,7 +35,7 @@
         <h1 class="title has-text-centered">Account Management</h1>
         <div class="field has-addons">
                             <p class="control">
-                                <a class="button" href="{{ route('account.showAll') }}">
+                                <a class="button" href="{{ route('account.show_all') }}">
                                     <span class="icon is-small">
                                         <i class="fa fa-eye"></i>
                                     </span>

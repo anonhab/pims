@@ -1,18 +1,31 @@
 <?php
 
-namespace App\Http\Controllers;
 
+namespace App\Http\Controllers\cadmin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Prison;
-use Illuminate\Http\Request;
+use App\Models\Prisoners;
 use Illuminate\Support\Facades\Log;
-class AccountController extends Controller
+class cAccountController extends Controller
 {
     // Show all accounts
  public function show_all()
     {
         $accounts=Account::all();
-        return view('view_account',compact('accounts'));
+        return view('cadmin.view_accounts',compact('accounts'));
+    }
+ public function show_prisoners()
+    {
+        $prisoners=Prisoners::all(); 
+        return view('cadmin.view_prisoners',compact('prisoners'));
+    }
+     public function all()
+    {
+        $accounts=Account::all();
+        return view('cadmin.view_account',compact('accounts'));
     }
 
     public function account_add()
@@ -20,7 +33,7 @@ class AccountController extends Controller
     {
         $account = Account::all(); 
         $prisons = Prison::all();
-        return view('create_account',compact('account','prisons'));
+        return view('cadmin.create_account',compact('account','prisons'));
     }
  
  

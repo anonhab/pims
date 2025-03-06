@@ -1,29 +1,44 @@
 <?php
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\inspector;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Prison;
 use App\Models\Prisoners;
 use Illuminate\Support\Facades\Log; // Add this for logging
 
-class PrisonerController extends Controller
+class iPrisonerController extends Controller
 {
     public function index()
     {
-        return view('add_prisoner');
+        return view('inspector.add_prisoner');
     }
-
+    public function lawyer()
+    {
+        return view('inspector.add_lawyer');
+    }
+     public function addroom()
+    {
+        return view('inspector.allocate_room');
+    }
+     public function showroom()
+    {
+        return view('inspector.view_room_allocations');
+    }
+    public function lawyershowall()
+    {
+        return view('inspector.view_lawyers');
+    }
     public function show_all()
     {
-        $prisoners=Prisoners::all();
-        return view('view_prisoner',compact('prisoners'));
+        $prisoners=Prisoners::all(); 
+        return view('inspector.view_prisoners',compact('prisoners'));
     }
 
     public function prisoner_add()
 
     {
         $prisons = Prison::all(); 
-        return view('add_prisoner',compact('prisons'));
+        return view('.inspector.add_prisoner',compact('prisons'));
     }
  
 public function store(Request $request)

@@ -1,18 +1,19 @@
 <?php
+namespace App\Http\Controllers\sysadmin;
 
-namespace App\Http\Controllers;
+use App\Http\Controllers\Controller;
 
 use App\Models\Account;
 use App\Models\Prison;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-class AccountController extends Controller
+class sAccountController extends Controller
 {
     // Show all accounts
  public function show_all()
     {
         $accounts=Account::all();
-        return view('view_account',compact('accounts'));
+        return view('sysadmin.view_account',compact('accounts'));
     }
 
     public function account_add()
@@ -20,7 +21,7 @@ class AccountController extends Controller
     {
         $account = Account::all(); 
         $prisons = Prison::all();
-        return view('create_account',compact('account','prisons'));
+        return view('sysadmin.create_account',compact('account','prisons'));
     }
  
  
