@@ -67,8 +67,8 @@
                     </span> Prison Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="/add_prison">Add/Update Prison</a></li>
-                    <li><a href="/view_prison">View Prison Details</a></li>
+                    <li><a href="{{ route('add.prison') }}">Add/Update Prison</a></li>
+                    <li><a href="{{ route('view.prison') }}">View Prison Details</a></li>
                 </ul>
             </li>
 

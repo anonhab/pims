@@ -10,7 +10,7 @@
 
             <div class="column is-10" id="page-content">
                     <div class="content-header">
-        <h4 class="title is-4">Create Medical Report</h4>        
+             
     </div>
 
     

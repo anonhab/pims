@@ -8,8 +8,7 @@
         @include('inspector.menu')
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4">Add Lawyer</h4>
-            </div>
+             </div>
             <section class="section">
                 <div class="container">
                     <h1 class="title has-text-centered">Lawyer Management</h1>

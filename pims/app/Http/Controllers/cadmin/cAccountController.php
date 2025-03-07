@@ -27,6 +27,12 @@ class cAccountController extends Controller
         $accounts=Account::all();
         return view('cadmin.view_account',compact('accounts'));
     }
+    public function add_prison(){
+        return view('cadmin.add_prison');
+    }
+    public function view_prison(){
+        return view('cadmin.view_prison');
+    }
 
     public function account_add()
 

@@ -26,7 +26,8 @@ Route::get('/caccounts', [cAccountController::class, 'show_all'])->name('account
 Route::get('/caccountadd', [cAccountController::class, 'account_add'])->name('account.add');
 Route::delete('/caccounts/{user_id}', [cAccountController::class, 'destroy'])->name('accounts.destroy');
 Route::get('/cprisoners', [cAccountController::class, 'show_prisoners'])->name('cprisoner.showAll');
-
+Route::get('/caddprison', [cAccountController::class, 'add_prison'])->name('add.prison');
+Route::get('/cviewprison', [cAccountController::class, 'view_prison'])->name('view.prison');
 // ---------------------------------
 // Resource Routes for Accounts (SysAdmin)
 Route::get('/saccounts', [sAccountController::class, 'show_all'])->name('saccount.show_all');

@@ -10,7 +10,6 @@
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4">Prisoners</h4>  
             </div>
             <div class="content-body">
                 <div class="card">
@@ -36,7 +35,7 @@
                         </div>
                         <div class="field has-addons">
                             <p class="control">
-                                <a class="button" href="#">
+                                <a class="button" id="create-record-button">
                                     <span class="icon is-small">
                                         <i class="fa fa-plus"></i>
                                     </span>
@@ -69,90 +68,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>Basic Literacy Program</td>
-                                    <td>A program to improve basic reading and writing skills.</td>
-                                    <td>Officer Smith</td>
-                                    <td>01/01/2023</td>
-                                    <td>31/12/2023</td>
-                                    <td>Main Hall, Prison Campus</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="1">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 2 -->
-                                <tr>
-                                    <td>2</td>
-                                    <td>Vocational Training</td>
-                                    <td>Training in carpentry and woodworking skills.</td>
-                                    <td>Officer Johnson</td>
-                                    <td>15/03/2023</td>
-                                    <td>15/09/2023</td>
-                                    <td>Workshop Area, Prison Campus</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="2">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 3 -->
-                                <tr>
-                                    <td>3</td>
-                                    <td>Life Skills Program</td>
-                                    <td>Training in communication, problem-solving, and teamwork.</td>
-                                    <td>Officer Brown</td>
-                                    <td>01/06/2023</td>
-                                    <td>30/11/2023</td>
-                                    <td>Conference Room, Prison Campus</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="3">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <!-- Rows will be populated here -->
                             </tbody>
                         </table>
                     </div>
@@ -160,6 +76,112 @@
             </div>
         </div>
         @include('includes.footer_js')
+
+        <!-- Modal for Create Record -->
+        <div class="modal" id="create-record-modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Create New Program</p>
+                    <button class="delete" aria-label="close" id="close-modal-button"></button>
+                </header>
+                <section class="modal-card-body">
+                    <!-- Form for creating a new program -->
+                    <form id="create-record-form">
+                        <div class="field">
+                            <label class="label">Program Name</label>
+                            <div class="control">
+                                <input class="input" type="text" id="program-name" name="program-name" placeholder="Enter program name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Description</label>
+                            <div class="control">
+                                <textarea class="textarea" id="description" name="description" placeholder="Enter program description" required></textarea>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Created By</label>
+                            <div class="control">
+                                <input class="input" type="text" id="created-by" name="created-by" placeholder="Enter creator's name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Program Start Date</label>
+                            <div class="control">
+                                <input class="input" type="date" id="start-date" name="start-date" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Program End Date</label>
+                            <div class="control">
+                                <input class="input" type="date" id="end-date" name="end-date" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Program Location</label>
+                            <div class="control">
+                                <input class="input" type="text" id="location" name="location" placeholder="Enter program location" required>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" id="save-record-button">Save changes</button>
+                    <button class="button" id="cancel-modal-button">Cancel</button>
+                </footer>
+            </div>
+        </div>
+
+        <script>
+            // JavaScript to handle modal and form submission
+            document.addEventListener('DOMContentLoaded', function () {
+                const createRecordButton = document.getElementById('create-record-button');
+                const closeModalButton = document.getElementById('close-modal-button');
+                const cancelModalButton = document.getElementById('cancel-modal-button');
+                const saveRecordButton = document.getElementById('save-record-button');
+                const createRecordModal = document.getElementById('create-record-modal');
+
+                // Open modal
+                createRecordButton.addEventListener('click', () => {
+                    createRecordModal.classList.add('is-active');
+                });
+
+                // Close modal
+                closeModalButton.addEventListener('click', () => {
+                    createRecordModal.classList.remove('is-active');
+                });
+
+                cancelModalButton.addEventListener('click', () => {
+                    createRecordModal.classList.remove('is-active');
+                });
+
+                // Save record
+                saveRecordButton.addEventListener('click', () => {
+                    const form = document.getElementById('create-record-form');
+                    const formData = new FormData(form);
+
+                    // Here you can handle the form data, e.g., send it to the server via AJAX
+                    fetch('/api/programs', {
+                        method: 'POST',
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('Success:', data);
+                        createRecordModal.classList.remove('is-active');
+                        // Optionally, reload the table or add the new record dynamically
+                        location.reload(); // Reload the page to reflect the new record
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+                });
+            });
+        </script>
 </body>
 
 </html>

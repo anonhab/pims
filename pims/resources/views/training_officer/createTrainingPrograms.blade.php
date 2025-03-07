@@ -8,7 +8,7 @@
         @include('training_officer.menu')
             <div class="column is-10" id="page-content">
                     <div class="content-header">
-        <h4 class="title is-4">Create Training Program</h4>        
+               
     </div>
 
     <section class="section">

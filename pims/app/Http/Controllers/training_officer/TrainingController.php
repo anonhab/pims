@@ -58,7 +58,7 @@ class TrainingController extends Controller
         // Fetch the certifications from the database
         // Example: $certifications = Certification::all();
         
-        return view('training_officer.viewCertifications', compact('certifications'));
+        return view('training_officer.viewCertifications');
     }
 
     // View list of jobs
@@ -67,7 +67,7 @@ class TrainingController extends Controller
         // Fetch the jobs from the database
         // Example: $jobs = Job::all();
         
-        return view('training_officer.viewJobs', compact('jobs'));
+        return view('training_officer.viewJobs');
     }
 
     // View list of training programs
@@ -76,6 +76,6 @@ class TrainingController extends Controller
         // Fetch the training programs from the database
         // Example: $trainingPrograms = TrainingProgram::all();
         
-        return view('training_officer.viewTrainingPrograms', compact('trainingPrograms'));
+        return view('training_officer.viewTrainingPrograms');
     }
 }

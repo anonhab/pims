@@ -9,17 +9,19 @@
                 </a>
             </li>
 
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-user-check"></i>
-                    </span> Active Trainers
-                </a>
-                <ul class="submenu">
-                    <li><a href="{{ route('prisoner.showAll') }}">View Prisoner Profile</a></li>
-                    <li><a href="/assign_room">Assign Prisoner to Room</a></li>
-                </ul>
-            </li>
+            <li class="has-submenu">
+    <a href="#">
+        <span class="icon">
+            <i class="fa fa-user-check"></i>
+        </span>
+        Active Trainers
+    </a>
+    <ul class="submenu">
+        <li><a href="#">View Job Trainer's Profile</a></li>
+        <li><a href="#">View Program Trainers</a></li>
+    </ul>
+</li>
+
 
             <li>
                 <a href="#">
@@ -40,6 +42,7 @@
                     </span> Jobs
                 </a>
                 <ul class="submenu">
+                   
                     <li><a href="{{ route('training.assignJobs') }}">Assign Job</a></li>
                     <li><a href="{{ route('training.viewJobs') }}">View Jobs</a></li>
                 </ul>

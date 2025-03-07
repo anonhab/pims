@@ -15,8 +15,7 @@
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4">Prisoners</h4>
-            </div>
+             </div>
             {{-- Flash Messages --}}
             <div class="columns">
                 <div class="column is-12">

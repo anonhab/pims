@@ -43,7 +43,7 @@ class SecurityController extends Controller
         // Fetch the appointments from the database
         // Example: $appointments = Appointment::all();
         
-        return view('security_officer.viewAppointments', compact('appointments'));
+        return view('security_officer.viewAppointments');
     }
 
     // View list of prisoners (if needed)

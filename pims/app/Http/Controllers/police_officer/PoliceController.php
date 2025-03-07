@@ -19,7 +19,7 @@ class PoliceController extends Controller
         // Logic to store the room allocation in the database
         // Example: RoomAllocation::create($request->all());
 
-        return redirect()->route('police_officer.viewRoomAllocations')->with('success', 'Room allocated successfully');
+     //   return redirect()->route('police_officer.viewRoomAllocations')->with('success', 'Room allocated successfully');
     }
 
     // Show form to create a request
@@ -43,7 +43,7 @@ class PoliceController extends Controller
         // Fetch the prisoners from the database
         // Example: $prisoners = Prisoner::all();
 
-        return view('police_officer.viewPrisoners', compact('prisoners'));
+        return view('police_officer.viewPrisoners');
     }
 
     // View list of requests
@@ -52,7 +52,7 @@ class PoliceController extends Controller
         // Fetch the requests from the database
         // Example: $requests = Request::all();
 
-        return view('police_officer.viewRequests', compact('requests'));
+        return view('police_officer.viewRequests');
     }
 
     // View list of room allocations
@@ -61,7 +61,7 @@ class PoliceController extends Controller
         // Fetch the room allocations from the database
         // Example: $roomAllocations = RoomAllocation::all();
 
-        return view('police_officer.viewRoomAllocations', compact('roomAllocations'));
+        return view('police_officer.viewRoomAllocations');
     }
 }
 

@@ -13,9 +13,7 @@
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4">Prisoners</h4>  
             </div>
-
 
             <div class="content-body">
                 <div class="card">
@@ -41,7 +39,7 @@
                         </div>
                         <div class="field has-addons">
                             <p class="control">
-                                <a class="button" href="#">
+                                <a class="button" id="create-record-button">
                                     <span class="icon is-small">
                                         <i class="fa fa-plus"></i>
                                     </span>
@@ -74,90 +72,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>John Doe</td>
-                                    <td>First Aid Certification</td>
-                                    <td>Officer Smith</td>
-                                    <td>15/05/2023</td>
-                                    <td>15/05/2025</td>
-                                    <td>Medical</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="1">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 2 -->
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jane Smith</td>
-                                    <td>Carpentry Certification</td>
-                                    <td>Officer Johnson</td>
-                                    <td>20/08/2023</td>
-                                    <td>20/08/2026</td>
-                                    <td>Vocational</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="2">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 3 -->
-                                <tr>
-                                    <td>3</td>
-                                    <td>Bob Johnson</td>
-                                    <td>IT Fundamentals Certification</td>
-                                    <td>Officer Brown</td>
-                                    <td>10/12/2023</td>
-                                    <td>10/12/2024</td>
-                                    <td>Technical</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="3">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <!-- Rows will be populated here -->
                             </tbody>
                         </table>
                     </div>
@@ -165,6 +80,71 @@
             </div>
         </div>
         @include('includes.footer_js')
+
+        <!-- Modal for Create Record -->
+        <div class="modal" id="create-record-modal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Create New Certification</p>
+                    <button class="delete" aria-label="close" id="close-modal-button"></button>
+                </header>
+                <section class="modal-card-body">
+                    <!-- Form for creating a new certification -->
+                    <form id="create-record-form">
+                        <div class="field">
+                            <label class="label">Prisoner</label>
+                            <div class="control">
+                                <input class="input" type="text" id="prisoner" name="prisoner" placeholder="Enter prisoner name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Certification Name</label>
+                            <div class="control">
+                                <input class="input" type="text" id="certification-name" name="certification-name" placeholder="Enter certification name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Issued By</label>
+                            <div class="control">
+                                <input class="input" type="text" id="issued-by" name="issued-by" placeholder="Enter issuer's name" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Issued Date</label>
+                            <div class="control">
+                                <input class="input" type="date" id="issued-date" name="issued-date" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Expiration Date</label>
+                            <div class="control">
+                                <input class="input" type="date" id="expiration-date" name="expiration-date" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Certification Type</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select id="certification-type" name="certification-type" required>
+                                        <option value="Medical">Medical</option>
+                                        <option value="Vocational">Vocational</option>
+                                        <option value="Technical">Technical</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" id="save-record-button">Save changes</button>
+                    <button class="button" id="cancel-modal-button">Cancel</button>
+                </footer>
+            </div>
+        </div>
+
+      
 </body>
 
 </html>

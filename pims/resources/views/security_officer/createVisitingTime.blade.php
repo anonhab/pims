@@ -10,7 +10,6 @@
         @include('security_officer.menu')
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4">Create Visiting Request</h4>
             </div>
 
             <section class="section">
