@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('police_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
@@ -32,8 +32,8 @@
                         <div class="field">
                             <div class="select">
                                 <select id="table-length">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
+                                    <option value="1">10</option>
+                                    <option value="2">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
@@ -65,11 +65,9 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Prisoner</th>
-                                    <th>Certification Name</th>
-                                    <th>Issued By</th>
-                                    <th>Issued Date</th>
-                                    <th>Expiration Date</th>
-                                    <th>Certification Type</th>
+                                    <th>Room Number</th>
+                                    <th>Allocation Date</th>
+                                    <th>Allocated By</th>
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -78,11 +76,9 @@
                                 <tr>
                                     <td>1</td>
                                     <td>John Doe</td>
-                                    <td>First Aid Certification</td>
-                                    <td>Officer Smith</td>
+                                    <td>Room 101</td>
                                     <td>15/05/2023</td>
-                                    <td>15/05/2025</td>
-                                    <td>Medical</td>
+                                    <td>Officer Smith</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -106,11 +102,9 @@
                                 <tr>
                                     <td>2</td>
                                     <td>Jane Smith</td>
-                                    <td>Carpentry Certification</td>
-                                    <td>Officer Johnson</td>
+                                    <td>Room 102</td>
                                     <td>20/08/2023</td>
-                                    <td>20/08/2026</td>
-                                    <td>Vocational</td>
+                                    <td>Officer Johnson</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -134,11 +128,9 @@
                                 <tr>
                                     <td>3</td>
                                     <td>Bob Johnson</td>
-                                    <td>IT Fundamentals Certification</td>
-                                    <td>Officer Brown</td>
+                                    <td>Room 103</td>
                                     <td>10/12/2023</td>
-                                    <td>10/12/2024</td>
-                                    <td>Technical</td>
+                                    <td>Officer Brown</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">

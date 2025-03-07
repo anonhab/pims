@@ -1,22 +1,17 @@
 <!DOCTYPE html>
 <html>
-
 @include('includes.head')
-
 <body>
     <!-- START NAV -->
     @include('includes.nav')
     <!-- END NAV -->
-
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('training_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
                 <h4 class="title is-4">Prisoners</h4>  
             </div>
-
-
             <div class="content-body">
                 <div class="card">
                     <div class="card-filter">
@@ -32,8 +27,8 @@
                         <div class="field">
                             <div class="select">
                                 <select id="table-length">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
@@ -64,10 +59,12 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Prisoner</th>
-                                    <th>Medical Officer</th>
-                                    <th>Appointment Date</th>
-                                    <th>Notes</th>
+                                    <th>Program Name</th>
+                                    <th>Description</th>
+                                    <th>Created By</th>
+                                    <th>Program Start Date</th>
+                                    <th>Program End Date</th>
+                                    <th>Program Location</th>
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -75,10 +72,12 @@
                                 <!-- Row 1 -->
                                 <tr>
                                     <td>1</td>
-                                    <td>John Doe</td>
-                                    <td>Dr. Smith</td>
-                                    <td>15/05/2023</td>
-                                    <td>Routine checkup for blood pressure.</td>
+                                    <td>Basic Literacy Program</td>
+                                    <td>A program to improve basic reading and writing skills.</td>
+                                    <td>Officer Smith</td>
+                                    <td>01/01/2023</td>
+                                    <td>31/12/2023</td>
+                                    <td>Main Hall, Prison Campus</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -101,10 +100,12 @@
                                 <!-- Row 2 -->
                                 <tr>
                                     <td>2</td>
-                                    <td>Jane Smith</td>
-                                    <td>Dr. Johnson</td>
-                                    <td>20/08/2023</td>
-                                    <td>Follow-up for previous injury.</td>
+                                    <td>Vocational Training</td>
+                                    <td>Training in carpentry and woodworking skills.</td>
+                                    <td>Officer Johnson</td>
+                                    <td>15/03/2023</td>
+                                    <td>15/09/2023</td>
+                                    <td>Workshop Area, Prison Campus</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -127,10 +128,12 @@
                                 <!-- Row 3 -->
                                 <tr>
                                     <td>3</td>
-                                    <td>Bob Johnson</td>
-                                    <td>Dr. Brown</td>
-                                    <td>10/12/2023</td>
-                                    <td>Dental checkup and cleaning.</td>
+                                    <td>Life Skills Program</td>
+                                    <td>Training in communication, problem-solving, and teamwork.</td>
+                                    <td>Officer Brown</td>
+                                    <td>01/06/2023</td>
+                                    <td>30/11/2023</td>
+                                    <td>Conference Room, Prison Campus</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">

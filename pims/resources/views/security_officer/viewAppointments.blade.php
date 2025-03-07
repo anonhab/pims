@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('security_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
@@ -32,8 +32,8 @@
                         <div class="field">
                             <div class="select">
                                 <select id="table-length">
-                                    <option value="1">10</option>
-                                    <option value="2">25</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
@@ -64,11 +64,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Appointment</th>
+                                    <th>Prisoner</th>
                                     <th>Medical Officer</th>
-                                    <th>Report Date</th>
-                                    <th>Findings</th>
-                                    <th>Recommendations</th>
+                                    <th>Appointment Date</th>
+                                    <th>Notes</th>
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -76,11 +75,10 @@
                                 <!-- Row 1 -->
                                 <tr>
                                     <td>1</td>
-                                    <td>John Doe - 15/05/2023</td>
+                                    <td>John Doe</td>
                                     <td>Dr. Smith</td>
-                                    <td>16/05/2023</td>
-                                    <td>High blood pressure detected.</td>
-                                    <td>Prescribed medication and follow-up in 2 weeks.</td>
+                                    <td>15/05/2023</td>
+                                    <td>Routine checkup for blood pressure.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -103,11 +101,10 @@
                                 <!-- Row 2 -->
                                 <tr>
                                     <td>2</td>
-                                    <td>Jane Smith - 20/08/2023</td>
+                                    <td>Jane Smith</td>
                                     <td>Dr. Johnson</td>
-                                    <td>21/08/2023</td>
-                                    <td>Injury healing well, no signs of infection.</td>
-                                    <td>Continue current treatment and monitor progress.</td>
+                                    <td>20/08/2023</td>
+                                    <td>Follow-up for previous injury.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -130,11 +127,10 @@
                                 <!-- Row 3 -->
                                 <tr>
                                     <td>3</td>
-                                    <td>Bob Johnson - 10/12/2023</td>
+                                    <td>Bob Johnson</td>
                                     <td>Dr. Brown</td>
-                                    <td>11/12/2023</td>
-                                    <td>Mild tooth decay detected.</td>
-                                    <td>Recommended dental cleaning and fluoride treatment.</td>
+                                    <td>10/12/2023</td>
+                                    <td>Dental checkup and cleaning.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">

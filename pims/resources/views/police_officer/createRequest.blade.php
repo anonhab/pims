@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 @include('includes.head')
     <body>
-  
+      
         <!--   NAV -->
         @include('includes.nav')
         <div class="columns" id="app-content">
-        @include('includes.menu')
-    
+        @include('police_officer.menu')
 
             <div class="column is-10" id="page-content">
                     <div class="content-header">
-        <h4 class="title is-4">Allocate Room/h4>        
+        <h4 class="title is-4">Create Request</h4>        
     </div>
 
+    
     <section class="section">
         <div class="container">
-            <h1 class="title has-text-centered">Room Allocation Management</h1>
+            <h1 class="title has-text-centered">Request Management</h1>
     
             <form>
                 <div class="columns">
-                    <!-- Prisoner and Room Allocation Details -->
+                    <!-- Request Information -->
                     <div class="column is-half">
                         <div class="card">
                             <div class="card-content">
-                                <p class="title is-4">Room Allocation</p>
+                                <p class="title is-4">Request Information</p>
     
                                 <div class="field">
-                                    <label class="label">Select Prisoner</label>
+                                    <label class="label">Prisoner</label>
                                     <div class="control">
                                         <div class="select is-fullwidth">
                                             <select required>
@@ -41,40 +41,66 @@
                                 </div>
     
                                 <div class="field">
-                                    <label class="label">Room Number</label>
+                                    <label class="label">Request Type</label>
                                     <div class="control">
                                         <div class="select is-fullwidth">
                                             <select required>
-                                                <option value="">Select Room Number</option>
-                                                <option value="101">101</option>
-                                                <option value="102">102</option>
-                                                <option value="103">103</option>
-                                                <option value="104">104</option>
-                                                <option value="105">105</option>
-                                                <!-- Dynamically populate this list with available rooms from the system -->
+                                                <option value="">Select Request Type</option>
+                                                <option>Visiting Time</option>
+                                                <option>Medical Assistance</option>
+                                                <option>Legal Aid</option>
+                                                <option>Other</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                
     
                                 <div class="field">
-                                    <label class="label">Allocation Date</label>
+                                    <label class="label">Status</label>
                                     <div class="control">
-                                        <input class="input" type="date" required>
+                                        <div class="select is-fullwidth">
+                                            <select required>
+                                                <option value="Pending">Pending</option>
+                                                <option value="Approved">Approved</option>
+                                                <option value="Rejected">Rejected</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
     
                                 <div class="field">
-                                    <label class="label">Allocated By</label>
+                                    <label class="label">Date of Request</label>
+                                    <div class="control">
+                                        <input class="input" type="date" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Request Details -->
+                    <div class="column is-half">
+                        <div class="card">
+                            <div class="card-content">
+                                <p class="title is-4">Request Details</p>
+    
+                                <div class="field">
+                                    <label class="label">Request Description</label>
+                                    <div class="control">
+                                        <textarea class="textarea" placeholder="Provide details about the request" required></textarea>
+                                    </div>
+                                </div>
+    
+                                <div class="field">
+                                    <label class="label">Requested By</label>
                                     <div class="control">
                                         <div class="select is-fullwidth">
                                             <select required>
-                                                <option value="">Select Allocating Officer</option>
-                                                <option>Officer A</option>
-                                                <option>Officer B</option>
-                                                <option>Officer C</option>
-                                                <!-- Dynamically populate this list with officers -->
+                                                <option value="">Select Requestor</option>
+                                                <option>Admin</option>
+                                                <option>Inspector</option>
+                                                <option>Prisoner</option>
+                                                <!-- Dynamically populate this list with requestor roles -->
                                             </select>
                                         </div>
                                     </div>
@@ -84,13 +110,12 @@
                         </div>
                     </div>
     
-    
                 </div>
     
                 <!-- Submit and Reset Button -->
-                <div class="field is-grouped is-grouped-left">
+                <div class="field is-grouped is-grouped-right">
                     <div class="control">
-                        <button class="button is-link">Allocate Room</button>
+                        <button class="button is-link">Submit</button>
                     </div>
                     <div class="control">
                         <button class="button is-light" type="reset">Reset</button>
@@ -99,7 +124,6 @@
             </form>
         </div>
     </section>
-    
     
     
     

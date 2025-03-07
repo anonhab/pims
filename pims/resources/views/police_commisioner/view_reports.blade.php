@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('police_commisioner.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">

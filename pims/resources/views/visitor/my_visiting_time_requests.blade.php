@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('visitor.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
@@ -32,8 +32,8 @@
                         <div class="field">
                             <div class="select">
                                 <select id="table-length">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
+                                    <option value="1">10</option>
+                                    <option value="2">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
@@ -64,10 +64,13 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Prisoner</th>
-                                    <th>Medical Officer</th>
-                                    <th>Appointment Date</th>
-                                    <th>Notes</th>
+                                    <th>Visitor Name</th>
+                                    <th>Contact Information</th>
+                                    <th>Relationship to Prisoner</th>
+                                    <th>Prisoner Information</th>
+                                    <th>Requested Visiting Date</th>
+                                    <th>Requested Visiting Time</th>
+                                    <th>Status</th>
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -75,10 +78,13 @@
                                 <!-- Row 1 -->
                                 <tr>
                                     <td>1</td>
+                                    <td>Michael Johnson</td>
+                                    <td>+1234567890</td>
+                                    <td>Brother</td>
                                     <td>John Doe</td>
-                                    <td>Dr. Smith</td>
-                                    <td>15/05/2023</td>
-                                    <td>Routine checkup for blood pressure.</td>
+                                    <td>20/02/2025</td>
+                                    <td>14:00</td>
+                                    <td>Pending</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -101,10 +107,13 @@
                                 <!-- Row 2 -->
                                 <tr>
                                     <td>2</td>
+                                    <td>Sarah Williams</td>
+                                    <td>+0987654321</td>
+                                    <td>Mother</td>
                                     <td>Jane Smith</td>
-                                    <td>Dr. Johnson</td>
-                                    <td>20/08/2023</td>
-                                    <td>Follow-up for previous injury.</td>
+                                    <td>25/02/2025</td>
+                                    <td>10:30</td>
+                                    <td>Pending</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -124,37 +133,12 @@
                                         </div>
                                     </td>
                                 </tr>
-                                <!-- Row 3 -->
-                                <tr>
-                                    <td>3</td>
-                                    <td>Bob Johnson</td>
-                                    <td>Dr. Brown</td>
-                                    <td>10/12/2023</td>
-                                    <td>Dental checkup and cleaning.</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="3">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
+            
         </div>
         @include('includes.footer_js')
 </body>

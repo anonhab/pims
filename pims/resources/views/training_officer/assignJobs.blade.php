@@ -5,61 +5,70 @@
         <!--   NAV -->
         @include('includes.nav')
         <div class="columns" id="app-content">
-        @include('includes.menu')
+        @include('training_officer.menu')
     
 
             <div class="column is-10" id="page-content">
                     <div class="content-header">
-        <h4 class="title is-4">Create Medical Report</h4>        
+        <h4 class="title is-4">Assign Job</h4>        
     </div>
 
-    
     <section class="section">
         <div class="container">
-            <h1 class="title has-text-centered">Medical Report Management</h1>
+            <h1 class="title has-text-centered">Job Management</h1>
     
             <form>
                 <div class="columns">
-                    <!-- Report Information -->
+                    <!-- Job Information -->
                     <div class="column is-half">
                         <div class="card">
                             <div class="card-content">
-                                <p class="title is-4">Report Information</p>
+                                <p class="title is-4">Job Information</p>
     
                                 <div class="field">
-                                    <label class="label">Appointment</label>
+                                    <label class="label">Prisoner</label>
                                     <div class="control">
                                         <div class="select is-fullwidth">
                                             <select required>
-                                                <option value="">Select Appointment</option>
-                                                <option>Appointment 1</option>
-                                                <option>Appointment 2</option>
-                                                <option>Appointment 3</option>
-                                                <!-- Dynamically populate this list with appointments -->
+                                                <option value="">Select Prisoner</option>
+                                                <option>John Doe</option>
+                                                <option>Jane Smith</option>
+                                                <option>Michael Johnson</option>
+                                                <!-- Dynamically populate this list with prisoners -->
                                             </select>
                                         </div>
                                     </div>
                                 </div>
     
                                 <div class="field">
-                                    <label class="label">Medical Officer</label>
+                                    <label class="label">Job Title</label>
                                     <div class="control">
                                         <div class="select is-fullwidth">
                                             <select required>
-                                                <option value="">Select Medical Officer</option>
-                                                <option>Dr. Sarah Williams</option>
-                                                <option>Dr. James Brown</option>
-                                                <option>Dr. Olivia Davis</option>
-                                                <!-- Dynamically populate this list with medical officers -->
+                                                <option value="">Select Job Title</option>
+                                                <option>Cleaner</option>
+                                                <option>Cook</option>
+                                                <option>Gardener</option>
+                                                <option>Maintenance Worker</option>
+                                                <option>Other</option>
+                                                <!-- Dynamically populate this list with job titles -->
                                             </select>
                                         </div>
                                     </div>
                                 </div>
     
                                 <div class="field">
-                                    <label class="label">Report Date</label>
+                                    <label class="label">Assigned By</label>
                                     <div class="control">
-                                        <input class="input" type="date" required>
+                                        <div class="select is-fullwidth">
+                                            <select required>
+                                                <option value="">Select Assigning Officer</option>
+                                                <option>Officer 1</option>
+                                                <option>Officer 2</option>
+                                                <option>Officer 3</option>
+                                                <!-- Dynamically populate this list with officers -->
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
     
@@ -67,23 +76,23 @@
                         </div>
                     </div>
     
-                    <!-- Medical Report Details -->
+                    <!-- Job Assignment Details -->
                     <div class="column is-half">
                         <div class="card">
                             <div class="card-content">
-                                <p class="title is-4">Report Details</p>
+                                <p class="title is-4">Assignment Details</p>
     
                                 <div class="field">
-                                    <label class="label">Findings</label>
+                                    <label class="label">Assignment Date</label>
                                     <div class="control">
-                                        <textarea class="textarea" placeholder="Enter the findings from the medical examination" required></textarea>
+                                        <input class="input" type="date" required>
                                     </div>
                                 </div>
     
                                 <div class="field">
-                                    <label class="label">Recommendations</label>
+                                    <label class="label">Additional Notes</label>
                                     <div class="control">
-                                        <textarea class="textarea" placeholder="Enter any recommendations for treatment or care" required></textarea>
+                                        <textarea class="textarea" placeholder="Enter any additional notes or details about the job assignment"></textarea>
                                     </div>
                                 </div>
     
@@ -105,7 +114,7 @@
             </form>
         </div>
     </section>
- 
+    
     
     
     

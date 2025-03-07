@@ -42,154 +42,136 @@
             </div>
 
             <div class="content-body">
-                <div class="columns">
-                    <div class="column">
-                        <div class="box quick-stats has-background-primary has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-users"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Prisoners</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-info has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-server"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Prisons</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-danger has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-chart-bar"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Police Officers</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-warning has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-bell"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Alerts</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="columns">
+    <div class="column">
+        <a href="{{ route('account.show_all') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-cog"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Central Administrators</h3>
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="{{ route('prisoner.showAll') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-secret"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Inspectors</h3>
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="#lawyer-link" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-tie"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Lawyers</h3>
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="{{ route('medical.createAppointment') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-md"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Medical Officers</h3>
+            </div>
+        </a>
+    </div>
+</div>
 
-                <div class="columns">
-                    <div class="column">
-                        <div class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">System Admins</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-light has-text-dark">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-secret"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Inspectors</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-warning has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-tie"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Lawyers</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-danger has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-md"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Medical Officers</h3>
-                            </div>
-                        </div>
-                    </div>
-                    
+<div class="columns">
+    <div class="column">
+        <a href="#police-commissioner-link" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Police Commissioners</h3>
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="{{ route ('police.allocateRoom') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Police Officers</h3>
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="{{ route('security.registerVisitor') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-lock"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Security Officers</h3>
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="{{ route('saccount.show_all') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-cog"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">System Admins</h3>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="columns">
+    <div class="column">
+        <a href="{{ route ('training.assignCertifications') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-graduate"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Training Officers</h3>
+            </div>
+        </a>
+    </div>
+    <div class="column">
+        <a href="{{ route('visitor.createVisitingRequest') }}" class="box quick-stats has-background-success has-text-white">
+            <div class="quick-stats-icon">
+                <span class="icon is-large"><i class="fa fa-3x fa-user-friends"></i></span>
+            </div>
+            <div class="quick-stats-content">
+                <h3 class="title is-4">Visitors</h3>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+    <div class="columns">
+        <div class="column">
+            <div class="card mb-0">
+                <div class="card-content">
+                    <p class="title is-4">Visits</p>
+                    <canvas id="chart1"></canvas>
                 </div>
-                <div class="columns">
-                    <div class="column">
-                        <div class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">System Admins</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-light has-text-dark">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-secret"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Inspectors</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-warning has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-tie"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Lawyers</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="box quick-stats has-background-danger has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-md"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Medical Officers</h3>
-                            </div>
-                        </div>
-                    </div>
-                    
+            </div>
+        </div>
+        <div class="column">
+            <div class="card mb-0">
+                <div class="card-content">
+                    <p class="title is-4">Conversion</p>
+                    <canvas id="chart2"></canvas>
                 </div>
-                <div class="columns">
-                    <div class="column">
-                        <div class="card mb-0">
-                            <div class="card-content">
-                                <p class="title is-4">Visits</p>
-                                <canvas id="chart1"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column">
-                        <div class="card mb-0">
-                            <div class="card-content">
-                                <p class="title is-4">Conversion</p>
-                                <canvas id="chart2"></canvas>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- End content-body -->
+            </div>
+        </div>
+    </div>
+</div> <!-- End content-body -->
+
         </div> <!-- End page-content -->
     </div> <!-- End app-content -->
 

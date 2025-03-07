@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('medical_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
@@ -32,8 +32,8 @@
                         <div class="field">
                             <div class="select">
                                 <select id="table-length">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
@@ -65,10 +65,9 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Prisoner</th>
-                                    <th>Job Title</th>
-                                    <th>Assigned By</th>
-                                    <th>Assignment Date</th>
-                                    <th>Additional Notes</th>
+                                    <th>Medical Officer</th>
+                                    <th>Appointment Date</th>
+                                    <th>Notes</th>
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -77,10 +76,9 @@
                                 <tr>
                                     <td>1</td>
                                     <td>John Doe</td>
-                                    <td>Kitchen Helper</td>
-                                    <td>Officer Smith</td>
+                                    <td>Dr. Smith</td>
                                     <td>15/05/2023</td>
-                                    <td>Assigned to assist in meal preparation.</td>
+                                    <td>Routine checkup for blood pressure.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -104,10 +102,9 @@
                                 <tr>
                                     <td>2</td>
                                     <td>Jane Smith</td>
-                                    <td>Laundry Attendant</td>
-                                    <td>Officer Johnson</td>
+                                    <td>Dr. Johnson</td>
                                     <td>20/08/2023</td>
-                                    <td>Assigned to manage laundry operations.</td>
+                                    <td>Follow-up for previous injury.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -131,10 +128,9 @@
                                 <tr>
                                     <td>3</td>
                                     <td>Bob Johnson</td>
-                                    <td>Gardener</td>
-                                    <td>Officer Brown</td>
+                                    <td>Dr. Brown</td>
                                     <td>10/12/2023</td>
-                                    <td>Assigned to maintain prison gardens.</td>
+                                    <td>Dental checkup and cleaning.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">

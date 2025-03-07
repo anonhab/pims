@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('training_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
@@ -32,8 +32,8 @@
                         <div class="field">
                             <div class="select">
                                 <select id="table-length">
-                                    <option value="1">10</option>
-                                    <option value="2">25</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
                                     <option value="50">50</option>
                                     <option value="100">100</option>
                                 </select>
@@ -64,13 +64,12 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Visitor's Full Name</th>
-                                    <th>Date of Birth</th>
-                                    <th>Gender</th>
-                                    <th>Contact Number</th>
-                                    <th>Email Address</th>
-                                    <th>Home Address</th>
-                                    <th>Relationship to Prisoner</th>
+                                    <th>Prisoner</th>
+                                    <th>Certification Name</th>
+                                    <th>Issued By</th>
+                                    <th>Issued Date</th>
+                                    <th>Expiration Date</th>
+                                    <th>Certification Type</th>
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -79,12 +78,11 @@
                                 <tr>
                                     <td>1</td>
                                     <td>John Doe</td>
-                                    <td>15/05/1985</td>
-                                    <td>Male</td>
-                                    <td>+1234567890</td>
-                                    <td>john.doe@example.com</td>
-                                    <td>123 Main St, City</td>
-                                    <td>Brother</td>
+                                    <td>First Aid Certification</td>
+                                    <td>Officer Smith</td>
+                                    <td>15/05/2023</td>
+                                    <td>15/05/2025</td>
+                                    <td>Medical</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -108,12 +106,11 @@
                                 <tr>
                                     <td>2</td>
                                     <td>Jane Smith</td>
-                                    <td>20/08/1990</td>
-                                    <td>Female</td>
-                                    <td>+0987654321</td>
-                                    <td>jane.smith@example.com</td>
-                                    <td>456 Elm St, Town</td>
-                                    <td>Sister</td>
+                                    <td>Carpentry Certification</td>
+                                    <td>Officer Johnson</td>
+                                    <td>20/08/2023</td>
+                                    <td>20/08/2026</td>
+                                    <td>Vocational</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -137,12 +134,11 @@
                                 <tr>
                                     <td>3</td>
                                     <td>Bob Johnson</td>
-                                    <td>10/12/1975</td>
-                                    <td>Male</td>
-                                    <td>+1122334455</td>
-                                    <td>bob.johnson@example.com</td>
-                                    <td>789 Oak St, Village</td>
-                                    <td>Friend</td>
+                                    <td>IT Fundamentals Certification</td>
+                                    <td>Officer Brown</td>
+                                    <td>10/12/2023</td>
+                                    <td>10/12/2024</td>
+                                    <td>Technical</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">

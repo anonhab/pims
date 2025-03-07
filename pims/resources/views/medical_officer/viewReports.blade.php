@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('medical_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
@@ -64,12 +64,11 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Prisoner</th>
-                                    <th>Request Type</th>
-                                    <th>Status</th>
-                                    <th>Date of Request</th>
-                                    <th>Request Description</th>
-                                    <th>Requested By</th>
+                                    <th>Appointment</th>
+                                    <th>Medical Officer</th>
+                                    <th>Report Date</th>
+                                    <th>Findings</th>
+                                    <th>Recommendations</th>
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -77,12 +76,11 @@
                                 <!-- Row 1 -->
                                 <tr>
                                     <td>1</td>
-                                    <td>John Doe</td>
-                                    <td>Medical Request</td>
-                                    <td>Pending</td>
-                                    <td>15/05/2023</td>
-                                    <td>Requesting medical checkup for chest pain.</td>
-                                    <td>Officer Smith</td>
+                                    <td>John Doe - 15/05/2023</td>
+                                    <td>Dr. Smith</td>
+                                    <td>16/05/2023</td>
+                                    <td>High blood pressure detected.</td>
+                                    <td>Prescribed medication and follow-up in 2 weeks.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -105,12 +103,11 @@
                                 <!-- Row 2 -->
                                 <tr>
                                     <td>2</td>
-                                    <td>Jane Smith</td>
-                                    <td>Legal Request</td>
-                                    <td>Approved</td>
-                                    <td>20/08/2023</td>
-                                    <td>Requesting access to legal documents.</td>
-                                    <td>Officer Johnson</td>
+                                    <td>Jane Smith - 20/08/2023</td>
+                                    <td>Dr. Johnson</td>
+                                    <td>21/08/2023</td>
+                                    <td>Injury healing well, no signs of infection.</td>
+                                    <td>Continue current treatment and monitor progress.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
@@ -133,12 +130,11 @@
                                 <!-- Row 3 -->
                                 <tr>
                                     <td>3</td>
-                                    <td>Bob Johnson</td>
-                                    <td>Commissary Request</td>
-                                    <td>Rejected</td>
-                                    <td>10/12/2023</td>
-                                    <td>Requesting additional commissary items.</td>
-                                    <td>Officer Brown</td>
+                                    <td>Bob Johnson - 10/12/2023</td>
+                                    <td>Dr. Brown</td>
+                                    <td>11/12/2023</td>
+                                    <td>Mild tooth decay detected.</td>
+                                    <td>Recommended dental cleaning and fluoride treatment.</td>
                                     <td class="has-text-centered">
                                         <div class="field is-grouped action">
                                             <p class="control">
