@@ -19,11 +19,6 @@ use App\Models\Account;
 
 // Dashboard
 Route::get('/dashboard', function () {
-    $person =[
-        "name" => "Amare",
-        "email" => "yigzawamare733@gmail.com",
-    ];
-    dump($person);
     return view('dashboard');
 });
 
@@ -60,6 +55,10 @@ Route::resource('lawyers', LawyerController::class);
 Route::resource('rooms', RoomController::class);
 Route::resource('visiting_time_requests', VisitingTimeRequestController::class);
 Route::resource('prisons', PrisonController::class);
+
+
+Route::resource('view_requests', VisitingTimeRequestController::class);
+
 
 // Visiting Time Requests
 Route::get('/create_visiting_time_request', function () {
