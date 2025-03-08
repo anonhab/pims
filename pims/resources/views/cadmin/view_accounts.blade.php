@@ -8,12 +8,11 @@
     <!--  NAV -->
     @include('includes.nav')
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('cadmin.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4"> Accounts</h4>  
-            </div>
+             </div>
             <div class="columns">
                 <div class="column is-12">
                     {{-- Success Alert --}}

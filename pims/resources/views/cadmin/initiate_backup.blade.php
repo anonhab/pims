@@ -8,15 +8,14 @@
     @include('includes.nav')
     <!--   NAV -->
     <div class="columns" id="app-content">
-        @include('includes.menu')
+        @include('cadmin.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4">Initiate Backup </h4>
-            </div>
+             </div>
             <section class="section">
                 <div class="container">
-                    <h1 class="title has-text-centered">Backup and Recovery</h1>
+                    <h1 class="title has-text-centered">Backup  </h1>
 
                     <form>
                         <div class="columns">

@@ -9,12 +9,11 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('includes.menu')
+       @include('cadmin.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                <h4 class="title is-4">Prisoners</h4>  
-            </div>
+             </div>
 
 
             <div class="content-body">
