@@ -39,7 +39,7 @@
                         </div>
                         <div class="field has-addons">
                             <p class="control">
-                                <a class="button" href="#">
+                                <a class="button" href="{{ route('prison.add') }}">
                                     <span class="icon is-small">
                                         <i class="fa fa-plus"></i>
                                     </span>
@@ -65,10 +65,8 @@
                                     <th>Prison Name</th>
                                     <th>Location</th>
                                     <th>Capacity</th>
-                                    <th>Managed By</th>
-                                    <th>Phone Number</th>
-                                    <th>Email Address</th>
-                                    <th>Additional Notes</th>
+                                   
+                                  
                                     <th class="has-text-centered">Action</th>
                                 </tr>
                             </thead>
@@ -79,10 +77,7 @@
                             <td>{{ $prison->name }}</td>
                             <td>{{ $prison->location }}</td>
                             <td>{{ $prison->capacity }}</td>
-                            <td>{{ $prison->managed_by }}</td>
-                            <td>{{ $prison->contact_phone }}</td>
-                            <td>{{ $prison->contact_email }}</td>
-                            <td>{{ $prison->additional_notes }}</td>
+                            
                             <td class="has-text-centered">
                                 <div class="field is-grouped action">
                                     <p class="control">

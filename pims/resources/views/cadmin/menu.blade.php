@@ -9,6 +9,18 @@
                 </a>
             </li>
 
+            
+            <li>
+                <a href="#">
+                    <span class="icon">
+                        <i class="fa fa-user"></i>
+                    </span> Role Management
+                </a>
+                <ul class="submenu">
+                    <li><a href="{{ route('roles.addrole') }}">Add Role</a></li>
+                    <li><a href="{{ route('roles.index') }}">View Roles</a></li>
+                </ul>
+            </li>
             <li>
                 <a href="#">
                     <span class="icon">
@@ -67,8 +79,8 @@
                     </span> Prison Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('add.prison') }}">Add/Update Prison</a></li>
-                    <li><a href="{{ route('view.prison') }}">View Prison Details</a></li>
+                    <li><a href="{{ route('prison.add') }}">Add/Update Prison</a></li>
+                    <li><a href="{{ route('prison.view') }}">View Prison Details</a></li>
                 </ul>
             </li>
 
