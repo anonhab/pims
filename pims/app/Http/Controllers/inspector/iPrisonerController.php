@@ -3,6 +3,8 @@ namespace App\Http\Controllers\inspector;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Prison;
+use App\Models\MedicalAppointment;
+use App\Models\LawyerAppointment;
 use App\Models\Prisoner;
 use Illuminate\Support\Facades\Log; // Add this for logging
 
@@ -30,9 +32,22 @@ class iPrisonerController extends Controller
     }
     public function show_all()
     {
-        $prisoners=Prisoner::all(); 
+        $prisoners=Prisoner::paginate(9);
         return view('inspector.view_Prisoner',compact('prisoners'));
     }
+    
+    public function view_appointments()
+    {
+        $appointments=MedicalAppointment::paginate(9);
+        return view('inspector.view_appointments',compact('appointments'));
+        }
+
+   
+        public function view_lawyer_appointments()
+        {
+            $lawyerAppointments=LawyerAppointment::paginate(9);
+            return view('inspector.view_lawyer_appointments',compact('lawyerAppointments'));
+            }
 
     public function prisoner_add()
 
@@ -59,7 +74,7 @@ public function store(Request $request)
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'dob' => $request->dob,
-            'sex' => $request->sex,
+            'gender' => $request->sex,
             'address' => $request->address,
             'marital_status' => $request->marital_status,
             'crime_committed' => $request->crime_committed,

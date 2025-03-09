@@ -49,4 +49,10 @@ class Prisoner extends Model
     {
         return $this->belongsTo(Account::class, 'assigned_inspector', 'user_id');
     }
+
+    // Relationship with Requests (optional)
+    public function requests()
+    {
+        return $this->hasMany(Requests::class, 'prisoner_id', 'id');
+    }
 }

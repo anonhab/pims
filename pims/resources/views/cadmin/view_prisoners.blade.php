@@ -14,307 +14,255 @@
         @include('cadmin.menu')
 
         <div class="column is-10" id="page-content">
-            <div class="content-header">
-             </div>
-            {{-- Flash Messages --}}
-            <div class="columns">
-                <div class="column is-12">
-                    {{-- Success Alert --}}
-                    @if(session('success1'))
-                    <div class="notification is-success">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-
-                    {{-- Error Alert --}}
-                    @if(session('error1'))
-                    <div class="notification is-danger">
-                        {{ session('error') }}
-                    </div>
-                    @endif
-
-                    {{-- Warning Alert --}}
-                    @if(session('warning1'))
-                    <div class="notification is-warning">
-                        {{ session('warning') }}
-                    </div>
-                    @endif
-
-                    {{-- Info Alert --}}
-                    @if(session('info'))
-                    <div class="notification is-info">
-                        {{ session('info') }}
-                    </div>
-                    @endif
-                </div>
-            </div>
             <div class="content-body">
                 <div class="card">
+                    <!-- Filters & Actions -->
                     <div class="card-filter">
                         <div class="field">
-                            <div class="control has-icons-left has-icons-right">
-                                <input class="input" id="table-search" type="text" placeholder="Search for records...">
+                            <div class="control has-icons-left">
+                                <input class="input" id="search-prisoner" type="text" placeholder="Search for prisoners...">
                                 <span class="icon is-left">
                                     <i class="fa fa-search"></i>
                                 </span>
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="select">
-                                <select id="table-length">
-                                    <option>1</option>
-                                    <option>2</option>
-                                </select>
-                            </div>
-                        </div>
+
                         <div class="field has-addons">
                             <p class="control">
-                                <a class="button" href="{{ route('prisoner.add') }}">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                    <span>Create Record</span>
+                                <a class="button is-primary" href="{{ route('prisoner.add') }}">
+                                    <span class="icon"><i class="fa fa-plus"></i></span>
+                                    <span>Create Prisoner</span>
                                 </a>
                             </p>
                             <p class="control">
-                                <a class="button" id="table-reload">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
+                                <a class="button" id="reload-prisoners">
+                                    <span class="icon"><i class="fa fa-refresh"></i></span>
                                     <span>Reload</span>
                                 </a>
                             </p>
                         </div>
                     </div>
+
                     <div class="card-content">
-                        <table class="table is-hoverable is-bordered is-fullwidth" id="datatable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>First Name</th>
-                                    <th>Middle Name</th>
-                                    <th>Last Name</th>
-                                    <th>Sex</th>
-                                    <th>Crime Committed</th>
-                                    <th>Status</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="hidden-data" style="display:none;">#</th>
-                                    <th class="has-text-centered">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($prisoners as $index => $prisoner)
-                                <tr id="prisoner-row-{{ $prisoner->prisoner_id }}">
-                                    <td>{{ $index + 1 }}</td>
-                                    <td>{{ $prisoner->first_name }}</td>
-                                    <td>{{ $prisoner->middle_name }}</td>
-                                    <td>{{ $prisoner->last_name }}</td>
-                                    <td>{{ $prisoner->sex }}</td>
-                                    <td>{{ $prisoner->crime_committed }}</td>
-                                    <td class="status-cell">
-                                    
-                                        @if ($prisoner->status == 'Active')
-                                        <span class="tag is-success">Active</span>
-                                        @elseif ($prisoner->status == 'Inactive')
-                                        <span class="tag is-danger">Inactive</span>
-                                        @elseif ($prisoner->status == 'Released')
-                                        <span class="tag is-info">Released</span>
-                                        @endif
-                                    </td>
-
-
-
-
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text view-prisoner" data-id="{{ $prisoner->prisoner_id }}">
-                                                    <span class="icon">
-                                                        <i class="fa fa-eye"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <select class="form-select action-status" data-id="{{ $prisoner->prisoner_id }}">
-                                                    <option value="Active" {{ $prisoner->status == 'Active' ? 'selected' : '' }}>Active</option>
-                                                    <option value="Inactive" {{ $prisoner->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
-                                                    <option value="Released" {{ $prisoner->status == 'Released' ? 'selected' : '' }}>Released</option>
-                                                </select>
-                                            </p>
-
+                        <!-- Prisoner Cards -->
+                        <div class="columns is-multiline">
+                            @foreach($prisoners as $prisoner)
+                            <div class="column is-12-mobile is-6-tablet is-4-desktop">
+                                <div class="card prisoner-card has-shadow-hover">
+                                    <div class="card-content">
+                                        <!-- Prisoner Details -->
+                                        <div class="media">
+                                            <div class="media-left">
+                                                <!-- Profile Image -->
+                                                <figure class="image is-48x48">
+                                                    <img src="{{ asset('storage/' .$prisoner->inmate_image) }}"
+                                                        alt="Profile Image">
+                                                </figure>
+                                            </div>
+                                            <div class="media-content">
+                                                <p class="title is-5">
+                                                    {{ $prisoner->first_name }} {{ $prisoner->last_name }}
+                                                </p>
+                                                <p class="subtitle is-6">
+                                                    <strong>Prisoner ID:</strong> {{ $prisoner->id }}
+                                                </p>
+                                            </div>
                                         </div>
-                                    </td>
-                                    <!-- Hidden details -->
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->prison_id }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->dob }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->address }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->marital_status }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->time_serve_start }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->time_serve_end }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->emergency_contact_name }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->emergency_contact_relation }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->emergency_contact_number }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ asset('storage/' . $prisoner->inmate_image) }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->created_at }}</td>
-                                    <td class="hidden-data" style="display:none;">{{ $prisoner->updated_at }}</td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Modal for Viewing Prisoner Data -->
-            <div class="modal" id="view-prisoner-modal">
-                <div class="modal-background"></div>
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title is-size-4 has-text-weight-bold">Prisoner Details</p>
-                        <button class="delete" aria-label="close" id="close-modal"></button>
-                    </header>
-                    <section class="modal-card-body">
-                        <div id="prisoner-details">
-                            <div class="columns is-mobile">
-                                <!-- Left Side: Details -->
-                                <div class="column is-half">
-                                    <p><strong>Prisoner ID:</strong> <span id="view-prisoner-id"></span></p>
-                                    <p><strong>Prison ID:</strong> <span id="view-prison-id"></span></p>
-                                    <p><strong>First Name:</strong> <span id="view-first-name"></span></p>
-                                    <p><strong>Middle Name:</strong> <span id="view-middle-name"></span></p>
-                                    <p><strong>Last Name:</strong> <span id="view-last-name"></span></p>
-                                    <p><strong>Date of Birth:</strong> <span id="view-dob"></span></p>
-                                    <p><strong>Sex:</strong> <span id="view-sex"></span></p>
-                                    <p><strong>Address:</strong> <span id="view-address"></span></p>
-                                    <p><strong>Marital Status:</strong> <span id="view-marital-status"></span></p>
-                                    <p><strong>Crime Committed:</strong> <span id="view-crime-committed"></span></p>
-                                    <p><strong>Status:</strong> <span id="view-status"></span></p>
-                                    <p><strong>Time Serve Start:</strong> <span id="view-time-serve-start"></span></p>
-                                    <p><strong>Time Serve End:</strong> <span id="view-time-serve-end"></span></p>
-                                    <p><strong>Emergency Contact Name:</strong> <span id="view-emergency-contact-name"></span></p>
-                                    <p><strong>Emergency Contact Relation:</strong> <span id="view-emergency-contact-relation"></span></p>
-                                    <p><strong>Emergency Contact Number:</strong> <span id="view-emergency-contact-number"></span></p>
-                                    <p><strong>Created At:</strong> <span id="view-created-at"></span></p>
-                                    <p><strong>Updated At:</strong> <span id="view-updated-at"></span></p>
-                                </div>
+                                        <div class="content">
+                                            <p><strong>Crime:</strong> {{ $prisoner->crime_committed }}</p>
+                                            <p><strong>Sex:</strong> {{ ucfirst($prisoner->gender) }}</p>
 
-                                <!-- Right Side: Inmate Image -->
-                                <div class="column is-half">
-                                    <div class="has-text-centered">
-                                        <img id="view-inmate-image" src="#" alt="Inmate Image" class="image is-4by3">
+                                            <p>
+                                                <strong>Status:</strong>
+                                                <span class="tag 
+                                {{ $prisoner->status == 'Active' ? 'is-success' : 
+                                   ($prisoner->status == 'Inactive' ? 'is-danger' : 'is-info') }}">
+                                                    {{ ucfirst($prisoner->status) }}
+                                                </span>
+                                            </p>
+
+                                            <!-- Action Buttons -->
+                                            <div class="buttons are-small is-centered">
+                                                <!-- Trigger View Prisoner Modal -->
+                                                <a href="#" class="button is-rounded is-text view-prisoner" data-id="{{ $prisoner->id }}">
+                                                    <span class="icon"><i class="fa fa-eye"></i></span>
+                                                    <span>View</span>
+                                                </a>
+
+                                                <a href="#"
+                                                    class="button is-danger is-rounded has-tooltip-right action-delete"
+                                                    data-id="{{ $prisoner->prisoner_id }}"
+                                                    data-tooltip="Delete Record">
+                                                    <span class="icon"><i class="fa fa-trash"></i></span>
+                                                    <span>Delete</span>
+                                                </a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <button class="button" id="close-modal-footer">Close</button>
-                    </footer>
+
+                        <!-- Pagination -->
+                        <div class="pagination is-centered" role="navigation" aria-label="pagination">
+                            <!-- Previous Button -->
+                            <a class="pagination-previous {{ $prisoners->currentPage() > 1 ? '' : 'is-disabled' }}"
+                                href="{{ $prisoners->previousPageUrl() ?? '#' }}">
+                                Previous
+                            </a>
+
+                            <!-- Next Button -->
+                            <a class="pagination-next {{ $prisoners->hasMorePages() ? '' : 'is-disabled' }}"
+                                href="{{ $prisoners->nextPageUrl() ?? '#' }}">
+                                Next
+                            </a>
+
+                            <!-- Page Numbers -->
+                            <ul class="pagination-list">
+                                @foreach($prisoners->getUrlRange(1, $prisoners->lastPage()) as $page => $url)
+                                <li>
+                                    <a class="pagination-link {{ $page == $prisoners->currentPage() ? 'is-current' : '' }}"
+                                        href="{{ $url }}">
+                                        {{ $page }}
+                                    </a>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- Modal Structure -->
+                    <!-- Prisoner Details Modal -->
+                    <div class="modal" id="view-prisoner-modal">
+                        <div class="modal-background"></div>
+                        <div class="modal-card" style="max-width: 800px; width: 90%;">
+                            <header class="modal-card-head has-background-primary-light">
+                                <p class="modal-card-title has-text-primary-dark">👤 Prisoner Details</p>
+                                <button class="delete close-modal" aria-label="close"></button>
+                            </header>
+
+                            <section class="modal-card-body">
+                                <div class="columns is-vcentered">
+                                    <!-- Prisoner Image -->
+                                    <div class="column is-4 has-text-centered">
+                                        <figure class="image is-150x150 is-inline-block">
+                                            <img id="view-inmate-image" class="is-rounded" src="{{ asset('storage/' . $prisoner->inmate_image) }}" alt="Prisoner Image">
+                                        </figure>
+
+                                        <p class="has-text-grey-light mt-2">Prisoner Profile</p>
+                                    </div>
+
+                                    <!-- Prisoner Details -->
+                                    <div class="column is-8">
+                                        <div class="box has-background-light">
+                                            <div class="columns">
+                                                <div class="column is-6">
+                                                    <p><strong>🔢 ID:</strong> <span id="view-prisoner-id" class="has-text-weight-semibold">N/A</span></p>
+                                                    <p><strong>🏛️ Prison ID:</strong> <span id="view-prison-id">N/A</span></p>
+                                                    <p><strong>📝 Name:</strong> <span id="view-first-name">N/A</span> <span id="view-middle-name">N/A</span> <span id="view-last-name">N/A</span></p>
+                                                    <p><strong>📅 DOB:</strong> <span id="view-dob">N/A</span></p>
+                                                    <p><strong>⚧️ Sex:</strong> <span id="view-sex">N/A</span></p>
+                                                    <p><strong>📍 Address:</strong> <span id="view-address">N/A</span></p>
+                                                </div>
+                                                <div class="column is-6">
+                                                    <p><strong>💍 Marital Status:</strong> <span id="view-marital-status">N/A</span></p>
+                                                    <p><strong>⚖️ Crime:</strong> <span id="view-crime-committed">N/A</span></p>
+                                                    <p><strong>📌 Status:</strong> <span id="view-status">N/A</span></p>
+                                                    <p><strong>⏳ Sentence:</strong> <span id="view-time-serve-start">N/A</span> ➝ <span id="view-time-serve-end">N/A</span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="box has-background-white-ter">
+                                            <p class="has-text-weight-bold has-text-primary">📞 Emergency Contact</p>
+                                            <p><strong>👤 Name:</strong> <span id="view-emergency-contact-name">N/A</span></p>
+                                            <p><strong>🤝 Relation:</strong> <span id="view-emergency-contact-relation">N/A</span></p>
+                                            <p><strong>📞 Number:</strong> <span id="view-emergency-contact-number">N/A</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="box has-background-white-bis">
+                                    <p><strong>📅 Created At:</strong> <span id="view-created-at">N/A</span></p>
+                                    <p><strong>📝 Last Updated:</strong> <span id="view-updated-at">N/A</span></p>
+                                </div>
+                            </section>
+
+                            <footer class="modal-card-foot is-flex is-justify-content-center">
+                                <button class="button is-danger is-rounded close-modal">❌ Close</button>
+                            </footer>
+                        </div>
+                    </div>
+
+
+
                 </div>
             </div>
+        </div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const viewButtons = document.querySelectorAll(".view-prisoner");
+                const modal = document.getElementById("view-prisoner-modal");
+                const closeModalButtons = document.querySelectorAll(".close-modal, .modal-background");
 
+                viewButtons.forEach(button => {
+                    button.addEventListener("click", function(event) {
+                        event.preventDefault();
 
-            <script>
-                
-                document.addEventListener('DOMContentLoaded', function() {
-                    // Get all "View" buttons
-                    const viewButtons = document.querySelectorAll('.view-prisoner');
-                    const modal = document.getElementById('view-prisoner-modal');
-                    const closeModalButtons = document.querySelectorAll('#close-modal, #close-modal-footer');
+                        const prisonerId = this.getAttribute("data-id");
+                        if (!prisonerId) {
+                            console.error("No prisoner ID found!");
+                            return;
+                        }
 
-                    // Add event listeners to "View" buttons
-                    viewButtons.forEach(button => {
-                        button.addEventListener('click', function() {
-                            const prisonerId = this.getAttribute('data-id');
-                            console.log('View button clicked for prisoner ID:', prisonerId);
+                        fetch(`/prisoners/${prisonerId}`) // Example URL endpoint for fetching prisoner data
+                            .then(response => response.json())
+                            .then(data => {
+                                // Populate the modal with prisoner data
+                                document.getElementById("view-prisoner-id").textContent = data.id || "N/A";
+                                document.getElementById("view-prison-id").textContent = data.prison_id || "N/A";
+                                document.getElementById("view-first-name").textContent = data.first_name || "N/A";
+                                document.getElementById("view-middle-name").textContent = data.middle_name || "N/A";
+                                document.getElementById("view-last-name").textContent = data.last_name || "N/A";
+                                document.getElementById("view-dob").textContent = data.dob || "N/A";
+                                document.getElementById("view-sex").textContent = data.gender || "N/A";
+                                document.getElementById("view-address").textContent = data.address || "N/A";
+                                document.getElementById("view-marital-status").textContent = data.marital_status || "N/A";
+                                document.getElementById("view-crime-committed").textContent = data.crime_committed || "N/A";
+                                document.getElementById("view-status").textContent = data.status || "N/A";
+                                document.getElementById("view-time-serve-start").textContent = data.time_serve_start || "N/A";
+                                document.getElementById("view-time-serve-end").textContent = data.time_serve_end || "N/A";
+                                document.getElementById("view-emergency-contact-name").textContent = data.emergency_contact_name || "N/A";
+                                document.getElementById("view-emergency-contact-relation").textContent = data.emergency_contact_relation || "N/A";
+                                document.getElementById("view-emergency-contact-number").textContent = data.emergency_contact_number || "N/A";
+                                document.getElementById("view-created-at").textContent = data.created_at || "N/A";
+                                document.getElementById("view-updated-at").textContent = data.updated_at || "N/A";
 
-                            // Fetch prisoner row and hidden data
-                            const prisonerRow = document.getElementById(`prisoner-row-${prisonerId}`);
-                            if (prisonerRow) {
-                                const hiddenData = prisonerRow.querySelectorAll('.hidden-data');
-                                const prisonerData = {
-                                    prisonerId: prisonerRow.querySelector('td:nth-child(1)').textContent,
-                                    prisonId: hiddenData[0].textContent,
-                                    firstName: prisonerRow.querySelector('td:nth-child(2)').textContent,
-                                    middleName: prisonerRow.querySelector('td:nth-child(3)').textContent,
-                                    lastName: prisonerRow.querySelector('td:nth-child(4)').textContent,
-                                    dob: hiddenData[1].textContent,
-                                    sex: prisonerRow.querySelector('td:nth-child(5)').textContent,
-                                    address: hiddenData[2].textContent,
-                                    maritalStatus: hiddenData[3].textContent,
-                                    crimeCommitted: prisonerRow.querySelector('td:nth-child(6)').textContent,
-                                    status: prisonerRow.querySelector('.status-cell').textContent,
-                                    timeServeStart: hiddenData[4].textContent,
-                                    timeServeEnd: hiddenData[5].textContent,
-                                    emergencyContactName: hiddenData[6].textContent,
-                                    emergencyContactRelation: hiddenData[7].textContent,
-                                    emergencyContactNumber: hiddenData[8].textContent,
-                                    inmateImage: hiddenData[9].textContent, // Get inmate image URL
-                                    createdAt: hiddenData[10].textContent,
-                                    updatedAt: hiddenData[11].textContent
-                                };
+                                // Set image source if available
+                                document.getElementById("view-inmate-image").src = data.inmate_image ?
+                                    '/storage/' + data.inmate_image :
+                                    '#';
 
-                                // Populate modal with prisoner data
-                                document.getElementById('view-prisoner-id').textContent = prisonerData.prisonerId;
-                                document.getElementById('view-prison-id').textContent = prisonerData.prisonId;
-                                document.getElementById('view-first-name').textContent = prisonerData.firstName;
-                                document.getElementById('view-middle-name').textContent = prisonerData.middleName;
-                                document.getElementById('view-last-name').textContent = prisonerData.lastName;
-                                document.getElementById('view-dob').textContent = prisonerData.dob;
-                                document.getElementById('view-sex').textContent = prisonerData.sex;
-                                document.getElementById('view-address').textContent = prisonerData.address;
-                                document.getElementById('view-marital-status').textContent = prisonerData.maritalStatus;
-                                document.getElementById('view-crime-committed').textContent = prisonerData.crimeCommitted;
-                                document.getElementById('view-status').textContent = prisonerData.status;
-                                document.getElementById('view-time-serve-start').textContent = prisonerData.timeServeStart;
-                                document.getElementById('view-time-serve-end').textContent = prisonerData.timeServeEnd;
-                                document.getElementById('view-emergency-contact-name').textContent = prisonerData.emergencyContactName;
-                                document.getElementById('view-emergency-contact-relation').textContent = prisonerData.emergencyContactRelation;
-                                document.getElementById('view-emergency-contact-number').textContent = prisonerData.emergencyContactNumber;
-                                document.getElementById('view-created-at').textContent = prisonerData.createdAt;
-                                document.getElementById('view-updated-at').textContent = prisonerData.updatedAt;
-
-                                // Set the prisoner image in the modal
-                                document.getElementById('view-inmate-image').src = prisonerData.inmateImage;
-
-                                // Open the modal
-                                modal.classList.add('is-active');
-                            }
-                        });
-                    });
-
-                    // Add event listeners to close buttons
-                    closeModalButtons.forEach(button => {
-                        button.addEventListener('click', function() {
-                            modal.classList.remove('is-active');
-                        });
-                    });
-
-                    // Close modal when clicking outside the modal
-                    modal.querySelector('.modal-background').addEventListener('click', function() {
-                        modal.classList.remove('is-active');
+                                modal.classList.add("is-active");
+                            })
+                            .catch(error => console.error("Error fetching prisoner data:", error));
                     });
                 });
-            </script>
 
-        </div>
+                // Close modal event listener
+                closeModalButtons.forEach(button => {
+                    button.addEventListener("click", function() {
+                        modal.classList.remove("is-active");
+                    });
+                });
+
+                // Close modal when clicking outside modal content
+                document.querySelector(".modal-background").addEventListener("click", function() {
+                    modal.classList.remove("is-active");
+                });
+            });
+        </script>
 
         @include('includes.footer_js')
 </body>

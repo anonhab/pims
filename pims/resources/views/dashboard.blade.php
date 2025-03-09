@@ -43,106 +43,107 @@
 
             <section class="content-body">
                 <div class="columns is-multiline">
-                    <div class="column is-3">
-                        <a href="{{ route('account.show_all') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-cog"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Central Administrators</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="{{ route('prisoner.showAll') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-secret"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Inspectors</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="#lawyer-link" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-tie"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Lawyers</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="{{ route('medical.createAppointment') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-md"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Medical Officers</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="#police-commissioner-link" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Police Commissioners</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="{{ route ('police.allocateRoom') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Police Officers</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="{{ route('security.registerVisitor') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-lock"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Security Officers</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="{{ route('saccount.show_all') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-cog"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">System Admins</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="{{ route ('training.assignCertifications') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-graduate"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Training Officers</h3>
-                            </div>
-                        </a>
-                    </div>
-                    <div class="column is-3">
-                        <a href="{{ route('visitor.createVisitingRequest') }}" class="box quick-stats has-background-success has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-friends"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Visitors</h3>
-                            </div>
-                        </a>
-                    </div>
+                <div class="column is-3">
+            <a href="{{ route('account.show_all') }}" class="box quick-stats has-background-primary has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user-cog"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">Central Administrators</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+            <a href="{{ route('prisoner.showAll') }}" class="box quick-stats has-background-danger has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user-secret"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">Inspectors</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+            <a href="#lawyer-link" class="box quick-stats has-background-info has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user-tie"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">Lawyers</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+            <a href="{{ route('medical.createAppointment') }}" class="box quick-stats has-background-warning has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user-md"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">Medical Officers</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+            <a href="#police-commissioner-link" class="box quick-stats has-background-success has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">Police Commissioners</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+            <a href="{{ route ('police.allocateRoom') }}" class="box quick-stats has-background-link has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">Police Officers</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+            <a href="{{ route('security.registerVisitor') }}" class="box quick-stats has-background-grey-dark has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user-lock"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">Security Officers</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+            <a href="{{ route('saccount.show_all') }}" class="box quick-stats has-background-dark has-text-white">
+                <div class="quick-stats-icon">
+                    <span class="icon is-large"><i class="fa fa-3x fa-user-cog"></i></span>
+                </div>
+                <div class="quick-stats-content">
+                    <h3 class="title is-4">System Admins</h3>
+                </div>
+            </a>
+        </div>
+        <div class="column is-3">
+    <a href="{{ route('training.assignCertifications') }}" class="box quick-stats has-background-info has-text-white">
+        <div class="quick-stats-icon">
+            <span class="icon is-large"><i class="fa fa-3x fa-user-graduate"></i></span>
+        </div>
+        <div class="quick-stats-content">
+            <h3 class="title is-4">Training Officers</h3>
+        </div>
+    </a>
+</div>
+<div class="column is-3">
+    <a href="{{ route('visitor.createVisitingRequest') }}" class="box quick-stats has-background-warning has-text-white">
+        <div class="quick-stats-icon">
+            <span class="icon is-large"><i class="fa fa-3x fa-user-friends"></i></span>
+        </div>
+        <div class="quick-stats-content">
+            <h3 class="title is-4">Visitors</h3>
+        </div>
+    </a>
+</div>
+
                 </div>
 
                 <div class="columns is-multiline">

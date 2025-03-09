@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Account;
 use App\Models\Prison;
+use App\Models\Requests;
 use App\Models\Prisoner;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
@@ -20,16 +21,24 @@ class cAccountController extends Controller
     {
        return view('cadmin.add_prison');
     }
+    public function prisonassign(){
+        $prison = Prison::all();
+        // $admins = Account::findOrFail('')
+        return view('cadmin.assign_prison', compact('prison'));
+      
+    }
     public function prisonview()
     {
-        $prisons=Prison::all();
-        return view('cadmin.view_prison',compact('prisons'));
+        $prisons = Prison::paginate(9); 
+         
+        return view('cadmin.view_prison', compact('prisons'));
     }
- public function show_all()
+    public function show_all()
     {
-        $accounts = Account::with('role')->get(); 
-        return view('cadmin.view_accounts',compact('accounts'));
+        $accounts = Account::with('role')->paginate(10); // Fetch accounts with roles and paginate
+        return view('cadmin.view_accounts', compact('accounts'));
     }
+    
     public function prisonstore(Request $request){
         // Validate the input
         $validated = $request->validate([
@@ -46,7 +55,7 @@ class cAccountController extends Controller
     }
  public function show_prisoners()
     {
-        $prisoners=Prisoner::all(); 
+        $prisoners=Prisoner::paginate(9);
         return view('cadmin.view_prisoners',compact('prisoners'));
     }
      public function all()
@@ -61,12 +70,19 @@ class cAccountController extends Controller
         return view('cadmin.view_prison');
     }
 
+    public function view_requests(){
+        $requests = Requests::paginate(9);
+        $roles = Role::all();
+        return view('inspector.view_requests', compact('requests','roles'));
+     
+    }
     public function account_add()
 
     {
         $account = Account::all(); 
         $prisons = Prison::all();
-        $roles= Role::all();
+        $roles = Role::where('id', 1)->get();
+
         return view('cadmin.create_account',compact('account','prisons', 'roles'));
     }
  
