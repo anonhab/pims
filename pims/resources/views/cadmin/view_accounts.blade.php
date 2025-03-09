@@ -118,7 +118,7 @@
             <td>{{ $account->phone_number }}</td>
             <td>{{ $account->dob }}</td>
             <td>{{ $account->address }}</td>
-            <td>{{ $account->role }}</td>
+            <td>{{ $account->role ? $account->role->name : 'N/A' }}</td>
             <td>{{ $account->gender }}</td>
             <td>
                 @if($account->user_image)

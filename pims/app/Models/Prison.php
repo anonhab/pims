@@ -1,5 +1,4 @@
 <?php
-// app/Models/Prison.php
 
 namespace App\Models;
 
@@ -10,16 +9,38 @@ class Prison extends Model
 {
     use HasFactory;
 
-    // Define the table name if it differs from the plural form of the model
-    protected $table = 'Prison';
+    protected $table = 'prisons';
 
-    // Define the fillable attributes for mass assignment
+    protected $primaryKey = 'id';
+
+    public $incrementing = false;
+
+    protected $keyType = 'string';
+
     protected $fillable = [
-        'name',
-        'location',
-        'capacity',
-        'contact_phone',
-        'contact_email',
-        'additional_notes',
+        'id', 'name', 'location', 'capacity', 'created_by', 'system_admin_id'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    // Relationship with Account (Created by)
+    public function creator()
+    {
+        return $this->belongsTo(Account::class, 'created_by', 'user_id');
+    }
+
+    // Relationship with Account (System Admin)
+    public function systemAdmin()
+    {
+        return $this->belongsTo(Account::class, 'system_admin_id', 'user_id');
+    }
+
+    // Relationship with Rooms
+    public function rooms()
+    {
+        return $this->hasMany(Room::class, 'prison_id', 'id');
+    }
 }

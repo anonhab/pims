@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Prison;
-use App\Models\Prisoners;
+use App\Models\Prisoner;
 use Illuminate\Support\Facades\Log; // Add this for logging
 
 class PrisonerController extends Controller
@@ -15,7 +15,7 @@ class PrisonerController extends Controller
 
     public function show_all()
     {
-        $prisoners=Prisoners::all();
+        $prisoners=Prisoner::all();
         return view('view_prisoner',compact('prisoners'));
     }
 
@@ -38,7 +38,7 @@ public function store(Request $request)
     }
 
     try {
-        Prisoners::create([
+        Prisoner::create([
             'prison_id' => $request->prison_id,
             'first_name' => $request->first_name,
             'middle_name' => $request->middle_name,
@@ -68,7 +68,7 @@ public function store(Request $request)
 // PrisonerController.php
 public function show($id)
 {
-    $prisoner = Prisoners::find($id); // Fetch prisoner by ID
+    $prisoner = Prisoner::find($id); // Fetch prisoner by ID
     if ($prisoner) {
         return response()->json($prisoner); // Return prisoner data as JSON
     }
@@ -81,7 +81,7 @@ public function updateStatus(Request $request, $id)
       
 
         // Find the prisoner by 'prisoner_id'
-        $prisoner = Prisoners::where('prisoner_id', $id)->firstOrFail();
+        $prisoner = Prisoner::where('prisoner_id', $id)->firstOrFail();
         
         // Update the status column with the new value
         $prisoner->status = $request->input('status');

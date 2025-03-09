@@ -23,21 +23,18 @@ class PrisonController extends Controller
     // Store a newly created resource in storage (store).
     public function store(Request $request)
     {
-        // Validate the request data
-        $request->validate([
+        // Validate the input
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
-            'capacity' => 'required|integer',
-          
-            'phone_number' => 'required|string',
-            'email' => 'required|email',
+            'capacity' => 'required|integer|min:1',
         ]);
-
-        // Create the prison record
-        Prison::create($request->all());
-
-        // Redirect back to the prisons index page with a success message
-        return redirect()->route('prisons.index')->with('success', 'Prison created successfully!');
+    
+        // Store the new prison
+        Prison::create($validated);
+    
+        // Redirect with a success message
+        return redirect()->route('prisons.index')->with('success', 'Prison added successfully!');
     }
 
     // Display the specified resource (show).

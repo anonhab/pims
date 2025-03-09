@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\cadmin\cAccountController;
+use App\Http\Controllers\cadmin\RoleController;
 use App\Http\Controllers\sysadmin\sAccountController;
 use App\Http\Controllers\inspector\iPrisonerController;
 use App\Http\Controllers\Lawyer\myLawyerController;
@@ -18,10 +19,23 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+Route::get('/roles', function () {
+    return view('cadmin.add_roles');
+});
+
+
 
 // ---------------------------------
 // Resource Routes for Accounts (cAdmin)
 Route::resource('accounts', cAccountController::class);
+
+Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+
+Route::post('/prisons', [cAccountController::class, 'prisonstore'])->name('prison.store');
+Route::get('/prisons', [cAccountController::class, 'prisonadd'])->name('prison.add');
+Route::get('/prisonsview', [cAccountController::class, 'prisonview'])->name('prison.view');
+Route::get('/viewroles', [RoleController::class, 'index'])->name('roles.index');
+Route::get('/addrole', [RoleController::class, 'addrole'])->name('roles.addrole');
 Route::get('/caccounts', [cAccountController::class, 'show_all'])->name('account.show_all');
 Route::get('/caccountadd', [cAccountController::class, 'account_add'])->name('account.add');
 Route::delete('/caccounts/{user_id}', [cAccountController::class, 'destroy'])->name('accounts.destroy');
