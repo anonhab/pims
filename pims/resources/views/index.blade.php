@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" >
 <head>
-    <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <title>CodePen - Navigation | Hoverable Sidebar Menu</title>
+  <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css'><link rel="stylesheet" href="css/style.css">
+  <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Prison Information Management System</title>
@@ -22,26 +24,90 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="css/app.css">
 </head>
-
 <body>
-    @include('includes.nav')
+<!-- partial:index.partial.html -->
+<div class="sidebar">
+  <div class="logo-details">
+    <i class='bx bxl-c-plus-plus icon'></i>
+    <div class="logo_name">CodingStella</div>
+    <i class='bx bx-menu' id="btn"></i>
+  </div>
+  <ul class="nav-list">
+    <li>
+      <i class='bx bx-search'></i>
+      <input type="text" placeholder="Search...">
+      <span class="tooltip">Search</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-grid-alt'></i>
+        <span class="links_name">Dashboard</span>
+      </a>
+      <span class="tooltip">Dashboard</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-user'></i>
+        <span class="links_name">User</span>
+      </a>
+      <span class="tooltip">User</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-chat'></i>
+        <span class="links_name">Messages</span>
+      </a>
+      <span class="tooltip">Messages</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-pie-chart-alt-2'></i>
+        <span class="links_name">Analytics</span>
+      </a>
+      <span class="tooltip">Analytics</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-folder'></i>
+        <span class="links_name">File Manager</span>
+      </a>
+      <span class="tooltip">Files</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-cart-alt'></i>
+        <span class="links_name">Order</span>
+      </a>
+      <span class="tooltip">Order</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-heart'></i>
+        <span class="links_name">Saved</span>
+      </a>
+      <span class="tooltip">Saved</span>
+    </li>
+    <li>
+      <a href="#">
+        <i class='bx bx-cog'></i>
+        <span class="links_name">Setting</span>
+      </a>
+      <span class="tooltip">Setting</span>
+    </li>
+    <li class="profile">
+      <div class="profile-details">
+        <img src="https://drive.google.com/uc?export=view&id=1ETZYgPpWbbBtpJnhi42_IR3vOwSOpR4z" alt="profileImg">
+        <div class="name_job">
+          <div class="name">Stella Army</div>
+          <div class="job">Web designer</div>
+        </div>
+      </div>
+      <i class='bx bx-log-out' id="log_out"></i>
+    </li>
+  </ul>
+</div>
+<section class="home-section">
 
-    <main class="columns" id="app-content">
-        @include('includes.menu')
-
-        <div class="column is-10" id="page-content">
-            <header class="content-header">
-                <h4 class="title is-4">Dashboard</h4>
-                <span class="separator"></span>
-                <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
-                    <ul>
-                        <li><a href="#">General</a></li>
-                        <li class="is-active"><a href="#" aria-current="page">Dashboard</a></li>
-                    </ul>
-                </nav>
-            </header>
-
-            <section class="content-body">
                 <div class="columns is-multiline">
                     <div class="column is-3">
                         <a href="{{ route('account.show_all') }}" class="box quick-stats has-background-primary has-text-white">
@@ -184,151 +250,10 @@
                         </div>
                     </div>
                 </div>
-            </section>
-        </div>
-    </main>
+          
+</section>
+<!-- partial -->
+  <script  src="js/script.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Example static data for the charts (Visitors, Prisoners, Prisons, Staffs)
-        const chartData = [{
-                date: '2025-01-01',
-                visitors: 1200,
-                prisoners: 50,
-                prisons: 3,
-                staffs: 10
-            },
-            {
-                date: '2025-01-02',
-                visitors: 1500,
-                prisoners: 55,
-                prisons: 3,
-                staffs: 12
-            },
-            {
-                date: '2025-01-03',
-                visitors: 1600,
-                prisoners: 53,
-                prisons: 3,
-                staffs: 11
-            },
-            {
-                date: '2025-01-04',
-                visitors: 1800,
-                prisoners: 60,
-                prisons: 3,
-                staffs: 15
-            },
-            {
-                date: '2025-01-05',
-                visitors: 2000,
-                prisoners: 58,
-                prisons: 3,
-                staffs: 14
-            },
-            {
-                date: '2025-01-06',
-                visitors: 2100,
-                prisoners: 62,
-                prisons: 4,
-                staffs: 16
-            },
-            {
-                date: '2025-01-07',
-                visitors: 2500,
-                prisoners: 65,
-                prisons: 4,
-                staffs: 18
-            },
-        ];
-
-        // Extract data for the charts
-        const dates = chartData.map(item => item.date);
-        const visitors = chartData.map(item => item.visitors);
-        const prisoners = chartData.map(item => item.prisoners);
-        const prisons = chartData.map(item => item.prisons);
-        const staffs = chartData.map(item => item.staffs);
-
-        // Function to update chart color based on color picker input
-        function updateChartColor(chart, color) {
-            chart.data.datasets[0].borderColor = color;
-            chart.update();
-        }
-
-        // Create the Visitors Chart (chart1)
-        const ctx1 = document.getElementById('chart1').getContext('2d');
-        const chart1 = new Chart(ctx1, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Visitors',
-                    data: visitors,
-                    borderColor: '#4bc0c0', // Default color
-                    tension: 0.1
-                }]
-            }
-        });
-
-        // Create the Prisoners Chart (chart2)
-        const ctx2 = document.getElementById('chart2').getContext('2d');
-        const chart2 = new Chart(ctx2, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Prisoners',
-                    data: prisoners,
-                    borderColor: '#ff6384', // Default color
-                    tension: 0.1
-                }]
-            }
-        });
-
-        // Create the Prisons Chart (chart3)
-        const ctx3 = document.getElementById('chart3').getContext('2d');
-        const chart3 = new Chart(ctx3, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Prisons',
-                    data: prisons,
-                    borderColor: '#36a2eb', // Default color
-                    tension: 0.1
-                }]
-            }
-        });
-
-        // Create the Staffs Chart (chart4)
-        const ctx4 = document.getElementById('chart4').getContext('2d');
-        const chart4 = new Chart(ctx4, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Staffs',
-                    data: staffs,
-                    borderColor: '#ff9f40', // Default color
-                    tension: 0.1
-                }]
-            }
-        });
-
-        // Event listeners to change colors dynamically
-        document.getElementById('color1').addEventListener('input', function(e) {
-            updateChartColor(chart1, e.target.value);
-        });
-        document.getElementById('color2').addEventListener('input', function(e) {
-            updateChartColor(chart2, e.target.value);
-        });
-        document.getElementById('color3').addEventListener('input', function(e) {
-            updateChartColor(chart3, e.target.value);
-        });
-        document.getElementById('color4').addEventListener('input', function(e) {
-            updateChartColor(chart4, e.target.value);
-        });
-    </script>
 </body>
-
 </html>

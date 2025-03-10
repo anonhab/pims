@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\Models\Prison;
 use App\Models\MedicalAppointment;
 use App\Models\LawyerAppointment;
+use App\Models\JobAssignment;
+use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use Illuminate\Support\Facades\Log; // Add this for logging
 
@@ -93,6 +95,21 @@ public function store(Request $request)
     } catch (\Exception $e) {
         return redirect()->back()->with('error', 'Failed to register prisoner.');
     }
+}
+public function viewJobs()
+{
+    // Fetch the jobs from the database
+    $jobs = JobAssignment::paginate(9);
+
+    return view('inspector.viewJobs',compact('jobs'));
+}
+
+// View list of training programs
+public function viewTrainingPrograms()
+{
+    $trainingprograms = TrainingProgram::paginate(9);
+
+    return view('inspector.viewTrainingPrograms',compact('trainingprograms'));
 }
 
 // PrisonerController.php

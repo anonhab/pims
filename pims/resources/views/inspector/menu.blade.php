@@ -69,9 +69,8 @@
                     </span>  Programs
                 </a>
                 <ul class="submenu">
-                    
-                    <li><a href="/view_training_programs">View Training Programs</a></li>
-                    <li><a href="/view_jobs">View Prisoner Job Assignments</a></li>
+                    <li><a href="{{ route('inspector.viewJobs') }}">View Prisoner Job Assignmentss</a></li>
+                    <li><a href="{{ route('inspector.viewTrainingPrograms') }}">View Training Programs</a></li>
                 </ul>
             </li>  
 
