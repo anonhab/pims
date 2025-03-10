@@ -81,8 +81,14 @@
                 <ul class="submenu">
                     <li><a href="{{ route('prison.add') }}">Add/Update Prison</a></li>
                     <li><a href="{{ route('prison.view') }}">View Prison Details</a></li>
+                    <li><a href="{{ route('prison.assign') }}">Prison Admin Assign</a></li>
+
+
+                    
+
                 </ul>
             </li>
+        
 
             <li>
                 <a href="#">

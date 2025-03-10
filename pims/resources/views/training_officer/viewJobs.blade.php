@@ -12,8 +12,7 @@
        @include('training_officer.menu')
 
         <div class="column is-10" id="page-content">
-            <div class="content-header">
-            </div>
+            <div class="content-header"></div>
 
             <div class="content-body">
                 <div class="card">
@@ -21,7 +20,7 @@
                         <!-- Search and other controls -->
                         <div class="field">
                             <div class="control has-icons-left has-icons-right">
-                                <input class="input" id="table-search" type="text" placeholder="Search for records...">
+                                <input class="input" id="table-search" type="text" placeholder="Search for jobs...">
                                 <span class="icon is-left">
                                     <i class="fa fa-search"></i>
                                 </span>
@@ -43,7 +42,7 @@
                                     <span class="icon is-small">
                                         <i class="fa fa-plus"></i>
                                     </span>
-                                    <span>Create Record</span>
+                                    <span>Create Job</span>
                                 </a>
                             </p>
                             <p class="control">
@@ -57,27 +56,44 @@
                         </div>
                     </div>
                     <div class="card-content">
-                        <!-- Table Section -->
-                        <table class="table is-hoverable is-bordered is-fullwidth" id="datatable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Prisoner</th>
-                                    <th>Job Title</th>
-                                    <th>Assigned By</th>
-                                    <th>Assignment Date</th>
-                                    <th>Additional Notes</th>
-                                    <th class="has-text-centered">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Rows will be populated here -->
-                            </tbody>
-                        </table>
+                        <!-- Card Layout for Jobs -->
+                        <div class="columns is-multiline">
+                            @foreach($jobs as $index => $job)
+                                <div class="column is-4">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <p class="card-header-title">Job Title: {{ $job->job_title }}</p>
+                                        </div>
+                                        <div class="card-content">
+                                            <p><strong>Prisoner ID:</strong> {{ $job->prisoner_id }}</p>
+                                            <p><strong>Assigned By:</strong> {{ $job->assigned_by }}</p>
+                                            <p><strong>Description:</strong> {{ $job->job_description }}</p>
+                                            <p><strong>Assigned Date:</strong> {{ $job->assigned_date }}</p>
+                                            <p><strong>Status:</strong> {{ ucfirst($job->status) }}</p>
+                                            <p><strong>Created At:</strong> {{ $job->created_at }}</p>
+                                            <p><strong>Updated At:</strong> {{ $job->updated_at }}</p>
+                                        </div>
+                                        <div class="card-footer">
+                                            <div class="card-footer-item">
+                                                <a href="#" class="button is-small is-link">Edit</a>
+                                            </div>
+                                            <div class="card-footer-item">
+                                                <form action="#" method="POST" class="delete-form">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="button is-small is-danger">Delete</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         @include('includes.footer_js')
 
         <!-- Modal for Create Record -->
@@ -85,22 +101,22 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Create New Job Assignment</p>
+                    <p class="modal-card-title">Create New Job</p>
                     <button class="delete" aria-label="close" id="close-modal-button"></button>
                 </header>
                 <section class="modal-card-body">
-                    <!-- Form for creating a new record -->
+                    <!-- Form for creating a new job -->
                     <form id="create-record-form">
-                        <div class="field">
-                            <label class="label">Prisoner</label>
-                            <div class="control">
-                                <input class="input" type="text" id="prisoner" name="prisoner" placeholder="Enter prisoner name" required>
-                            </div>
-                        </div>
                         <div class="field">
                             <label class="label">Job Title</label>
                             <div class="control">
                                 <input class="input" type="text" id="job-title" name="job-title" placeholder="Enter job title" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Prisoner ID</label>
+                            <div class="control">
+                                <input class="input" type="text" id="prisoner-id" name="prisoner-id" placeholder="Enter prisoner ID" required>
                             </div>
                         </div>
                         <div class="field">
@@ -110,15 +126,27 @@
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">Assignment Date</label>
+                            <label class="label">Job Description</label>
                             <div class="control">
-                                <input class="input" type="date" id="assignment-date" name="assignment-date" required>
+                                <textarea class="textarea" id="job-description" name="job-description" placeholder="Enter job description" required></textarea>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">Additional Notes</label>
+                            <label class="label">Assigned Date</label>
                             <div class="control">
-                                <textarea class="textarea" id="additional-notes" name="additional-notes" placeholder="Enter additional notes"></textarea>
+                                <input class="input" type="date" id="assigned-date" name="assigned-date" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">Status</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select id="status" name="status" required>
+                                        <option value="active">Active</option>
+                                        <option value="completed">Completed</option>
+                                        <option value="terminated">Terminated</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </form>
@@ -158,7 +186,7 @@
                     const form = document.getElementById('create-record-form');
                     const formData = new FormData(form);
 
-                    // Here you can handle the form data, e.g., send it to the server via AJAX
+                    // Handle the form data, e.g., send it to the server via AJAX
                     fetch('/api/jobs', {
                         method: 'POST',
                         body: formData
@@ -167,7 +195,7 @@
                     .then(data => {
                         console.log('Success:', data);
                         createRecordModal.classList.remove('is-active');
-                        // Optionally, reload the table or add the new record dynamically
+                        // Optionally, reload the page or dynamically add the new job
                     })
                     .catch((error) => {
                         console.error('Error:', error);

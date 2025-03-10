@@ -19,7 +19,7 @@
                 <ul class="submenu">
                     <li><a href="{{ route('prisoner.add') }}">Add/Update Prisoner</a></li>
                     <li><a href="{{ route('prisoner.showAll') }}">View Prisoner Profile</a></li>
-                    <li><a href="/assign_room">Assign Prisoner to Room</a></li>
+                
                 </ul>
             </li>
 
@@ -30,8 +30,8 @@
                     </span> Process Request 
                 </a>
                 <ul class="submenu">
-                    <li><a href="/create_request">Create/Update Request</a></li>
-                    <li><a href="/view_requests">View Requests</a></li>
+          
+                    <li><a href="{{ route('view.requests') }}">View Requests</a></li>
                 </ul>
             </li>
 
@@ -43,8 +43,8 @@
                 </a>
                 <ul class="submenu">
                   
-                    <li><a href="/view_appointments">View medical Appointment </a></li>
-                    <li><a href="/view_appointments">View legal Appointment </a></li>
+                    <li><a href="{{ route('view.appointments') }}">View medical Appointment </a></li>
+                    <li><a href="{{ route('lawyer.appointments') }}">View legal Appointment </a></li>
                 </ul>
             </li>
 

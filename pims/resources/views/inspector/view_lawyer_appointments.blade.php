@@ -63,32 +63,41 @@
                     </div>
 
                     <div class="card-content">
-                        <!-- Card Layout Section -->
+                        <!-- Card Layout Section for Lawyer Appointments -->
                         <div class="columns is-multiline">
-                            @foreach($appointments as $appointment)
+                            @foreach($lawyerAppointments as $appointment)
                             <div class="column is-12-mobile is-6-tablet is-4-desktop">
                                 <div class="card has-shadow">
                                     <div class="card-content">
                                         <p class="title is-5">
-                                            Appointment for {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->last_name }}
+                                            Lawyer Appointment for {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->last_name }}
                                         </p>
                                         <p class="subtitle is-6">
-                                            <strong>Medical Officer:</strong> {{ $appointment->doctor->first_name }} {{ $appointment->doctor->last_name }}
+                                            <strong>Lawyer:</strong> {{ $appointment->lawyer->first_name }} {{ $appointment->lawyer->last_name }}
                                         </p>
 
-                                        <p><strong>Appointment Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</p>
-                                        <p><strong>Diagnosis:</strong> {{ $appointment->diagnosis }}</p>
-                                        <p><strong>Treatment:</strong> {{ $appointment->treatment }}</p>
+                                        <p><strong>Appointment Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y H:i') }}</p>
 
                                         <div class="field">
                                             <span class="tag 
-                                                {{ $appointment->status == 'Completed' ? 'is-success' : 
-                                                   ($appointment->status == 'Pending' ? 'is-warning' : 'is-danger') }}">
+                                                {{ $appointment->status == 'completed' ? 'is-success' : 
+                                                   ($appointment->status == 'scheduled' ? 'is-warning' : 'is-danger') }}">
                                                 {{ ucfirst($appointment->status) }}
                                             </span>
                                         </div>
 
-                                     
+                                        <!-- Action Buttons -->
+                                        <div class="buttons is-small is-centered">
+                                            <a href="#" class="button is-rounded is-text">
+                                                <span class="icon"><i class="fa fa-edit"></i></span>
+                                                <span>Edit</span>
+                                            </a>
+
+                                            <a href="#" class="button is-danger is-rounded action-delete" data-id="{{ $appointment->id }}">
+                                                <span class="icon"><i class="fa fa-trash"></i></span>
+                                                <span>Delete</span>
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\training_officer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\TrainingProgram;
+use App\Models\JobAssignment;
 
 class TrainingController extends Controller
 {
@@ -65,17 +67,16 @@ class TrainingController extends Controller
     public function viewJobs()
     {
         // Fetch the jobs from the database
-        // Example: $jobs = Job::all();
-        
-        return view('training_officer.viewJobs');
+        $jobs = JobAssignment::paginate(9);
+
+        return view('training_officer.viewJobs',compact('jobs'));
     }
 
     // View list of training programs
     public function viewTrainingPrograms()
     {
-        // Fetch the training programs from the database
-        // Example: $trainingPrograms = TrainingProgram::all();
-        
-        return view('training_officer.viewTrainingPrograms');
+        $trainingprograms = TrainingProgram::paginate(9);
+
+        return view('training_officer.viewTrainingPrograms',compact('trainingprograms'));
     }
 }

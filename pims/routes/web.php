@@ -34,6 +34,8 @@ Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
 Route::post('/prisons', [cAccountController::class, 'prisonstore'])->name('prison.store');
 Route::get('/prisons', [cAccountController::class, 'prisonadd'])->name('prison.add');
 Route::get('/prisonsview', [cAccountController::class, 'prisonview'])->name('prison.view');
+Route::get('/prisonassign', [cAccountController::class, 'prisonassign'])->name('prison.assign');
+Route::get('/viewrequests', [cAccountController::class, 'view_requests'])->name('view.requests');
 Route::get('/viewroles', [RoleController::class, 'index'])->name('roles.index');
 Route::get('/addrole', [RoleController::class, 'addrole'])->name('roles.addrole');
 Route::get('/caccounts', [cAccountController::class, 'show_all'])->name('account.show_all');
@@ -52,6 +54,8 @@ Route::delete('/saccounts/{user_id}', [sAccountController::class, 'destroy'])->n
 // Resource Routes for Prisoners (Inspector)
 Route::resource('prisoners', iPrisonerController::class);
 Route::get('/prisoners', [iPrisonerController::class, 'show_all'])->name('prisoner.showAll');
+Route::get('/view_appointments', [iPrisonerController::class, 'view_appointments'])->name('view.appointments');
+Route::get('/view_lawyer_appointments', [iPrisonerController::class, 'view_lawyer_appointments'])->name('lawyer.appointments');
 Route::get('/prisonersadd', [iPrisonerController::class, 'prisoner_add'])->name('prisoner.add');
 Route::delete('/prisoner/{id}', [iPrisonerController::class, 'destroy'])->name('prisoner.destroy');
 Route::post('/prisoner/{id}/status', [iPrisonerController::class, 'updateStatus'])->name('prisoner.updateStatus');

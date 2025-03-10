@@ -8,6 +8,144 @@
     color: #fff;
     transition: width 0.3s ease-in-out;
 }
+  /* Align buttons in a row and ensure they are on opposite sides */
+  .buttons.is-centered {
+    display: flex;
+    justify-content: space-between; /* Distribute buttons to the left and right */
+    margin-top: 10px;
+    width: 100%; /* Ensure the container takes full width */
+}
+
+/* Ensure buttons have the same height */
+.button {
+    height: 40px; /* Set a fixed height for buttons */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect on buttons */
+.button.is-link:hover {
+    background-color: #209cee;
+    color: white;
+}
+
+.button.is-danger:hover {
+    background-color: #f14668;
+    color: white;
+}
+
+/* Rounded buttons with soft shadow */
+.button.is-rounded {
+    border-radius: 25px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button.is-rounded:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Tooltip styling */
+.has-tooltip-right::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.has-tooltip-right:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Icon and text alignment */
+.button .icon {
+    margin-right: 5px;
+}
+
+/* Pagination Styles */
+.pagination-list {
+    display: flex;
+    gap: 5px;
+}
+
+.pagination-link {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: #4a4a4a;
+    font-weight: bold;
+}
+  /* Hover effect on cards */
+  .has-shadow-hover:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 0 6px 20px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Tooltip styling */
+.has-tooltip-right::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.has-tooltip-right:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Pagination Styles */
+.pagination-list {
+    display: flex;
+    gap: 5px;
+}
+
+.pagination-link {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    color: #4a4a4a;
+    font-weight: bold;
+}
+
+.pagination-link.is-current {
+    background-color: #00d1b2;
+    color: white;
+}
+.pagination-link.is-current {
+    background-color: #209cee;
+    color: white;
+}
+
+.pagination-previous,
+.pagination-next {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+}
+
+.pagination-previous.is-disabled,
+.pagination-next.is-disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
 
 #sidebar .menu {
     font-size: 16px;

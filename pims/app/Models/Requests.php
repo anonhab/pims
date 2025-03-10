@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Request extends Model
+class Requests extends Model
 {
     use HasFactory;
 
@@ -18,7 +18,7 @@ class Request extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'requester_id', 'request_type', 'status', 'approved_by', 'request_details'
+        'id', 'requester_id', 'request_type', 'status', 'approved_by', 'request_details', 'prisoner_id'
     ];
 
     protected $casts = [
@@ -36,5 +36,11 @@ class Request extends Model
     public function approvedBy()
     {
         return $this->belongsTo(Account::class, 'approved_by', 'user_id');
+    }
+
+    // Relationship with Prisoner
+    public function prisoner()
+    {
+        return $this->belongsTo(Prisoner::class, 'prisoner_id', 'id');
     }
 }
