@@ -13,17 +13,23 @@ use App\Http\Controllers\training_officer\TrainingController;
 use App\Http\Controllers\visitor\VisitorController;
 
 // Dashboard Routes
-Route::get('/', function () {
-    return view('dashboard');
-});
 Route::get('/dashboard', function () {
     return view('dashboard');
+});
+Route::get('/', function () {
+    return view('index');
 });
 Route::get('/roles', function () {
     return view('cadmin.add_roles');
 });
 
+Route::get('/home', function () {
+    return view('home');
+});
 
+Route::get('/components/{component}', function ($component) {
+    return view("components.{$component}");
+});
 
 // ---------------------------------
 // Resource Routes for Accounts (cAdmin)
@@ -59,8 +65,9 @@ Route::get('/view_lawyer_appointments', [iPrisonerController::class, 'view_lawye
 Route::get('/prisonersadd', [iPrisonerController::class, 'prisoner_add'])->name('prisoner.add');
 Route::delete('/prisoner/{id}', [iPrisonerController::class, 'destroy'])->name('prisoner.destroy');
 Route::post('/prisoner/{id}/status', [iPrisonerController::class, 'updateStatus'])->name('prisoner.updateStatus');
-
-// ---------------------------------
+Route::get('/inspectorviewjobs', [iPrisonerController::class, 'viewJobs'])->name('inspector.viewJobs');
+Route::get('/inspectorviewtrainingprograms', [iPrisonerController::class, 'viewTrainingPrograms'])->name('inspector.viewTrainingPrograms');
+//---------------------------------
 // Lawyer Routes
 Route::get('/lawyer', [iPrisonerController::class, 'lawyer'])->name('lawyer.add');
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall');
