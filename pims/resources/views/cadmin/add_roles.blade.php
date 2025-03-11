@@ -4,7 +4,7 @@
 <body>
 
 
-    <!-- NAV -->
+    
     @include('includes.nav')
     <div class="columns" id="app-content">
         @include('cadmin.menu')
@@ -52,9 +52,9 @@
                     <form action="{{ route('roles.store') }}" method="POST">
     @csrf
     <div class="columns is-centered">
-        <!-- Role Details -->
+        
         <div class="column is-half">
-            <div class="card">
+           <div class="card room-card has-shadow-hover"></div></div>
                 <div class="card-content">
                     <p class="title is-4">Add Role</p>
 
@@ -90,7 +90,7 @@
         </div>
     </div>
 
-    <!-- Submit and Reset Buttons -->
+    
     <div class="field is-grouped is-grouped-centered">
         <div class="control">
             <button class="button is-link" type="submit">Add Role</button>

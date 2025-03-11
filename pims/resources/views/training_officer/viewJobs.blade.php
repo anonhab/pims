@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 @include('includes.head')
 
 <body>
@@ -9,7 +8,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('training_officer.menu')
+        @include('training_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header"></div>
@@ -55,6 +54,7 @@
                             </p>
                         </div>
                     </div>
+
                     <div class="card-content">
                         <!-- Card Layout for Jobs -->
                         <div class="columns is-multiline">
@@ -204,5 +204,4 @@
             });
         </script>
 </body>
-
 </html>

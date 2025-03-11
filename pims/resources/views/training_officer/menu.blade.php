@@ -43,7 +43,6 @@
                 </a>
                 <ul class="submenu">
                    
-                    <li><a href="{{ route('training.assignJobs') }}">Assign Job</a></li>
                     <li><a href="{{ route('training.viewJobs') }}">View Jobs</a></li>
                     
                 </ul>

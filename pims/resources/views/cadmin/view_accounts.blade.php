@@ -60,7 +60,7 @@
                         <div class="columns is-multiline">
                             @foreach($accounts as $account)
                             <div class="column is-12-mobile is-6-tablet is-4-desktop">
-                                <div class="card account-card has-shadow-hover">
+                                <div class="card room-card account-card has-shadow-hover">
                                     <div class="card-content">
                                         <div class="media">
                                             <div class="media-left">
@@ -78,7 +78,7 @@
                                             </div>
                                         </div>
                                         <div class="content">
-                                            <p><strong>Prison:</strong> {{ $account->prison_id }}</p>
+                                            <p><strong>Prison:</strong> {{ $account->prison ? $account->prison->name:'N/A' }}</p>
                                             <p><strong>First Name:</strong> {{ $account->first_name }}</p>
                                             <p><strong>Last Name:</strong> {{ $account->last_name }}</p>
                                             <p><strong>Email:</strong> {{ $account->email }}</p>

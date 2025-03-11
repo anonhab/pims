@@ -3,7 +3,7 @@
 
 <body>
 
-    <!-- NAV -->
+    
     @include('includes.nav')
     <div class="columns" id="app-content">
         @include('cadmin.menu')
@@ -48,7 +48,7 @@
                
                     <h1 class="title has-text-centered">Prison Management</h1>
 
-                    <!-- Form for adding a new prison -->
+                    
                     <form action="{{ route('prison.store') }}" method="POST">
                     <div class="columns is-centered">
                         <p class="control">
@@ -63,7 +63,7 @@
                     </div>
                         @csrf
                         <div class="columns is-centered">
-                            <!-- Prison Details -->
+                            
                             <div class="column is-half">
                                 <div class="card">
                                     <div class="card-content">
@@ -104,7 +104,7 @@
                             </div>
                         </div>
 
-                        <!-- Submit and Reset Buttons -->
+                        
                         <div class="field is-grouped is-grouped-centered">
                             <div class="control">
                                 <button class="button is-link" type="submit">Add Prison</button>

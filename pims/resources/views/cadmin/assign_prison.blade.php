@@ -3,7 +3,7 @@
 
 <body>
 
-    <!-- NAV -->
+    
     @include('includes.nav')
     <div class="columns" id="app-content">
         @include('cadmin.menu')
@@ -51,7 +51,7 @@
                     <form action="{{ route('prison.assign') }}" method="POST">
                         @csrf
                         <div class="columns is-centered">
-                            <!-- Prison Assignment Details -->
+                            
                             <div class="column is-half">
                                 <div class="card">
                                     <div class="card-content">
@@ -63,7 +63,7 @@
                                                 <div class="select is-fullwidth">
                                                     <select name="prison_id" required>
                                                         <option value="">Select Prison</option>
-                                                        <!-- Loop through prisons to populate the options -->
+                                                        
                                                         @foreach($prisons as $prison)
                                                             <option value="{{ $prison->id }}">{{ $prison->name }}</option>
                                                         @endforeach
@@ -78,7 +78,7 @@
                                                 <div class="select is-fullwidth">
                                                     <select name="system_admin_id" required>
                                                         <option value="">Select System Admin</option>
-                                                        <!-- Loop through system admins to populate the options -->
+                                                        
                                                         @foreach($admins as $admin)
                                                             <option value="{{ $admin->id }}">{{ $admin->name }}</option>
                                                         @endforeach
@@ -99,7 +99,7 @@
                             </div>
                         </div>
 
-                        <!-- Submit and Reset Buttons -->
+                        
                         <div class="field is-grouped is-grouped-centered">
                             <div class="control">
                                 <button class="button is-link" type="submit">Assign Prison</button>
