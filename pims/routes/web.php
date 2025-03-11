@@ -76,6 +76,12 @@ Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->nam
 // Room Routes
 Route::get('/addroom', [iPrisonerController::class, 'addroom'])->name('room.add');
 Route::get('/showroom', [iPrisonerController::class, 'showroom'])->name('room.show');
+Route::get('/roomassign', [iPrisonerController::class, 'roomassign'])->name('room.assign');
+Route::get('/allocate', [iPrisonerController::class, 'allocate'])->name('room.allocate');
+Route::post('/rooms', [iPrisonerController::class, 'roomstore'])->name('room.store');
+Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room');
+
+
 
 // ---------------------------------
 // Lawyer Prisoner Routes

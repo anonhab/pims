@@ -94,8 +94,9 @@
                     </span> Room Allocation
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('room.add') }}">Allocate Room to Prisoner</a></li>
-                    <li><a href="{{ route('room.show') }}">View Room Allocations</a></li>
+                    <li><a href="{{ route('room.show') }}">View Rooms</a></li>
+                    <li><a href="{{ route('room.allocate') }}">Allocate room</a></li>
+                    <li><a href="{{ route('room.assign') }}"> view allocations </a> </li>
                 </ul>
             </li>
         </ul>

@@ -5,23 +5,31 @@ use App\Http\Controllers\Controller;
 
 use App\Models\Account;
 use App\Models\Prison;
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 class sAccountController extends Controller
 {
     // Show all accounts
  public function show_all()
-    {
-        $accounts=Account::all();
-        return view('sysadmin.view_account',compact('accounts'));
-    }
+{
+    // Fetch accounts and exclude the role column where role_id = 1
+    $accounts = Account::where('role_id', '!=', 3)->paginate(3);
+    
+    // Pass the filtered accounts to the view
+    return view('sysadmin.view_account', compact('accounts'));
+}
 
     public function account_add()
 
     {
         $account = Account::all(); 
         $prisons = Prison::all();
-        return view('sysadmin.create_account',compact('account','prisons'));
+        $roles = Role::whereNotIn('id', [1, 3])->get();
+
+        return view('sysadmin.create_account', compact('account', 'prisons', 'roles'));
+
+         
     }
  
  

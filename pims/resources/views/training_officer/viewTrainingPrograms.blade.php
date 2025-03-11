@@ -9,7 +9,7 @@
     <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('training_officer.menu')
+        @include('training_officer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header"></div>
@@ -98,11 +98,11 @@
             <div class="modal-background"></div>
             <div class="modal-card">
                 <header class="modal-card-head">
-                    <p class="modal-card-title">Create New trainingprograms</p>
+                    <p class="modal-card-title">Create New Training Program</p>
                     <button class="delete" aria-label="close" id="close-modal-button"></button>
                 </header>
                 <section class="modal-card-body">
-                    <!-- Form for creating a new trainingprograms -->
+                    <!-- Form for creating a new training program -->
                     <form id="create-record-form">
                         <div class="field">
                             <label class="label">Program Title</label>
@@ -119,7 +119,7 @@
                         <div class="field">
                             <label class="label">Created By</label>
                             <div class="control">
-                                <input class="input" type="text" id="created-by" name="created-by" placeholder="Enter created by" required>
+                                <input class="input" type="text" id="created-by" name="created-by" placeholder="Enter creator name" required>
                             </div>
                         </div>
                     </form>
@@ -160,7 +160,7 @@
                     const formData = new FormData(form);
 
                     // Handle the form data, e.g., send it to the server via AJAX
-                    fetch('/api/jobs', {
+                    fetch('/api/trainingprograms', {
                         method: 'POST',
                         body: formData
                     })
@@ -168,7 +168,7 @@
                     .then(data => {
                         console.log('Success:', data);
                         createRecordModal.classList.remove('is-active');
-                        // Optionally, reload the page or dynamically add the new trainingprograms
+                        // Optionally, reload the page or dynamically add the new training program
                     })
                     .catch((error) => {
                         console.error('Error:', error);
