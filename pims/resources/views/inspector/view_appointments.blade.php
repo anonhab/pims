@@ -31,35 +31,8 @@
                             </div>
                         </div>
 
-                        <div class="field">
-                            <div class="select">
-                                <select id="table-length">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                        </div>
 
-                        <div class="field has-addons">
-                            <p class="control">
-                                <a class="button" href="#">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                    <span>Create Record</span>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a class="button" id="table-reload">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
-                                    <span>Reload</span>
-                                </a>
-                            </p>
-                        </div>
+                        
                     </div>
 
                     <div class="card-content">

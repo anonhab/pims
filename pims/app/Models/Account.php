@@ -36,8 +36,9 @@ class Account extends Model
     // Accessor for the password attribute
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = Hash::make($value); // Automatically hash the password
+        $this->attributes['password'] = $value; // DO NOT HASH AGAIN
     }
+    
 
     // Relationship with Role
     public function role()

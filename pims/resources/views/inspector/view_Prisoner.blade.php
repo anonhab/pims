@@ -262,6 +262,7 @@
                     modal.classList.remove("is-active");
                 });
             });
+            
         </script>
 
         @include('includes.footer_js')

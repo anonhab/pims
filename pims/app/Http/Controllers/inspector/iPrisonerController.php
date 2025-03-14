@@ -10,6 +10,7 @@ use App\Models\LawyerAppointment;
 use App\Models\JobAssignment;
 use App\Models\TrainingProgram;
 use App\Models\Prisoner;
+use  App\Models\Requests;
 use App\Models\Room;
 use Illuminate\Support\Facades\Log; // Add this for logging
 
@@ -23,7 +24,15 @@ class iPrisonerController extends Controller
     {
         return view('inspector.add_lawyer');
     }
-
+    public function updateStatusrequest(Request $request, $id)
+    {
+        $requeststatus = Prisoner::find($request->id);
+        $requeststatus->status = $request->room_id;  // Allocate the selected room
+        $requeststatus->save();
+    
+        return back()->with('success', 'Room allocated successfully!');
+    }
+    
     public function allocate()
     {
         $prisoners = Prisoner::whereNull('room_id')->paginate(9);
@@ -37,7 +46,7 @@ class iPrisonerController extends Controller
     }
     public function allocateRoom(Request $request)
     {
-        $prisoner = Prisoner::find($request->prisoner_id);
+        $prisoner = Prisoner::find($request->id);
         $prisoner->room_id = $request->room_id;  // Allocate the selected room
         $prisoner->save();
     

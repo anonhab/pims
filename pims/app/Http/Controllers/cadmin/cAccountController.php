@@ -11,6 +11,7 @@ use App\Models\Requests;
 use App\Models\Prisoner;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
 
 class cAccountController extends Controller
@@ -121,7 +122,7 @@ class cAccountController extends Controller
             // Create the user record
             $user = Account::create([
                 'username' => $request->username,
-                'password' => bcrypt($request->password), // Encrypt password
+                'password' =>Hash::make($request->password),
                 'role_id' => $request->role_id, // Assuming role_id is the correct field in the database
                 'prison_id' => $request->prison_id,
                 'first_name' => $request->first_name,
