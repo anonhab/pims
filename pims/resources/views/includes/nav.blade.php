@@ -1,119 +1,123 @@
 <style>
-   /* 🔔 Notification Modal */
-   #notification-modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      inset: 0; /* Alternative to left, top, width, height */
-      background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-   }
+    /* 🔔 Notification Modal */
+    #notification-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        /* Alternative to left, top, width, height */
+        background-color: rgba(0, 0, 0, 0.5);
+        /* Semi-transparent background */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
 
-   /* Show modal smoothly */
-   #notification-modal.is-active {
-      opacity: 1;
-      visibility: visible;
-   }
+    /* Show modal smoothly */
+    #notification-modal.is-active {
+        opacity: 1;
+        visibility: visible;
+    }
 
-   /* 📦 Modal Box */
-   .modal-content {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      width: 90%;
-      max-width: 420px;
-      text-align: center;
-      box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
-      animation: fadeIn 0.3s ease-in-out;
-      position: relative;
-   }
+    /* 📦 Modal Box */
+    .modal-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        width: 90%;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s ease-in-out;
+        position: relative;
+    }
 
-   /* 🔲 Modal Background Click to Close */
-   .modal-background {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: transparent;
-   }
+    /* 🔲 Modal Background Click to Close */
+    .modal-background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+    }
 
-   /* ✨ Notification Badge */
-   #notification-bell {
-      position: relative;
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-   }
+    /* ✨ Notification Badge */
+    #notification-bell {
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+    }
 
-   #notification-bell:hover {
-      transform: scale(1.1);
-   }
+    #notification-bell:hover {
+        transform: scale(1.1);
+    }
 
-   #notification-count {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background: #ff3860; /* Bright red */
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      border-radius: 50%;
-      display: none; /* Hidden by default */
-      box-shadow: 0 0 8px rgba(255, 56, 96, 0.5);
-   }
+    #notification-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff3860;
+        /* Bright red */
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 50%;
+        display: none;
+        /* Hidden by default */
+        box-shadow: 0 0 8px rgba(255, 56, 96, 0.5);
+    }
 
-   /* Show the badge when there are notifications */
-   #notification-count.active {
-      display: inline-block;
-   }
+    /* Show the badge when there are notifications */
+    #notification-count.active {
+        display: inline-block;
+    }
 
-   /* 🎨 Button Styles */
-   button {
-      margin: 8px;
-      padding: 12px 18px;
-      font-size: 1rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
-   }
+    /* 🎨 Button Styles */
+    button {
+        margin: 8px;
+        padding: 12px 18px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    }
 
-   button:hover {
-      transform: scale(1.05);
-   }
+    button:hover {
+        transform: scale(1.05);
+    }
 
-   /* 🎯 Primary Button */
-   button.is-primary {
-      background: #007bff;
-      color: white;
-   }
+    /* 🎯 Primary Button */
+    button.is-primary {
+        background: #007bff;
+        color: white;
+    }
 
-   button.is-primary:hover {
-      background: #0056b3;
-   }
+    button.is-primary:hover {
+        background: #0056b3;
+    }
 
-   /* ⚪ Light Button */
-   button.is-light {
-      background: #f1f1f1;
-      color: #333;
-   }
+    /* ⚪ Light Button */
+    button.is-light {
+        background: #f1f1f1;
+        color: #333;
+    }
 
-   button.is-light:hover {
-      background: #d6d6d6;
-   }
+    button.is-light:hover {
+        background: #d6d6d6;
+    }
 </style>
 
 <nav class="navbar columns is-fixed-top" role="navigation" aria-label="main navigation" id="app-header">
     <div class="navbar-brand column is-2 is-paddingless">
         <a class="navbar-item">
-            {{ session('rolename') }} 
+            {{ session('rolename') }}
         </a>
     </div>
 
@@ -145,15 +149,59 @@
                     &nbsp; Hi, {{ session('first_name') }}
                 </a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item">My Profile</a>
+                    <a href="#" class="navbar-item" id="view-profile">My Profile</a>
                     <a class="navbar-item">Settings</a>
                     <hr class="navbar-divider">
-                    <a href="{{url('logout')}}" class="navbar-item app-logout">Logout</a>
+                    <a href="{{ url('logout') }}" class="navbar-item app-logout">Logout</a>
                 </div>
             </div>
+
         </div>
     </div>
 </nav>
+<!-- Profile Modal -->
+<!-- Profile Modal -->
+<div class="modal" id="profileModal">
+    <div class="modal-background"></div>
+    <div class="modal-content" style="max-width: 800px; width: 80%; padding: 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+        <div class="box">
+            <h1 class="title has-text-centered">My Profile</h1>
+
+            <div class="columns is-multiline">
+                <!-- Left column: Profile details -->
+                <div class="column is-half">
+                    <p><strong>Name:</strong> {{ session('first_name') }} {{ session('last_name') }}</p>
+                    <p><strong>Email:</strong> {{ session('email') }}</p>
+                    <p><strong>Phone:</strong> {{ session('phone') }}</p>
+                </div>
+
+                <!-- Right column: Role & Address -->
+                <div class="column is-half">
+                    <p><strong>Role:</strong> {{ session('role_id') }}</p>
+                    <p><strong>Address:</strong> {{ session('address') }}</p>
+                </div>
+            </div>
+
+            <!-- Additional Profile Info Section (optional) -->
+            <div class="columns">
+                <div class="column is-full">
+                    <p><strong>Additional Information:</strong></p>
+                    <p>Additional info can go here, such as preferences, status, etc.</p>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <div class="has-text-centered">
+                <button class="button is-primary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Close Button -->
+    <button class="modal-close is-large" aria-label="close" onclick="closeModal()"></button>
+</div>
+
+
 
 <!-- 🔥 Enhanced Notification Modal -->
 <div id="notification-modal" class="modal">
@@ -175,5 +223,13 @@
         </div>
     </div>
 </div>
+<!-- Modal Toggle JavaScript -->
+<script>
+    document.getElementById('view-profile').addEventListener('click', function () {
+        document.getElementById('profileModal').classList.add('is-active');
+    });
 
- 
+    function closeModal() {
+        document.getElementById('profileModal').classList.remove('is-active');
+    }
+</script>
