@@ -43,20 +43,7 @@
                                     <p><strong>Status:</strong> <span class="tag is-info">{{ ucfirst($prisoner->status) }}</span></p>
                                     <p><strong>Room ID:</strong> {{ $prisoner->room_id ?? 'N/A' }}</p>
                                     <p><strong>Room Number:</strong> {{ $prisoner->room->room_number ?? 'N/A' }}</p>
-                                    <div class="buttons are-small is-centered">
-                                        <a href="#" class="button is-link is-rounded has-tooltip-right" data-tooltip="Edit Prisoner">
-                                            <span class="icon">
-                                                <i class="fa fa-edit"></i>
-                                            </span>
-                                            <span>Edit</span>
-                                        </a>
-                                        <button class="button is-danger is-rounded has-tooltip-right action-delete" data-id="{{ $prisoner->id }}" data-tooltip="Delete Prisoner">
-                                            <span class="icon">
-                                                <i class="fa fa-trash"></i>
-                                            </span>
-                                            <span>Delete</span>
-                                        </button>
-                                    </div>
+                                   
                                 </div>
                             </div>
                         </div>

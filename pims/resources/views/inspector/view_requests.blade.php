@@ -29,42 +29,15 @@
                             </div>
                         </div>
 
-                        <div class="field">
-                            <div class="select">
-                                <select id="table-length">
-                                    <option value="1">10</option>
-                                    <option value="2">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="field has-addons">
-                            <p class="control">
-                                <a class="button is-primary" href="#" id="open-modal">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                    <span>Create Record</span>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a class="button" id="table-reload">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
-                                    <span>Reload</span>
-                                </a>
-                            </p>
-                        </div>
                     </div>
 
                     <div class="card-content">
                         <!-- Enhanced Grid Layout for Request Cards -->
-                        <div class="columns is-multiline">
+                        <div class="columns is-multiline" id="request-list">
                             @foreach($requests as $request)
-                            <div class="column is-12-mobile is-6-tablet is-4-desktop">
+                            <div class="column is-12-mobile is-6-tablet is-4-desktop request-card-container"
+                                data-search="{{ strtolower($request->requester->name . ' ' . $request->request_type . ' ' . $request->status . ' ' . ($request->prisoner ? $request->prisoner->first_name . ' ' . $request->prisoner->last_name : '')) }}">
+
                                 <div class="card request-card has-shadow-hover">
                                     <div class="card-content">
                                         <div class="media">
@@ -89,9 +62,7 @@
 
                                             <div class="buttons are-small is-centered">
                                                 <p class="control">
-
                                                     <a href="#" class="button is-rounded is-text view-prisoner" data-id="{{ $request->prisoner ? $request->prisoner->id : '' }}">
-
                                                         <span class="icon">
                                                             <i class="fa fa-eye"></i>
                                                         </span>
@@ -99,11 +70,14 @@
                                                     </a>
                                                 </p>
                                                 <p class="control">
-                                                    <a href="#" class="button is-danger is-rounded has-tooltip-right action-delete" data-id="{{ $request->id }}" data-tooltip="Delete Record">
+                                                    <a href="javascript:void(0);"
+                                                        class="button is-warning is-rounded action-update-status"
+                                                        data-id="{{ $request->id }}"
+                                                        data-status="{{ $request->status }}">
                                                         <span class="icon">
-                                                            <i class="fa fa-trash"></i>
+                                                            <i class="fa fa-sync"></i>
                                                         </span>
-                                                        <span>Delete</span>
+                                                        <span>Update Status</span>
                                                     </a>
                                                 </p>
                                             </div>
@@ -112,8 +86,6 @@
                                 </div>
                             </div>
                             @endforeach
-
-
                         </div>
 
                         <!-- Pagination Controls -->
@@ -148,6 +120,35 @@
             </div>
         </div>
 
+        <!-- Status Update Modal -->
+        <div id="update-status-modal" class="modal">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="box">
+                    <h3 class="title is-5">Update Request Status</h3>
+
+                    <input type="hidden" id="update-request-id">
+
+                    <div class="field">
+                        <label class="label">Select Status</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select id="update-status">
+                                    <option value="pending">Pending</option>
+                                    <option value="approved">Approved</option>
+                                    <option value="rejected">Rejected</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="buttons is-centered">
+                        <button class="button is-primary" id="confirm-status-update">Update</button>
+                        <button class="button is-light" id="close-status-modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
         <<!-- Prisoner Details Modal -->
@@ -214,6 +215,60 @@
 
             @include('includes.footer_js')
             <script>
+               
+                document.addEventListener("DOMContentLoaded", function() {
+                    const updateStatusModal = document.getElementById("update-status-modal");
+                    const closeModalBtn = document.getElementById("close-status-modal");
+                    const confirmUpdateBtn = document.getElementById("confirm-status-update");
+
+                    // Open modal when clicking "Update Status"
+                    document.querySelectorAll(".action-update-status").forEach(button => {
+                        button.addEventListener("click", function() {
+                            const requestId = this.getAttribute("data-id");
+                            const currentStatus = this.getAttribute("data-status");
+
+                            document.getElementById("update-request-id").value = requestId;
+                            document.getElementById("update-status").value = currentStatus;
+
+                            updateStatusModal.classList.add("is-active");
+                        });
+                    });
+
+                    // Close modal
+                    closeModalBtn.addEventListener("click", function() {
+                        updateStatusModal.classList.remove("is-active");
+                    });
+
+                    // Confirm status update
+                    confirmUpdateBtn.addEventListener("click", function() {
+                        const requestId = document.getElementById("update-request-id").value;
+                        const newStatus = document.getElementById("update-status").value;
+
+                        fetch(`/requests/update-status/${requestId}`, {
+                                method: "POST",
+                                headers: {
+                                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content"),
+                                    "Content-Type": "application/json"
+                                },
+                                body: JSON.stringify({
+                                    status: newStatus
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    alert(`Request status updated to ${data.new_status}!`);
+                                    updateStatusModal.classList.remove("is-active");
+                                    location.reload(); // Refresh to show new status
+                                } else {
+                                    alert("Failed to update request status.");
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                    });
+                });
+
+
                 document.addEventListener("DOMContentLoaded", function() {
                     const viewButtons = document.querySelectorAll(".view-prisoner");
                     const modal = document.getElementById("view-prisoner-modal");

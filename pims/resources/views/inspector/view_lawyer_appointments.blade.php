@@ -86,18 +86,7 @@
                                             </span>
                                         </div>
 
-                                        <!-- Action Buttons -->
-                                        <div class="buttons is-small is-centered">
-                                            <a href="#" class="button is-rounded is-text">
-                                                <span class="icon"><i class="fa fa-edit"></i></span>
-                                                <span>Edit</span>
-                                            </a>
-
-                                            <a href="#" class="button is-danger is-rounded action-delete" data-id="{{ $appointment->id }}">
-                                                <span class="icon"><i class="fa fa-trash"></i></span>
-                                                <span>Delete</span>
-                                            </a>
-                                        </div>
+                                        
                                     </div>
                                 </div>
                             </div>

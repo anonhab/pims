@@ -2,7 +2,7 @@
     <aside class="menu">
         <ul class="menu-list">
             <li>
-                <a href="/dashboard">
+                <a href="/idashboard">
                     <span class="icon">
                         <i class="fa fa-home"></i>
                     </span> Dashboard
