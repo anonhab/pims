@@ -14,7 +14,7 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-user-check"></i>
-                    </span> Prisoner Management
+                    </span> Prisoners
                 </a>
                 <ul class="submenu">
                     <li><a href="{{ route('prisoner.add') }}">Add/Update Prisoner</a></li>
@@ -27,7 +27,7 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-paper-plane"></i>
-                    </span> Process Request 
+                    </span>  Requests 
                 </a>
                 <ul class="submenu">
           
@@ -39,7 +39,7 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-calendar"></i>
-                    </span> Appointment Management
+                    </span> Appointments 
                 </a>
                 <ul class="submenu">
                   
@@ -54,7 +54,7 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-users"></i>
-                    </span> Visitor Management
+                    </span> Visitors 
                 </a>
                 <ul class="submenu">
                     <li><a href="/view_visitor_registrations">View Visitor Registrations</a></li>
@@ -83,7 +83,7 @@
                 <ul class="submenu">
                     <li><a href="{{ route('lawyer.add') }}">Add/Update Lawyer Profile</a></li>
                     <li><a href="{{ route('lawyer.lawyershowall') }}">View Lawyer Profiles</a></li>
-                    <li><a href="/assign_lawyer">Assign Lawyer to Prisoner</a></li>
+                    <li><a href="{{ route('assignments.view') }}">Assign Lawyer to Prisoner</a></li>
                 </ul>
             </li>
 

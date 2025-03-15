@@ -36,16 +36,13 @@
                         <div class="columns is-multiline" id="request-list">
                             @foreach($requests as $request)
                             <div class="column is-12-mobile is-6-tablet is-4-desktop request-card-container"
-                                data-search="{{ strtolower($request->requester->name . ' ' . $request->request_type . ' ' . $request->status . ' ' . ($request->prisoner ? $request->prisoner->first_name . ' ' . $request->prisoner->last_name : '')) }}">
+                                data-search="{{ strtolower(optional($request->user)->first_name . ' ' . $request->request_type . ' ' . $request->status . ' ' . optional($request->prisoner)->first_name . ' ' . optional($request->prisoner)->last_name) }}">
 
                                 <div class="card request-card has-shadow-hover">
                                     <div class="card-content">
                                         <div class="media">
-                                            <div class="media-left">
-                                                <!-- Optionally, you can add an image or icon here -->
-                                            </div>
                                             <div class="media-content">
-                                                <p class="title is-5">{{ $request->requester->name }}</p>
+                                                <p class="title is-5">{{ optional($request->prisoner)->first_name ?? 'Unknown' }}</p>
                                                 <p class="subtitle is-6">{{ ucfirst($request->request_type) }}</p>
                                             </div>
                                         </div>
@@ -54,29 +51,36 @@
                                             <p><strong>Details:</strong> {{ Str::limit($request->request_details, 50) }}</p>
 
                                             <!-- Display the role name associated with the requester -->
-                                            <p><strong>Requested by:</strong> {{ $request->requester && $request->requester->role ? $request->requester->role->name : 'N/A' }}</p>
+                                            <p><strong>Requested by:</strong>
+                                                @if($request->user && $request->lawyer)
+                                                {{ optional($request->user)->role->name ?? 'N/A' }} and Lawyer ID {{ optional($request->lawyer)->lawyer_id ?? 'N/A' }}
+                                                @elseif($request->user)
+                                                {{ optional($request->user)->role->name ?? 'N/A' }} ( ID: {{ optional($request->user)->user_id ?? 'N/A' }})
+                                                @elseif($request->lawyer)
+                                                Lawyer ID: {{ optional($request->lawyer)->lawyer_id ?? 'N/A' }}
+                                                @else
+                                                N/A
+                                                @endif
+                                            </p>
+
+
 
                                             <!-- Display prisoner information -->
-                                            <p><strong>Prisoner ID:</strong> {{ $request->prisoner ? $request->prisoner->id : 'N/A' }}</p>
-                                            <p><strong>Prisoner Name:</strong> {{ $request->prisoner ? $request->prisoner->first_name . ' ' . $request->prisoner->last_name : 'N/A' }}</p>
+                                            <p><strong>Prisoner ID:</strong> {{ optional($request->prisoner)->id ?? 'N/A' }}</p>
+                                            <p><strong>Prisoner Name:</strong> {{ optional($request->prisoner)->first_name . ' ' . optional($request->prisoner)->last_name ?? 'N/A' }}</p>
 
                                             <div class="buttons are-small is-centered">
                                                 <p class="control">
-                                                    <a href="#" class="button is-rounded is-text view-prisoner" data-id="{{ $request->prisoner ? $request->prisoner->id : '' }}">
-                                                        <span class="icon">
-                                                            <i class="fa fa-eye"></i>
-                                                        </span>
+                                                    <a href="#" class="button is-rounded is-text view-prisoner"
+                                                        data-id="{{ optional($request->prisoner)->id }}">
+                                                        <span class="icon"><i class="fa fa-eye"></i></span>
                                                         <span>View</span>
                                                     </a>
                                                 </p>
                                                 <p class="control">
-                                                    <a href="javascript:void(0);"
-                                                        class="button is-warning is-rounded action-update-status"
-                                                        data-id="{{ $request->id }}"
-                                                        data-status="{{ $request->status }}">
-                                                        <span class="icon">
-                                                            <i class="fa fa-sync"></i>
-                                                        </span>
+                                                    <a href="javascript:void(0);" class="button is-warning is-rounded action-update-status"
+                                                        data-id="{{ $request->id }}" data-status="{{ $request->status }}">
+                                                        <span class="icon"><i class="fa fa-sync"></i></span>
                                                         <span>Update Status</span>
                                                     </a>
                                                 </p>
@@ -91,31 +95,25 @@
                         <!-- Pagination Controls -->
                         <div class="pagination is-centered" role="navigation" aria-label="pagination">
                             <!-- Previous Button -->
-                            @if($requests->currentPage() > 1)
-                            <a class="pagination-previous" href="{{ $requests->previousPageUrl() }}">Previous</a>
-                            @else
-                            <a class="pagination-previous is-disabled" href="#">Previous</a>
-                            @endif
+                            <a class="pagination-previous {{ $requests->onFirstPage() ? 'is-disabled' : '' }}"
+                                href="{{ $requests->previousPageUrl() }}">Previous</a>
 
                             <!-- Next Button -->
-                            @if($requests->hasMorePages())
-                            <a class="pagination-next" href="{{ $requests->nextPageUrl() }}">Next</a>
-                            @else
-                            <a class="pagination-next is-disabled" href="#">Next</a>
-                            @endif
+                            <a class="pagination-next {{ $requests->hasMorePages() ? '' : 'is-disabled' }}"
+                                href="{{ $requests->nextPageUrl() }}">Next</a>
 
                             <!-- Page Numbers -->
                             <ul class="pagination-list">
-                                @foreach($requests->getUrlRange(1, $requests->lastPage()) as $page => $url)
+                                @foreach(range(1, $requests->lastPage()) as $page)
                                 <li>
-                                    <a class="pagination-link {{ $page == $requests->currentPage() ? 'is-current' : '' }}" href="{{ $url }}">
-                                        {{ $page }}
-                                    </a>
+                                    <a class="pagination-link {{ $page == $requests->currentPage() ? 'is-current' : '' }}"
+                                        href="{{ $requests->url($page) }}">{{ $page }}</a>
                                 </li>
                                 @endforeach
                             </ul>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -215,7 +213,6 @@
 
             @include('includes.footer_js')
             <script>
-               
                 document.addEventListener("DOMContentLoaded", function() {
                     const updateStatusModal = document.getElementById("update-status-modal");
                     const closeModalBtn = document.getElementById("close-status-modal");

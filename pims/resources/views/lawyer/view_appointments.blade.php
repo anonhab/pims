@@ -1,162 +1,79 @@
 <!DOCTYPE html>
 <html>
-
 @include('includes.head')
 
 <body>
-    <!-- START NAV -->
+    <!-- NAV -->
     @include('includes.nav')
-    <!-- END NAV -->
 
     <div class="columns" id="app-content">
-       @include('lawyer.menu')
+        @include('lawyer.menu')
 
         <div class="column is-10" id="page-content">
             <div class="content-header">
-                
+                <h1 class="title has-text-centered">View Lawyer Appointments</h1>
             </div>
 
-
-            <div class="content-body">
-                <div class="card">
-                    <div class="card-filter">
-                        <!-- Search and other controls -->
-                        <div class="field">
-                            <div class="control has-icons-left has-icons-right">
-                                <input class="input" id="table-search" type="text" placeholder="Search for records...">
-                                <span class="icon is-left">
-                                    <i class="fa fa-search"></i>
-                                </span>
+            <section class="section">
+                <div class="container">
+                    <!-- Appointment Cards -->
+                    <div class="columns is-multiline">
+                        @foreach($appointments as $appointment)
+                            <div class="column is-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <p class="card-header-title">Appointment #{{ $appointment->id }}</p>
+                                    </div>
+                                    <div class="card-content">
+                                        <div class="content">
+                                            <p><strong>Prisoner Name:</strong> {{ $appointment->prisoner->name }}</p>
+                                            <p><strong>Appointment Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</p>
+                                            <p><strong>Notes:</strong> {{ $appointment->notes }}</p>
+                                            <p><strong>Status:</strong> 
+                                                @if($appointment->status == 'confirmed')
+                                                    <span class="has-text-success">Confirmed</span>
+                                                @else
+                                                    <span class="has-text-danger">Pending</span>
+                                                @endif
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="field">
-                            <div class="select">
-                                <select id="table-length">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="field has-addons">
-                            <p class="control">
-                                <a class="button" href="#">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                    <span>Create Record</span>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a class="button" id="table-reload">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
-                                    <span>Reload</span>
-                                </a>
-                            </p>
-                        </div>
+                        @endforeach
                     </div>
-                    <div class="card-content">
-                        <!-- Table Section -->
-                        <table class="table is-hoverable is-bordered is-fullwidth" id="datatable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Prisoner</th>
-                                    <th>Medical Officer</th>
-                                    <th>Appointment Date</th>
-                                    <th>Notes</th>
-                                    <th class="has-text-centered">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Row 1 -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>John Doe</td>
-                                    <td>Dr. Smith</td>
-                                    <td>15/05/2023</td>
-                                    <td>Routine checkup for blood pressure.</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="1">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 2 -->
-                                <tr>
-                                    <td>2</td>
-                                    <td>Jane Smith</td>
-                                    <td>Dr. Johnson</td>
-                                    <td>20/08/2023</td>
-                                    <td>Follow-up for previous injury.</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="2">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <!-- Row 3 -->
-                                <tr>
-                                    <td>3</td>
-                                    <td>Bob Johnson</td>
-                                    <td>Dr. Brown</td>
-                                    <td>10/12/2023</td>
-                                    <td>Dental checkup and cleaning.</td>
-                                    <td class="has-text-centered">
-                                        <div class="field is-grouped action">
-                                            <p class="control">
-                                                <a href="#" class="button is-rounded is-text">
-                                                    <span class="icon">
-                                                        <i class="fa fa-edit"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                            <p class="control">
-                                                <a class="button is-rounded is-text action-delete" data-id="3">
-                                                    <span class="icon">
-                                                        <i class="fa fa-trash"></i>
-                                                    </span>
-                                                </a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+
+                    <!-- Pagination Controls -->
+                    <div class="pagination is-centered" role="navigation" aria-label="pagination">
+                        <!-- Previous Button -->
+                        <a class="pagination-previous {{ $appointments->currentPage() > 1 ? '' : 'is-disabled' }}" 
+                           href="{{ $appointments->previousPageUrl() ?? '#' }}">
+                            Previous
+                        </a>
+
+                        <!-- Next Button -->
+                        <a class="pagination-next {{ $appointments->hasMorePages() ? '' : 'is-disabled' }}" 
+                           href="{{ $appointments->nextPageUrl() ?? '#' }}">
+                            Next
+                        </a>
+
+                        <!-- Page Numbers -->
+                        <ul class="pagination-list">
+                            @foreach($appointments->getUrlRange(1, $appointments->lastPage()) as $page => $url)
+                            <li>
+                                <a class="pagination-link {{ $page == $appointments->currentPage() ? 'is-current' : '' }}" href="{{ $url }}">
+                                    {{ $page }}
+                                </a>
+                            </li>
+                            @endforeach
+                        </ul>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
-        @include('includes.footer_js')
-</body>
+    </div>
 
+    @include('includes.footer_js')
+</body>
 </html>

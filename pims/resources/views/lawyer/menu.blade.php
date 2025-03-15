@@ -2,7 +2,7 @@
     <aside class="menu">
         <ul class="menu-list">
             <li>
-                <a href="/dashboard">
+                <a href="{{ route('mylawyer.ldashboard') }}">
                     <span class="icon">
                         <i class="fa fa-home"></i>
                     </span> Dashboard
@@ -15,8 +15,8 @@
                     </span> my prisoners
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('prisoner.showAll') }}">View Prisoner Profile</a></li>
-                    <li><a href="/assign_room">Assign Prisoner to Room</a></li>
+                    <li><a href="{{ route('mylawyer.myprisoners') }}">View Prisoner Profile</a></li>
+                   
                 </ul>
             </li>
 
@@ -24,11 +24,11 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-paper-plane"></i>
-                    </span> Request Management
+                    </span> Request
                 </a>
                 <ul class="submenu">
-                    <li><a href="/create_request">Create/Update Request</a></li>
-                    <li><a href="/view_requests">View Requests</a></li>
+                    <li><a href="{{ route('mylawyer.createrequest')}}">Create/Update Request</a></li>
+                    <li><a href="{{ route('mylawyer.viewrequest') }}">View Requests</a></li>
                 </ul>
             </li>
 
@@ -36,11 +36,11 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-calendar"></i>
-                    </span> Appointment Management
+                    </span> Appointment 
                 </a>
                 <ul class="submenu">
-                    <li><a href="/create_appointment">Create/Update Appointment</a></li>
-                    <li><a href="/view_appointments">View Appointment Details</a></li>
+                    <li><a href="{{ route('mylawyer.createlegalappo') }}">Create/Update Appointment</a></li>
+                    <li><a href="{{ route('mylawyer.viewappointment') }}">View Appointment Details</a></li>
                 </ul>
             </li>
 

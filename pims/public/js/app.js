@@ -88,7 +88,7 @@ window.onload = function () {
                 alert('Error fetching notifications: ' + error.message);
             });
     }
-
+    setInterval(fetchNotifications, 1000); 
     // Handle Click Event for Notifications
     document.getElementById("notification-dropdown").addEventListener("click", function (event) {
         let notificationItem = event.target.closest('.dropdown-item');

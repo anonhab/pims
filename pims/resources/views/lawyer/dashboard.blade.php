@@ -172,7 +172,7 @@
 
         <div class="columns" id="app-content">
             <!-- Sidebar Menu -->
-            @include('inspector.menu')
+            @include('lawyer.menu')
 
             <!-- Main Content -->
             <div class="column is-10" id="page-content">

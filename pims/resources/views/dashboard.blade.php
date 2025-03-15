@@ -65,7 +65,7 @@
                         </a>
                     </div>
                     <div class="column is-3">
-                        <a href="#lawyer-link" class="box quick-stats has-background-info has-text-white">
+                        <a href="{{ route('mylawyer.myprisoner') }}" class="box quick-stats has-background-info has-text-white">
                             <div class="quick-stats-icon">
                                 <span class="icon is-large"><i class="fa fa-3x fa-user-tie"></i></span>
                             </div>
