@@ -59,4 +59,5 @@ public function assignedLawyers()
     {
         return $this->hasMany(Requests::class, 'prisoner_id', 'id');
     }
+    
 }

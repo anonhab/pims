@@ -10,6 +10,7 @@ class Lawyer extends Model
     use HasFactory;
 
     protected $table = 'lawyers';
+
     protected $primaryKey='lawyer_id';
 
     protected $fillable = [

@@ -71,10 +71,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout']);
 
 // Admin routes
-Route::middleware('middleware')->group(function () {
-    Route::get('/prisons', [cAccountController::class, 'prisonadd'])->name('prison.add');
 
-});
 // ---------------------------------
 // Grouping all routes with the role:3 middleware
 Route::middleware('role:3')->group(function() {
@@ -118,7 +115,7 @@ Route::get('/inspectorviewtrainingprograms', [iPrisonerController::class, 'viewT
 //---------------------------------
 // Lawyer Routes
 Route::get('/lawyer', [iPrisonerController::class, 'lawyer'])->name('lawyer.add')->middleware('role:2');
-Route::post('/lawyers/store', [iPrisonerController::class, 'lstore'])->name('lawyers.lstore');
+Route::post('/lawyerstore', [iPrisonerController::class, 'lstore'])->name('lawyers.lstore');
 
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 
@@ -139,8 +136,7 @@ Route::get('/idashboard', function () {
 })->middleware('role:2');
 
 
-
-// ---------------------------------
+Route::middleware('middleware')->group(function () {
 // Lawyer Prisoner Routes
 Route::get('/myprisoner', [myLawyerController::class, 'myprisoner'])->name('mylawyer.myprisoner');
 Route::get('createlegalappo', [myLawyerController::class, 'createlegalappo'])->name('mylawyer.createlegalappo');
@@ -149,6 +145,11 @@ Route::get('/viewappointment', [myLawyerController::class, 'viewappointment'])->
 Route::get('/viewrequest', [myLawyerController::class, 'viewrequest'])->name('mylawyer.viewrequest');
 Route::get('/ldashboard', [myLawyerController::class, 'ldashboard'])->name('mylawyer.ldashboard');
 Route::get('/myprisoners', [myLawyerController::class, 'myprisoners'])->name('mylawyer.myprisoners');
+Route::post('/requests/store', [myLawyerController::class, 'rstore'])->name('requests.store');
+Route::post('/appointments/store', [myLawyerController::class, 'astore'])->name('lawyer_appointments.store');
+
+});
+
 
 
 // ---------------------------------

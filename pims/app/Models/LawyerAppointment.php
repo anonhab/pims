@@ -18,7 +18,13 @@ class LawyerAppointment extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'prisoner_id', 'lawyer_id', 'appointment_date', 'status', 'created_by'
+        'id',
+        'prisoner_id',
+        'lawyer_id',
+        'appointment_date',
+        'status',
+        'notes',
+        'created_by'
     ];
 
     protected $casts = [

@@ -18,7 +18,7 @@ class Middleware
      */
     public function handle($request, Closure $next)
     {
-        if ($request->session()->has('username')) {
+        if ($request->session()->has('lawyer_id')) {
             return $next($request);
         }
 

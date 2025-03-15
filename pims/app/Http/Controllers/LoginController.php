@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Account;
+use App\Models\Lawyer;
 use App\Models\LawyerPrisonerAssignment;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
@@ -19,72 +20,96 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-{
-    // Log request received
-    Log::info('Login attempt:', ['email' => $request->email, 'ip' => $request->ip()]);
+    {
+        // Log request attempt
+        Log::info('Login attempt:', ['email' => $request->email, 'ip' => $request->ip()]);
 
-    // Rate limiter key (based on IP address)
-    $key = 'login-attempts:' . $request->ip();
+        // Rate limiter key (based on IP address)
+        $key = 'login-attempts:' . $request->ip();
 
-    // Check if too many attempts
-    if (RateLimiter::tooManyAttempts($key, 5)) {
-        Log::warning('Too many login attempts', ['email' => $request->email, 'ip' => $request->ip()]);
-        throw ValidationException::withMessages(['email' => 'Too many login attempts. Try again later.']);
-    }
+        // Check if too many attempts
+        if (RateLimiter::tooManyAttempts($key, 5)) {
+            Log::warning('Too many login attempts', ['email' => $request->email, 'ip' => $request->ip()]);
+            throw ValidationException::withMessages(['email' => 'Too many login attempts. Try again later.']);
+        }
 
-    // Validate input
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|min:8',
-    ]);
+        // Validate input
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:8',
+        ]);
 
-    $credentials = $request->only(['email', 'password']);
+        $credentials = $request->only(['email', 'password']);
 
-    // Check if the account exists
-    if ($account = Account::where('email', $credentials['email'])->first()) {
-        Log::info('Account found:', ['email' => $account->email]);
+        // Check if user exists in the Account model
+        if ($account = Account::where('email', $credentials['email'])->first()) {
+            Log::info('Account found:', ['email' => $account->email]);
 
-        // Check if password matches
-        if (Hash::check($credentials['password'], $account->password)) {
-            // Reset rate limiter after successful login
-            RateLimiter::clear($key);
+            // Verify password
+            if (Hash::check($credentials['password'], $account->password)) {
+                // Reset rate limiter
+                RateLimiter::clear($key);
 
-            // Store user session
-            $request->session()->put([
-                'username'   => $account->username,
-                'user_id'    => $account->user_id,
-                'first_name' => $account->first_name,
-                'last_name'  => $account->last_name,
-                'user_image' => $account->user_image,
-                'role_id'    => is_object($account->role) ? $account->role->id : (int) $account->role, // Extract ID from Role model
-                'rolename'   => is_object($account->role) ? $account->role->name : '', // Fetch role name if it's an object, else empty string
-            ]);
-            
-            Log::info('Login successful:', ['email' => $account->email, 'username' => $account->username]);
+                // Store session data
+                $request->session()->put([
+                    'username'   => $account->username,
+                    'user_id'    => $account->user_id,
+                    'first_name' => $account->first_name,
+                    'last_name'  => $account->last_name,
+                    'user_image' => $account->user_image,
+                    'role_id'    => is_object($account->role) ? $account->role->id : (int) $account->role,
+                    'rolename'   => is_object($account->role) ? $account->role->name : '',
+                ]);
 
-            // Redirect based on role_id
-            if ($account->role_id == 3) {
-                $recentAssignments = LawyerPrisonerAssignment::all();
+                Log::info('Login successful:', ['email' => $account->email, 'username' => $account->username]);
 
-                return view('cadmin.dashboard',compact('recentAssignments')); // Redirect to inspector dashboard view for role_id 2
-            } elseif ($account->role_id == 2) {
-                return view('inspector.dashboard'); // Redirect to inspector dashboard view for role_id 2
-
+                // Redirect based on role
+                return match ($account->role_id) {
+                    3 => view('cadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
+                    2 => view('inspector.dashboard'),
+                    default => redirect()->intended('/dashboard'),
+                };
             } else {
-                return redirect()->intended('/dashboard'); // Default dashboard
+                Log::warning('Login failed: Incorrect password', ['email' => $credentials['email']]);
+            }
+        }
+
+        // Check if user is a lawyer
+        elseif ($lawyer = Lawyer::where('email', $credentials['email'])->first()) {
+            Log::info('Lawyer account found:', ['email' => $lawyer->email]);
+
+            // Verify password
+            if (Hash::check($credentials['password'], $lawyer->password)) {
+                // Reset rate limiter
+                RateLimiter::clear($key);
+               
+                // Store session data
+                $request->session()->put([
+                    'lawyer_id'  => $lawyer->lawyer_id,
+                    'first_name' => $lawyer->first_name,
+                    'last_name'  => $lawyer->last_name,
+                ]);
+                
+                // If lawyer_id is set, add 'rolename' => 'lawyer' to the session
+                if ($request->session()->has('lawyer_id')) {
+                    $request->session()->put('rolename', 'lawyer');
+                }
+                
+                Log::info('Lawyer login successful:', ['email' => $lawyer->email, 'username' => $lawyer->username]);
+
+                return view('lawyer.dashboard');
+            } else {
+                Log::warning('Lawyer login failed: Incorrect password', ['email' => $credentials['email']]);
             }
         } else {
-            Log::warning('Login failed: Incorrect password', ['email' => $credentials['email']]);
+            Log::warning('Login failed: Account not found', ['email' => $credentials['email']]);
         }
-    } else {
-        Log::warning('Login failed: Account not found', ['email' => $credentials['email']]);
+
+        // Increment rate limiter
+        RateLimiter::hit($key, 60);
+
+        return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
     }
-
-    // Increment rate limiter
-    RateLimiter::hit($key, 60); // Lock for 60 seconds after 5 attempts
-
-    return redirect()->back()->withErrors(['email' => 'Invalid credentials']);
-}
 
     public function homepage(Request $request)
     {
