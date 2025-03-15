@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Account;
+use App\Models\LawyerPrisonerAssignment;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
@@ -63,7 +64,9 @@ class LoginController extends Controller
 
             // Redirect based on role_id
             if ($account->role_id == 3) {
-                return view('cadmin.dashboard'); // Redirect to inspector dashboard view for role_id 2
+                $recentAssignments = LawyerPrisonerAssignment::all();
+
+                return view('cadmin.dashboard',compact('recentAssignments')); // Redirect to inspector dashboard view for role_id 2
             } elseif ($account->role_id == 2) {
                 return view('inspector.dashboard'); // Redirect to inspector dashboard view for role_id 2
 

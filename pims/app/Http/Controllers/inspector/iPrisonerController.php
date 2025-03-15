@@ -10,10 +10,12 @@ use App\Models\LawyerAppointment;
 use App\Models\JobAssignment;
 use App\Models\TrainingProgram;
 use App\Models\Prisoner;
+use App\Models\LawyerPrisonerAssignment;
+use App\Models\Lawyer;
 use  App\Models\Requests;
 use App\Models\Room;
 use Illuminate\Support\Facades\Log; // Add this for logging
-
+use Illuminate\Support\Facades\Hash;
 class iPrisonerController extends Controller
 {
     public function index()
@@ -21,9 +23,17 @@ class iPrisonerController extends Controller
         return view('inspector.add_prisoner');
     }
     public function lawyer()
-    {
-        return view('inspector.add_lawyer');
-    }
+{
+    $prisoners = Prisoner::whereDoesntHave('assignedLawyers')->get();
+    return view('inspector.add_lawyer', compact('prisoners'));
+}
+public function asslawyer()
+{
+    $assignments= LawyerPrisonerAssignment::all();
+    return view('inspector.assign_lawyer', compact('assignments'));
+  
+}
+
     public function updateStatusrequest(Request $request, $id)
     {
         $requeststatus = Prisoner::find($request->id);
@@ -52,7 +62,33 @@ class iPrisonerController extends Controller
     
         return back()->with('success', 'Room allocated successfully!');
     }
-    
+    public function lstore(Request $request)
+    {
+        
+
+        // Create a new lawyer
+        $lawyer = Lawyer::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'date_of_birth' => $request->date_of_birth,
+            'contact_info' => $request->contact_info,
+            'email' => $request->email,
+            'password' => Hash::make($request->password), // Hash the password before storing
+            'law_firm' => $request->law_firm,
+            'license_number' => $request->license_number,
+            'cases_handled' => $request->cases_handled,
+        ]);
+
+        // Assign the lawyer to the selected prisoner
+        $prisoner = Prisoner::findOrFail($request->prisoner_id);
+        $prisoner->lawyer_id = $lawyer->id;
+        $prisoner->assignment_date = $request->assignment_date;
+        $prisoner->assigned_by = $request->assigned_by;
+        $prisoner->save();
+
+        // Redirect with a success message
+        return redirect()->back()->with('success', 'Lawyer assigned successfully!');
+    }
 
     public function roomstore(Request $request)
     {
@@ -78,9 +114,31 @@ class iPrisonerController extends Controller
         $rooms = Room::paginate(9);
         return view('inspector.view_room', compact('rooms'));
     }
+    public function assignlawyer(Request $request)
+    {
+         
+        $request->validate([
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'lawyer_id' => 'required|exists:lawyers,id',
+            'assigned_by' => 'required|string',
+            'assignment_date' => 'required|date',
+        ]);
+        LawyerPrisonerAssignment::create([
+            'prisoner_id' => $request->prisoner_id,
+            'lawyer_id' => $request->lawyer_id,
+            'assigned_by' => $request->assigned_by,
+            'assignment_date' => $request->assignment_date,
+        ]);
+
+        return redirect()->back()->with('success', 'Assignment created successfully.');
+ 
+       
+    }
     public function lawyershowall()
     {
-        return view('inspector.view_lawyers');
+        $lawyers = Lawyer::all(); // Fetch all lawyer records from the database
+        return view('inspector.view_lawyers', compact('lawyers'));
+         
     }
     public function show_all()
     {

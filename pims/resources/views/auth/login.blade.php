@@ -70,10 +70,6 @@ h1 {
   transition: border-color 0.3s ease;
 }
 
-.input-group:hover {
-  border: 1px solid #3498db; /* Blue border on hover */
-}
-
 .input-group i {
   color: #667eea; /* Blue icon color */
   font-size: 18px;

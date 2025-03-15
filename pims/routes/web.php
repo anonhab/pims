@@ -118,10 +118,15 @@ Route::get('/inspectorviewtrainingprograms', [iPrisonerController::class, 'viewT
 //---------------------------------
 // Lawyer Routes
 Route::get('/lawyer', [iPrisonerController::class, 'lawyer'])->name('lawyer.add')->middleware('role:2');
+Route::post('/lawyers/store', [iPrisonerController::class, 'lstore'])->name('lawyers.lstore');
+
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 
 // ---------------------------------
 // Room Routes
+Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
+Route::get('/assignments', [iPrisonerController::class, 'asslawyer'])->name('assignments.view');
+
 Route::get('/addroom', [iPrisonerController::class, 'addroom'])->name('room.add')->middleware('role:2');
 Route::get('/showroom', [iPrisonerController::class, 'showroom'])->name('room.show')->middleware('role:2');
 Route::get('/roomassign', [iPrisonerController::class, 'roomassign'])->name('room.assign')->middleware('role:2');
@@ -138,6 +143,13 @@ Route::get('/idashboard', function () {
 // ---------------------------------
 // Lawyer Prisoner Routes
 Route::get('/myprisoner', [myLawyerController::class, 'myprisoner'])->name('mylawyer.myprisoner');
+Route::get('createlegalappo', [myLawyerController::class, 'createlegalappo'])->name('mylawyer.createlegalappo');
+Route::get('/createrequest', [myLawyerController::class, 'createrequest'])->name('mylawyer.createrequest');
+Route::get('/viewappointment', [myLawyerController::class, 'viewappointment'])->name('mylawyer.viewappointment');
+Route::get('/viewrequest', [myLawyerController::class, 'viewrequest'])->name('mylawyer.viewrequest');
+Route::get('/ldashboard', [myLawyerController::class, 'ldashboard'])->name('mylawyer.ldashboard');
+Route::get('/myprisoners', [myLawyerController::class, 'myprisoners'])->name('mylawyer.myprisoners');
+
 
 // ---------------------------------
 // Medical Routes
