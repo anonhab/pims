@@ -71,19 +71,7 @@
                                         <p class="title is-4">Personal Information</p>
                                         <div class="field">
                                             <!-- Prison dropdown -->
-                                            <label class="label">Prison</label>
-                                            <div class="control">
-                                                <div class="select">
-                                                    <select name="prison_id" required>
-                                                        <option value="" disabled selected>Select a prison</option>
-                                                        @foreach ($prisons as $prison)
-                                                            <option value="{{ $prison->prison_id }}">
-                                                                {{ $prison->name }} (ID: {{ $prison->prison_id }})
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
                                         </div>
 
                                         <div class="field">

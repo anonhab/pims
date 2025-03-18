@@ -10,6 +10,8 @@ use App\Models\Prison;
 use App\Models\Requests;
 use App\Models\Prisoner;
 use App\Models\Role;
+use App\Models\Visitor;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
@@ -18,6 +20,31 @@ class cAccountController extends Controller
 {
     // Show all accounts
 
+    public function getChartData()
+    {
+        $startDate = Carbon::now()->subDays(7); // Get last 7 days data
+
+        $chartData = [];
+
+        for ($i = 0; $i < 7; $i++) {
+            $date = $startDate->copy()->addDays($i)->format('Y-m-d');
+
+            $chartData[] = [
+                'date' => $date,
+                'visitors' => Visitor::whereDate('created_at', $date)->count(),
+                'prisoners' => Prisoner::whereDate('created_at', $date)->count(),
+                'prisons' => Prison::count(),
+                'staffs' => Account::whereDate('created_at', $date)->count(),
+            ];
+        }
+
+        return response()->json($chartData);
+    }
+
+    public  function dashboard(){
+        
+        return view ('cadmin.dashboard');
+    }
  public function prisonadd()
     {
        return view('cadmin.add_prison');
@@ -123,7 +150,7 @@ class cAccountController extends Controller
             $user = Account::create([
                 'username' => $request->username,
                 'password' =>Hash::make($request->password),
-                'role_id' => $request->role_id, // Assuming role_id is the correct field in the database
+                'role_id' => $request->role_id, 
                 'prison_id' => $request->prison_id,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,

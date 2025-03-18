@@ -112,6 +112,26 @@
     button.is-light:hover {
         background: #d6d6d6;
     }
+    /* 🔹 Hosseana Prison Management System Title */#system-title {
+    font-size: 1.5rem; /* Increased size for better readability */
+    font-weight: bold;
+    color: #fff; /* White text */
+    background: black; /* Smooth gradient */
+    padding: 12px 25px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: fit-content;
+    margin-left: 30%;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+
+
+
 </style>
 
 <nav class="navbar columns is-fixed-top" role="navigation" aria-label="main navigation" id="app-header">
@@ -120,8 +140,13 @@
             {{ session('rolename') }}
         </a>
     </div>
+    
+    @if(session('prison'))
+    <div id="system-title">{{ session('prison') }}</div>
+@endif
 
     <div id="navMenu" class="navbar-menu column is-hidden-touch">
+
         <div class="navbar-end">
             <!-- 🔔 Notification Bell -->
             <div class="navbar-item dropdown">
@@ -185,9 +210,10 @@
             <!-- Additional Profile Info Section (optional) -->
             <div class="columns">
                 <div class="column is-full">
-                    <p><strong>Additional Information:</strong></p>
-                    <p>Additional info can go here, such as preferences, status, etc.</p>
-                </div>
+                     <figure class="image avatar is-32x32">
+                        <img src="{{ asset('storage/' . session('user_image')) }}" alt="User Image" class="is-rounded">
+                    </figure>
+            </div>
             </div>
 
             <!-- Close Button -->

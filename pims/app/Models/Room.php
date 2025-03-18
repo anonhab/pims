@@ -30,5 +30,5 @@ class Room extends Model
     public function prison()
     {
         return $this->belongsTo(Prison::class, 'prison_id', 'id');
-    }
+    } 
 }

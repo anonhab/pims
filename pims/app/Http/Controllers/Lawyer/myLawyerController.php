@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\LawyerAppointment;
 use App\Models\Requests;
 use App\Models\Prisoner;
+use App\Models\Account;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
 
 use Illuminate\Http\Request;
@@ -49,6 +51,17 @@ class myLawyerController extends Controller
             'request_details' => $request->request_details,
             'prisoner_id' => $request->prisoner_id,
         ];
+        // Fetch all users with role_id = 5
+        $users = Account::where('role_id', 2)->pluck('user_id');
+
+        // Insert notifications for each user
+        foreach ($users as $userId) {
+            Notification::create([
+                'account_id' => $userId,
+                'message' => "New request: " . $request->request_type,
+                'status' => 'unread',
+            ]);
+        }
 
         Log::info("Insert Data: ", $requestData);
 

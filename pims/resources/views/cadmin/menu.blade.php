@@ -2,7 +2,7 @@
     <aside class="menu">
         <ul class="menu-list">
             <li>
-                <a href="/dashboard">
+                <a href="{{ route('cadmin.dashboard') }}">
                     <span class="icon">
                         <i class="fa fa-home"></i>
                     </span> Dashboard

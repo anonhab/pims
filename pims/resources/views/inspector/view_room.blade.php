@@ -105,54 +105,58 @@
                         <button class="delete" aria-label="close" onclick="closeModal()"></button>
                     </header>
                     <form action="{{ route('room.store') }}" method="POST">
-                        @csrf
-                        <section class="modal-card-body">
-                            <div class="field">
-                                <label class="label">Room Number</label>
-                                <div class="control">
-                                    <input class="input" type="text" name="room_number" required>
-                                </div>
-                            </div>
+    @csrf
+    <section class="modal-card-body">
+        <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
 
-                            <div class="field">
-                                <label class="label">Capacity</label>
-                                <div class="control">
-                                    <input class="input" type="number" name="capacity">
-                                </div>
-                            </div>
+        <div class="field">
+            <label class="label">Room Number</label>
+            <div class="control">
+                <input class="input" type="text" name="room_number" required>
+            </div>
+        </div>
 
-                            <div class="field">
-                                <label class="label">Type</label>
-                                <div class="control">
-                                    <div class="select">
-                                        <select name="type">
-                                            <option value="cell">Cell</option>
-                                            <option value="medical">Medical</option>
-                                            <option value="security">Security</option>
-                                            <option value="training">Training</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="field">
+            <label class="label">Capacity</label>
+            <div class="control">
+                <input class="input" type="number" name="capacity">
+            </div>
+        </div>
 
-                            <div class="field">
-                                <label class="label">Status</label>
-                                <div class="control">
-                                    <div class="select">
-                                        <select name="status">
-                                            <option value="available">Available</option>
-                                            <option value="occupied">Occupied</option>
-                                            <option value="under_maintenance">Under Maintenance</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                        <footer class="modal-card-foot">
-                            <button type="submit" class="button is-success">Save</button>
-                            <button type="button" class="button" onclick="closeModal()">Cancel</button>
-                        </footer>
-                    </form>
+        <div class="field">
+            <label class="label">Type</label>
+            <div class="control">
+                <div class="select">
+                    <select name="type">
+                        <option value="cell">Cell</option>
+                        <option value="medical">Medical</option>
+                        <option value="security">Security</option>
+                        <option value="training">Training</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label">Status</label>
+            <div class="control">
+                <div class="select">
+                    <select name="status">
+                        <option value="available">Available</option>
+                        <option value="occupied">Occupied</option>
+                        <option value="under_maintenance">Under Maintenance</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+    <footer class="modal-card-foot">
+        <button type="submit" class="button is-success">Save</button>
+        <button type="button" class="button" onclick="closeModal()">Cancel</button>
+    </footer>
+</form>
+
                 </div>
             </div>
 

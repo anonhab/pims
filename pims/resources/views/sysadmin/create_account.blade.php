@@ -67,21 +67,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="field">
-                                            <label class="label">Prison</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select name="prison_id" required>
-                                                        <option value="" disabled selected>Select a prison</option>
-                                                        @foreach ($prisons as $prison)
-                                                        <option value="{{ $prison->prison_id }}">
-                                                            {{ $prison->name }} (ID: {{ $prison->prison_id }})
-                                                        </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
 
                                         <div class="field">
                                             <label class="label">Role</label>
