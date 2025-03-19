@@ -227,6 +227,10 @@ h1 {
 </head>
 
 <body>
+   <!-- Loader -->
+   <div id="loader">
+        <div class="spinner"></div>
+    </div>
   <!-- Modal Structure -->
   <div class="modal" id="contact-admin-modal">
     <div class="modal-background"></div>
@@ -245,7 +249,7 @@ h1 {
     <div class="login-box">
       <div class="login-header">
         <img src="assets/img/prison-logo.png" alt="Prison Logo" class="logo">
-        <h1>Prisoner Management System</h1>
+        <h1>Prisoner Information Management System</h1>
       </div>
 
       @if ($errors->any())
@@ -283,6 +287,7 @@ h1 {
   </div>
 
   <script>
+    
     document.addEventListener("DOMContentLoaded", function () {
       const togglePassword = document.getElementById("togglePassword");
       const passwordInput = document.getElementById("password");

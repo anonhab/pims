@@ -8,7 +8,6 @@
     @include('includes.head')
 
     <style>
-        /* General Styles */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f6f9;
@@ -16,7 +15,6 @@
             padding: 0;
         }
 
-        /* Dashboard Overview Cards */
         .dashboard-card {
             background-color: #fff;
             border-radius: 8px;
@@ -49,33 +47,22 @@
 </head>
 
 <body>
-    <!-- NAV -->
     @include('includes.nav')
 
     <div class="columns" id="app-content">
-        <!-- Sidebar Menu -->
         @include('sysadmin.menu')
 
-        <!-- Main Content -->
         <div class="column is-10" id="page-content">
             <section class="section">
                 <div class="container">
                     <h1 class="title">Dashboard Overview</h1>
 
-                    <!-- Stats Cards -->
                     <div class="columns is-multiline">
                         @php
                             $dashboardItems = [
-                                ['icon' => 'fa-user-injured', 'count' => $totalPrisoners ?? 0, 'label' => 'Total Prisoners'],
-                                ['icon' => 'fa-user-tie', 'count' => $totalLawyers ?? 0, 'label' => 'Total Lawyers'],
-                                
-                                ['icon' => 'fa-user-tie', 'count' => $totalJobs ??
-                                0, 'label' => 'Total Jobs'],
-                                
-                                ['icon' => 'fa-user-tie', 'count' => $totalPrisoners
-                                ?? 0, 'label' => 'Total Prison'],
-                                ['icon' => 'fa-calendar-check', 'count' => $visitingRequests ?? 0, 'label' => 'Pending Visiting Requests'],
-                                ['icon' => 'fa-file-alt', 'count' => $totalReports ?? 0, 'label' => 'Generated Reports'],
+                                ['icon' => 'fa-user', 'count' => $totalAccounts ?? 0, 'label' => 'Total Accounts'],
+                                ['icon' => 'fa-chart-line', 'count' => $totalReports ?? 0, 'label' => 'Generated Reports'],
+                                ['icon' => 'fa-database', 'count' => $totalBackups ?? 0, 'label' => 'Backup Logs'],
                             ];
                         @endphp
 
@@ -92,41 +79,6 @@
                                 </div>
                             </div>
                         @endforeach
-                    </div>
-
-                    <!-- Data Visualization -->
-                    <div class="box">
-                        <h2 class="title is-4">Statistics Overview</h2>
-                        <canvas id="statsChart"></canvas>
-                    </div>
-
-                    <!-- Recent Assignments Table -->
-                    <div class="box">
-                        <h2 class="title is-4">Recent Assignments</h2>
-                        <table class="table is-fullwidth is-striped is-hoverable">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Prisoner ID</th>
-                                    <th>Prisoner name</th>
-                                    <th>Lawyer</th>
-                                    <th>Assigned By</th>
-                                    <th>Date</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($recentAssignments as $assignment)
-                                    <tr>
-                                        <td>{{ $assignment->assignment_id }}</td>
-                                        <td>{{ optional($assignment->prisoner)->id ?? 'N/A' }}</td>
-                                        <td>{{ optional($assignment->prisoner)->first_name ?? 'N/A' }}</td>
-                                        <td>{{ optional($assignment->lawyer)->first_name ?? 'N/A' }}</td>
-                                        <td>Inspector {{ optional($assignment->assignedBy)->user_id ?? 'N/A' }} {{ optional($assignment->assignedBy)->first_name ?? 'N/A' }}</td>
-                                        <td>{{ $assignment->assignment_date }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </section>

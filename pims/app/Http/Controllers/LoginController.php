@@ -54,20 +54,20 @@ class LoginController extends Controller
                 $request->session()->put([
                     'username'   => $account->username,
                     'user_id'    => $account->user_id,
-
-                    'prison' => $account->prison ? $account->prison->name : 'N/A',
-                    'email' => $account->email,
-                    'gender' => $account->gender,
-                    'address' => $account->address,
-                    'phone'=> $account->phone_number,
+                    'prison'     => $account->prison ? $account->prison->name : 'N/A',
+                    'email'      => $account->email,
+                    'gender'     => $account->gender,
+                    'address'    => $account->address,
+                    'phone'      => $account->phone_number,
                     'first_name' => $account->first_name,
                     'last_name'  => $account->last_name,
                     'user_image' => $account->user_image,
-                    'prison_id' => $account->prison_id,
+                    'prison_id'  => $account->prison_id,
                     'role_id'    => is_object($account->role) ? $account->role->id : (int) $account->role,
                     'rolename'   => is_object($account->role) ? $account->role->name : '',
+                    'password'   => $account->password, // Ensure this is hashed
                 ]);
-
+                
                 Log::info('Login successful:', ['email' => $account->email, 'username' => $account->username]);
 
                 // Redirect based on role

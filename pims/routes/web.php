@@ -10,6 +10,7 @@ use App\Http\Controllers\police_officer\PoliceController;
 use App\Http\Controllers\security_officer\SecurityController;
 use App\Http\Controllers\training_officer\TrainingController;
 use App\Http\Controllers\visitor\VisitorController;
+use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\LoginController;
 use App\Models\Notification;
 use Illuminate\Http\Request;
@@ -17,6 +18,12 @@ use App\Models\Requests;
 use Illuminate\Support\Facades\Session;
 Route::get('/dashboard', function () {
     return view('dashboard');
+});
+Route::get('/sdashboard', function () {
+    return view('sysadmin.dashboard');
+});
+Route::get('/pdashboard', function () {
+    return view('police_officer.dashboard');
 });
 Route::get('/', function () {
     return view('dashboard');
@@ -50,9 +57,7 @@ Route::post('/requests/update-status/{id}', function ($id, Request $request) {
     }
     return response()->json(['success' => false, 'message' => 'Invalid status or request not found.']);
 });
-Route::get('/components/{component}', function ($component) {
-    return view("components.{$component}");
-});
+
 
 Route::get('/chart-data', [cAccountController::class, 'getChartData']);
 Route::get('/login', [LoginController::class, 'showLoginForm']);
@@ -78,12 +83,12 @@ Route::middleware('role:3')->group(function () {
     Route::get('/caddprison', [cAccountController::class, 'add_prison'])->name('add.prison');
     Route::get('/cviewprison', [cAccountController::class, 'view_prison'])->name('view.prison');
 });
+Route::resource('prisoners', iPrisonerController::class);
 Route::resource('accounts', cAccountController::class);
 Route::get('/saccounts', [sAccountController::class, 'show_all'])->name('saccount.show_all')->middleware('role:1');
 Route::get('/saccountadd', [sAccountController::class, 'account_add'])->name('saccount.add')->middleware('role:1');
 Route::delete('/saccounts/{user_id}', [sAccountController::class, 'destroy'])->name('saccounts.destroy')->middleware('role:1');
 Route::get('/viewrequests', [cAccountController::class, 'view_requests'])->name('view.requests')->middleware('role:2');
-Route::resource('prisoners', iPrisonerController::class)->middleware('role:2');
 Route::get('/show_allforin', [iPrisonerController::class, 'show_allforin'])->name('prisoner.show_allforin')->middleware('role:2');
 Route::get('/view_appointments', [iPrisonerController::class, 'view_appointments'])->name('view.appointments')->middleware('role:2');
 Route::get('/view_lawyer_appointments', [iPrisonerController::class, 'view_lawyer_appointments'])->name('lawyer.appointments')->middleware('role:2');
@@ -152,3 +157,25 @@ Route::get('/viewjobs', [TrainingController::class, 'viewJobs'])->name('training
 Route::get('/viewtrainingprograms', [TrainingController::class, 'viewTrainingPrograms'])->name('training.viewTrainingPrograms');
 Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest');
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
+Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
+
+
+// Home Page
+Route::get('/', function () {
+    return view('home'); // home.blade.php is in the views folder
+})->name('home');
+
+// About Page
+Route::get('/about', function () {
+    return view('components.about'); // about.blade.php is in the components folder
+})->name('about');
+
+// Services Page
+Route::get('/services', function () {
+    return view('components.services'); // services.blade.php is in the components folder
+})->name('services');
+
+// Contact Page
+Route::get('/contact', function () {
+    return view('components.contact'); // contact.blade.php is in the components folder
+})->name('contact');
