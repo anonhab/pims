@@ -82,11 +82,10 @@
                                                 <div class="select is-fullwidth">
                                                     <select name="location" required>
                                                         <option value="">Select Location</option>
-                                                        <option value="Addis Ababa">Addis Ababa</option>
-                                                        <option value="Bahir Dar">Bahir Dar</option>
-                                                        <option value="Gondar">Gondar</option>
-                                                        <option value="Adama">Adama</option>
-                                                        <option value="Hawassa">Hawassa</option>
+                                                        <option value="Worabe">Worabe</option>
+                                                        <option value="silte">silte</option>
+                                                        <option value="kembat">kembat</option>
+                                                        <option value="gurage">gurage</option>
                                                     </select>
                                                 </div>
                                             </div>

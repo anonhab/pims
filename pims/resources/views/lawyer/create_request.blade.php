@@ -51,9 +51,9 @@
                                                 <div class="select is-fullwidth">
                                                     <select name="request_type" required>
                                                         <option value="">Select Request Type</option>
-                                                        <option value="visiting_time">Visiting Time</option>
-                                                        <option value="backup">Backup</option>
-                                                        <option value="report">Report</option>
+                                                        
+                                                        <option value="backup">Legal assistance</option>
+                                                        <option value="report">Medical assistance </option>
                                                         <option value="prison_transfer">Prison Transfer</option>
                                                     </select>
                                                 </div>

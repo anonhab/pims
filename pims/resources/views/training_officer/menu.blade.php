@@ -9,7 +9,7 @@
                 </a>
             </li>
 
-            <li class="has-submenu">
+            <!-- <li class="has-submenu">
     <a href="#">
         <span class="icon">
             <i class="fa fa-user-check"></i>
@@ -20,7 +20,7 @@
         <li><a href="#">View Job Trainer's Profile</a></li>
         <li><a href="#">View Program Trainers</a></li>
     </ul>
-</li>
+</li> -->
 
 
             <li>

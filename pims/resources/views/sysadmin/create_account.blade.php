@@ -32,17 +32,8 @@
 
             <section class="section">
                 <div class="container">
-                    <h1 class="title has-text-centered">Account Management</h1>
-                    <div class="field has-addons">
-                        <p class="control">
-                            <a class="button" href="{{ route('saccount.show_all') }}">
-                                <span class="icon is-small">
-                                    <i class="fa fa-eye"></i>
-                                </span>
-                                <span>View Records</span>
-                            </a>
-                        </p>
-
+                     <div class="field has-addons">
+                       
                     </div>
                     <form action="{{ route('accounts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf

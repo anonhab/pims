@@ -112,7 +112,9 @@
     button.is-light:hover {
         background: #d6d6d6;
     }
-    /* 🔹 Hosseana Prison Management System Title */#system-title {
+/* 🔹 System Title - Flexible for All Words */
+/* 🔹 System Title - Centered & Flexible */
+#system-title {
     font-size: 1.5rem; /* Increased size for better readability */
     font-weight: bold;
     color: #fff; /* White text */
@@ -121,11 +123,15 @@
     border-radius: 10px;
     text-align: center;
     box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3); /* Stronger shadow for depth */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: fit-content;
-    margin-left: 30%;
+    display: inline-block; /* Ensures the title adapts to its content */
+    max-width: 100%; /* Ensures responsiveness */
+    white-space: nowrap; /* Prevents text from wrapping */
+    overflow: hidden; /* Prevents text overflow */
+    text-overflow: ellipsis; /* Adds "..." if text is too long */
+    
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%); /* Centers horizontally */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
@@ -137,12 +143,14 @@
 <nav class="navbar columns is-fixed-top" role="navigation" aria-label="main navigation" id="app-header">
     <div class="navbar-brand column is-2 is-paddingless">
         <a class="navbar-item">
-            {{ session('rolename') }}
+            PIMS
         </a>
     </div>
     
     @if(session('prison'))
-    <div id="system-title">{{ session('prison') }}</div>
+    <div id="system-title">
+        {{ session('rolename') }} For {{ session('prison') }}
+    </div>
 @endif
 
     <div id="navMenu" class="navbar-menu column is-hidden-touch">

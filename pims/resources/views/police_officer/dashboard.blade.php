@@ -172,7 +172,7 @@
 
         <div class="columns" id="app-content">
             <!-- Sidebar Menu -->
-            @include('lawyer.menu')
+            @include('police_officer.menu')
 
             <!-- Main Content -->
             <div class="column is-10" id="page-content">
@@ -236,7 +236,8 @@
                                 </div>
                                 <div class="card-body scrollable">
                                     <ul>
-                                        
+                                     
+                                        <!-- Add more items here to test scrolling -->
                                     </ul>
                                 </div>
                             </div>

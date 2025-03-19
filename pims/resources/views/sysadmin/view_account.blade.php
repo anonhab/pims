@@ -58,16 +58,6 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="field">
-                            <div class="select">
-                                <select id="table-length">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">5</option>
-
-                                </select>
-                            </div>
-                        </div>
                         <div class="field has-addons">
                             <p class="control">
                                 <a class="button" href="{{ route('saccount.add') }}">
@@ -77,67 +67,63 @@
                                     <span>Create Record</span>
                                 </a>
                             </p>
-                            <p class="control">
-                                <a class="button" id="table-reload">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
-                                    <span>Reload</span>
-                                </a>
-                            </p>
                         </div>
                     </div>
 
                     <div class="card-content">
-                        <!-- Card Section -->
-                        <div class="columns is-multiline">
-                            @foreach($accounts as $account)
-                            <div class="column is-4">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <p class="card-header-title">{{ $account->first_name }} {{ $account->last_name }}</p>
-                                    </div>
-                                    <div class="image-container">
-                                        @if($account->user_image)
-                                        <img src="{{ asset('storage/' . $account->user_image) }}" alt="User Image" class="rounded-image">
-                                        @else
-                                        <img src="{{ asset('default-profile.png') }}" alt="Default Image" class="rounded-image">
-                                        @endif
-                                    </div>
+    <div class="columns is-multiline">
+        @if($accounts->isEmpty())
+            <div class="notification is-warning has-text-centered">
+                No accounts found.
+            </div>
+        @else
+            @foreach($accounts as $account)
+            <div class="column is-4">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-header-title">{{ $account->first_name }} {{ $account->last_name }}</p>
+                    </div>
+                    <div class="image-container">
+                        @if($account->user_image)
+                        <img src="{{ asset('storage/' . $account->user_image) }}" alt="User Image" class="rounded-image">
+                        @else
+                        <img src="{{ asset('default-profile.png') }}" alt="Default Image" class="rounded-image">
+                        @endif
+                    </div>
 
-                                    <div class="card-content">
-                                        <div class="content">
-                                        <p><strong>Prison:</strong> {{ $account->prison ? $account->prison->name:'N/A' }}</p>                                            <p><strong>Username:</strong> {{ $account->username }}</p>
-                                            <p><strong>Email:</strong> {{ $account->email }}</p>
-                                            <p><strong>Phone Number:</strong> {{ $account->phone_number }}</p>
-                                            <p><strong>Date of Birth:</strong> {{ $account->dob }}</p>
-                                            <p><strong>Address:</strong> {{ $account->address }}</p>
-
-                                            <p><strong>Role:</strong> {{ $account->role ? $account->role->name : 'N/A' }}</p>
-
-                                            <p><strong>Gender:</strong> {{ $account->gender }}</p>
-                                        </div>
-                                    </div>
-
-                                    <div class="card-footer">
-                                        <div class="card-footer-item">
-                                            <a href="#" class="button is-small is-link">Edit</a>
-                                        </div>
-                                        <div class="card-footer-item">
-                                            <button class="button is-small is-danger action-delete" data-id="{{ $account->user_id }}">
-                                                <span class="icon is-small">
-                                                    <i class="fa fa-trash"></i>
-                                                </span>
-                                                Delete
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            @endforeach
-
+                    <div class="card-content">
+                        <div class="content">
+                            <p><strong>Prison:</strong> {{ $account->prison ? $account->prison->name:'N/A' }}</p>
+                            <p><strong>Username:</strong> {{ $account->username }}</p>
+                            <p><strong>Email:</strong> {{ $account->email }}</p>
+                            <p><strong>Phone Number:</strong> {{ $account->phone_number }}</p>
+                            <p><strong>Date of Birth:</strong> {{ $account->dob }}</p>
+                            <p><strong>Address:</strong> {{ $account->address }}</p>
+                            <p><strong>Role:</strong> {{ $account->role ? $account->role->name : 'N/A' }}</p>
+                            <p><strong>Gender:</strong> {{ $account->gender }}</p>
                         </div>
                     </div>
+
+                    <div class="card-footer">
+                        <div class="card-footer-item">
+                            <a href="#" class="button is-small is-link">Edit</a>
+                        </div>
+                        <div class="card-footer-item">
+                            <button class="button is-small is-danger action-delete" data-id="{{ $account->user_id }}">
+                                <span class="icon is-small">
+                                    <i class="fa fa-trash"></i>
+                                </span>
+                                Delete
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        @endif
+    </div>
+</div>
+
                     <!-- Pagination Controls -->
                     <div class="pagination is-centered" role="navigation" aria-label="pagination">
                         <!-- Previous Button -->

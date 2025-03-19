@@ -35,8 +35,11 @@ class iPrisonerController extends Controller
 
     public function asslawyer()
     {
-        $assignments = LawyerPrisonerAssignment::all();
-        return view('inspector.assign_lawyer', compact('assignments'));
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+        $lawyer =Lawyer::where('prison', session('prison_id'))->paginate(9);
+        $assignments = LawyerPrisonerAssignment::where('prison_id', session('prison_id'))->paginate(9);
+
+        return view('inspector.assign_lawyer', compact('assignments','prisoners','lawyer'));
     }
 
     public function updateStatusrequest(Request $request, $id)
@@ -60,14 +63,14 @@ class iPrisonerController extends Controller
             ->paginate(9);
 
         $rooms = Room::all();
-        return view('inspector.allocate_room', compact('prisoners', 'rooms'));
+        return view('police_officer.allocate_room', compact('prisoners', 'rooms'));
     }
 
     public function roomassign()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
         $rooms = Room::paginate(9);
-        return view('inspector.view _allocation', compact('prisoners', 'rooms'));
+        return view('police_officer.view _allocation', compact('prisoners', 'rooms'));
     }
 
     public function allocateRoom(Request $request)
@@ -83,13 +86,32 @@ class iPrisonerController extends Controller
 
         return back()->with('error', 'Prisoner not found!');
     }
+    public function assignlawyer(Request $request)
+    {
+         
+        
+        LawyerPrisonerAssignment::create([
+            'prisoner_id' => $request->prisoner_id,
+            'lawyer_id' => $request->lawyer_id,
+            'prison_id'=> $request->prison_id,
+            'assigned_by' => $request->assigned_by,
+            'assignment_date' => $request->assignment_date,
+        ]);
 
+        return redirect()->back()->with('success', 'Assignment created successfully.');
+ 
+       
+    }
     public function show_all()
+    {
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+        return view('police_officer.view_Prisoner', compact('prisoners'));
+    }
+    public function show_allforin()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
         return view('inspector.view_Prisoner', compact('prisoners'));
     }
-
     public function view_appointments()
     {
         $appointments = MedicalAppointment::whereHas('prisoner', function ($query) {
@@ -192,6 +214,7 @@ class iPrisonerController extends Controller
             'law_firm' => $request->law_firm,
             'license_number' => $request->license_number,
             'cases_handled' => $request->cases_handled,
+            'prison_id'=> $request->prison_id,
         ]);
 
         // Assign the lawyer to the selected prisoner
@@ -201,8 +224,9 @@ class iPrisonerController extends Controller
         $prisoner->assigned_by = $request->assigned_by;
         $prisoner->save();
 
-        // Redirect with a success message
-        return redirect()->back()->with('success', 'Lawyer assigned successfully!');
+        // Redirect with a success message 
+        return view('inspector.view_lawyers', ['success' => 'Lawyer assigned successfully!']);
+
     }    
 
     public function updateStatus(Request $request, $id)
@@ -262,11 +286,11 @@ class iPrisonerController extends Controller
     public function showroom()
     {
         $rooms = Room::where('prison_id', session('prison_id'))->paginate(9);
-        return view('inspector.view_room', compact('rooms'));
+        return view('police_officer.view_room', compact('rooms'));
     }
     public function lawyershowall()
     {
-        $lawyers = Lawyer::all(); // Fetch all lawyer records from the database
+        $lawyers = Lawyer::where('prison', session('prison_id'))->paginate(9);
         return view('inspector.view_lawyers', compact('lawyers'));
          
     }

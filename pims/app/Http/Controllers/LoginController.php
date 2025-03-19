@@ -75,6 +75,8 @@ class LoginController extends Controller
                     3 => view('cadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     2 => view('inspector.dashboard'),
                     1 => view('sysadmin.dashboard',['recentAssignments' => LawyerPrisonerAssignment::all()]),
+                    8 => view('police_officer.dashboard'),
+                    6  => view('training_officer.dashboard'),
                     default => redirect()->intended('/dashboard'),
                 };
             } else {

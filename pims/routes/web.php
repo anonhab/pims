@@ -64,7 +64,7 @@ Route::middleware('role:3')->group(function () {
     Route::get('/chart-data', [cAccountController::class, 'getChartData']);
     Route::resource('accounts', cAccountController::class);
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
-    Route::post('/prisonadd', [cAccountController::class, 'prisonadd'])->name('prison.add');
+    Route::get('/prisonadd', [cAccountController::class, 'prisonadd'])->name('prison.add');
     Route::post('/prisons', [cAccountController::class, 'prisonstore'])->name('prison.store');
     Route::get('/prisonsview', [cAccountController::class, 'prisonview'])->name('prison.view');
     Route::get('/prisonassign', [cAccountController::class, 'prisonassign'])->name('prison.assign');
@@ -84,7 +84,7 @@ Route::get('/saccountadd', [sAccountController::class, 'account_add'])->name('sa
 Route::delete('/saccounts/{user_id}', [sAccountController::class, 'destroy'])->name('saccounts.destroy')->middleware('role:1');
 Route::get('/viewrequests', [cAccountController::class, 'view_requests'])->name('view.requests')->middleware('role:2');
 Route::resource('prisoners', iPrisonerController::class)->middleware('role:2');
-Route::get('/prisoners', [iPrisonerController::class, 'show_all'])->name('prisoner.showAll')->middleware('role:2');
+Route::get('/show_allforin', [iPrisonerController::class, 'show_allforin'])->name('prisoner.show_allforin')->middleware('role:2');
 Route::get('/view_appointments', [iPrisonerController::class, 'view_appointments'])->name('view.appointments')->middleware('role:2');
 Route::get('/view_lawyer_appointments', [iPrisonerController::class, 'view_lawyer_appointments'])->name('lawyer.appointments')->middleware('role:2');
 Route::get('/prisonersadd', [iPrisonerController::class, 'prisoner_add'])->name('prisoner.add')->middleware('role:2');
@@ -94,6 +94,7 @@ Route::get('/inspectorviewjobs', [iPrisonerController::class, 'viewJobs'])->name
 Route::get('/inspectorviewtrainingprograms', [iPrisonerController::class, 'viewTrainingPrograms'])->name('inspector.viewTrainingPrograms')->middleware('role:2');
 Route::get('/lawyer', [iPrisonerController::class, 'lawyer'])->name('lawyer.add')->middleware('role:2');
 Route::post('/lawyerstore', [iPrisonerController::class, 'lstore'])->name('lawyers.lstore');
+
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
 Route::get('/assignments', [iPrisonerController::class, 'asslawyer'])->name('assignments.view');
@@ -118,6 +119,16 @@ Route::middleware('middleware')->group(function () {
     Route::post('/requests/store', [myLawyerController::class, 'rstore'])->name('requests.store');
     Route::post('/appointments/store', [myLawyerController::class, 'astore'])->name('lawyer_appointments.store');
 });
+Route::get('/prisoners', [iPrisonerController::class, 'show_all'])
+    ->name('prisoner.showAll')
+    ->middleware('role:2,8');
+    Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:8');
+
+Route::get('/addroom', [iPrisonerController::class, 'addroom'])->name('room.add')->middleware('role:8');
+Route::get('/showroom', [iPrisonerController::class, 'showroom'])->name('room.show')->middleware('role:8');
+Route::get('/roomassign', [iPrisonerController::class, 'roomassign'])->name('room.assign')->middleware('role:8');
+Route::get('/allocate', [iPrisonerController::class, 'allocate'])->name('room.allocate')->middleware('role:8');
+Route::post('/rooms', [iPrisonerController::class, 'roomstore'])->name('room.store')->middleware('role:8');
 Route::get('/medicalappointments', [MedicalController::class, 'createMedicalAppointment'])->name('medical.createAppointment');
 Route::get('/medicalreports', [MedicalController::class, 'createMedicalReport'])->name('medical.createReport');
 Route::get('/viewmedicalappointments', [MedicalController::class, 'viewAppointments'])->name('medical.viewAppointments');

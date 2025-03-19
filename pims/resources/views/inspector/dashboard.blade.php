@@ -236,15 +236,7 @@
                                 </div>
                                 <div class="card-body scrollable">
                                     <ul>
-                                        <li><strong>Prisoner:</strong> John Doe assigned to Job 3</li>
-                                        <li><strong>Request:</strong> Legal request from prisoner #121 has been approved</li>
-                                        <li><strong>Visitor:</strong> Visitor registration approved for Jane Smith</li>
-                                        <li><strong>Appointment:</strong> Medical appointment scheduled for prisoner #45</li>
-                                        <li><strong>Prisoner:</strong> Jane Doe assigned to Job 2</li>
-                                        <li><strong>Request:</strong> Legal request from prisoner #122 has been approved</li>
-                                        <li><strong>Visitor:</strong> Visitor registration approved for Mark Lee</li>
-                                        <li><strong>Appointment:</strong> Medical appointment scheduled for prisoner #46</li>
-                                        <!-- Add more items here to test scrolling -->
+                                       
                                     </ul>
                                 </div>
                             </div>

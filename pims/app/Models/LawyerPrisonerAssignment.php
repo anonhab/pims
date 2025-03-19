@@ -19,6 +19,7 @@ class LawyerPrisonerAssignment extends Model
         'assigned_by',
         'created_at',
         'updated_at',
+        'prison_id',
     ];
 
     public function lawyer()
