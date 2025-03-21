@@ -62,16 +62,7 @@
             </div>
             <section class="section">
                 <div class="container">
-                    <h1 class="title has-text-centered">Account Management</h1>
-                    <div class="columns is-centered"">
-                        <p class="control">
-                            <a class="button" href="{{ route('account.show_all') }}">
-                                <span class="icon is-small">
-                                    <i class="fa fa-eye"></i>
-                                </span>
-                                <span>View Records</span>
-                            </a>
-                        </p>
+                    
 
                     </div>
                     <form action="{{ route('accounts.store') }}" method="POST" enctype="multipart/form-data">

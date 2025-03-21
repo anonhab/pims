@@ -45,20 +45,10 @@
 
             <section class="section">
                 <div class="container">
-               
-                    <h1 class="title has-text-centered">Prison Management</h1>
 
                     
                     <form action="{{ route('prison.store') }}" method="POST">
                     <div class="columns is-centered">
-                        <p class="control">
-                            <a class="button" href="{{ route('prison.view') }}">
-                                <span class="icon is-small">
-                                    <i class="fa fa-eye"></i>
-                                </span>
-                                <span>View Records</span>
-                            </a>
-                        </p>
 
                     </div>
                         @csrf
