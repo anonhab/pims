@@ -54,9 +54,16 @@ class LoginController extends Controller
                 $request->session()->put([
                     'username'   => $account->username,
                     'user_id'    => $account->user_id,
+
+                    'prison' => $account->prison ? $account->prison->name : 'N/A',
+                    'email' => $account->email,
+                    'gender' => $account->gender,
+                    'address' => $account->address,
+                    'phone'=> $account->phone_number,
                     'first_name' => $account->first_name,
                     'last_name'  => $account->last_name,
                     'user_image' => $account->user_image,
+                    'prison_id' => $account->prison_id,
                     'role_id'    => is_object($account->role) ? $account->role->id : (int) $account->role,
                     'rolename'   => is_object($account->role) ? $account->role->name : '',
                 ]);
@@ -67,6 +74,7 @@ class LoginController extends Controller
                 return match ($account->role_id) {
                     3 => view('cadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     2 => view('inspector.dashboard'),
+                    1 => view('sysadmin.dashboard',['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     default => redirect()->intended('/dashboard'),
                 };
             } else {
@@ -121,13 +129,19 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->forget([
             'username',
+            'lawyer_id',
+            'prison',
             'first_name',
             'user_id',
             'last_name',
             'role_id',
             'user_image',
-            'rolename'
-        ]);
+            'rolename',     
+            'email' ,
+            'gender' ,
+            'address',
+            'phone',
+             ]);
         return redirect()->route('login');
     }
 }

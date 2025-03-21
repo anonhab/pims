@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\inspector;
+namespace App\Http\Controllers\Inspector;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,55 +12,170 @@ use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use App\Models\LawyerPrisonerAssignment;
 use App\Models\Lawyer;
-use  App\Models\Requests;
+use App\Models\Requests;
 use App\Models\Room;
-use Illuminate\Support\Facades\Log; // Add this for logging
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+
 class iPrisonerController extends Controller
 {
     public function index()
     {
         return view('inspector.add_prisoner');
     }
+
     public function lawyer()
-{
-    $prisoners = Prisoner::whereDoesntHave('assignedLawyers')->get();
-    return view('inspector.add_lawyer', compact('prisoners'));
-}
-public function asslawyer()
-{
-    $assignments= LawyerPrisonerAssignment::all();
-    return view('inspector.assign_lawyer', compact('assignments'));
-  
-}
+    {
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))
+            ->whereDoesntHave('assignedLawyers')
+            ->get();
+
+        return view('inspector.add_lawyer', compact('prisoners'));
+    }
+
+    public function asslawyer()
+    {
+        $assignments = LawyerPrisonerAssignment::all();
+        return view('inspector.assign_lawyer', compact('assignments'));
+    }
 
     public function updateStatusrequest(Request $request, $id)
     {
-        $requeststatus = Prisoner::find($request->id);
-        $requeststatus->status = $request->room_id;  // Allocate the selected room
-        $requeststatus->save();
-    
-        return back()->with('success', 'Room allocated successfully!');
+        $requeststatus = Prisoner::where('prison_id', session('prison_id'))
+            ->find($request->id);
+
+        if ($requeststatus) {
+            $requeststatus->status = $request->room_id;
+            $requeststatus->save();
+            return back()->with('success', 'Room allocated successfully!');
+        }
+
+        return back()->with('error', 'Prisoner not found!');
     }
-    
+
     public function allocate()
     {
-        $prisoners = Prisoner::whereNull('room_id')->paginate(9);
-        $rooms=Room::all();
-        return view('inspector.allocate_room', compact('prisoners','rooms'));
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))
+            ->whereNull('room_id')
+            ->paginate(9);
+
+        $rooms = Room::all();
+        return view('inspector.allocate_room', compact('prisoners', 'rooms'));
     }
-    public function roomassign(){
-        $prisoners = Prisoner::paginate(9);
-        $rooms=Room::paginate(9);
-        return view('inspector.view _allocation', compact('prisoners','rooms'));
+
+    public function roomassign()
+    {
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+        $rooms = Room::paginate(9);
+        return view('inspector.view _allocation', compact('prisoners', 'rooms'));
     }
+
     public function allocateRoom(Request $request)
     {
-        $prisoner = Prisoner::find($request->id);
-        $prisoner->room_id = $request->room_id;  // Allocate the selected room
-        $prisoner->save();
+        $prisoner = Prisoner::where('prison_id', session('prison_id'))
+            ->find($request->id);
+
+        if ($prisoner) {
+            $prisoner->room_id = $request->room_id;
+            $prisoner->save();
+            return back()->with('success', 'Room allocated successfully!');
+        }
+
+        return back()->with('error', 'Prisoner not found!');
+    }
+
+    public function show_all()
+    {
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+        return view('inspector.view_Prisoner', compact('prisoners'));
+    }
+
+    public function view_appointments()
+    {
+        $appointments = MedicalAppointment::whereHas('prisoner', function ($query) {
+            $query->where('prison_id', session('prison_id'));
+        })->paginate(9);
+
+        return view('inspector.view_appointments', compact('appointments'));
+    }
+
+    public function view_lawyer_appointments()
+    {
+        $lawyerAppointments = LawyerAppointment::whereHas('prisoner', function ($query) {
+            $query->where('prison_id', session('prison_id'));
+        })->paginate(9);
+
+        return view('inspector.view_lawyer_appointments', compact('lawyerAppointments'));
+    }
+
+    public function viewJobs()
+    {
+        $jobs = JobAssignment::whereHas('prisoner', function ($query) {
+            $query->where('prison_id', session('prison_id'));
+        })->paginate(9);
+
+        return view('inspector.viewJobs', compact('jobs'));
+    }
+
+       public function viewTrainingPrograms()
+    {
+        $trainingprograms = TrainingProgram::paginate(9);
+
+        return view('inspector.viewTrainingPrograms', compact('trainingprograms'));
+    }
+    public function roomstore(Request $request)
+    {
+        $request->validate([
+            'room_number' => 'required|string|max:20|unique:rooms',
+            'capacity' => 'nullable|integer',
+            'type' => 'nullable|in:cell,medical,security,training',
+            'status' => 'nullable|string',
+        ]);
+
+        $room = new Room();
+        $room->room_number = $request->room_number;
+        $room->capacity = $request->capacity;
+        $room->type = $request->type;
+        $room->status = $request->status;
+        $room->prison_id=$request->prison_id;
+        $room->save();
+
+        return back()->with('success', 'Room added successfully!');
+    }
+
+    public function show($id)
+    {
+        $prisoner = Prisoner::where('prison_id', session('prison_id'))
+            ->with('prison') // ✅ Eager load the related prison
+            ->find($id);
     
-        return back()->with('success', 'Room allocated successfully!');
+        if (!$prisoner) {
+            return response()->json(['error' => 'Prisoner not found'], 404);
+        }
+    
+        return response()->json([
+            'id' => $prisoner->id,
+            'first_name' => $prisoner->first_name,
+            'middle_name' => $prisoner->middle_name,
+            'last_name' => $prisoner->last_name,
+            'dob' => $prisoner->dob,
+            'gender' => $prisoner->gender,
+            'address' => $prisoner->address,
+            'marital_status' => $prisoner->marital_status,
+            'crime_committed' => $prisoner->crime_committed,
+            'status' => $prisoner->status,
+            'time_serve_start' => $prisoner->time_serve_start,
+            'time_serve_end' => $prisoner->time_serve_end,
+            'emergency_contact_name' => $prisoner->emergency_contact_name,
+            'emergency_contact_relation' => $prisoner->emergency_contact_relation,
+            'emergency_contact_number' => $prisoner->emergency_contact_number,
+            'created_at' => $prisoner->created_at,
+            'updated_at' => $prisoner->updated_at,
+            'inmate_image' => $prisoner->inmate_image,
+    
+            // ✅ Fetch the prison name from the relation
+            'prison_name' => $prisoner->prison ? $prisoner->prison->name : 'N/A',
+        ]);
     }
     public function lstore(Request $request)
     {
@@ -88,84 +203,24 @@ public function asslawyer()
 
         // Redirect with a success message
         return redirect()->back()->with('success', 'Lawyer assigned successfully!');
-    }
+    }    
 
-    public function roomstore(Request $request)
+    public function updateStatus(Request $request, $id)
     {
-        $request->validate([
-            'room_number' => 'required|string|max:20|unique:rooms',
-            'capacity' => 'nullable|integer',
-            'type' => 'nullable|in:cell,medical,security,training',
-            'status' => 'nullable|string',
-        ]);
+        try {
+            $prisoner = Prisoner::where('prison_id', session('prison_id'))
+                ->where('prisoner_id', $id)
+                ->firstOrFail();
 
-        $room = new Room();
-        $room->room_number = $request->room_number;
-        $room->capacity = $request->capacity;
-        $room->type = $request->type;
-        $room->status = $request->status;
-        $room->save();
+            $prisoner->status = $request->input('status');
+            $prisoner->save();
 
-        return back()->with('success', 'Room added successfully!');
+            return response()->json(['success' => true, 'message' => 'Prisoner status updated successfully.']);
+        } catch (\Exception $e) {
+            Log::error('Error updating prisoner status: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Error updating prisoner status.']);
+        }
     }
-
-    public function showroom()
-    {
-        $rooms = Room::paginate(9);
-        return view('inspector.view_room', compact('rooms'));
-    }
-    public function assignlawyer(Request $request)
-    {
-         
-        $request->validate([
-            'prisoner_id' => 'required|exists:prisoners,id',
-            'lawyer_id' => 'required|exists:lawyers,id',
-            'assigned_by' => 'required|string',
-            'assignment_date' => 'required|date',
-        ]);
-        LawyerPrisonerAssignment::create([
-            'prisoner_id' => $request->prisoner_id,
-            'lawyer_id' => $request->lawyer_id,
-            'assigned_by' => $request->assigned_by,
-            'assignment_date' => $request->assignment_date,
-        ]);
-
-        return redirect()->back()->with('success', 'Assignment created successfully.');
- 
-       
-    }
-    public function lawyershowall()
-    {
-        $lawyers = Lawyer::all(); // Fetch all lawyer records from the database
-        return view('inspector.view_lawyers', compact('lawyers'));
-         
-    }
-    public function show_all()
-    {
-        $prisoners = Prisoner::paginate(9);
-        return view('inspector.view_Prisoner', compact('prisoners'));
-    }
-
-    public function view_appointments()
-    {
-        $appointments = MedicalAppointment::paginate(9);
-        return view('inspector.view_appointments', compact('appointments'));
-    }
-
-
-    public function view_lawyer_appointments()
-    {
-        $lawyerAppointments = LawyerAppointment::paginate(9);
-        return view('inspector.view_lawyer_appointments', compact('lawyerAppointments'));
-    }
-
-    public function prisoner_add()
-
-    {
-        $prisons = Prison::all();
-        return view('.inspector.add_prisoner', compact('prisons'));
-    }
-
     public function store(Request $request)
     {
         // Handle image upload
@@ -204,48 +259,21 @@ public function asslawyer()
             return redirect()->back()->with('error', 'Failed to register prisoner.');
         }
     }
-    public function viewJobs()
+    public function showroom()
     {
-        // Fetch the jobs from the database
-        $jobs = JobAssignment::paginate(9);
-
-        return view('inspector.viewJobs', compact('jobs'));
+        $rooms = Room::where('prison_id', session('prison_id'))->paginate(9);
+        return view('inspector.view_room', compact('rooms'));
     }
-
-    // View list of training programs
-    public function viewTrainingPrograms()
+    public function lawyershowall()
     {
-        $trainingprograms = TrainingProgram::paginate(9);
-
-        return view('inspector.viewTrainingPrograms', compact('trainingprograms'));
+        $lawyers = Lawyer::all(); // Fetch all lawyer records from the database
+        return view('inspector.view_lawyers', compact('lawyers'));
+         
     }
+    public function prisoner_add()
 
-    // PrisonerController.php
-    public function show($id)
     {
-        $prisoner = Prisoner::find($id); // Fetch prisoner by ID
-        if ($prisoner) {
-            return response()->json($prisoner); // Return prisoner data as JSON
-        }
-        return response()->json(['error' => 'Prisoner not found'], 404);
-    }
-    public function updateStatus(Request $request, $id)
-    {
-        try {
-            // Validate the input status
-
-
-            // Find the prisoner by 'prisoner_id'
-            $prisoner = Prisoner::where('prisoner_id', $id)->firstOrFail();
-
-            // Update the status column with the new value
-            $prisoner->status = $request->input('status');
-            $prisoner->save();
-
-            return response()->json(['success' => true, 'message' => 'Prisoner status updated successfully.']);
-        } catch (\Exception $e) {
-            Log::error('Error updating prisoner status: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Error updating prisoner status.']);
-        }
+        $prisons = Prison::all();
+        return view('.inspector.add_prisoner', compact('prisons'));
     }
 }

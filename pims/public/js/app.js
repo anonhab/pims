@@ -84,8 +84,7 @@ window.onload = function () {
                 }
             })
             .catch(error => {
-                console.error('Error fetching notifications:', error);
-                alert('Error fetching notifications: ' + error.message);
+             
             });
     }
     setInterval(fetchNotifications, 1000); 

@@ -11,15 +11,17 @@ use Illuminate\Support\Facades\Log;
 class sAccountController extends Controller
 {
     // Show all accounts
- public function show_all()
-{
-    // Fetch accounts and exclude the role column where role_id = 1
-    $accounts = Account::where('role_id', '!=', 3)->paginate(3);
+    public function show_all()
+    {
+        // Fetch accounts excluding role_id = 1 and role_id = 3
+        $accounts = Account::whereNotIn('role_id', [1, 3])
+            ->where('prison_id', session('prison_id'))
+            ->paginate(3);
     
-    // Pass the filtered accounts to the view
-    return view('sysadmin.view_account', compact('accounts'));
-}
-
+        // Pass the filtered accounts to the view
+        return view('sysadmin.view_account', compact('accounts'));
+    }
+    
     public function account_add()
 
     {

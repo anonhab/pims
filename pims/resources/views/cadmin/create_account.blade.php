@@ -104,8 +104,8 @@
                                                     <select name="prison_id" required>
                                                         <option value="" disabled selected>Select a prison</option>
                                                         @foreach ($prisons as $prison)
-                                                        <option value="{{ $prison->prison_id }}">
-                                                            {{ $prison->name }} (ID: {{ $prison->prison_id }})
+                                                        <option value="{{ $prison->id }}">
+                                                            {{ $prison->name }} 
                                                         </option>
                                                         @endforeach
                                                     </select>

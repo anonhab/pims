@@ -127,20 +127,7 @@
             <div class="content-body">
                 <div class="card">
                     <div class="card-content">
-                        <!-- 🔍 Search & Filter Section -->
-                        <div class="columns is-multiline">
-                            <div class="column is-6">
-                                <div class="field">
-                                    <div class="control has-icons-left">
-                                        <input class="input" id="search-input" type="text" placeholder="Search prisoners...">
-                                        <span class="icon is-left">
-                                            <i class="fas fa-search"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-
-
+                       
 
                         </div>
 

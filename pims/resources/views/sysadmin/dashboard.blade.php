@@ -54,7 +54,7 @@
 
     <div class="columns" id="app-content">
         <!-- Sidebar Menu -->
-        @include('cadmin.menu')
+        @include('sysadmin.menu')
 
         <!-- Main Content -->
         <div class="column is-10" id="page-content">

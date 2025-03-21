@@ -29,12 +29,7 @@
                                             <p><strong>Prisoner Name:</strong> {{ $appointment->prisoner->name }}</p>
                                             <p><strong>Appointment Date:</strong> {{ \Carbon\Carbon::parse($appointment->appointment_date)->format('d/m/Y') }}</p>
                                             <p><strong>Notes:</strong> {{ $appointment->notes }}</p>
-                                            <p><strong>Status:</strong> 
-                                                @if($appointment->status == 'confirmed')
-                                                    <span class="has-text-success">Confirmed</span>
-                                                @else
-                                                    <span class="has-text-danger">Pending</span>
-                                                @endif
+                                            <p><strong >Status:</strong> {{ $appointment->status }}</p>
                                             </p>
                                         </div>
                                     </div>
