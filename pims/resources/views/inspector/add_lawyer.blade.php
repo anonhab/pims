@@ -1,156 +1,88 @@
 <!DOCTYPE html>
 <html>
-@include('includes.head')
+    @include('includes.head')
 
-<body>
-    <!--  NAV -->
-    @include('includes.nav')
-    <div class="columns" id="app-content">
+    <body>
+        <!-- Navigation -->
+        @include('includes.nav')
 
-        @include('inspector.menu')
-        <div class="column is-10" id="page-content">
-        <div class="column is-12">
-                    {{-- Success Alert --}}
-                    @if(session('success'))
-                    <div class="notification is-success">
-                        {{ session('success') }}
-                    </div>
-                    @endif
+        <div class="columns" id="app-content">
+            @include('inspector.menu')
 
-                    {{-- Error Alert --}}
-                    @if(session('error'))
-                    <div class="notification is-danger">
-                        {{ session('error') }}
-                    </div>
-                    @endif
-
-                    {{-- Warning Alert --}}
-                    @if(session('warning'))
-                    <div class="notification is-warning">
-                        {{ session('warning') }}
-                    </div>
-                    @endif
-
-                    {{-- Info Alert --}}
-                    @if(session('info'))
-                    <div class="notification is-info">
-                        {{ session('info') }}
-                    </div>
-                    @endif
+            <div class="column is-10" id="page-content">
+                <div class="column is-12">
+                    <!-- Flash Messages -->
+                    @foreach (['success', 'error', 'warning', 'info'] as $msg)
+                        @if(session($msg))
+                            <div class="notification is-{{ $msg }}">
+                                {{ session($msg) }}
+                            </div>
+                        @endif
+                    @endforeach
                 </div>
-            <div class="content-header">
-            </div>
-            <section class="section">
-                <div class="container">
-                    <h1 class="title has-text-centered">Lawyer Management</h1>
 
-                    <form method="POST" action="{{ route('lawyers.lstore') }}">
-    @csrf
+                <div class="content-header"></div>
 
-    <div class="columns">
-        
-        <!-- Lawyer Profile Information -->
-        <div class="column is-half">
-            <div class="card">
-                <div class="card-content">
-                    <p class="title is-4">Lawyer Profile</p>
+                <section class="section">
+                    <div class="container">
+                       
 
-                    <!-- Personal Information -->
-                    <div class="field">
-                        <label class="label">First Name</label>
-                        <div class="control">
-                            <input class="input" type="text" name="first_name" placeholder="Enter first name" required>
-                        </div>
+                        <form method="POST" action="{{ route('lawyers.lstore') }}">
+                            @csrf
+
+                            <div class="columns">
+                                <!-- Lawyer Profile Information -->
+                                <div class="column is-half">
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <p class="title is-4">Lawyer Profile</p>
+
+                                            <!-- Personal Information -->
+                                            @foreach ([
+                                                'first_name' => 'First Name',
+                                                'last_name' => 'Last Name',
+                                                'date_of_birth' => 'Date of Birth',
+                                                'contact_info' => 'Contact Information',
+                                                'email' => 'Email Address',
+                                                'password' => 'Password',
+                                                'law_firm' => 'Law Firm',
+                                                'license_number' => 'License Number',
+                                                'cases_handled' => 'Cases Handled'
+                                            ] as $name => $label)
+                                                <div class="field">
+                                                    <label class="label">{{ $label }}</label>
+                                                    <div class="control">
+                                                        <input 
+                                                            class="input" 
+                                                            type="{{ $name === 'password' ? 'password' : ($name === 'date_of_birth' ? 'date' : 'text') }}" 
+                                                            name="{{ $name }}" 
+                                                            placeholder="Enter {{ strtolower($label) }}" 
+                                                            {{ in_array($name, ['first_name', 'last_name', 'date_of_birth', 'contact_info', 'email', 'password', 'license_number', 'cases_handled']) ? 'required' : '' }}>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+
+                                            <input type="hidden" name="prison" value="{{ session('prison_id') }}">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit and Reset Buttons -->
+                            <div class="field is-grouped is-grouped-right">
+                                <div class="control">
+                                    <button class="button is-link" type="submit">Assign Lawyer</button>
+                                </div>
+                                <div class="control">
+                                    <button class="button is-light" type="reset">Reset</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-
-                    <div class="field">
-                        <label class="label">Last Name</label>
-                        <div class="control">
-                            <input class="input" type="text" name="last_name" placeholder="Enter last name" required>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Date of Birth</label>
-                        <div class="control">
-                            <input class="input" type="date" name="date_of_birth" required>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Contact Information</label>
-                        <div class="control">
-                            <input class="input" type="text" name="contact_info" placeholder="Enter lawyer's contact information" required>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Email Address</label>
-                        <div class="control">
-                            <input class="input" type="email" name="email" placeholder="Enter email address" required>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Password</label>
-                        <div class="control">
-                            <input class="input" type="password" name="password" placeholder="Enter password" required>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Law Firm</label>
-                        <div class="control">
-                            <input class="input" type="text" name="law_firm" placeholder="Enter law firm name">
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">License Number</label>
-                        <div class="control">
-                            <input class="input" type="text" name="license_number" placeholder="Enter lawyer's license number" required>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Cases Handled</label>
-                        <div class="control">
-                            <input class="input" type="number" name="cases_handled" placeholder="Enter number of cases handled" required>
-                        </div>
-                    </div>
-
-                </div>
+                </section>
             </div>
         </div>
 
-        
-
-    </div>
-
-    <!-- Submit and Reset Button -->
-    <div class="field is-grouped is-grouped-right">
-        <div class="control">
-            <button class="button is-link" type="submit">Assign Lawyer</button>
-        </div>
-        <div class="control">
-            <button class="button is-light" type="reset">Reset</button>
-        </div>
-    </div>
-</form>
-
-                </div>
-            </section>
-
-
-
-
-
-
-        </div>
-    </div>
-
-    @include('includes.footer_js')
-</body>
-
-
+        @include('includes.footer_js')
+    </body>
 </html>

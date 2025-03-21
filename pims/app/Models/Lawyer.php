@@ -23,6 +23,7 @@ class Lawyer extends Model
         'law_firm',
         'license_number',
         'cases_handled',
+        'prison',
     ];
 
     protected $hidden = [

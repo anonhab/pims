@@ -59,21 +59,21 @@
                                         </div>
 
                                         <div class="content">
-    <p><strong>Prisoner ID:</strong> 
-        {{ optional($assignment->prisoner)->id ?? 'Not assigned' }}
-    </p>
-    <p><strong>Prisoner name:</strong> 
-        {{ optional($assignment->prisoner)->first_name ?? 'Not assigned' }}
-    </p>
-    
-    <p><strong>Lawyer Name:</strong> 
-        {{ optional($assignment->lawyer)->first_name ?? 'Not assigned' }}
-    </p>
-    
-    <p><strong>Assigned By:</strong> 
-        {{ optional($assignment->assignedBy)->first_name ?? 'Unknown' }}
-    </p>
-</div>
+                                            <p><strong>Prisoner ID:</strong>
+                                                {{ optional($assignment->prisoner)->id ?? 'Not assigned' }}
+                                            </p>
+                                            <p><strong>Prisoner name:</strong>
+                                                {{ optional($assignment->prisoner)->first_name ?? 'Not assigned' }}
+                                            </p>
+
+                                            <p><strong>Lawyer Name:</strong>
+                                                {{ optional($assignment->lawyer)->first_name ?? 'Not assigned' }}
+                                            </p>
+
+                                            <p><strong>Assigned By:</strong>
+                                                {{ optional($assignment->assignedBy)->first_name ?? 'Unknown' }}
+                                            </p>
+                                        </div>
 
                                     </div>
 
@@ -104,38 +104,60 @@
                                 <button class="delete" onclick="closeForm()"></button>
                             </header>
                             <form action="{{ route('assignments.store') }}" method="POST">
-                                @csrf
-                                <section class="modal-card-body">
-                                    <div class="field">
-                                        <label class="label">Prisoner ID</label>
-                                        <div class="control">
-                                            <input type="text" name="prisoner_id" class="input" required>
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label class="label">Lawyer ID</label>
-                                        <div class="control">
-                                            <input type="text" name="lawyer_id" class="input" required>
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label class="label">Assigned By</label>
-                                        <div class="control">
-                                            <input type="text" name="assigned_by" class="input" required>
-                                        </div>
-                                    </div>
-                                    <div class="field">
-                                        <label class="label">Assignment Date</label>
-                                        <div class="control">
-                                            <input type="date" name="assignment_date" class="input" required>
-                                        </div>
-                                    </div>
-                                </section>
-                                <footer class="modal-card-foot">
-                                    <button class="button is-success" type="submit">Save</button>
-                                    <button class="button" onclick="closeForm()">Cancel</button>
-                                </footer>
-                            </form>
+    @csrf
+    <section class="modal-card-body">
+        
+        <!-- Select Prisoner -->
+        <div class="field">
+            <label class="label">For Prisoners</label>
+            <div class="control">
+                <div class="select">
+                    <select name="prisoner_id" required>
+                        <option value="">Select Prisoner</option>
+                        @foreach($prisoners as $prisoner)
+                            <option value="{{ $prisoner->id }}">{{ $prisoner->first_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Select Lawyer -->
+        <div class="field">
+            <label class="label">Lawyer</label>
+            <div class="control">
+                <div class="select">
+                    <select name="lawyer_id" required>
+                        <option value="">Select Lawyer</option>
+                        @foreach($lawyer as $lawyers)
+                            <option value="{{ $lawyers->lawyer_id }}">{{ $lawyers->first_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hidden Fields -->
+        <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
+        <input type="hidden" name="assigned_by" value="{{ session('user_id') }}">
+
+        <!-- Assignment Date -->
+        <div class="field">
+            <label class="label">Assignment Date</label>
+            <div class="control">
+                <input type="date" name="assignment_date" class="input" required>
+            </div>
+        </div>
+
+    </section>
+
+    <!-- Form Actions -->
+    <footer class="modal-card-foot">
+        <button class="button is-success" type="submit">Save</button>
+        <button type="button" class="button" onclick="closeForm()">Cancel</button>
+    </footer>
+</form>
+
                         </div>
                     </div>
                 </div>
@@ -143,24 +165,24 @@
         </div>
         @include('includes.footer_js')
         <script>
-    function openForm() {
-        document.getElementById("assignmentForm").classList.add("is-active");
-    }
+            function openForm() {
+                document.getElementById("assignmentForm").classList.add("is-active");
+            }
 
-    function closeForm() {
-        document.getElementById("assignmentForm").classList.remove("is-active");
-    }
+            function closeForm() {
+                document.getElementById("assignmentForm").classList.remove("is-active");
+            }
 
-    // Close modal when clicking on the background
-    document.addEventListener("DOMContentLoaded", function () {
-        const modal = document.getElementById("assignmentForm");
-        const modalBackground = modal.querySelector(".modal-background");
-        const closeButton = modal.querySelector(".delete");
+            // Close modal when clicking on the background
+            document.addEventListener("DOMContentLoaded", function() {
+                const modal = document.getElementById("assignmentForm");
+                const modalBackground = modal.querySelector(".modal-background");
+                const closeButton = modal.querySelector(".delete");
 
-        modalBackground.addEventListener("click", closeForm);
-        closeButton.addEventListener("click", closeForm);
-    });
-</script>
+                modalBackground.addEventListener("click", closeForm);
+                closeButton.addEventListener("click", closeForm);
+            });
+        </script>
 
     </div>
 </body>

@@ -18,12 +18,24 @@
                 </a>
                 <ul class="submenu">
                     <li><a href="{{ route('prisoner.add') }}">Add/Update Prisoner</a></li>
-                    <li><a href="{{ route('prisoner.showAll') }}">View Prisoner Profile</a></li>
+                    <li><a href="{{ route('prisoner.show_allforin') }}">View Prisoner Profile</a></li>
                 
                 </ul>
             </li>
+            <!-- <li>
+                <a href="#">
+                    <span class="icon">
+                        <i class="fa fa-paper-plane"></i>
+                    </span> Assign Police   Requests 
+                </a>
+                <ul class="submenu">
+          
+                    <li><a href="{{ route('view.requests') }}">View Requests</a></li>
+                </ul>
+            </li>  -->
 
-            <li>
+
+            <!-- <li>
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-paper-plane"></i>
@@ -33,9 +45,9 @@
           
                     <li><a href="{{ route('view.requests') }}">View Requests</a></li>
                 </ul>
-            </li>
+            </li> -->
 
-            <li>
+            <!-- <li>
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-calendar"></i>
@@ -46,11 +58,11 @@
                     <li><a href="{{ route('view.appointments') }}">View medical Appointment </a></li>
                     <li><a href="{{ route('lawyer.appointments') }}">View legal Appointment </a></li>
                 </ul>
-            </li>
+            </li> -->
 
             
 
-            <li>
+            <!-- <li>
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-users"></i>
@@ -60,9 +72,9 @@
                     <li><a href="/view_visitor_registrations">View Visitor Registrations</a></li>
                     <li><a href="/view_visiting_time_requests">View Requests</a></li>
                 </ul>
-            </li>
+            </li> -->
 
-            <li>
+            <!-- <li>
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-chalkboard-teacher"></i>
@@ -72,7 +84,7 @@
                     <li><a href="{{ route('inspector.viewJobs') }}">View Prisoner Job Assignmentss</a></li>
                     <li><a href="{{ route('inspector.viewTrainingPrograms') }}">View Training Programs</a></li>
                 </ul>
-            </li>  
+            </li>   -->
 
             <li>
                 <a href="#">
@@ -87,7 +99,7 @@
                 </ul>
             </li>
 
-            <li>
+            <!-- <li>
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-door-closed"></i>
@@ -98,7 +110,7 @@
                     <li><a href="{{ route('room.allocate') }}">Allocate room</a></li>
                     <li><a href="{{ route('room.assign') }}"> view allocations </a> </li>
                 </ul>
-            </li>
+            </li> -->
         </ul>
     </aside>
 </div>

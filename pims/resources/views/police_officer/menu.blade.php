@@ -1,13 +1,15 @@
 <div class="column is-2 is-fullheight is-hidden-touch" id="sidebar">
     <aside class="menu">
         <ul class="menu-list">
-            <li>
-                <a href="/dashboard">
+        <li>
+                <a href="/pdashboard">
                     <span class="icon">
                         <i class="fa fa-home"></i>
                     </span> Dashboard
                 </a>
             </li>
+
+            
             <li>
                 <a href="#">
                     <span class="icon">
@@ -15,23 +17,12 @@
                     </span> Prisoner Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('police.viewPrisoners') }}">View Prisoner Profile</a></li>
-                    <li><a href="{{ route('police.allocateRoom') }}">Assign Prisoner to Room</a></li>
+                <li><a href="{{ route('prisoner.showAll') }}">View Prisoner Profile</a></li>
+                
                 </ul>
             </li>
 
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-paper-plane"></i>
-                    </span> Request Management
-                </a>
-                <ul class="submenu">
-                    <li><a href="{{ route('police.createRequest') }}">Create/Update Request</a></li>
-                    <li><a href="{{ route('police.viewRequests') }}">View Requests</a></li>
-                </ul>
-            </li>
-
+         
             <li>
                 <a href="#">
                     <span class="icon">
@@ -39,10 +30,11 @@
                     </span> Room Allocation
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('police.allocateRoom') }}">Allocate Room to Prisoner</a></li>
-                    <li><a href="{{ route('police.viewRoomAllocations') }}">View Room Allocations</a></li>
+                    <li><a href="{{ route('room.show') }}">View Rooms</a></li>
+                    <li><a href="{{ route('room.allocate') }}">Allocate room</a></li>
+                    <li><a href="{{ route('room.assign') }}"> view allocations </a> </li>
                 </ul>
-            </li>
+            </li> 
         </ul>
     </aside>
 </div>

@@ -9,17 +9,7 @@
                 </a>
             </li>
             
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-paper-plane"></i>
-                    </span> Request Management
-                </a>
-                <ul class="submenu">
-                    <li><a href="{{ route('medical.createAppointment') }}">Create Medical Appointment</a></li>
-                    <li><a href="{{ route('medical.createReport') }}">Create/Update Medical Report</a></li>
-                </ul>
-            </li>
+          
 
             <li>
                 <a href="#">

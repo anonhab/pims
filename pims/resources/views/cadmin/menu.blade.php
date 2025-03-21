@@ -10,17 +10,7 @@
             </li>
 
             
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-user"></i>
-                    </span> Role Management
-                </a>
-                <ul class="submenu">
-                    <li><a href="{{ route('roles.addrole') }}">Add Role</a></li>
-                    <li><a href="{{ route('roles.index') }}">View Roles</a></li>
-                </ul>
-            </li>
+           
             <li>
                 <a href="#">
                     <span class="icon">
@@ -42,9 +32,7 @@
                 <ul class="submenu">
            
                     <li><a href="{{ route('cprisoner.showAll') }}">View Prisoner Profile</a></li>
-                    <li><a href="/view_jobs">View  Job Assignments</a></li>
-                    <li><a href="/view_training_programs">View Training Programs</a></li>
-                    <li><a href="/view_certifications">View Certifications</a></li>
+                  
                 </ul>
             </li>       
             <li>
@@ -81,7 +69,6 @@
                 <ul class="submenu">
                     <li><a href="{{ route('prison.add') }}">Add/Update Prison</a></li>
                     <li><a href="{{ route('prison.view') }}">View Prison Details</a></li>
-                    <li><a href="{{ route('prison.assign') }}">Prison Admin Assign</a></li>
 
 
                     
@@ -90,17 +77,7 @@
             </li>
         
 
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-clock"></i>
-                    </span> Visiting Time Requests
-                </a>
-                <ul class="submenu">
-                
-                    <li><a href="/view_visiting_time_requests">View Requests</a></li>
-                </ul>
-            </li>
+           
         </ul>
     </aside>
 </div>

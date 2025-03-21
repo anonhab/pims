@@ -1,6 +1,283 @@
 /* Google Font import for Roboto */
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+    /* 🔔 Notification Modal */
+    /* 🔔 Notification Modal */
+    #notification-modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    }
 
+    /* Show modal smoothly */
+    #notification-modal.is-active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* 📦 Modal Box */
+    .modal-content {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        width: 90%;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 0.3s ease-in-out;
+        position: relative;
+    }
+
+    /* 🔲 Modal Background Click to Close */
+    .modal-background {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+    }
+
+    /* 🔔 Notification Bell & Badge */
+    #notification-bell {
+        position: relative;
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out;
+    }
+
+    #notification-bell:hover {
+        transform: scale(1.1);
+    }
+
+    /* 🔴 Notification Count (Badge) */
+    #notification-count {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ff3860;
+        /* Bright red */
+        color: white;
+        font-size: 12px;
+        font-weight: bold;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 50%;
+        display: none;
+        /* Hidden by default */
+        box-shadow: 0 0 8px rgba(255, 56, 96, 0.5);
+    }
+
+    /* Show badge when notifications exist */
+    #notification-count.active {
+        display: inline-block;
+    }
+
+    /* 🎨 Button Styles */
+    button {
+        margin: 8px;
+        padding: 12px 18px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background 0.3s ease-in-out, transform 0.2s ease-in-out;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+    }
+
+    /* 🎯 Primary Button */
+    button.is-primary {
+        background: #007bff;
+        color: white;
+    }
+
+    button.is-primary:hover {
+        background: #0056b3;
+    }
+
+    /* ⚪ Light Button */
+    button.is-light {
+        background: #f1f1f1;
+        color: #333;
+    }
+
+    button.is-light:hover {
+        background: #d6d6d6;
+    }
+
+    /* 🔹 System Title - Centered & Responsive */
+    #system-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #fff;
+        background: black;
+        padding: 12px 25px;
+        border-radius: 10px;
+        text-align: center;
+        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
+        display: inline-block;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+
+    /* 🖼 Profile Modal Enhancements */
+    #profileModal .box {
+        padding: 20px;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #profileModal img.is-rounded {
+        border: 2px solid #007bff;
+        box-shadow: 0px 3px 10px rgba(0, 123, 255, 0.3);
+    }
+
+    /* ✨ Smooth Fade-in Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* 📦 Profile Modal Box */
+    /* 📦 Larger Profile Modal Box */
+    .profile-box {
+        max-width: 700px;
+        /* Increased width */
+        width: 90%;
+        padding: 30px;
+        /* More padding */
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        animation: fadeIn 0.3s ease-in-out;
+        position: relative;
+    }
+
+    /* 🖼 Larger Profile Image */
+    .profile-image img {
+        border: 4px solid #007bff;
+        border-radius: 50%;
+        box-shadow: 0px 5px 12px rgba(0, 123, 255, 0.3);
+        transition: transform 0.3s ease-in-out;
+        width: 100%;
+        max-width: 150px;
+        /* Increased size */
+        height: auto;
+    }
+
+    /* 📸 Profile Image Hover Effect */
+    .profile-image img:hover {
+        transform: scale(1.08);
+    }
+
+    /* 👤 Larger Username */
+    .username {
+        font-size: 1.4rem;
+        /* Increased size */
+        font-weight: bold;
+        color: #007bff;
+        margin-top: 12px;
+    }
+
+    /* 📄 Larger Profile Details */
+    .profile-details {
+        font-size: 1.1rem;
+        line-height: 1.8;
+    }
+
+    /* 🏷 Profile Items */
+    .profile-item {
+        padding: 8px 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* 🖌 Last Item - Remove Bottom Border */
+    .profile-item:last-child {
+        border-bottom: none;
+    }
+
+    /* 🔄 Modal Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* 📲 Responsive Fixes */
+    @media screen and (max-width: 768px) {
+        .profile-box {
+            max-width: 95%;
+        }
+
+        .profile-image {
+            margin-bottom: 15px;
+        }
+
+        .profile-details {
+            text-align: center;
+        }
+    }
+    /* 📦 Password Modal */
+.password-box {
+    max-width: 500px;
+    width: 90%;
+    padding: 25px;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+    animation: fadeIn 0.3s ease-in-out;
+    position: relative;
+}
+
+/* 🔑 Input Fields */
+.input {
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+/* 📢 Modal Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* 📲 Responsive */
+@media screen and (max-width: 768px) {
+    .password-box {
+        max-width: 90%;
+    }
+}
 /* Sidebar and Menu Enhancements */
 #sidebar {
     padding: 0;

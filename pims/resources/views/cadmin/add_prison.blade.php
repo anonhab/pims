@@ -45,20 +45,10 @@
 
             <section class="section">
                 <div class="container">
-               
-                    <h1 class="title has-text-centered">Prison Management</h1>
 
                     
                     <form action="{{ route('prison.store') }}" method="POST">
                     <div class="columns is-centered">
-                        <p class="control">
-                            <a class="button" href="{{ route('prison.view') }}">
-                                <span class="icon is-small">
-                                    <i class="fa fa-eye"></i>
-                                </span>
-                                <span>View Records</span>
-                            </a>
-                        </p>
 
                     </div>
                         @csrf
@@ -82,11 +72,10 @@
                                                 <div class="select is-fullwidth">
                                                     <select name="location" required>
                                                         <option value="">Select Location</option>
-                                                        <option value="Addis Ababa">Addis Ababa</option>
-                                                        <option value="Bahir Dar">Bahir Dar</option>
-                                                        <option value="Gondar">Gondar</option>
-                                                        <option value="Adama">Adama</option>
-                                                        <option value="Hawassa">Hawassa</option>
+                                                        <option value="Worabe">Worabe</option>
+                                                        <option value="silte">silte</option>
+                                                        <option value="kembat">kembat</option>
+                                                        <option value="gurage">gurage</option>
                                                     </select>
                                                 </div>
                                             </div>
