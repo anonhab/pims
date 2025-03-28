@@ -4,30 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<<<<<<< HEAD
-    <title>Prison Information Management System</title>
-    <!-- External CSS Libraries -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Custom CSS -->
-=======
-    <title>pims</title>
-    <title>pims</title>
-    <title>pims</title>
-    <meta name="description" content="Free Admin Dashboard Template Build with Bulma.io By nafplann">
-    <meta name="keywords" content="Bulma,CSS,Admin,Template,Free,Download">
-    <meta name="language" content="en-EN">
-    <meta name="author" content="Abdul Manaf">
-    <meta name="google-adsense-account" content="ca-pub-7864475889913507">
 
-    <link href="https://fonts.googleapis.com/icon?family=Poppins" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/font-awesome-line-awesome/css/all.min.css"
-        integrity="sha512-dC0G5HMA6hLr/E1TM623RN6qK+sL8sz5vB+Uc68J7cBon68bMfKcvbkg6OqlfGHo1nMmcCxO5AinnRTDhWbWsA=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css"
-        integrity="sha512-HqxHUkJM0SYcbvxUw5P60SzdOTy/QVwA1JJrvaXJv4q7lmbDZCmZaqz01UPOaQveoxfYRv1tHozWGPMcuTBuvQ=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
->>>>>>> 86c91f23e44a69f294f22240769600a4cb39b6e5
     <link rel="stylesheet" href="css/app.css">
 </head>
 

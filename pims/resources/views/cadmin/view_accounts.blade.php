@@ -87,22 +87,33 @@
                                             <p><strong>Address:</strong> {{ $account->address }}</p>
                                             <p><strong>Gender:</strong> {{ $account->gender }}</p>
                                             <div class="buttons are-small is-centered">
-                                                <p class="control">
-                                                    <a href="#" class="button is-link is-rounded has-tooltip-right" data-tooltip="Edit Record">
-                                                        <span class="icon">
-                                                            <i class="fa fa-edit"></i>
-                                                        </span>
-                                                        <span>Edit</span>
-                                                    </a>
-                                                </p>
-                                                <p class="control">
-                                                    <button class="button is-danger is-rounded has-tooltip-right action-delete" data-id="{{ $account->user_id }}" data-tooltip="Delete Record">
-                                                        <span class="icon">
-                                                            <i class="fa fa-trash"></i>
-                                                        </span>
-                                                        <span>Delete</span>
-                                                    </button>
-                                                </p>
+                                            <div class="card-footer-item">
+                                            <button class="button is-small is-link edit-btn"
+                                                data-id="{{ $account->user_id }}"
+                                                data-first-name="{{ $account->first_name }}"
+                                                data-last-name="{{ $account->last_name }}"
+                                                data-email="{{ $account->email }}"
+                                                data-phone="{{ $account->phone_number }}"
+                                                data-address="{{ $account->address }}"
+                                                data-role-id="{{ $account->role_id }}"
+                                                data-role-name="{{ $account->role ? $account->role->name : 'N/A' }}">
+                                                <span class="icon is-small">
+                                                    <i class="fa fa-edit"></i>
+                                                </span>
+                                                Edit
+                                            </button>
+
+                                        </div>
+                                        <div class="card-footer-item">
+                                            <form action="{{ route('caccount.destroy', $account->user_id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this account?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button class="button is-small is-danger action-delete" data-id="{{ $account->id }}">
+                                                    Delete
+                                                </button>
+
+                                            </form>
+                                        </div>
                                             </div>
                                         </div>
                                     </div>
@@ -145,8 +156,116 @@
         </div>
 
     </div>
+    <div class="modal" id="editModal">
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Edit Account</p>
+                    <button class="delete close-modal" aria-label="close"></button>
+                </header>
+                <form id="editForm" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <section class="modal-card-body">
+                        <input type="hidden" name="user_id" id="edit-user-id">
+
+                        <div class="field">
+                            <label class="label">First Name</label>
+                            <div class="control">
+                                <input class="input" type="text" name="first_name" id="edit-first-name">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Last Name</label>
+                            <div class="control">
+                                <input class="input" type="text" name="last_name" id="edit-last-name">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Email</label>
+                            <div class="control">
+                                <input class="input" type="email" name="email" id="edit-email">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Phone Number</label>
+                            <div class="control">
+                                <input class="input" type="text" name="phone_number" id="edit-phone">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Address</label>
+                            <div class="control">
+                                <input class="input" type="text" name="address" id="edit-address">
+                            </div>
+                        </div>
+
+                        <div class="field">
+                            <label class="label">Role</label>
+                            <div class="control">
+                                <div class="select">
+                                    <select name="role_id" id="edit-role">
+                                        @foreach($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <footer class="modal-card-foot">
+                        <button type="submit" class="button is-success">Save Changes</button>
+                        <button type="button" class="button close-modal">Cancel</button>
+                    </footer>
+                </form>
+            </div>
+        </div>
 
     @include('includes.footer_js')
+    <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const editButtons = document.querySelectorAll('.edit-btn');
+                const modal = document.getElementById('editModal');
+                const closeModalButtons = document.querySelectorAll('.close-modal');
+                const editForm = document.getElementById('editForm');
+
+                editButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const userId = this.dataset.id;
+                        const firstName = this.dataset.firstName;
+                        const lastName = this.dataset.lastName;
+                        const email = this.dataset.email;
+                        const phone = this.dataset.phone;
+                        const address = this.dataset.address;
+                        const role = this.dataset.role;
+
+                        document.getElementById('edit-user-id').value = userId;
+                        document.getElementById('edit-first-name').value = firstName;
+                        document.getElementById('edit-last-name').value = lastName;
+                        document.getElementById('edit-email').value = email;
+                        document.getElementById('edit-phone').value = phone;
+                        document.getElementById('edit-address').value = address;
+                        document.getElementById('edit-role').value = role;
+
+                        editForm.action = `/saccount/update/${userId}`;
+
+                        modal.classList.add('is-active');
+                    });
+                });
+
+                closeModalButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        modal.classList.remove('is-active');
+                    });
+                });
+            });
+        </script>
+
 </body>
 
 </html>

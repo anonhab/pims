@@ -114,27 +114,7 @@
     }
 
     /* 🔹 System Title - Centered & Responsive */
-    #system-title {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #fff;
-        background: #475569;
-        padding: 12px 25px;
-        border-radius: 10px;
-        text-align: center;
-        box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.3);
-        display: inline-block;
-        max-width: 100%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    }
-
+    
     /* 🖼 Profile Modal Enhancements */
     #profileModal .box {
         padding: 20px;
@@ -264,19 +244,26 @@
     border-radius: 5px;
     padding: 10px;
 }
-
-/* 📢 Modal Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+@keyframes moveTitle {
+    0% { transform: translateX(0px); }    /* Start at original position */
+    50% { transform: translateX(700px); } /* Move right */
+    100% { transform: translateX(0); }  /* Move back to original position */
 }
 
-/* 📲 Responsive */
-@media screen and (max-width: 768px) {
-    .password-box {
-        max-width: 90%;
-    }
+#system-title {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    margin-left: -600px;
+    background: #007bff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    animation: moveTitle 16s ease-in-out infinite; /* Adjust speed as needed */
 }
+
+
 </style>
 @if (session('success'))
     <div id="success-popup" class="modal is-active">
@@ -309,9 +296,10 @@
     </div>
 
     @if(session('prison'))
-    <div id="system-title">
-        {{ session('rolename') }} For {{ session('prison') }}
-    </div>
+   <div id="system-title">
+    <span id="role-display">{{ session('rolename') }}</span> For <span id="prison-display">{{ session('prison') }}</span>
+</div>
+
     @endif
 
     <div id="navMenu" class="navbar-menu column is-hidden-touch">
@@ -489,3 +477,4 @@
         document.getElementById('passwordModal').classList.remove('is-active');
     }
 </script>
+ 

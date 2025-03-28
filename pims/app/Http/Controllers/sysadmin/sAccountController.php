@@ -13,13 +13,14 @@ class sAccountController extends Controller
     // Show all accounts
     public function show_all()
     {
+        $roles = Role::all();
         // Fetch accounts excluding role_id = 1 and role_id = 3
         $accounts = Account::whereNotIn('role_id', [1, 3])
             ->where('prison_id', session('prison_id'))
             ->paginate(3);
     
         // Pass the filtered accounts to the view
-        return view('sysadmin.view_account', compact('accounts'));
+        return view('sysadmin.view_account', compact('accounts','roles'));
     }
     
     public function account_add()
@@ -76,35 +77,30 @@ public function store(Request $request)
         return redirect()->back()->with('error1', 'Failed to register user.');
     }
 }
-
-
-public function destroy($user_id)
+public function update(Request $request, $id)
 {
-    $account = Account::find($user_id);
+    $account = Account::findOrFail($id);
+    $account->first_name = $request->first_name;
+    $account->last_name = $request->last_name;
+    $account->email = $request->email;
+    $account->phone_number = $request->phone_number;
+    $account->role_id = $request->role_id;
+    $account->save();
 
-    if ($account) {
-        // Log the account deletion attempt
-        Log::info('Attempting to delete account', [
-            'user_id' => $user_id,
-            'username' => $account->username,
-        ]);
+    return redirect()->back()->with('success', 'User updated successfully!');
+}
+ 
+public function destroy($id)
+{
+    $account = Account::find($id);
 
-        $account->delete();
-
-        // Log successful deletion
-        Log::info('Account deleted successfully', [
-            'user_id' => $user_id,
-            'username' => $account->username,
-        ]);
-
-        return response()->json(['success' => true]);
+    if (!$account) {
+        return response()->json(['success' => false, 'message' => 'Account not found'], 404);
     }
 
-   
+    $account->delete();
 
-    return response()->json(['success' => false]);
+    return redirect()->back()->with('success', 'User deleted successfully!');
 }
-
-
 
 }

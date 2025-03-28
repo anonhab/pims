@@ -201,33 +201,51 @@ class iPrisonerController extends Controller
     }
     public function lstore(Request $request)
     {
-        
-
-        // Create a new lawyer
-        $lawyer = Lawyer::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'date_of_birth' => $request->date_of_birth,
-            'contact_info' => $request->contact_info,
-            'email' => $request->email,
-            'password' => Hash::make($request->password), // Hash the password before storing
-            'law_firm' => $request->law_firm,
-            'license_number' => $request->license_number,
-            'cases_handled' => $request->cases_handled,
-            'prison_id'=> $request->prison_id,
+        // Validate the request data
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'date_of_birth' => 'required|date',
+            'contact_info' => 'required|string|max:255',
+            'email' => 'required|email|unique:lawyers,email',
+            'password' => 'required|string|min:6',
+            'law_firm' => 'nullable|string|max:255',
+            'license_number' => 'required|string|max:255|unique:lawyers,license_number',
+            'cases_handled' => 'required|integer|min:0',
+            'prison' => 'required|exists:prisons,id',
         ]);
-
-        // Assign the lawyer to the selected prisoner
-        $prisoner = Prisoner::findOrFail($request->prisoner_id);
-        $prisoner->lawyer_id = $lawyer->id;
-        $prisoner->assignment_date = $request->assignment_date;
-        $prisoner->assigned_by = $request->assigned_by;
-        $prisoner->save();
-
-        // Redirect with a success message 
-        return view('inspector.view_lawyers', ['success' => 'Lawyer assigned successfully!']);
-
-    }    
+    
+        try {
+            // Create a new lawyer
+            $lawyer = Lawyer::create([
+                'first_name' => $validatedData['first_name'],
+                'last_name' => $validatedData['last_name'],
+                'date_of_birth' => $validatedData['date_of_birth'],
+                'contact_info' => $validatedData['contact_info'],
+                'email' => $validatedData['email'],
+                'password' => Hash::make($validatedData['password']), // Secure password hashing
+                'law_firm' => $validatedData['law_firm'] ?? null,
+                'license_number' => $validatedData['license_number'],
+                'cases_handled' => $validatedData['cases_handled'],
+                'prison' => $validatedData['prison'],
+            ]);
+    
+            // Log the successful creation
+            Log::info('New lawyer created', [
+                'lawyer_id' => $lawyer->id,
+                'email' => $lawyer->email,
+                'prison' => $lawyer->prison
+            ]);
+    
+            return redirect()->back()->with('success', 'Lawyer added successfully!');
+    
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error creating lawyer', ['error' => $e->getMessage()]);
+    
+            return redirect()->back()->with('error', 'Failed to add lawyer. Please try again.');
+        }
+    }
 
     public function updateStatus(Request $request, $id)
     {
@@ -300,4 +318,23 @@ class iPrisonerController extends Controller
         $prisons = Prison::all();
         return view('.inspector.add_prisoner', compact('prisons'));
     }
+    // Update Account
+    public function update(Request $request, $id)
+    {
+        $lawyer = Lawyer::find($id);
+        if (!$lawyer) return response()->json(['success' => false, 'message' => 'Account not found'], 404);
+    
+        $lawyer->update($request->all());
+        return redirect()->back()->with('success', 'Lawyer updated successfully!');
+    }
+    
+    public function destroy($id)
+    {
+        $lawyer = Lawyer::find($id);
+        if (!$lawyer) return response()->json(['success' => false, 'message' => 'Account not found'], 404);
+    
+        $lawyer->delete();
+        return redirect()->back()->with('success', 'Lawyer deleted successfully!');
+    }
+    
 }
