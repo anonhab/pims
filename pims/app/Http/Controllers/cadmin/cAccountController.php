@@ -14,7 +14,8 @@ use App\Models\Visitor;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
+
 
 class cAccountController extends Controller
 {
@@ -129,63 +130,74 @@ class cAccountController extends Controller
     public function store(Request $request)
     {
         Log::info('User registration attempt', ['username' => $request->username]);
-
-        // Check if the email already exists
-        $existingUser = Account::where('email', $request->email)->first();
-        if ($existingUser) {
-            Log::error('Email already exists', ['email' => $request->email]);
-            session()->flash('error', 'The email address is already registered.');
-            return redirect()->back()->with('error', 'The email address is already registered.');
-        }
-
+    
+        // Validate the request data
+        $validated = $request->validate([
+            'username' => 'required|string|max:255|unique:accounts,username',
+            'email' => 'required|email|unique:accounts,email',
+            'password' => 'required|string|min:6|confirmed',
+            'role_id' => 'required|integer|exists:roles,id',
+            'prison_id' => 'nullable|integer|exists:prisons,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone_number' => 'nullable|string|max:15',
+            'dob' => 'nullable|date',
+            'gender' => 'required|in:male,female,other',
+            'address' => 'nullable|string|max:255',
+            'user_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', // Validate image
+        ]);
+    
         // Initialize image path
         $imagePath = null;
-
-        // Check if user has uploaded an image
+    
+        // Handle image upload safely
         if ($request->hasFile('user_image')) {
             try {
-                // Store the image in public storage and get the path
                 $imagePath = $request->file('user_image')->store('user_images', 'public');
                 Log::info('User image uploaded successfully.', ['image_path' => $imagePath]);
             } catch (\Exception $e) {
                 Log::error('Image upload failed', ['error' => $e->getMessage()]);
-                session()->flash('error', 'Image upload failed.');
                 return redirect()->back()->with('error', 'Image upload failed.');
             }
-        } else {
-            Log::warning('No user image uploaded.');
         }
-
+    
         try {
-            // Create the user record
-            $user = Account::create([
-                'username' => $request->username,
-                'password' => Hash::make($request->password),
-                'role_id' => $request->role_id,
-                'prison_id' => $request->prison_id,
-                'first_name' => $request->first_name,
-                'last_name' => $request->last_name,
-                'email' => $request->email,
-                'phone_number' => $request->phone_number,
-                'dob' => $request->dob,
-                'gender' => $request->gender,
-                'address' => $request->address,
-                'user_image' => $imagePath, // Store the image path
-            ]);
-
-            Log::info('User created successfully', ['id' => $user->user_id, 'username' => $user->username]);
-
-            // Flash success message and redirect back
-            session()->flash('success', 'User registered successfully!');
+            // Use a transaction to ensure data integrity
+            DB::transaction(function () use ($validated, $imagePath) {
+                $user = Account::create([
+                    'username' => $validated['username'],
+                    'password' => Hash::make($validated['password']),
+                    'role_id' => $validated['role_id'],
+                    'prison_id' => $validated['prison_id'] ?? null,
+                    'first_name' => $validated['first_name'],
+                    'last_name' => $validated['last_name'],
+                    'email' => $validated['email'],
+                    'phone_number' => $validated['phone_number'] ?? null,
+                    'dob' => $validated['dob'] ?? null,
+                    'gender' => $validated['gender'],
+                    'address' => $validated['address'] ?? null,
+                    'user_image' => $imagePath, // Store the image path
+                ]);
+    
+                Log::info('User created successfully', ['id' => $user->user_id, 'username' => $user->username]);
+            });
+    
             return redirect()->back()->with('success', 'User registered successfully!');
-        } catch (\Exception $e) {
-            // Log any errors and flash error message
-            Log::error('User registration failed', ['error' => $e->getMessage()]);
-            session()->flash('error', 'Failed to register user.');
-
-            return redirect()->back()->with('error', 'Failed to register user.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Check for duplicate entry error (SQLSTATE[23000] means unique constraint violation)
+            if ($e->getCode() == 23000) {
+                Log::error('Duplicate entry error', ['error' => $e->getMessage()]);
+                return redirect()->back()->with('error', 'Duplicate entry: Email or username already exists.');
+            }
+    
+            Log::error('Database error', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'A database error occurred. Please try again.');
+        } catch (\Throwable $e) {
+            Log::error('Unexpected error', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'An unexpected error occurred. Please try again.');
         }
     }
+    
 
 
     public function update(Request $request, $id)
