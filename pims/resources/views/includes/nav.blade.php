@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<nav class="navbar columns is-fixed-top" role="navigation" aria-label="main navigation" id="app-header">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -411,6 +411,7 @@
     </style>
 </head>
 
+
 <body class="pims-reset">
     <!-- Security Header Bar -->
     <div class="pims-security-bar">
@@ -693,5 +694,6 @@
         }
     </script>
 </body>
+</nav>
 
 </html>
