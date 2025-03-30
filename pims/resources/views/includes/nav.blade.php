@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<nav class="navbar columns is-fixed-top" role="navigation" aria-label="main navigation" id="app-header">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -411,7 +411,6 @@
     </style>
 </head>
 
-
 <body class="pims-reset">
     <!-- Security Header Bar -->
     <div class="pims-security-bar">
@@ -430,8 +429,10 @@
         <div class="pims-navbar">
             <div class="pims-navbar-brand">
                 <div class="pims-logo">
-                    <div class="pims-logo-text">  
-                        <small></small>
+                    <i class="fas fa-user-lock pims-logo-icon"></i>
+                    <div class="pims-logo-text">
+                        PIMS
+                        <small>Prison Information Management</small>
                     </div>
                 </div>
                 @if(session('prison'))
@@ -692,6 +693,5 @@
         }
     </script>
 </body>
-</nav>
 
 </html>
