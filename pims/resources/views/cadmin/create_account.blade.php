@@ -706,93 +706,9 @@
                 });
             });
 
-            // Form submission handling
-            const form = document.getElementById('accountForm');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Validate all fields before submission
-                let isValid = true;
-                const allInputs = form.querySelectorAll('input[required], select[required]');
-                allInputs.forEach(input => {
-                    if (!input.value) {
-                        input.classList.add('is-danger');
-                        isValid = false;
-                    }
-                });
-                
-                if (!isValid) {
-                    showNotification('Please fill all required fields', 'error');
-                    return;
-                }
-                
-                // Submit form via AJAX
-                const formData = new FormData(form);
-                
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showNotification(data.message || 'Account created successfully!', 'success');
-                        form.reset();
-                        
-                        // Reset form steps
-                        steps.forEach(step => step.classList.remove('active'));
-                        document.getElementById('step1').classList.add('active');
-                        
-                        stepIndicators.forEach((indicator, index) => {
-                            indicator.classList.remove('active', 'completed');
-                            if (index === 0) indicator.classList.add('active');
-                        });
-                        
-                        // Reset file input labels
-                        fileInputs.forEach(input => {
-                            const fileLabel = input.nextElementSibling.querySelector('.file-label');
-                            fileLabel.textContent = 'Upload Image…';
-                        });
-                    } else {
-                        showNotification(data.message || 'An error occurred', 'error');
-                    }
-                })
-                .catch(error => {
-                    showNotification('An error occurred while submitting the form', 'error');
-                    console.error('Error:', error);
-                });
-            });
+           
+       
 
-            // Notification system
-            function showNotification(message, type) {
-                const notification = document.getElementById('notification');
-                const notificationIcon = notification.querySelector('.notification-icon');
-                const notificationMessage = notification.querySelector('.notification-message');
-                
-                notification.className = `notification ${type} active`;
-                
-                if (type === 'success') {
-                    notificationIcon.className = 'notification-icon fas fa-check-circle';
-                } else {
-                    notificationIcon.className = 'notification-icon fas fa-exclamation-circle';
-                }
-                
-                notificationMessage.textContent = message;
-                
-                // Auto-hide after 5 seconds
-                setTimeout(() => {
-                    notification.classList.remove('active');
-                }, 5000);
-                
-                // Close button
-                notification.querySelector('.notification-close').onclick = () => {
-                    notification.classList.remove('active');
-                };
-            }
         });
     </script>
 </body>
