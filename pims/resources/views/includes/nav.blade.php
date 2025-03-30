@@ -648,6 +648,28 @@
             securityInfo.children[0].innerHTML = messages[Math.floor(Math.random() * messages.length)];
         }, 5000);
     </script>
+    <!-- Modal Toggle JavaScript -->
+<script>
+    document.getElementById('view-profile').addEventListener('click', function() {
+        document.getElementById('profileModal').classList.add('is-active');
+    });
+
+    function closeModal() {
+        document.getElementById('profileModal').classList.remove('is-active');
+    }
+</script>
+
+<script>
+    // Open Change Password Modal
+    document.getElementById('change-password').addEventListener('click', function () {
+        document.getElementById('passwordModal').classList.add('is-active');
+    });
+
+    // Close Modal
+    function closePasswordModal() {
+        document.getElementById('passwordModal').classList.remove('is-active');
+    }
+</script>
 </body>
 
 </html>
