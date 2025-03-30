@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -213,8 +214,15 @@
         }
 
         @keyframes pims-fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .pims-dropdown-header {
@@ -377,8 +385,13 @@
         }
 
         @keyframes pims-scan {
-            0% { top: 0; }
-            100% { top: 100%; }
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
         }
 
         /* Responsive Design */
@@ -386,17 +399,18 @@
             .pims-security-info {
                 display: none;
             }
-            
+
             .pims-system-title {
                 display: none;
             }
-            
+
             .pims-logo-text small {
                 display: none;
             }
         }
     </style>
 </head>
+
 <body class="pims-reset">
     <!-- Security Header Bar -->
     <div class="pims-security-bar">
@@ -448,7 +462,7 @@
                     <div class="pims-dropdown-menu" id="pimsDropdownMenu">
                         <div class="pims-dropdown-header">
                             <img src="{{ asset('storage/' . session('user_image')) }}" alt="User">
-                           
+
                         </div>
                         <div class="pims-dropdown-body">
                             <a href="#" class="pims-dropdown-item" id="pimsViewProfile">
@@ -506,18 +520,18 @@
                 </div>
                 <div class="pims-profile-details">
                     <div class="pims-detail-item">
-                        
+
                         <div class="pims-detail-label">Username</div>
                         <div class="pims-detail-value">{{ session('username') }}</div>
                         <div class="profile-item"><strong>Full Name:</strong> {{ session('first_name') }} {{ session('last_name') }}</div>
-                <div class="profile-item"><strong>Email:</strong> {{ session('email') }}</div>
-                <div class="profile-item"><strong>Phone:</strong> {{ session('phone') }}</div>
-                <div class="profile-item"><strong>Gender:</strong> {{ session('gender') }}</div>
-                <div class="profile-item"><strong>Address:</strong> {{ session('address') }}</div>
-                <div class="profile-item"><strong>Role:</strong> {{ session('rolename') }}</div>
-                <div class="profile-item"><strong>Prison:</strong> {{ session('prison') }}</div>
-                <div class="profile-item"><strong>Prison ID:</strong> {{ session('prison_id') }}</div>
-                <div class="profile-item"><strong>User ID:</strong> {{ session('user_id') }}</div>
+                        <div class="profile-item"><strong>Email:</strong> {{ session('email') }}</div>
+                        <div class="profile-item"><strong>Phone:</strong> {{ session('phone') }}</div>
+                        <div class="profile-item"><strong>Gender:</strong> {{ session('gender') }}</div>
+                        <div class="profile-item"><strong>Address:</strong> {{ session('address') }}</div>
+                        <div class="profile-item"><strong>Role:</strong> {{ session('rolename') }}</div>
+                        <div class="profile-item"><strong>Prison:</strong> {{ session('prison') }}</div>
+                        <div class="profile-item"><strong>Prison ID:</strong> {{ session('prison_id') }}</div>
+                        <div class="profile-item"><strong>User ID:</strong> {{ session('user_id') }}</div>
                     </div>
                     <!-- Other profile details here -->
                 </div>
@@ -635,4 +649,5 @@
         }, 5000);
     </script>
 </body>
+
 </html>
