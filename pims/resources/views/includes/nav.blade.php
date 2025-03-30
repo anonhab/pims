@@ -576,6 +576,96 @@
 .pims-error-popup.pims-active {
     opacity: 1;
 }
+/* Base styling for the profile modal */
+.pims-profile-modal .pims-modal-content {
+    background-color: white;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* Profile Header Styling */
+.pims-profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.pims-profile-avatar-container {
+    position: relative;
+    margin-right: 20px;
+}
+
+.pims-profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f2f2f2;
+}
+
+/* Profile Info Styling */
+.pims-profile-info {
+    flex-grow: 1;
+}
+
+.pims-profile-info h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--pims-dark);
+}
+
+.pims-profile-info p {
+    font-size: 16px;
+    color: #777;
+    margin: 5px 0;
+}
+
+/* Profile Details Section Styling */
+.pims-profile-details {
+    margin-top: 20px;
+}
+
+.pims-detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.pims-detail-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.pims-detail-value {
+    color: #777;
+}
+
+/* Modal close button */
+.pims-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--pims-dark);
+    cursor: pointer;
+}
+
+/* Animation for profile modal */
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
 
 
     </style>
@@ -693,43 +783,70 @@
 @endif
 
 
-    <!-- Profile Modal -->
-    <div class="pims-modal pims-profile-modal" id="pimsProfileModal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-content">
-            <div class="pims-modal-header">
-                <h2><i class="fas fa-user-shield"></i> User Profile</h2>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pimsProfileModal')">&times;</button>
-            </div>
-            <div class="pims-modal-body">
-                <div class="pims-profile-header">
-                    <img src="{{ asset('storage/' . session('user_image')) }}" alt="User" class="pims-profile-avatar">
-                    <div class="pims-profile-info">
-                        <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
-                        <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
-
-                    </div>
+ <!-- Profile Modal -->
+<div class="pims-modal pims-profile-modal" id="pimsProfileModal">
+    <div class="pims-modal-background"></div>
+    <div class="pims-modal-content">
+        <div class="pims-modal-header">
+            <h2><i class="fas fa-user-shield"></i> User Profile</h2>
+            <button class="pims-modal-close" onclick="pimsCloseModal('pimsProfileModal')">&times;</button>
+        </div>
+        <div class="pims-modal-body">
+            <div class="pims-profile-header">
+                <div class="pims-profile-avatar-container">
+                    <img src="{{ asset('storage/' . session('user_image')) }}" alt="User Avatar" class="pims-profile-avatar">
                 </div>
-                <div class="pims-profile-details">
-                    <div class="pims-detail-item">
-
-                        <div class="pims-detail-label">Username</div>
-                        <div class="pims-detail-value">{{ session('username') }}</div>
-                        <div class="profile-item"><strong>Full Name:</strong> {{ session('first_name') }} {{ session('last_name') }}</div>
-                        <div class="profile-item"><strong>Email:</strong> {{ session('email') }}</div>
-                        <div class="profile-item"><strong>Phone:</strong> {{ session('phone') }}</div>
-                        <div class="profile-item"><strong>Gender:</strong> {{ session('gender') }}</div>
-                        <div class="profile-item"><strong>Address:</strong> {{ session('address') }}</div>
-                        <div class="profile-item"><strong>Role:</strong> {{ session('rolename') }}</div>
-                        <div class="profile-item"><strong>Prison:</strong> {{ session('prison') }}</div>
-                        <div class="profile-item"><strong>Prison ID:</strong> {{ session('prison_id') }}</div>
-                        <div class="profile-item"><strong>User ID:</strong> {{ session('user_id') }}</div>
-                    </div>
-                    <!-- Other profile details here -->
+                <div class="pims-profile-info">
+                    <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
+                    <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
+                </div>
+            </div>
+            <div class="pims-profile-details">
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Username:</div>
+                    <div class="pims-detail-value">{{ session('username') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Full Name:</div>
+                    <div class="pims-detail-value">{{ session('first_name') }} {{ session('last_name') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Email:</div>
+                    <div class="pims-detail-value">{{ session('email') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Phone:</div>
+                    <div class="pims-detail-value">{{ session('phone') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Gender:</div>
+                    <div class="pims-detail-value">{{ session('gender') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Address:</div>
+                    <div class="pims-detail-value">{{ session('address') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Role:</div>
+                    <div class="pims-detail-value">{{ session('rolename') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Prison:</div>
+                    <div class="pims-detail-value">{{ session('prison') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">Prison ID:</div>
+                    <div class="pims-detail-value">{{ session('prison_id') }}</div>
+                </div>
+                <div class="pims-detail-item">
+                    <div class="pims-detail-label">User ID:</div>
+                    <div class="pims-detail-value">{{ session('user_id') }}</div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 
     <!-- Change Password Modal -->
     <div class="pims-modal pims-password-modal" id="pimsPasswordModal">
