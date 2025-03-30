@@ -406,6 +406,55 @@
     }
 }
 
+/* Notification System */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: var(--pims-border-radius);
+    box-shadow: var(--pims-card-shadow);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    transform: translateX(150%);
+    transition: transform 0.4s ease;
+    max-width: 350px;
+}
+
+.notification.active {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background-color: var(--pims-success);
+    color: white;
+}
+
+.notification.error {
+    background-color: var(--pims-danger);
+    color: white;
+}
+
+.notification-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.notification-close {
+    margin-left: 15px;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
 /* Base styling for the modal */
 .pims-modal {
     position: fixed;
@@ -537,46 +586,7 @@
     z-index: -1;
 }
 
-/* Success Popup */
-.pims-success-popup {
-    position: fixed;
-    top: 10px;  /* Changed to top corner */
-    right: 10px; /* Changed to top corner */
-    z-index: 9999;
-    width: 300px;
-    background-color: #28a745;  /* Success background color */
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.pims-success-popup.pims-active {
-    opacity: 1;
-}
-
-/* Error Popup */
-.pims-error-popup {
-    position: fixed;
-    top: 10px;  /* Changed to top corner */
-    right: 10px; /* Changed to top corner */
-    z-index: 9999;
-    width: 300px;
-    background-color: #dc3545;  /* Error background color */
-    color: white;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.pims-error-popup.pims-active {
-    opacity: 1;
-}
-/* Base styling for the profile modal */
+/* Profile Modal */
 .pims-profile-modal .pims-modal-content {
     background-color: white;
     border-radius: 8px;
@@ -666,8 +676,6 @@
         opacity: 1;
     }
 }
-
-
     </style>
 </head>
 
@@ -730,110 +738,91 @@
         </div>
     </div>
 
-    <!-- Success Popup -->
-<!-- Success Popup -->
-@if (session('success'))
-<div id="pimsSuccessPopup" class="pims-modal pims-active">
-    <div class="pims-modal-background"></div>
-    <div class="pims-modal-content">
-        <div class="pims-modal-header">
-            <h2><i class="fas fa-check-circle" style="color: var(--pims-success);"></i> Success</h2>
-            <button class="pims-modal-close" onclick="pimsCloseSuccessPopup()">&times;</button>
-        </div>
-        <div class="pims-modal-body">
-            <p>{{ session('success') }}</p>
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="pims-button pims-primary" onclick="pimsCloseSuccessPopup()">OK</button>
-            </div>
-        </div>
+    <!-- Success Notification -->
+    @if (session('success'))
+    <div id="pimsSuccessPopup" class="notification success active">
+        <i class="notification-icon fas fa-check-circle"></i>
+        <span class="notification-message">{{ session('success') }}</span>
+        <button class="notification-close" onclick="pimsCloseSuccessPopup()">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
-</div>
-@endif
+    @endif
 
-<!-- Error Popup -->
-@if (session('error'))
-<div id="pimsErrorPopup" class="pims-modal pims-active">
-    <div class="pims-modal-background"></div>
-    <div class="pims-modal-content">
-        <div class="pims-modal-header">
-            <h2><i class="fas fa-times-circle" style="color: var(--pims-danger);"></i> Error</h2>
-            <button class="pims-modal-close" onclick="pimsCloseErrorPopup()">&times;</button>
-        </div>
-        <div class="pims-modal-body">
-            <p>{{ session('error') }}</p>
-            <div style="text-align: center; margin-top: 20px;">
-                <button class="pims-button pims-error" onclick="pimsCloseErrorPopup()">OK</button>
-            </div>
-        </div>
+    <!-- Error Notification -->
+    @if (session('error'))
+    <div id="pimsErrorPopup" class="notification error active">
+        <i class="notification-icon fas fa-exclamation-circle"></i>
+        <span class="notification-message">{{ session('error') }}</span>
+        <button class="notification-close" onclick="pimsCloseErrorPopup()">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
-</div>
-@endif
+    @endif
 
-
- <!-- Profile Modal -->
-<div class="pims-modal pims-profile-modal" id="pimsProfileModal">
-    <div class="pims-modal-background"></div>
-    <div class="pims-modal-content">
-        <div class="pims-modal-header">
-            <h2><i class="fas fa-user-shield"></i> User Profile</h2>
-            <button class="pims-modal-close" onclick="pimsCloseModal('pimsProfileModal')">&times;</button>
-        </div>
-        <div class="pims-modal-body">
-            <div class="pims-profile-header">
-                <div class="pims-profile-avatar-container">
-                    <img src="{{ asset('storage/' . session('user_image')) }}" alt="User Avatar" class="pims-profile-avatar">
-                </div>
-                <div class="pims-profile-info">
-                    <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
-                    <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
-                </div>
+    <!-- Profile Modal -->
+    <div class="pims-modal pims-profile-modal" id="pimsProfileModal">
+        <div class="pims-modal-background"></div>
+        <div class="pims-modal-content">
+            <div class="pims-modal-header">
+                <h2><i class="fas fa-user-shield"></i> User Profile</h2>
+                <button class="pims-modal-close" onclick="pimsCloseModal('pimsProfileModal')">&times;</button>
             </div>
-            <div class="pims-profile-details">
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Username:</div>
-                    <div class="pims-detail-value">{{ session('username') }}</div>
+            <div class="pims-modal-body">
+                <div class="pims-profile-header">
+                    <div class="pims-profile-avatar-container">
+                        <img src="{{ asset('storage/' . session('user_image')) }}" alt="User Avatar" class="pims-profile-avatar">
+                    </div>
+                    <div class="pims-profile-info">
+                        <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
+                        <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
+                    </div>
                 </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Full Name:</div>
-                    <div class="pims-detail-value">{{ session('first_name') }} {{ session('last_name') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Email:</div>
-                    <div class="pims-detail-value">{{ session('email') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Phone:</div>
-                    <div class="pims-detail-value">{{ session('phone') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Gender:</div>
-                    <div class="pims-detail-value">{{ session('gender') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Address:</div>
-                    <div class="pims-detail-value">{{ session('address') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Role:</div>
-                    <div class="pims-detail-value">{{ session('rolename') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Prison:</div>
-                    <div class="pims-detail-value">{{ session('prison') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">Prison ID:</div>
-                    <div class="pims-detail-value">{{ session('prison_id') }}</div>
-                </div>
-                <div class="pims-detail-item">
-                    <div class="pims-detail-label">User ID:</div>
-                    <div class="pims-detail-value">{{ session('user_id') }}</div>
+                <div class="pims-profile-details">
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Username:</div>
+                        <div class="pims-detail-value">{{ session('username') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Full Name:</div>
+                        <div class="pims-detail-value">{{ session('first_name') }} {{ session('last_name') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Email:</div>
+                        <div class="pims-detail-value">{{ session('email') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Phone:</div>
+                        <div class="pims-detail-value">{{ session('phone') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Gender:</div>
+                        <div class="pims-detail-value">{{ session('gender') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Address:</div>
+                        <div class="pims-detail-value">{{ session('address') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Role:</div>
+                        <div class="pims-detail-value">{{ session('rolename') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Prison:</div>
+                        <div class="pims-detail-value">{{ session('prison') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Prison ID:</div>
+                        <div class="pims-detail-value">{{ session('prison_id') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">User ID:</div>
+                        <div class="pims-detail-value">{{ session('user_id') }}</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-
 
     <!-- Change Password Modal -->
     <div class="pims-modal pims-password-modal" id="pimsPasswordModal">
@@ -888,27 +877,27 @@
     </div>
 
     <!-- 🔥 Enhanced Notification Modal -->
-<div id="notification-modal" class="modal">
-    <div class="modal-background"></div>
-    <div class="modal-content">
-        <div class="box">
-            <div class="notification-header">
-                <h3 class="title is-5 has-text-centered">Notifications</h3>
-                <hr class="is-marginless">
-            </div>
-            <div id="notification-list" class="notification-list">
-                <!-- Notifications will be dynamically inserted here -->
-            </div>
-            <br>
-            <div class="notification-actions">
-                <button class="button is-primary is-fullwidth" id="mark-all-as-read">Mark All as Read</button>
-                <div class="buttons is-centered">
-                    <button class="button is-light" id="close-modal">Close</button>
+    <div id="notification-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="notification-header">
+                    <h3 class="title is-5 has-text-centered">Notifications</h3>
+                    <hr class="is-marginless">
+                </div>
+                <div id="notification-list" class="notification-list">
+                    <!-- Notifications will be dynamically inserted here -->
+                </div>
+                <br>
+                <div class="notification-actions">
+                    <button class="button is-primary is-fullwidth" id="mark-all-as-read">Mark All as Read</button>
+                    <div class="buttons is-centered">
+                        <button class="button is-light" id="close-modal">Close</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
     <script>
         // Toggle Dropdown Menu
@@ -948,8 +937,30 @@
         }
 
         function pimsCloseSuccessPopup() {
-            document.getElementById('pimsSuccessPopup').classList.remove('pims-active');
+            document.getElementById('pimsSuccessPopup').classList.remove('active');
         }
+
+        function pimsCloseErrorPopup() {
+            document.getElementById('pimsErrorPopup').classList.remove('active');
+        }
+
+        // Auto-close notifications after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const successPopup = document.getElementById('pimsSuccessPopup');
+            const errorPopup = document.getElementById('pimsErrorPopup');
+            
+            if (successPopup) {
+                setTimeout(() => {
+                    successPopup.classList.remove('active');
+                }, 5000);
+            }
+            
+            if (errorPopup) {
+                setTimeout(() => {
+                    errorPopup.classList.remove('active');
+                }, 5000);
+            }
+        });
 
         // Security scan animation
         setInterval(() => {
