@@ -212,45 +212,7 @@ window.onload = function () {
         });
     });
 
-    // Handling account deletion
-    const deleteButtons = document.querySelectorAll('.action-delete');
-    deleteButtons.forEach(function ($el) {
-        $el.addEventListener('click', function (e) {
-            e.preventDefault();
-            const accountId = $el.getAttribute('data-id');
-
-            Swal.fire({
-                title: "Are you sure?",
-                text: "You want to delete this account?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Yes, delete it!"
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    fetch(`/accounts/${accountId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            $el.closest('tr').remove();
-                            Swal.fire('Deleted!', 'The account has been deleted.', 'success');
-                        } else {
-                            Swal.fire('Error!', 'Failed to delete the account.', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire('Error!', 'There was an error deleting the account.', 'error');
-                    });
-                }
-            });
-        });
-    });
+   
 
     // Handle sidebar submenu toggle
     const sidebarMenus = getAll('#sidebar ul li a');

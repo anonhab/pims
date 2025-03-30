@@ -41,84 +41,95 @@ class cAccountController extends Controller
         return response()->json($chartData);
     }
 
-    public  function dashboard(){
-        
-        return view ('cadmin.dashboard');
-    }
- public function prisonadd()
+    public  function dashboard()
     {
-       return view('cadmin.add_prison');
+
+        return view('cadmin.dashboard');
     }
-    public function prisonassign(){
+
+    public  function generate()
+    {
+
+        return view('cadmin.generate');
+    }
+    public function prisonadd()
+    {
+        return view('cadmin.add_prison');
+    }
+    public function prisonassign()
+    {
         $prison = Prison::all();
         // $admins = Account::findOrFail('')
         return view('cadmin.assign_prison', compact('prison'));
-      
     }
     public function prisonview()
     {
-        $prisons = Prison::paginate(9); 
-         
+        $prisons = Prison::paginate(9);
+
         return view('cadmin.view_prison', compact('prisons'));
     }
     public function show_all()
     {
+        $roles = Role::all();
         $accounts = Account::with('role')->paginate(10); // Fetch accounts with roles and paginate
-        return view('cadmin.view_accounts', compact('accounts'));
+        return view('cadmin.view_accounts', compact('accounts','roles'));
     }
-    
-    public function prisonstore(Request $request){
+
+    public function prisonstore(Request $request)
+    {
         // Validate the input
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
         ]);
-    
+
         // Store the new prison
         Prison::create($validated);
-    
+
         // Redirect with a success message
         return redirect()->back()->with('success', 'Prison added successfully!');
     }
- public function show_prisoners()
+    public function show_prisoners()
     {
-        $prisoners=Prisoner::paginate(9);
-        return view('cadmin.view_prisoners',compact('prisoners'));
+        $prisoners = Prisoner::paginate(9);
+        return view('cadmin.view_prisoners', compact('prisoners'));
     }
-     public function all()
+    public function all()
     {
-        $accounts=Account::all();
-        return view('cadmin.view_account',compact('accounts'));
+        $accounts = Account::all();
+        return view('cadmin.view_account', compact('accounts'));
     }
-    public function add_prison(){
+    public function add_prison()
+    {
         return view('cadmin.add_prison');
     }
-    public function view_prison(){
+    public function view_prison()
+    {
         return view('cadmin.view_prison');
     }
 
-    public function view_requests(){
+    public function view_requests()
+    {
         $requests = Requests::paginate(9);
         $roles = Role::all();
-        return view('inspector.view_requests', compact('requests','roles'));
-     
+        return view('inspector.view_requests', compact('requests', 'roles'));
     }
     public function account_add()
 
     {
-        $account = Account::all(); 
+        $account = Account::all();
         $prisons = Prison::all();
         $roles = Role::where('id', 1)->get();
 
-        return view('cadmin.create_account',compact('account','prisons', 'roles'));
+        return view('cadmin.create_account', compact('account', 'prisons', 'roles'));
     }
- 
- 
+
+
     public function store(Request $request)
     {
         Log::info('User registration attempt', ['username' => $request->username]);
-    
+
         // Check if the email already exists
         $existingUser = Account::where('email', $request->email)->first();
         if ($existingUser) {
@@ -126,10 +137,10 @@ class cAccountController extends Controller
             session()->flash('error', 'The email address is already registered.');
             return redirect()->back()->with('error', 'The email address is already registered.');
         }
-    
+
         // Initialize image path
         $imagePath = null;
-    
+
         // Check if user has uploaded an image
         if ($request->hasFile('user_image')) {
             try {
@@ -144,13 +155,13 @@ class cAccountController extends Controller
         } else {
             Log::warning('No user image uploaded.');
         }
-    
+
         try {
             // Create the user record
             $user = Account::create([
                 'username' => $request->username,
-                'password' =>Hash::make($request->password),
-                'role_id' => $request->role_id, 
+                'password' => Hash::make($request->password),
+                'role_id' => $request->role_id,
                 'prison_id' => $request->prison_id,
                 'first_name' => $request->first_name,
                 'last_name' => $request->last_name,
@@ -161,9 +172,9 @@ class cAccountController extends Controller
                 'address' => $request->address,
                 'user_image' => $imagePath, // Store the image path
             ]);
-    
+
             Log::info('User created successfully', ['id' => $user->user_id, 'username' => $user->username]);
-    
+
             // Flash success message and redirect back
             session()->flash('success', 'User registered successfully!');
             return redirect()->back()->with('success', 'User registered successfully!');
@@ -171,40 +182,35 @@ class cAccountController extends Controller
             // Log any errors and flash error message
             Log::error('User registration failed', ['error' => $e->getMessage()]);
             session()->flash('error', 'Failed to register user.');
-    
+
             return redirect()->back()->with('error', 'Failed to register user.');
         }
     }
+
+
+    public function update(Request $request, $id)
+    {
+        $account = Account::findOrFail($id);
+        $account->first_name = $request->first_name;
+        $account->last_name = $request->last_name;
+        $account->email = $request->email;
+        $account->phone_number = $request->phone_number;
+        $account->role_id = $request->role_id;
+        $account->save();
     
-    
-    
-public function destroy($user_id)
-{
-    $account = Account::find($user_id);
-
-    if ($account) {
-        // Log the account deletion attempt
-        Log::info('Attempting to delete account', [
-            'user_id' => $user_id,
-            'username' => $account->username,
-        ]);
-
-        $account->delete();
-
-        // Log successful deletion
-        Log::info('Account deleted successfully', [
-            'user_id' => $user_id,
-            'username' => $account->username,
-        ]);
-
-        return response()->json(['success' => true]);
+        return redirect()->back()->with('success', 'User updated successfully!');
     }
-
-   
-
-    return response()->json(['success' => false]);
-}
-
-
-
+     
+    public function destroy($id)
+    {
+        $account = Account::find($id);
+    
+        if (!$account) {
+            return response()->json(['success' => false, 'message' => 'Account not found'], 404);
+        }
+    
+        $account->delete();
+    
+        return redirect()->back()->with('success', 'User deleted successfully!');
+    }
 }

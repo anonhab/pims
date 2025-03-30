@@ -244,31 +244,8 @@
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-4TVE6RNN41"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'G-4TVE6RNN41');
-    </script>
-
-    <script
-        type=application/ld+json>
-        {
-            "@context": "http://schema.org",
-            "@type": "WebSite",
-            "url": "https://www.nafplann.com/",
-            "name": "Abdul Manaaf | Fullstack Web Developer",
-            "author": "Abdul Manaaf",
-            "image": "https://avatars3.githubusercontent.com/u/7114259?s=460&v=4",
-            "description": "Abdul Manaaf is a Fullstack Web Developer from Indonesia",
-            "sameAs": ["https://www.facebook.com/nafplann", "https://instagram.com/nafplann", "https://twitter.com/nafplann", "https://id.linkedin.com/in/nafplann", "https://github.com/nafplann"]
-        }
-    </script>
-
+  
+ 
 
 
 </body>

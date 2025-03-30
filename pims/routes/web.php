@@ -16,6 +16,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\Requests;
 use Illuminate\Support\Facades\Session;
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
@@ -31,9 +32,7 @@ Route::get('/', function () {
 Route::get('/roles', function () {
     return view('cadmin.add_roles');
 });
-Route::get('/home', function () {
-    return view('home');
-});
+;
 Route::get('/notifications', function () {
     $userId = session('user_id'); 
     $notifications = Notification::where('account_id', $userId)
@@ -82,9 +81,16 @@ Route::middleware('role:3')->group(function () {
     Route::get('/cprisoners', [cAccountController::class, 'show_prisoners'])->name('cprisoner.showAll');
     Route::get('/caddprison', [cAccountController::class, 'add_prison'])->name('add.prison');
     Route::get('/cviewprison', [cAccountController::class, 'view_prison'])->name('view.prison');
+    Route::get('/generate', [cAccountController::class, 'generate'])->name('cadmin.generate');
 });
 Route::resource('prisoners', iPrisonerController::class);
 Route::resource('accounts', cAccountController::class);
+Route::put('/saccount/update/{id}', [sAccountController::class, 'update'])->name('saccount.update');
+Route::delete('/saccount/delete/{id}', [sAccountController::class, 'destroy'])->name('saccount.destroy');
+Route::put('/caccount/update/{id}', [cAccountController::class, 'update'])->name('caccount.update');
+Route::delete('/caccount/delete/{id}', [cAccountController::class, 'destroy'])->name('caccount.destroy');
+
+
 Route::get('/saccounts', [sAccountController::class, 'show_all'])->name('saccount.show_all')->middleware('role:1');
 Route::get('/saccountadd', [sAccountController::class, 'account_add'])->name('saccount.add')->middleware('role:1');
 Route::delete('/saccounts/{user_id}', [sAccountController::class, 'destroy'])->name('saccounts.destroy')->middleware('role:1');
@@ -99,6 +105,8 @@ Route::get('/inspectorviewjobs', [iPrisonerController::class, 'viewJobs'])->name
 Route::get('/inspectorviewtrainingprograms', [iPrisonerController::class, 'viewTrainingPrograms'])->name('inspector.viewTrainingPrograms')->middleware('role:2');
 Route::get('/lawyer', [iPrisonerController::class, 'lawyer'])->name('lawyer.add')->middleware('role:2');
 Route::post('/lawyerstore', [iPrisonerController::class, 'lstore'])->name('lawyers.lstore');
+Route::put('/lawyers/{id}', [iPrisonerController::class, 'update'])->name('lawyers.update'); // Update lawyer
+Route::delete('/lawyers/{id}', [iPrisonerController::class, 'destroy'])->name('lawyers.destroy'); 
 
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
@@ -164,18 +172,3 @@ Route::post('/change-password', [PasswordController::class, 'update'])->name('pa
 Route::get('/', function () {
     return view('home'); // home.blade.php is in the views folder
 })->name('home');
-
-// About Page
-Route::get('/about', function () {
-    return view('components.about'); // about.blade.php is in the components folder
-})->name('about');
-
-// Services Page
-Route::get('/services', function () {
-    return view('components.services'); // services.blade.php is in the components folder
-})->name('services');
-
-// Contact Page
-Route::get('/contact', function () {
-    return view('components.contact'); // contact.blade.php is in the components folder
-})->name('contact');

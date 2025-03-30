@@ -42,7 +42,7 @@
                     </span> Report Generation
                 </a>
                 <ul class="submenu">
-                    <li><a href="/generate_report">Generate Report</a></li>
+                    <li><a href="{{ route('cadmin.generate') }}">Generate Report</a></li>
                     <li><a href="/view_reports">View Generated Reports</a></li>
                 </ul>
             </li>
