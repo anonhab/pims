@@ -19,6 +19,9 @@ use Illuminate\Support\Facades\Session;
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
+Route::get('/dashboard', function () {
+    return view('dashboard');
+});
 Route::get('/sdashboard', function () {
     return view('sysadmin.dashboard');
 });
