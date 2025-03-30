@@ -37,103 +37,132 @@ window.onload = function () {
         });
     }
 
-    // Fetch Notifications
+   
+// Fetch Notifications and Update Bell Badge
+document.getElementById("pimsNotificationBell").addEventListener("click", function () {
     fetchNotifications();
+    document.getElementById("notification-modal").classList.add("is-active");
+});
 
-    function fetchNotifications() {
-        fetch('/notifications')
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                } else {
-                    return response.text().then(text => { throw new Error(text); });
-                }
-            })
-            .then(data => {
-                let notificationDropdown = document.getElementById("notification-dropdown");
-                let notificationCount = document.getElementById("notification-count");
-
-                notificationDropdown.innerHTML = '<div class="dropdown-content"></div>'; // Clear old notifications
-
-                if (data.length === 0) {
-                    notificationDropdown.innerHTML = `<div class="dropdown-item">No new notifications.</div>`;
-                    notificationCount.style.display = 'none';
-                } else {
-                    notificationCount.style.display = 'inline-block';
-                    notificationCount.textContent = data.length;
-
-                    let dropdownContent = notificationDropdown.querySelector('.dropdown-content');
-
-                    data.forEach(notification => {
-                        let notificationItem = document.createElement('a');
-                        notificationItem.classList.add('dropdown-item');
-                        notificationItem.dataset.id = notification.id;
-                        notificationItem.dataset.message = notification.message;
-                        notificationItem.dataset.timestamp = new Date(notification.created_at).toLocaleString();
-
-                        notificationItem.innerHTML = `
-                            <strong>${notification.message}</strong>
-                            <br><small>${new Date(notification.created_at).toLocaleString()}</small>
-                        `;
-                        dropdownContent.appendChild(notificationItem);
-
-                        let divider = document.createElement('hr');
-                        divider.classList.add('dropdown-divider');
-                        dropdownContent.appendChild(divider);
-                    });
-                }
-            })
-            .catch(error => {
-             
-            });
-    }
-    setInterval(fetchNotifications, 1000); 
-    // Handle Click Event for Notifications
-    document.getElementById("notification-dropdown").addEventListener("click", function (event) {
-        let notificationItem = event.target.closest('.dropdown-item');
-        if (notificationItem) {
-            let message = notificationItem.dataset.message;
-            let timestamp = notificationItem.dataset.timestamp;
-            let notificationId = notificationItem.dataset.id;
-
-            document.getElementById("modal-message").innerHTML = `<strong>${message}</strong><br><small>${timestamp}</small>`;
-            document.getElementById("notification-modal").classList.add("is-active");
-
-            // Store ID for marking as read
-            document.getElementById("mark-as-read").dataset.id = notificationId;
-        }
-    });
-
-    // Mark as Read
-    document.getElementById("mark-as-read").addEventListener("click", function () {
-        let notificationId = this.dataset.id;
-
-        fetch(`/notifications/read/${notificationId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: JSON.stringify({ read: true })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                return response.text().then(text => { throw new Error(text); });
-            }
-        })
+function fetchNotifications() {
+    fetch('/notifications')
+        .then(response => response.ok ? response.json() : response.text().then(text => { throw new Error(text); }))
         .then(data => {
-            if (data.success) {
-                document.getElementById("notification-modal").classList.remove("is-active");
-                fetchNotifications(); // Refresh notifications
+            let notificationList = document.getElementById("notification-list");
+            let notificationBadge = document.querySelector(".pims-notification-badge");
+            notificationList.innerHTML = ""; // Clear previous notifications
+            
+            let unreadCount = data.filter(notification => !notification.read).length;
+            if (unreadCount > 0) {
+                notificationBadge.textContent = unreadCount;
+                notificationBadge.style.display = "inline-block";
+            } else {
+                notificationBadge.style.display = "none";
+            }
+            
+            if (data.length === 0) {
+                notificationList.innerHTML = "<p class='has-text-centered'>No new notifications.</p>";
+            } else {
+                data.forEach(notification => {
+                    let notificationItem = document.createElement("div");
+                    notificationItem.classList.add("notification-item", "box", "mb-3");
+                    notificationItem.dataset.id = notification.id;
+                    
+                    let timeAgo = getTimeAgo(new Date(notification.created_at));
+                    
+                    notificationItem.innerHTML = `
+                        <div class="media">
+                            <div class="media-content">
+                                <p><strong>${notification.message}</strong></p>
+                                <small class="has-text-grey">${timeAgo}</small>
+                            </div>
+                            <div class="media-right">
+                                <button class="button is-small is-light mark-as-read" data-id="${notification.id}">✓</button>
+                            </div>
+                        </div>
+                    `;
+                    notificationList.appendChild(notificationItem);
+                });
             }
         })
-        .catch(error => {
-            console.error('Error marking notification as read:', error);
-            alert('Error marking notification as read: ' + error.message);
-        });
+        .catch(error => console.error("Error fetching notifications:", error));
+}
+
+// Convert timestamp to "time ago" format
+function getTimeAgo(timestamp) {
+    const now = new Date();
+    const seconds = Math.floor((now - timestamp) / 1000);
+    
+    if (seconds < 60) return `${seconds} seconds ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes} minutes ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours} hours ago`;
+    const days = Math.floor(hours / 24);
+    if (days < 7) return `${days} days ago`;
+    const weeks = Math.floor(days / 7);
+    if (weeks < 4) return `${weeks} weeks ago`;
+    const months = Math.floor(days / 30);
+    if (months < 12) return `${months} months ago`;
+    const years = Math.floor(days / 365);
+    return `${years} years ago`;
+}
+
+// Handle Click Event for Marking Notifications as Read
+document.getElementById("notification-list").addEventListener("click", function (event) {
+    if (event.target.classList.contains("mark-as-read")) {
+        let notificationId = event.target.dataset.id;
+        markNotificationAsRead(notificationId);
+    }
+});
+
+// Mark a Notification as Read
+function markNotificationAsRead(notificationId) {
+    fetch(`/notifications/read/${notificationId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({ read: true })
+    })
+    .then(response => response.ok ? response.json() : response.text().then(text => { throw new Error(text); }))
+    .then(data => {
+        if (data.success) {
+            fetchNotifications(); // Refresh notifications
+        }
+    })
+    .catch(error => {
+        console.error('Error marking notification as read:', error);
+        alert('Error marking notification as read: ' + error.message);
     });
+}
+
+// Mark All as Read
+document.getElementById("mark-all-as-read").addEventListener("click", function () {
+    fetch(`/notifications/read-all`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.ok ? response.json() : response.text().then(text => { throw new Error(text); }))
+    .then(data => {
+        if (data.success) {
+            fetchNotifications(); // Refresh notifications
+        }
+    })
+    .catch(error => {
+        console.error('Error marking all notifications as read:', error);
+        alert('Error marking all notifications as read: ' + error.message);
+    });
+});
+
+// Close Modal
+document.getElementById("close-modal").addEventListener("click", function () {
+    document.getElementById("notification-modal").classList.remove("is-active");
+});
 
     // Close Modal
     document.getElementById("close-modal").addEventListener("click", function () {

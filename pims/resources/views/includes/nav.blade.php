@@ -592,23 +592,28 @@
         </div>
     </div>
 
-    <!-- Notification Modal -->
-    <div class="pims-modal pims-notification-modal" id="pimsNotificationModal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-content">
-            <div class="pims-modal-header">
-                <h2><i class="fas fa-bell"></i> Notifications</h2>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pimsNotificationModal')">&times;</button>
+    <!-- 🔥 Enhanced Notification Modal -->
+<div id="notification-modal" class="modal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <div class="box">
+            <div class="notification-header">
+                <h3 class="title is-5 has-text-centered">Notifications</h3>
+                <hr class="is-marginless">
             </div>
-            <div class="pims-modal-body">
-                <div class="pims-notification-item pims-unread">
-                    <p>New inmate transfer request requires your approval</p>
-                    <div class="pims-notification-time">2 minutes ago</div>
+            <div id="notification-list" class="notification-list">
+                <!-- Notifications will be dynamically inserted here -->
+            </div>
+            <br>
+            <div class="notification-actions">
+                <button class="button is-primary is-fullwidth" id="mark-all-as-read">Mark All as Read</button>
+                <div class="buttons is-centered">
+                    <button class="button is-light" id="close-modal">Close</button>
                 </div>
-                <!-- Other notifications here -->
             </div>
         </div>
     </div>
+</div>
 
     <script>
         // Toggle Dropdown Menu
