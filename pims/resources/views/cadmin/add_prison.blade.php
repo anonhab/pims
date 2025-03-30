@@ -11,37 +11,7 @@
         <div class="column is-10" id="page-content">
             <div class="content-header"></div>
             {{-- Flash Messages --}}
-            <div class="columns">
-                <div class="column is-12">
-                    {{-- Success Alert --}}
-                    @if(session('success'))
-                    <div class="notification is-success">
-                        {{ session('success') }}
-                    </div>
-                    @endif
-
-                    {{-- Error Alert --}}
-                    @if(session('error'))
-                    <div class="notification is-danger">
-                        {{ session('error') }}
-                    </div>
-                    @endif
-
-                    {{-- Warning Alert --}}
-                    @if(session('warning'))
-                    <div class="notification is-warning">
-                        {{ session('warning') }}
-                    </div>
-                    @endif
-
-                    {{-- Info Alert --}}
-                    @if(session('info'))
-                    <div class="notification is-info">
-                        {{ session('info') }}
-                    </div>
-                    @endif
-                </div>
-            </div>
+             
 
             <section class="section">
                 <div class="container">
