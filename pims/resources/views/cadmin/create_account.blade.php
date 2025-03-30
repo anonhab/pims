@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIMS - Create Account</title>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
+<html>
+
+@include('includes.head')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+
+<style>
         :root {
             --pims-primary: #1a2a3a;
             --pims-secondary: #2c3e50;
@@ -23,36 +19,11 @@
             --pims-nav-height: 60px;
             --pims-sidebar-width: 250px;
         }
+ 
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        body {
-            background-color: #f0f2f5;
-            color: var(--pims-text-dark);
-            min-height: 100vh;
-        }
 
         /* Header Styles */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--pims-nav-height);
-            background-color: var(--pims-primary);
-            color: white;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            padding: 0 1.5rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
+     
         /* Sidebar Styles */
         .sidbar {
             position: fixed;
@@ -67,7 +38,7 @@
             transition: all 0.3s ease;
         }
 
-        /* Main Content Area */
+      /* Main Content Area */
         #page-content {
             margin-left: var(--pims-sidebar-width);
             padding: 1.5rem;
@@ -77,16 +48,7 @@
             background-color: #f0f2f5;
         }
 
-        /* Form Container */
-        .section {
-            padding: 1.5rem 0;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
+       
 
         /* Multi-step form */
         .form-steps {
@@ -304,54 +266,7 @@
             margin-top: 2rem;
         }
 
-        /* Notification */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 1rem 1.5rem;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-card-shadow);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            transform: translateX(150%);
-            transition: transform 0.4s ease;
-        }
-
-        .notification.active {
-            transform: translateX(0);
-        }
-
-        .notification.success {
-            background-color: var(--pims-success);
-            color: white;
-        }
-
-        .notification.error {
-            background-color: var(--pims-danger);
-            color: white;
-        }
-
-        .notification-icon {
-            margin-right: 0.75rem;
-            font-size: 1.2rem;
-        }
-
-        .notification-close {
-            margin-left: 1rem;
-            background: none;
-            border: none;
-            color: inherit;
-            cursor: pointer;
-            opacity: 0.8;
-            transition: opacity 0.2s ease;
-        }
-
-        .notification-close:hover {
-            opacity: 1;
-        }
-
+        
         /* Responsive Layout */
         .columns {
             display: flex;
@@ -406,21 +321,15 @@
             margin-top: 0.25rem;
         }
     </style>
-</head>
-
 <body>
-    <!-- Fixed Header -->
-    <div class="header">
-        @include('includes.nav')  {{-- Navigation Bar --}}
-    </div>
-    
-    <!-- Sidebar -->
-    <div class="sidbar">
-        @include('cadmin.menu')   {{-- Sidebar Menu --}}
-    </div>
+    <!-- START NAV -->
+    @include('includes.nav')
+    <!-- END NAV -->
 
-    <!-- Main Content -->
-    <div class="column is-10" id="page-content">
+    <div class="columns" id="app-content">
+        @include('cadmin.menu')
+
+        <div class="column is-10" id="page-content">
         <section class="section">
             <div class="container">
                 <!-- Progress Steps -->
@@ -604,12 +513,6 @@
         </section>
     </div>
 
-    <!-- Notification Template -->
-    <div id="notification" class="notification">
-        <i class="notification-icon"></i>
-        <span class="notification-message"></span>
-        <button class="notification-close"><i class="fas fa-times"></i></button>
-    </div>
 
     <script src="js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -711,5 +614,6 @@
 
         });
     </script>
+      @include('includes.footer_js')
 </body>
 </html>
