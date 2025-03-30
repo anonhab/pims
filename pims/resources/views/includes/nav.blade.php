@@ -430,10 +430,8 @@
         <div class="pims-navbar">
             <div class="pims-navbar-brand">
                 <div class="pims-logo">
-                    <i class="fas fa-user-lock pims-logo-icon"></i>
-                    <div class="pims-logo-text">
-                        PIMS
-                        <small>Prison Information Management</small>
+                    <div class="pims-logo-text">  
+                        <small></small>
                     </div>
                 </div>
                 @if(session('prison'))
