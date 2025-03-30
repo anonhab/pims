@@ -16,9 +16,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\Requests;
 use Illuminate\Support\Facades\Session;
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 });
