@@ -412,18 +412,6 @@
 </head>
 
 <body class="pims-reset">
-    <!-- Security Header Bar -->
-    <div class="pims-security-bar">
-        <div class="pims-security-info">
-            <span><i class="fas fa-shield-alt"></i> SECURITY LEVEL: MAXIMUM</span>
-            <span><i class="fas fa-lock"></i> ENCRYPTION: AES-256</span>
-            <span><i class="fas fa-eye"></i> ACTIVITY MONITORED</span>
-        </div>
-        <div class="pims-last-login">
-            Last login: {{ date('Y-m-d H:i:s') }} from {{ request()->ip() }}
-        </div>
-    </div>
-
     <!-- Main Navigation -->
     <div class="pims-nav-container">
         <div class="pims-navbar">
