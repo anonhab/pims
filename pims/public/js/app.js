@@ -87,6 +87,7 @@ function fetchNotifications() {
         })
         .catch(error => console.error("Error fetching notifications:", error));
 }
+setInterval(fetchNotifications, 1000); 
 
 // Convert timestamp to "time ago" format
 function getTimeAgo(timestamp) {
