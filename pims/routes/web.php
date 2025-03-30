@@ -169,21 +169,6 @@ Route::post('/change-password', [PasswordController::class, 'update'])->name('pa
 
 
 // Home Page
-Route::get('/home', function () {
+Route::get('/', function () {
     return view('home'); // home.blade.php is in the views folder
 })->name('home');
-
-// About Page
-Route::get('/about', function () {
-    return view('components.about'); // about.blade.php is in the components folder
-})->name('about');
-
-// Services Page
-Route::get('/services', function () {
-    return view('components.services'); // services.blade.php is in the components folder
-})->name('services');
-
-// Contact Page
-Route::get('/contact', function () {
-    return view('components.contact'); // contact.blade.php is in the components folder
-})->name('contact');
