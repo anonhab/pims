@@ -3,400 +3,820 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prison Information Management System (PIMS)</title>
+    <title>Prison Information Management System | Central Ethiopia</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <style>
+        /* Global Styles */
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --text-light: #7f8c8d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        h1, h2, h3, h4 {
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+        
+        p {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--secondary-color);
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-accent {
+            background: var(--accent-color);
+        }
+        
+        .btn-accent:hover {
+            background: #c0392b;
+        }
+        
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-color);
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0;
+        }
+        
+        .logo-text span {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: block;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 30px;
+        }
+        
+        nav ul li a {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+        
+        nav ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--secondary-color);
+            transition: width 0.3s ease;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)), url('https://static.euronews.com/articles/stories/06/19/90/88/1200x675_cmsv2_8b08e5b6-7918-576b-8bf5-f889c58c4e01-6199088.jpg') no-repeat center center/cover;
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            text-align: left;
+            padding-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* Features Section */
+        .features {
+            background: white;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+        
+        /* About Section */
+        .about {
+            background: var(--light-color);
+        }
+        
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+        
+        .about-text {
+            flex: 1;
+        }
+        
+        .about-image {
+            flex: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        /* Stats Section */
+        .stats {
+            background: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-item h3 {
+            font-size: 3rem;
+            color: white;
+            margin-bottom: 10px;
+        }
+        
+        .stat-item p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+        
+        /* Contact Section */
+        .contact {
+            background: white;
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .contact-info {
+            margin-bottom: 30px;
+        }
+        
+        .contact-info h3 {
+            margin-bottom: 20px;
+        }
+        
+        .contact-info-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .contact-info-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--light-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: var(--secondary-color);
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .contact-form textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-col h3 {
+            color: white;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .footer-col p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+            list-style: none;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .about-content {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                order: -1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 15px 0;
+            }
+            
+            nav {
+                position: fixed;
+                top: 80px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: white;
+                transition: left 0.3s ease;
+                padding: 30px;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav.active {
+                left: 0;
+            }
+            
+            nav ul {
+                flex-direction: column;
+            }
+            
+            nav ul li {
+                margin: 15px 0;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
-    @include('includes.head')
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <div class="logo-text">
+                    <h1>PIMS</h1>
+                    <span>Prison Information Management System</span>
+                </div>
+            </div>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="/login" class="btn btn-accent">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>Prison Information Management in Central Ethiopia</h1>
-                <p>Efficient, Secure, and Scalable Solutions for Modern Correctional Facilities</p>
-                <a href="#features" class="btn">Explore Features</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Introduction Section -->
-    <section id="introduction" class="introduction">
-        <div class="container">
-            
-            <div class="intro-content">
-                <div class="intro-text">
-                    <p>
-                        The Prison Information Management System (PIMS) is designed to meet the growing needs of correctional facilities in the Central Ethiopia Region, including the Gurage, Silte, Kambata Tambaro, Halaba, Hadiya zones, and the Yem Special Woreda. These areas have experienced an increase in criminal activity, resulting in a higher number of inmates in various prisons. Currently, the region's prison system faces challenges in managing and tracking inmate data, rehabilitation programs, and security measures effectively due to outdated and partially manual methods.
-                    </p>
-                    <p>
-                        The PIMS aims to solve these problems by providing a platform that improves the management of inmate information, strengthens security measures, and simplifies administrative tasks within prison facilities. The system will enable more efficient prisoner registration, tracking of rehabilitation programs, handling of transfer requests, visitor management, and report generation to support better decision-making.
-                    </p>
-                </div>
-                <div class="intro-image">
-                    <!-- Replace the src attribute with your image link -->
-                    <img src="data:image/png;base64,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" alt="Prison Management System">
+                <h1>Modern Prison Management for Central Ethiopia</h1>
+                <p>Streamlining correctional facility operations with our comprehensive Prison Information Management System. Secure, efficient, and designed for the unique needs of Central Ethiopia's prison system.</p>
+                <div class="hero-btns">
+                    <a href="#features" class="btn">Explore Features</a>
+                    <a href="#contact" class="btn btn-accent">Contact Us</a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Features Section -->
-    <section id="features" class="features">
+    <section class="section features" id="features">
         <div class="container">
-            <h2>Features</h2>
-            <div class="feature-grid">
+            <div class="section-title">
+                <h2>System Features</h2>
+            </div>
+            
+            <div class="features-grid">
                 <div class="feature-card">
-                    <i class="fas fa-user-cog"></i>
-                    <h3>Account Management</h3>
+                    <div class="feature-icon">
+                        <i class="fas fa-user-lock"></i>
+                    </div>
+                    <h3>Inmate Management</h3>
+                    <p>Comprehensive tracking of inmate records, including personal details, offenses, and incarceration history.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <i class="fas fa-user-lock"></i>
-                    <h3>Prisoner Records</h3>
+                    <div class="feature-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <h3>Case Tracking</h3>
+                    <p>Monitor legal cases, court dates, and judgments for each inmate with automated reminders.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <i class="fas fa-clipboard-check"></i>
-                    <h3>Request Evaluation</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-user-check"></i>
-                    <h3>Prisoner Release</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-eye"></i>
-                    <h3>Prisoner Information</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-chart-bar"></i>
-                    <h3>Report Generation</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-bed"></i>
-                    <h3>Room Allocation</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-calendar-check"></i>
-                    <h3>Medical Appointments</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-envelope"></i>
-                    <h3>Request Submission</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-database"></i>
-                    <h3>Backup & Recovery</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <h3>Login System</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-graduation-cap"></i>
-                    <h3>Training Programs</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-briefcase"></i>
-                    <h3>Job Assignments</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-certificate"></i>
-                    <h3>Certifications</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-check-circle"></i>
-                    <h3>Request Execution</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-calendar-alt"></i>
-                    <h3>Visitor Requests</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-user-plus"></i>
-                    <h3>Visitor Registration</h3>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-shield-alt"></i>
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
                     <h3>Visitor Management</h3>
+                    <p>Efficient scheduling and tracking of inmate visits with proper security protocols.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <i class="fas fa-eye"></i>
-                    <h3>Prisoner Monitoring</h3>
+                    <div class="feature-icon">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3>Medical Records</h3>
+                    <p>Maintain complete health records and schedule medical appointments for inmates.</p>
                 </div>
+                
                 <div class="feature-card">
-                    <i class="fas fa-user-tie"></i>
-                    <h3>Lawyer Profiles</h3>
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Reporting & Analytics</h3>
+                    <p>Generate detailed reports and gain insights into prison operations and population trends.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Security Management</h3>
+                    <p>Monitor security incidents, staff assignments, and facility access control.</p>
                 </div>
             </div>
         </div>
     </section>
-    @include('components.about')
-    @include('components.services')
-    @include('components.contact')
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About PIMS</h2>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-text">
+                    <p>The Prison Information Management System (PIMS) is a state-of-the-art solution designed specifically for the correctional facilities in Central Ethiopia. Our system addresses the unique challenges faced by prison administrators in managing inmate populations, security protocols, and rehabilitation programs.</p>
+                    
+                    <p>Developed in collaboration with correctional experts, PIMS provides a secure, centralized platform that enhances operational efficiency while maintaining the highest standards of data security and privacy compliance.</p>
+                    
+                    <p>Our mission is to modernize prison management through technology, improving outcomes for both staff and inmates while ensuring public safety across the Central Ethiopia region.</p>
+                    
+                    <a href="#" class="btn">Learn More</a>
+                </div>
+                
+                <div class="about-image">
+                    <img src="https://images.unsplash.com/photo-1581093196270-1a1d1b6b9540?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Prison Management System">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="section stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h3>25+</h3>
+                    <p>Prisons Connected</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>10,000+</h3>
+                    <p>Records Managed</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>99.9%</h3>
+                    <p>System Uptime</p>
+                </div>
+                
+                <div class="stat-item">
+                    <h3>50+</h3>
+                    <p>Trained Staff</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>Contact Us</h2>
+            </div>
+            
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Get in Touch</h3>
+                    <p>Have questions about our Prison Information Management System? Contact our team for more information.</p>
+                    
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Location</h4>
+                            <p>Central Ethiopia Regional Administration, Wolkite, Ethiopia</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h4>Email</h4>
+                            <p>info@pims-ethiopia.gov.et</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-info-item">
+                        <div class="contact-info-icon">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h4>Phone</h4>
+                            <p>+251 11 123 4567</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3>Send Us a Message</h3>
+                    <form>
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                        <input type="text" placeholder="Subject">
+                        <textarea placeholder="Your Message" required></textarea>
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer>
         <div class="container">
-            <p>&copy; 2023 Prison Information Management System. All rights reserved.</p>
-            <div class="social-links">
-                <a href="#"><i class="fab fa-facebook"></i></a>
-                <a href="#"><i class="fab fa-twitter"></i></a>
-                <a href="#"><i class="fab fa-linkedin"></i></a>
+            <div class="footer-container">
+                <div class="footer-col">
+                    <div class="logo">
+                        <div class="logo-text">
+                            <h1 style="color: white;">PIMS</h1>
+                            <span style="color: rgba(255, 255, 255, 0.7);">Prison Information Management System</span>
+                        </div>
+                    </div>
+                    <p>Modernizing correctional facility management across Central Ethiopia through innovative technology solutions.</p>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#about">About</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                        <li><a href="/login">Login</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Inmate Management</a></li>
+                        <li><a href="#">Visitor Tracking</a></li>
+                        <li><a href="#">Case Management</a></li>
+                        <li><a href="#">Reporting Tools</a></li>
+                        <li><a href="#">System Training</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-col">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2023 Prison Information Management System - Central Ethiopia. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Hamburger Menu Toggle
-        const hamburger = document.querySelector('.hamburger');
-        const navbar = document.querySelector('.navbar');
-        hamburger.addEventListener('click', () => {
-            navbar.classList.toggle('active');
-            hamburger.classList.toggle('active');
+        // Mobile Menu Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            mainNav.classList.toggle('active');
+            mobileMenuBtn.innerHTML = mainNav.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                if(this.getAttribute('href') === '#') return;
+                
+                const target = document.querySelector(this.getAttribute('href'));
+                if(target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close mobile menu if open
+                    if(mainNav.classList.contains('active')) {
+                        mainNav.classList.remove('active');
+                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+                    }
+                }
+            });
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if(window.scrollY > 50) {
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.boxShadow = 'none';
+            }
         });
     </script>
-    @include('includes.footer_js')
 </body>
 </html>
-<style>
-/* General Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Poppins', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f4f4f4;
-}
-
-.container {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Header */
-.main-header {
-    background: #333;
-    color: #fff;
-    padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: 600;
-}
-
-.logo img {
-    width: 50px;
-    margin-right: 10px;
-}
-
-.navbar ul {
-    list-style: none;
-    display: flex;
-    gap: 1.5rem;
-}
-
-.navbar a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease;
-}
-
-.navbar a:hover {
-    color: #00ff00;
-}
-
-.hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-}
-
-.hamburger .bar {
-    width: 25px;
-    height: 3px;
-    background: #fff;
-    transition: all 0.3s ease;
-}
-
-/* Hero Section */
-.hero {
-    background: linear-gradient(135deg, #333, #555);
-    color: #fff;
-    padding: 100px 0;
-    text-align: center;
-}
-
-.hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
-
-.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 2rem;
-}
-
-.hero .btn {
-    background: #00ff00;
-    color: #333;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: 600;
-    transition: background 0.3s ease;
-}
-
-.hero .btn:hover {
-    background: #00cc00;
-}
-
-/* Introduction Section */
-.introduction {
-    padding: 80px 0;
-    background: #fff;
-}
-
-.introduction h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2.5rem;
-}
-
-.intro-content {
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-}
-
-.intro-text {
-    flex: 1;
-}
-
-.intro-text p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #555;
-}
-
-.intro-image {
-    flex: 1;
-}
-
-.intro-image img {
-    width: 100%;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-}
-
-/* Features Section */
-.features {
-    padding: 80px 0;
-    background: #f4f4f4;
-}
-
-.features h2 {
-    text-align: center;
-    margin-bottom: 2rem;
-    font-size: 2.5rem;
-}
-
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-}
-
-.feature-card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.feature-card:hover {
-    transform: translateY(-10px);
-}
-
-.feature-card i {
-    font-size: 2rem;
-    color: #00ff00;
-    margin-bottom: 1rem;
-}
-
-.feature-card h3 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.feature-card p {
-    font-size: 1rem;
-    color: #666;
-}
-
-/* Footer */
-.footer {
-    background: #333;
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
-}
-
-.footer .social-links {
-    margin-top: 1rem;
-}
-
-.footer .social-links a {
-    color: #fff;
-    margin: 0 10px;
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-}
-
-.footer .social-links a:hover {
-    color: #00ff00;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .hamburger {
-        display: flex;
-    }
-
-    .navbar {
-        display: none;
-        flex-direction: column;
-        background: #333;
-        position: absolute;
-        top: 60px;
-        left: 0;
-        width: 100%;
-        padding: 1rem;
-    }
-
-    .navbar.active {
-        display: flex;
-    }
-
-    .intro-content {
-        flex-direction: column;
-    }
-}
-</style>
