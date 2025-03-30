@@ -550,19 +550,41 @@
             <div class="pims-modal-body">
                 <form method="POST" action="{{ route('password.update') }}">
                     @csrf
-                    <div class="pims-field">
-                        <label class="pims-label">Current Password</label>
-                        <div class="pims-control pims-has-icons-left">
-                            <input type="password" class="pims-input" name="current_password" placeholder="Enter current password" required>
-                            <span class="pims-icon pims-is-small pims-is-left">
-                                <i class="fas fa-lock"></i>
-                            </span>
+
+                    <!-- 🔒 Current Password -->
+                    <div class="field">
+                        <label class="label">Current Password</label>
+                        <div class="control">
+                            <input type="password" class="input" name="current_password" placeholder="Enter current password" required>
+                        </div>
+                        @error('current_password')
+                        <p class="help is-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- 🔑 New Password -->
+                    <div class="field">
+                        <label class="label">New Password</label>
+                        <div class="control">
+                            <input type="password" class="input" name="new_password" placeholder="Enter new password" required>
+                        </div>
+                        @error('new_password')
+                        <p class="help is-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- 🔄 Confirm Password -->
+                    <div class="field">
+                        <label class="label">Confirm New Password</label>
+                        <div class="control">
+                            <input type="password" class="input" name="new_password_confirmation" placeholder="Confirm new password" required>
                         </div>
                     </div>
-                    <!-- Other password fields here -->
-                    <div class="pims-field" style="text-align: center; margin-top: 30px;">
-                        <button type="submit" class="pims-button pims-primary">Update Password</button>
-                        <button type="button" class="pims-button pims-light" onclick="pimsCloseModal('pimsPasswordModal')">Cancel</button>
+
+                    <!-- ✅ Submit & Cancel Buttons -->
+                    <div class="has-text-centered">
+                        <button type="submit" class="button is-primary is-large">Update Password</button>
+                        <button type="button" class="button is-light is-large" onclick="closePasswordModal()">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -649,27 +671,27 @@
         }, 5000);
     </script>
     <!-- Modal Toggle JavaScript -->
-<script>
-    document.getElementById('view-profile').addEventListener('click', function() {
-        document.getElementById('profileModal').classList.add('is-active');
-    });
+    <script>
+        document.getElementById('view-profile').addEventListener('click', function() {
+            document.getElementById('profileModal').classList.add('is-active');
+        });
 
-    function closeModal() {
-        document.getElementById('profileModal').classList.remove('is-active');
-    }
-</script>
+        function closeModal() {
+            document.getElementById('profileModal').classList.remove('is-active');
+        }
+    </script>
 
-<script>
-    // Open Change Password Modal
-    document.getElementById('change-password').addEventListener('click', function () {
-        document.getElementById('passwordModal').classList.add('is-active');
-    });
+    <script>
+        // Open Change Password Modal
+        document.getElementById('change-password').addEventListener('click', function() {
+            document.getElementById('passwordModal').classList.add('is-active');
+        });
 
-    // Close Modal
-    function closePasswordModal() {
-        document.getElementById('passwordModal').classList.remove('is-active');
-    }
-</script>
+        // Close Modal
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('is-active');
+        }
+    </script>
 </body>
 
 </html>
