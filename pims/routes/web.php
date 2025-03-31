@@ -41,12 +41,17 @@ Route::get('/roles', function () {
 ;
 Route::get('/notifications', function () {
     $userId = session('user_id'); 
+    $prisonId = session('prison_id'); // Assuming prison_id is stored in session
+
     $notifications = Notification::where('account_id', $userId)
+        ->where('prison_id', $prisonId) // Filtering by prison_id
         ->where('status', 'unread') 
         ->orderBy('created_at', 'desc')
         ->get();
+        
     return response()->json($notifications);
 });
+
 Route::post('/notifications/read/{id}', function ($id) {
     $notification = Notification::find($id);
     if ($notification) {
