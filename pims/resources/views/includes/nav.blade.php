@@ -817,7 +817,7 @@
                     </div>
                     <div class="pims-detail-item">
                         <div class="pims-detail-label">User ID:</div>
-                        <div class="pims-detail-value">{{ session('user_id') }}</div>
+                        <div class="pims-detail-value">{{ session('user_id') }}{{ session('lawyer_id') }}</div>
                     </div>
                 </div>
             </div>

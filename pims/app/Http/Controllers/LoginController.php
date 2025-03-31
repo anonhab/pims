@@ -67,14 +67,14 @@ class LoginController extends Controller
                     'rolename'   => is_object($account->role) ? $account->role->name : '',
                     'password'   => $account->password, // Ensure this is hashed
                 ]);
-                
+
                 Log::info('Login successful:', ['email' => $account->email, 'username' => $account->username]);
 
                 // Redirect based on role
                 return match ($account->role_id) {
                     3 => view('cadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     2 => view('inspector.dashboard'),
-                    1 => view('sysadmin.dashboard',['recentAssignments' => LawyerPrisonerAssignment::all()]),
+                    1 => view('sysadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     8 => view('police_officer.dashboard'),
                     6  => view('training_officer.dashboard'),
                     default => redirect()->intended('/dashboard'),
@@ -92,19 +92,26 @@ class LoginController extends Controller
             if (Hash::check($credentials['password'], $lawyer->password)) {
                 // Reset rate limiter
                 RateLimiter::clear($key);
-               
+
                 // Store session data
                 $request->session()->put([
-                    'lawyer_id'  => $lawyer->lawyer_id,
-                    'first_name' => $lawyer->first_name,
-                    'last_name'  => $lawyer->last_name,
+                    'lawyer_id'      => $lawyer->lawyer_id,
+                    'first_name'     => $lawyer->first_name,
+                    'last_name'      => $lawyer->last_name,
+                    'date_of_birth'  => $lawyer->date_of_birth,
+                    'contact_info'   => $lawyer->contact_info,
+                    'email'          => $lawyer->email,
+                    'law_firm'       => $lawyer->law_firm,
+                    'license_number' => $lawyer->license_number,
+                    'cases_handled'  => $lawyer->cases_handled,
+                    'prison_id'         => $lawyer->prison,
                 ]);
-                
+
                 // If lawyer_id is set, add 'rolename' => 'lawyer' to the session
                 if ($request->session()->has('lawyer_id')) {
                     $request->session()->put('rolename', 'lawyer');
                 }
-                
+
                 Log::info('Lawyer login successful:', ['email' => $lawyer->email, 'username' => $lawyer->username]);
 
                 return view('lawyer.dashboard');
@@ -138,12 +145,24 @@ class LoginController extends Controller
             'last_name',
             'role_id',
             'user_image',
-            'rolename',     
-            'email' ,
-            'gender' ,
+            'rolename',
+            'email',
+            'gender',
             'address',
             'phone',
-             ]);
+        ]);
+        $request->session()->forget([
+            'lawyer_id',
+            'first_name',
+            'last_name',
+            'date_of_birth',
+            'contact_info',
+            'email',
+            'law_firm',
+            'license_number',
+            'cases_handled',
+            'prison',
+        ]);
         return redirect()->route('login');
     }
 }
