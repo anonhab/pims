@@ -17,7 +17,7 @@ use Illuminate\Http\Request;
 use App\Models\Requests;
 use Illuminate\Support\Facades\Session;
 
-Route::get('/dashboard', function () {
+Route::get('/allactor', function () {
     return view('dashboard');
 });
 Route::get('/sdashboard', function () {

@@ -9,17 +9,7 @@
             @include('inspector.menu')
 
             <div class="column is-10" id="page-content">
-                <div class="column is-12">
-                    <!-- Flash Messages -->
-                    @foreach (['success', 'error', 'warning', 'info'] as $msg)
-                        @if(session($msg))
-                            <div class="notification is-{{ $msg }}">
-                                <button class="delete"></button>
-                                {{ session($msg) }}
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
+                
 
                 <section class="section">
                     <div class="container">

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,409 +8,678 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Unique CSS Variables */
-        :root {
-            --pims-primary: #1a2a3a;
-            --pims-secondary: #2c3e50;
-            --pims-accent: #e74c3c;
-            --pims-light: #ecf0f1;
-            --pims-dark: #0d1520;
-            --pims-text: #ffffff;
-            --pims-text-light: #bdc3c7;
-            --pims-success: #27ae60;
-            --pims-warning: #f39c12;
-            --pims-danger: #e74c3c;
-            --pims-security-red: #c0392b;
-        }
+/* Unique CSS Variables */
+:root {
+    --pims-primary: #1a2a3a;
+    --pims-secondary: #2c3e50;
+    --pims-accent: #e74c3c;
+    --pims-light: #ecf0f1;
+    --pims-dark: #0d1520;
+    --pims-text: #ffffff;
+    --pims-text-light: #bdc3c7;
+    --pims-success: #27ae60;
+    --pims-warning: #f39c12;
+    --pims-danger: #e74c3c;
+    --pims-security-red: #c0392b;
+}
 
-        /* Reset for PIMS only */
-        .pims-reset {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+/* Reset for PIMS only */
+.pims-reset {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
 
-        /* Security Header Bar */
-        .pims-security-bar {
-            background-color: var(--pims-dark);
-            color: var(--pims-text-light);
-            padding: 5px 0;
-            font-size: 0.8rem;
-            border-bottom: 1px solid var(--pims-security-red);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px 20px;
-        }
+/* Security Header Bar */
+.pims-security-bar {
+    background-color: var(--pims-dark);
+    color: var(--pims-text-light);
+    padding: 5px 20px;
+    font-size: 0.8rem;
+    border-bottom: 1px solid var(--pims-security-red);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .pims-security-info {
-            display: flex;
-            gap: 20px;
-        }
+.pims-security-info {
+    display: flex;
+    gap: 20px;
+}
 
-        .pims-security-info span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+.pims-security-info span {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 
-        .pims-security-info i {
-            color: var(--pims-success);
-        }
+.pims-security-info i {
+    color: var(--pims-success);
+}
 
-        .pims-last-login {
-            color: var(--pims-text-light);
-        }
+.pims-last-login {
+    color: var(--pims-text-light);
+}
 
-        /* Main Navigation */
-        .pims-nav-container {
-            background-color: var(--pims-primary);
-            color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-            border-bottom: 1px solid rgba(231, 76, 60, 0.3);
-        }
+/* Main Navigation */
+.pims-nav-container {
+    background-color: var(--pims-primary);
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 1px solid rgba(231, 76, 60, 0.3);
+}
 
-        .pims-navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            height: 70px;
-        }
+.pims-navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 70px;
+}
 
-        .pims-navbar-brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.pims-navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .pims-logo {
-            display: flex;
-            align-items: center;
-        }
+.pims-logo {
+    display: flex;
+    align-items: center;
+}
 
-        .pims-logo-icon {
-            font-size: 1.8rem;
-            color: var(--pims-accent);
-            margin-right: 10px;
-        }
+.pims-logo-icon {
+    font-size: 1.8rem;
+    color: var(--pims-accent);
+    margin-right: 10px;
+}
 
-        .pims-logo-text {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: white;
-        }
+.pims-logo-text {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: white;
+}
 
-        .pims-logo-text small {
-            font-size: 0.8rem;
-            color: var(--pims-text-light);
-            display: block;
-            line-height: 1;
-        }
+.pims-logo-text small {
+    font-size: 0.8rem;
+    color: var(--pims-text-light);
+    display: block;
+}
 
-        .pims-system-title {
-            margin-left: 30px;
-            font-size: 1.1rem;
-            color: var(--pims-text-light);
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            padding-left: 20px;
-        }
+.pims-system-title {
+    margin-left: 30px;
+    font-size: 1.1rem;
+    color: var(--pims-text-light);
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 20px;
+}
 
-        .pims-system-title strong {
-            color: white;
-            font-weight: 500;
-        }
+.pims-system-title strong {
+    color: white;
+    font-weight: 500;
+}
 
-        .pims-nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+.pims-nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
 
-        /* Notification Bell */
-        .pims-notification-bell {
-            position: relative;
-            cursor: pointer;
-            color: var(--pims-text-light);
-            transition: all 0.3s;
-            font-size: 1.2rem;
-        }
+/* Notification Bell */
+.pims-notification-bell {
+    position: relative;
+    cursor: pointer;
+    color: var(--pims-text-light);
+    transition: all 0.3s;
+    font-size: 1.2rem;
+}
 
-        .pims-notification-bell:hover {
-            color: white;
-        }
+.pims-notification-bell:hover {
+    color: white;
+}
 
-        .pims-notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background-color: var(--pims-danger);
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
+.pims-notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--pims-danger);
+    color: white;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
 
-        /* User Profile */
-        .pims-user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            position: relative;
-        }
+/* User Profile */
+.pims-user-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    position: relative;
+}
 
-        .pims-user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--pims-accent);
-            object-fit: cover;
-        }
+.pims-user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--pims-accent);
+    object-fit: cover;
+}
 
-        .pims-user-info {
-            display: flex;
-            flex-direction: column;
-        }
+.pims-user-info {
+    display: flex;
+    flex-direction: column;
+}
 
-        .pims-user-name {
-            font-weight: 500;
-            color: white;
-            font-size: 0.9rem;
-        }
+.pims-user-name {
+    font-weight: 500;
+    color: white;
+    font-size: 0.9rem;
+}
 
-        .pims-user-role {
-            font-size: 0.8rem;
-            color: var(--pims-text-light);
-        }
+.pims-user-role {
+    font-size: 0.8rem;
+    color: var(--pims-text-light);
+}
 
-        /* Dropdown Menu */
-        .pims-dropdown-menu {
-            position: absolute;
-            top: 60px;
-            right: 0;
-            background-color: var(--pims-secondary);
-            border-radius: 5px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            width: 250px;
-            z-index: 1001;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            display: none;
-        }
+/* Dropdown Menu */
+.pims-dropdown-menu {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: var(--pims-secondary);
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 250px;
+    z-index: 1001;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: none;
+}
 
-        .pims-dropdown-menu.pims-active {
-            display: block;
-            animation: pims-fadeIn 0.3s;
-        }
+.pims-dropdown-menu.pims-active {
+    display: block;
+    animation: pims-fadeIn 0.3s;
+}
 
-        @keyframes pims-fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+@keyframes pims-fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
 
-        .pims-dropdown-header {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-        .pims-dropdown-body {
-            padding: 10px 0;
-        }
+.pims-dropdown-header {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .pims-dropdown-item {
-            padding: 10px 15px;
-            color: var(--pims-text-light);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all 0.3s;
-            font-size: 0.9rem;
-        }
+.pims-dropdown-body {
+    padding: 10px 0;
+}
 
-        .pims-dropdown-item:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            padding-left: 20px;
-        }
+.pims-dropdown-item {
+    padding: 10px 15px;
+    color: var(--pims-text-light);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
 
-        .pims-dropdown-item i {
-            width: 20px;
-            text-align: center;
-        }
+.pims-dropdown-item:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding-left: 20px;
+}
 
-        .pims-dropdown-divider {
-            height: 1px;
-            background-color: rgba(255, 255, 255, 0.1);
-            margin: 5px 0;
-        }
+.pims-dropdown-item i {
+    width: 20px;
+    text-align: center;
+}
 
-        /* Modals */
-        .pims-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
+.pims-dropdown-divider {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.1);
+    margin: 5px 0;
+}
 
-        .pims-modal.pims-active {
-            display: flex;
-            animation: pims-fadeIn 0.3s;
-        }
+/* Modals */
+.pims-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
 
-        .pims-modal-content {
-            background-color: var(--pims-secondary);
-            border-radius: 5px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--pims-accent);
-            position: relative;
-        }
+.pims-modal.pims-active {
+    display: flex;
+    animation: pims-fadeIn 0.3s;
+}
 
-        .pims-modal-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            color: var(--pims-text-light);
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
+.pims-modal-content {
+    background-color: var(--pims-secondary);
+    border-radius: 5px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--pims-accent);
+    position: relative;
+}
 
-        .pims-modal-close:hover {
-            color: white;
-        }
+.pims-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--pims-text-light);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
 
-        .pims-modal-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-        }
+.pims-modal-close:hover {
+    color: white;
+}
 
-        .pims-modal-header h2 {
-            color: white;
-            font-size: 1.5rem;
-            text-align: center;
-        }
+.pims-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+}
 
-        .pims-modal-body {
-            padding: 20px;
-        }
+.pims-modal-header h2 {
+    color: white;
+    font-size: 1.5rem;
+    text-align: center;
+}
 
-        /* Profile Modal */
-        .pims-profile-modal .pims-profile-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
+.pims-modal-body {
+    padding: 20px;
+}
 
-        .pims-profile-modal .pims-profile-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 3px solid var(--pims-accent);
-            object-fit: cover;
-        }
+/* Profile Modal */
+.pims-profile-modal .pims-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
 
-        /* Password Modal */
-        .pims-password-modal .pims-field {
-            margin-bottom: 20px;
-        }
+.pims-profile-modal .pims-profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--pims-accent);
+    object-fit: cover;
+}
 
-        .pims-password-modal .pims-label {
-            color: white;
-            margin-bottom: 5px;
-            display: block;
-        }
+/* Password Modal */
+.pims-password-modal .pims-field {
+    margin-bottom: 20px;
+}
 
-        .pims-password-modal .pims-input {
-            width: 100%;
-            padding: 12px 15px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-            color: white;
-            font-size: 1rem;
-        }
+.pims-password-modal .pims-label {
+    color: white;
+    margin-bottom: 5px;
+    display: block;
+}
 
-        /* Notification Modal */
-        .pims-notification-modal .pims-notification-item {
-            padding: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s;
-        }
+.pims-password-modal .pims-input {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+}
 
-        /* Security Elements */
-        .pims-security-scan {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(to right, transparent, var(--pims-accent), transparent);
-            box-shadow: 0 0 10px var(--pims-accent);
-            animation: pims-scan 5s linear infinite;
-            z-index: 1001;
-            pointer-events: none;
-        }
+/* Notification Modal */
+.pims-notification-modal .pims-notification-item {
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s;
+}
 
-        @keyframes pims-scan {
-            0% { top: 0; }
-            100% { top: 100%; }
-        }
+/* Security Elements */
+.pims-security-scan {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--pims-accent), transparent);
+    box-shadow: 0 0 10px var(--pims-accent);
+    animation: pims-scan 5s linear infinite;
+    z-index: 1001;
+    pointer-events: none;
+}
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .pims-security-info {
-                display: none;
-            }
-            
-            .pims-system-title {
-                display: none;
-            }
-            
-            .pims-logo-text small {
-                display: none;
-            }
-        }
+@keyframes pims-scan {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: 100%;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pims-security-info {
+        display: none;
+    }
+
+    .pims-system-title {
+        display: none;
+    }
+
+    .pims-logo-text small {
+        display: none;
+    }
+}
+
+/* Notification System */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: var(--pims-border-radius);
+    box-shadow: var(--pims-card-shadow);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    transform: translateX(150%);
+    transition: transform 0.4s ease;
+    max-width: 350px;
+}
+
+.notification.active {
+    transform: translateX(0);
+}
+
+.notification.success {
+    background-color: var(--pims-success);
+    color: white;
+}
+
+.notification.error {
+    background-color: var(--pims-danger);
+    color: white;
+}
+
+.notification-icon {
+    margin-right: 10px;
+    font-size: 1.2rem;
+}
+
+.notification-close {
+    margin-left: 15px;
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.notification-close:hover {
+    opacity: 1;
+}
+
+/* Base styling for the modal */
+.pims-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pims-active {
+    display: flex;
+    opacity: 1;
+}
+
+/* Modal content */
+.pims-modal-content {
+    background-color: white;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* Header styling */
+.pims-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #f2f2f2;
+    padding-bottom: 10px;
+}
+
+.pims-modal-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--pims-dark);
+}
+
+.pims-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--pims-dark);
+    cursor: pointer;
+}
+
+/* Modal Body */
+.pims-modal-body {
+    padding-top: 20px;
+    text-align: center;
+}
+
+.pims-modal-body p {
+    font-size: 16px;
+    color: var(--pims-dark);
+}
+
+/* Buttons */
+.pims-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pims-button.pims-primary {
+    background-color: var(--pims-success);
+    color: white;
+}
+
+.pims-button.pims-primary:hover {
+    background-color: darkgreen;
+}
+
+.pims-button.pims-error {
+    background-color: var(--pims-danger);
+    color: white;
+}
+
+.pims-button.pims-error:hover {
+    background-color: darkred;
+}
+
+/* Icon styling */
+.pims-modal-header i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+/* Animation for scale-in effect */
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Success and error color schemes */
+:root {
+    --pims-success: #28a745;
+    --pims-danger: #dc3545;
+    --pims-dark: #333;
+}
+
+/* Modal background styling */
+.pims-modal-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: -1;
+}
+
+/* Profile Modal */
+.pims-profile-modal .pims-modal-content {
+    background-color: white;
+    border-radius: 8px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    animation: scaleIn 0.3s ease-out;
+}
+
+/* Profile Header Styling */
+.pims-profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.pims-profile-avatar-container {
+    position: relative;
+    margin-right: 20px;
+}
+
+.pims-profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #f2f2f2;
+}
+
+/* Profile Info Styling */
+.pims-profile-info {
+    flex-grow: 1;
+}
+
+.pims-profile-info h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--pims-dark);
+}
+
+.pims-profile-info p {
+    font-size: 16px;
+    color: #777;
+    margin: 5px 0;
+}
+
+/* Profile Details Section Styling */
+.pims-profile-details {
+    margin-top: 20px;
+}
+
+.pims-detail-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.pims-detail-label {
+    font-weight: 600;
+    color: #333;
+}
+
+.pims-detail-value {
+    color: #777;
+}
+
+/* Modal close button */
+.pims-modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--pims-dark);
+    cursor: pointer;
+}
+
+/* Animation for profile modal */
+@keyframes scaleIn {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
     </style>
 </head>
-<body class="pims-reset">
-    <!-- Security Header Bar -->
-    <div class="pims-security-bar">
-        <div class="pims-security-info">
-            <span><i class="fas fa-shield-alt"></i> SECURITY LEVEL: MAXIMUM</span>
-            <span><i class="fas fa-lock"></i> ENCRYPTION: AES-256</span>
-            <span><i class="fas fa-eye"></i> ACTIVITY MONITORED</span>
-        </div>
-        <div class="pims-last-login">
-            Last login: {{ date('Y-m-d H:i:s') }} from {{ request()->ip() }}
-        </div>
-    </div>
 
+<body class="pims-reset">
     <!-- Main Navigation -->
     <div class="pims-nav-container">
         <div class="pims-navbar">
@@ -432,7 +702,7 @@
                 <!-- Notification Bell -->
                 <div class="pims-notification-bell" id="pimsNotificationBell">
                     <i class="fas fa-bell"></i>
-                    <span class="pims-notification-badge">3</span>
+                    <span class="pims-notification-badge" style="display: none;">0</span>
                 </div>
 
                 <!-- User Profile -->
@@ -448,10 +718,7 @@
                     <div class="pims-dropdown-menu" id="pimsDropdownMenu">
                         <div class="pims-dropdown-header">
                             <img src="{{ asset('storage/' . session('user_image')) }}" alt="User">
-                            <div>
-                                <h4>{{ session('first_name') }} {{ session('last_name') }}</h4>
-                                <p>{{ session('rolename') }}</p>
-                            </div>
+
                         </div>
                         <div class="pims-dropdown-body">
                             <a href="#" class="pims-dropdown-item" id="pimsViewProfile">
@@ -471,22 +738,25 @@
         </div>
     </div>
 
-    <!-- Success Popup -->
+    <!-- Success Notification -->
     @if (session('success'))
-    <div id="pimsSuccessPopup" class="pims-modal pims-active">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-content">
-            <div class="pims-modal-header">
-                <h2><i class="fas fa-check-circle" style="color: var(--pims-success);"></i> Success</h2>
-                <button class="pims-modal-close" onclick="pimsCloseSuccessPopup()">&times;</button>
-            </div>
-            <div class="pims-modal-body">
-                <p>{{ session('success') }}</p>
-                <div style="text-align: center; margin-top: 20px;">
-                    <button class="pims-button pims-primary" onclick="pimsCloseSuccessPopup()">OK</button>
-                </div>
-            </div>
-        </div>
+    <div id="pimsSuccessPopup" class="notification success active">
+        <i class="notification-icon fas fa-check-circle"></i>
+        <span class="notification-message">{{ session('success') }}</span>
+        <button class="notification-close" onclick="pimsCloseSuccessPopup()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    @endif
+
+    <!-- Error Notification -->
+    @if (session('error'))
+    <div id="pimsErrorPopup" class="notification error active">
+        <i class="notification-icon fas fa-exclamation-circle"></i>
+        <span class="notification-message">{{ session('error') }}</span>
+        <button class="notification-close" onclick="pimsCloseErrorPopup()">
+            <i class="fas fa-times"></i>
+        </button>
     </div>
     @endif
 
@@ -500,7 +770,9 @@
             </div>
             <div class="pims-modal-body">
                 <div class="pims-profile-header">
-                    <img src="{{ asset('storage/' . session('user_image')) }}" alt="User" class="pims-profile-avatar">
+                    <div class="pims-profile-avatar-container">
+                        <img src="{{ asset('storage/' . session('user_image')) }}" alt="User Avatar" class="pims-profile-avatar">
+                    </div>
                     <div class="pims-profile-info">
                         <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
                         <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
@@ -508,10 +780,45 @@
                 </div>
                 <div class="pims-profile-details">
                     <div class="pims-detail-item">
-                        <div class="pims-detail-label">Username</div>
+                        <div class="pims-detail-label">Username:</div>
                         <div class="pims-detail-value">{{ session('username') }}</div>
                     </div>
-                    <!-- Other profile details here -->
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Full Name:</div>
+                        <div class="pims-detail-value">{{ session('first_name') }} {{ session('last_name') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Email:</div>
+                        <div class="pims-detail-value">{{ session('email') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Phone:</div>
+                        <div class="pims-detail-value">{{ session('phone') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Gender:</div>
+                        <div class="pims-detail-value">{{ session('gender') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Address:</div>
+                        <div class="pims-detail-value">{{ session('address') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Role:</div>
+                        <div class="pims-detail-value">{{ session('rolename') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Prison:</div>
+                        <div class="pims-detail-value">{{ session('prison') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">Prison ID:</div>
+                        <div class="pims-detail-value">{{ session('prison_id') }}</div>
+                    </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">User ID:</div>
+                        <div class="pims-detail-value">{{ session('user_id') }}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -528,39 +835,66 @@
             <div class="pims-modal-body">
                 <form method="POST" action="{{ route('password.update') }}">
                     @csrf
-                    <div class="pims-field">
-                        <label class="pims-label">Current Password</label>
-                        <div class="pims-control pims-has-icons-left">
-                            <input type="password" class="pims-input" name="current_password" placeholder="Enter current password" required>
-                            <span class="pims-icon pims-is-small pims-is-left">
-                                <i class="fas fa-lock"></i>
-                            </span>
+
+                    <!-- 🔒 Current Password -->
+                    <div class="field">
+                        <label class="label">Current Password</label>
+                        <div class="control">
+                            <input type="password" class="input" name="current_password" placeholder="Enter current password" required>
+                        </div>
+                        @error('current_password')
+                        <p class="help is-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- 🔑 New Password -->
+                    <div class="field">
+                        <label class="label">New Password</label>
+                        <div class="control">
+                            <input type="password" class="input" name="new_password" placeholder="Enter new password" required>
+                        </div>
+                        @error('new_password')
+                        <p class="help is-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- 🔄 Confirm Password -->
+                    <div class="field">
+                        <label class="label">Confirm New Password</label>
+                        <div class="control">
+                            <input type="password" class="input" name="new_password_confirmation" placeholder="Confirm new password" required>
                         </div>
                     </div>
-                    <!-- Other password fields here -->
-                    <div class="pims-field" style="text-align: center; margin-top: 30px;">
-                        <button type="submit" class="pims-button pims-primary">Update Password</button>
-                        <button type="button" class="pims-button pims-light" onclick="pimsCloseModal('pimsPasswordModal')">Cancel</button>
+
+                    <!-- ✅ Submit & Cancel Buttons -->
+                    <div class="has-text-centered">
+                        <button type="submit" class="button is-primary is-large">Update Password</button>
+                        <button type="button" class="button is-light is-large" onclick="closePasswordModal()">Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Notification Modal -->
-    <div class="pims-modal pims-notification-modal" id="pimsNotificationModal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-content">
-            <div class="pims-modal-header">
-                <h2><i class="fas fa-bell"></i> Notifications</h2>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pimsNotificationModal')">&times;</button>
-            </div>
-            <div class="pims-modal-body">
-                <div class="pims-notification-item pims-unread">
-                    <p>New inmate transfer request requires your approval</p>
-                    <div class="pims-notification-time">2 minutes ago</div>
+    <!-- 🔥 Enhanced Notification Modal -->
+    <div id="notification-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box">
+                <div class="notification-header">
+                    <h3 class="title is-5 has-text-centered">Notifications</h3>
+                    <hr class="is-marginless">
                 </div>
-                <!-- Other notifications here -->
+                <div id="notification-list" class="notification-list">
+                    <!-- Notifications will be dynamically inserted here -->
+                </div>
+                <br>
+                <div class="notification-actions">
+                    <button class="button is-primary is-fullwidth" id="mark-all-as-read">Mark All as Read</button>
+                    <div class="buttons is-centered">
+                        <button class="button is-light" id="close-modal">Close</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -603,8 +937,30 @@
         }
 
         function pimsCloseSuccessPopup() {
-            document.getElementById('pimsSuccessPopup').classList.remove('pims-active');
+            document.getElementById('pimsSuccessPopup').classList.remove('active');
         }
+
+        function pimsCloseErrorPopup() {
+            document.getElementById('pimsErrorPopup').classList.remove('active');
+        }
+
+        // Auto-close notifications after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const successPopup = document.getElementById('pimsSuccessPopup');
+            const errorPopup = document.getElementById('pimsErrorPopup');
+            
+            if (successPopup) {
+                setTimeout(() => {
+                    successPopup.classList.remove('active');
+                }, 5000);
+            }
+            
+            if (errorPopup) {
+                setTimeout(() => {
+                    errorPopup.classList.remove('active');
+                }, 5000);
+            }
+        });
 
         // Security scan animation
         setInterval(() => {
@@ -626,5 +982,28 @@
             securityInfo.children[0].innerHTML = messages[Math.floor(Math.random() * messages.length)];
         }, 5000);
     </script>
+    <!-- Modal Toggle JavaScript -->
+    <script>
+        document.getElementById('view-profile').addEventListener('click', function() {
+            document.getElementById('profileModal').classList.add('is-active');
+        });
+
+        function closeModal() {
+            document.getElementById('profileModal').classList.remove('is-active');
+        }
+    </script>
+
+    <script>
+        // Open Change Password Modal
+        document.getElementById('change-password').addEventListener('click', function() {
+            document.getElementById('passwordModal').classList.add('is-active');
+        });
+
+        // Close Modal
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('is-active');
+        }
+    </script>
 </body>
+
 </html>
