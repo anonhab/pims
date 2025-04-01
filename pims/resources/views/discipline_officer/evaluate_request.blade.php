@@ -233,11 +233,7 @@
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <div class="sidebar">
-            <div class="sidebar-header">
-                <h4>Prison Management</h4>
-                <p class="mb-0">Discipline Officer</p>
-            </div>
-            
+        @include('includes.nav')
             <ul class="nav flex-column sidebar-menu">
                 <li class="nav-item">
                     <a class="nav-link active" href="#">
@@ -249,34 +245,10 @@
                         <i class="fas fa-user-shield"></i> Prisoner Management
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-clipboard-list"></i> Incident Reports
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-calendar-alt"></i> Schedule
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-file-alt"></i> Reports
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-cog"></i> Settings
-                    </a>
-                </li>
-                <li class="nav-item mt-4">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
-                </li>
+               
             </ul>
         </div>
-        @include('includes.nav')
+       
 
         <!-- Main Content Area -->
         <div class="main-content">
