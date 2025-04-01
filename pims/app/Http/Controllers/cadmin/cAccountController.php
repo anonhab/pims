@@ -66,7 +66,7 @@ class cAccountController extends Controller
     }
     public function prisonview()
     {
-        $prisons = Prison::paginate(9);
+        $prisons = Prison::paginate(25);
 
         return view('cadmin.view_prison', compact('prisons'));
     }

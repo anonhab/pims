@@ -7,10 +7,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\Account;
 use App\Models\Lawyer;
+use App\Models\Prison;
 use App\Models\LawyerPrisonerAssignment;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
+
 
 class LoginController extends Controller
 {
@@ -105,6 +107,12 @@ class LoginController extends Controller
                     'license_number' => $lawyer->license_number,
                     'cases_handled'  => $lawyer->cases_handled,
                     'prison_id'         => $lawyer->prison,
+                    'user_image' => $lawyer->profile_image,
+              
+                    'prison' => Prison::find($lawyer->prison)?->name,
+
+
+                    
                 ]);
 
                 // If lawyer_id is set, add 'rolename' => 'lawyer' to the session

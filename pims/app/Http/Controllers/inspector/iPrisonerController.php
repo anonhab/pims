@@ -203,38 +203,47 @@ class iPrisonerController extends Controller
     {
         // Validate the request data
         $validatedData = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'contact_info' => 'required|string|max:255',
-            'email' => 'required|email|unique:lawyers,email',
-            'password' => 'required|string|min:6',
-            'law_firm' => 'nullable|string|max:255',
+            'first_name'      => 'required|string|max:255',
+            'last_name'       => 'required|string|max:255',
+            'date_of_birth'   => 'required|date',
+            'contact_info'    => 'required|string|max:255',
+            'email'          => 'required|email|unique:lawyers,email',
+            'password'       => 'required|string|min:6',
+            'law_firm'       => 'nullable|string|max:255',
             'license_number' => 'required|string|max:255|unique:lawyers,license_number',
-            'cases_handled' => 'required|integer|min:0',
-            'prison' => 'required|exists:prisons,id',
+            'cases_handled'  => 'required|integer|min:0',
+            'prison'         => 'required|exists:prisons,id',
+            'profile_image'  => 'nullable', // Image validation
         ]);
     
         try {
+            // Handle image upload if provided
+            $imagePath = null;
+            if ($request->hasFile('profile_image')) {
+                $imagePath = $request->file('profile_image')->store('lawyer_profiles', 'public');
+            }
+    
             // Create a new lawyer
             $lawyer = Lawyer::create([
-                'first_name' => $validatedData['first_name'],
-                'last_name' => $validatedData['last_name'],
-                'date_of_birth' => $validatedData['date_of_birth'],
-                'contact_info' => $validatedData['contact_info'],
-                'email' => $validatedData['email'],
-                'password' => Hash::make($validatedData['password']), // Secure password hashing
-                'law_firm' => $validatedData['law_firm'] ?? null,
+                'first_name'     => $validatedData['first_name'],
+                'last_name'      => $validatedData['last_name'],
+                'date_of_birth'  => $validatedData['date_of_birth'],
+                'contact_info'   => $validatedData['contact_info'],
+                'email'          => $validatedData['email'],
+                'password'       => Hash::make($validatedData['password']), // Secure password hashing
+                'law_firm'       => $validatedData['law_firm'] ?? null,
                 'license_number' => $validatedData['license_number'],
-                'cases_handled' => $validatedData['cases_handled'],
-                'prison' => $validatedData['prison'],
+                'cases_handled'  => $validatedData['cases_handled'],
+                'prison'         => $validatedData['prison'],
+                'profile_image'  => $imagePath, // Save image path
             ]);
     
             // Log the successful creation
             Log::info('New lawyer created', [
                 'lawyer_id' => $lawyer->id,
                 'email' => $lawyer->email,
-                'prison' => $lawyer->prison
+                'prison' => $lawyer->prison,
+                'profile_image' => $lawyer->profile_image,
             ]);
     
             return redirect()->back()->with('success', 'Lawyer added successfully!');
@@ -246,6 +255,7 @@ class iPrisonerController extends Controller
             return redirect()->back()->with('error', 'Failed to add lawyer. Please try again.');
         }
     }
+    
 
     public function updateStatus(Request $request, $id)
     {
