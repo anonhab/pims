@@ -1,224 +1,451 @@
 <!DOCTYPE html>
 @include('includes.head')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIMS - Prisoner Management</title>
+
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+        :root {
+            --pims-primary: #1a2a3a;
+            /* Darker blue for more authority */
+            --pims-secondary: #2c3e50;
+            --pims-accent: #2980b9;
+            /* Slightly darker blue */
+            --pims-danger: #c0392b;
+            /* Darker red */
+            --pims-success: #27ae60;
+            /* Darker green */
+            --pims-warning: #d35400;
+            /* Darker orange */
+            --pims-text-light: #ecf0f1;
+            --pims-text-dark: #2c3e50;
+            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --pims-border-radius: 6px;
+            --pims-nav-height: 60px;
+            --pims-sidebar-width: 250px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: var(--pims-text-dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        .header {
+            color: white;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            top: 0;
+        }
+
+        /* Sidebar Styles */
+        .sidbar {
+            position: fixed;
+            top: var(--pims-nav-height);
+            left: 0;
+            width: var(--pims-sidebar-width);
+            height: calc(100vh - var(--pims-nav-height));
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+            z-index: 900;
+            transition: all 0.3s ease;
+        }
+
+        /* Main Content Area */
+        #pims-page-content {
+            margin-left: 0;
+            padding: 1.5rem;
+            padding-left: 300px;
+            padding-top: 100px;
+            min-height: calc(100vh - var(--pims-nav-height));
+            transition: all 0.3s ease;
+            background-color: #f0f2f5;
+        }
+
+
+    /* Form Styles */
+    .pims-form-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem;
+    }
+
+    .pims-form-section {
+        margin-bottom: 2rem;
+    }
+
+    .pims-form-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+        color: var(--pims-primary);
+        position: relative;
+        padding-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .pims-form-title::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 3px;
+        background-color: var(--pims-accent);
+    }
+
+    .pims-form-title i {
+        margin-right: 10px;
+        color: var(--pims-accent);
+    }
+
+    .pims-form-card {
+        background: white;
+        border-radius: var(--pims-border-radius);
+        box-shadow: var(--pims-card-shadow);
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        border-left: 4px solid var(--pims-accent);
+    }
+
+    .pims-form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .pims-form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .pims-form-label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--pims-secondary);
+    }
+
+    .pims-form-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: var(--pims-border-radius);
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .pims-form-input:focus {
+        border-color: var(--pims-accent);
+        box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.1);
+        outline: none;
+    }
+
+    .pims-form-select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: var(--pims-border-radius);
+        font-size: 1rem;
+        background-color: white;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1em;
+    }
+
+    .pims-form-textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: var(--pims-border-radius);
+        font-size: 1rem;
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .pims-file-upload {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+    }
+
+    .pims-file-input {
+        position: absolute;
+        left: 0;
+        top: 0;
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+    }
+
+    .pims-file-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.5rem;
+        border: 2px dashed #ddd;
+        border-radius: var(--pims-border-radius);
+        background-color: #f9f9f9;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .pims-file-label:hover {
+        border-color: var(--pims-accent);
+        background-color: rgba(41, 128, 185, 0.05);
+    }
+
+    .pims-file-icon {
+        margin-right: 0.75rem;
+        color: var(--pims-accent);
+        font-size: 1.5rem;
+    }
+
+    .pims-form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .pims-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--pims-border-radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .pims-btn-primary {
+        background-color: var(--pims-accent);
+        color: white;
+    }
+
+    .pims-btn-primary:hover {
+        background-color: #2472a4;
+        transform: translateY(-2px);
+    }
+
+    .pims-btn-secondary {
+        background-color: #ecf0f1;
+        color: var(--pims-secondary);
+    }
+
+    .pims-btn-secondary:hover {
+        background-color: #dfe6e9;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #pims-page-content {
+            margin-left: 0;
+            padding: 1rem;
+        }
+
+        .pims-form-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
 
 <body>
-
     <!-- NAV -->
     @include('includes.nav')
 
-    <div class="columns" id="app-content">
-        @include('inspector.menu')
+    <!-- Sidebar -->
+    @include('inspector.menu')
 
-        <div class="column is-10" id="page-content">
-            <div class="content-header">
+    <!-- Main Content -->
+    <div id="pims-page-content">
+        <div class="pims-form-container">
+            <h1 class="pims-form-title">
+                <i class="fas fa-user-lock"></i> Prisoner Registration
+            </h1>
 
-            </div>
+            <form action="{{ route('prisoners.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
 
-           
+                <div class="pims-form-grid">
+                    <!-- Personal Information -->
+                    <div class="pims-form-card">
+                        <h2 class="pims-form-title is-size-4">
+                            <i class="fas fa-id-card"></i> Personal Information
+                        </h2>
 
-            <section class="section">
-                <div class="container">
-                   
-                    <form action="{{ route('prisoners.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="columns">
-                            <!-- Personal Information -->
-                            <div class="column is-half">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <p class="title is-4">Personal Information</p>
-                                        <div class="field">
-                                            <!-- Prison dropdown -->
-                                            <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
-                                        </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">First Name</label>
+                            <input class="pims-form-input" type="text" name="first_name" placeholder="Enter first name" required>
+                        </div>
 
-                                        <div class="field">
-                                            <label class="label">First Name</label>
-                                            <div class="control">
-                                                <input class="input" type="text" name="first_name" placeholder="Enter first name" required>
-                                            </div>
-                                        </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Middle Name</label>
+                            <input class="pims-form-input" type="text" name="middle_name" placeholder="Enter middle name">
+                        </div>
 
-                                        <div class="field">
-                                            <label class="label">Middle Name</label>
-                                            <div class="control">
-                                                <input class="input" type="text" name="middle_name" placeholder="Enter middle name">
-                                            </div>
-                                        </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Last Name</label>
+                            <input class="pims-form-input" type="text" name="last_name" placeholder="Enter last name" required>
+                        </div>
 
-                                        <div class="field">
-                                            <label class="label">Last Name</label>
-                                            <div class="control">
-                                                <input class="input" type="text" name="last_name" placeholder="Enter last name" required>
-                                            </div>
-                                        </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Birthday</label>
+                            <input class="pims-form-input" type="date" name="dob" required>
+                        </div>
 
-                                        <div class="field">
-                                            <label class="label">Birthday</label>
-                                            <div class="control">
-                                                <input class="input" type="date" name="dob" required>
-                                            </div>
-                                        </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Sex</label>
+                            <select class="pims-form-select" name="sex" required>
+                                <option value="Male" selected>Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                    </div>
 
-                                        <div class="field">
-                                            <label class="label">Sex</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select name="sex" required>
-                                                        <option value="Male" selected>Male</option>
-                                                        <option value="Female">Female</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+                    <!-- Additional Personal Info -->
+                    <div class="pims-form-card">
+                        <h2 class="pims-form-title is-size-4">
+                            <i class="fas fa-info-circle"></i> Additional Information
+                        </h2>
 
-                                        <div class="field">
-                                            <label class="label">Address</label>
-                                            <div class="control">
-                                                <textarea class="textarea" name="address" placeholder="Enter address" required></textarea>
-                                            </div>
-                                        </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Address</label>
+                            <textarea class="pims-form-textarea" name="address" placeholder="Enter address" required></textarea>
+                        </div>
 
-                                        <div class="field">
-                                            <label class="label">Marital Status</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select name="marital_status" required>
-                                                        <option value="Single">Single</option>
-                                                        <option value="Married">Married</option>
-                                                        <option value="Divorced">Divorced</option>
-                                                        <option value="Widowed">Widowed</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Marital Status</label>
+                            <select class="pims-form-select" name="marital_status" required>
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
+                            </select>
+                        </div>
 
-                            <!-- Case Details -->
-                            <div class="column is-half">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <p class="title is-4">Case Details</p>
-
-                                        <div class="field">
-                                            <label class="label">Crime Committed</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select name="crime_committed" required>
-                                                        <option value="" disabled selected>Select Offense</option>
-                                                        <option>Theft</option>
-                                                        <option>Assault</option>
-                                                        <option>Drug Possession</option>
-                                                        <option>Fraud</option>
-                                                        <option>Other</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="field">
-                                            <label class="label">Status</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select name="status" required>
-                                                        <option value="" disabled selected>Status</option>
-                                                        <option>Active</option>
-                                                        <option>Inactive</option>
-                                                        <option>Released</option>
-                                                       
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-
-
-                                        <div class="field">
-                                            <label class="label">Time Serve Start</label>
-                                            <div class="control">
-                                                <input class="input" type="date" name="time_serve_start" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label class="label">Time Serve Ends</label>
-                                            <div class="control">
-                                                <input class="input" type="date" name="time_serve_end" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Emergency Contact -->
-                                <div class="card">
-                                    <div class="card-content">
-                                        <p class="title is-4">Emergency Contact</p>
-
-                                        <div class="field">
-                                            <label class="label">Name</label>
-                                            <div class="control">
-                                                <input class="input" type="text" name="emergency_contact_name" placeholder="Enter emergency contact name" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label class="label">Relation</label>
-                                            <div class="control">
-                                                <input class="input" type="text" name="emergency_contact_relation" placeholder="Enter relation" required>
-                                            </div>
-                                        </div>
-
-                                        <div class="field">
-                                            <label class="label">Contact #</label>
-                                            <div class="control">
-                                                <input class="input" type="tel" name="emergency_contact_number" placeholder="Enter contact number" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Inmate Image Upload -->
-                                <div class="card">
-                                    <div class="card-content">
-                                        <p class="title is-4">Inmate Image</p>
-                                        <div class="field">
-                                            <div class="file has-name is-fullwidth">
-                                                <label class="file-label">
-                                                    <input class="file-input" type="file" name="inmate_image" required>
-                                                    <span class="file-cta">
-                                                        <span class="file-icon">
-                                                            <i class="fa fa-upload"></i>
-                                                        </span>
-                                                        <span class="file-label">
-                                                            Upload Image…
-                                                        </span>
-                                                    </span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Submit Button -->
-                                <div class="field is-grouped">
-                                    <div class="control">
-                                        <button class="button is-link" type="submit">Submit</button>
-                                    </div>
-                                    <div class="control">
-                                        <button class="button is-light" type="reset">Reset</button>
-                                    </div>
-                                </div>
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Inmate Image</label>
+                            <div class="pims-file-upload">
+                                <input class="pims-file-input" type="file" name="inmate_image" required>
+                                <label class="pims-file-label">
+                                    <i class="fas fa-camera pims-file-icon"></i>
+                                    <span>Click to upload inmate photo</span>
+                                </label>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </section>
 
+                <!-- Case Details -->
+                <div class="pims-form-card">
+                    <h2 class="pims-form-title is-size-4">
+                        <i class="fas fa-gavel"></i> Case Details
+                    </h2>
+
+                    <div class="pims-form-grid">
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Crime Committed</label>
+                            <select class="pims-form-select" name="crime_committed" required>
+                                <option value="" disabled selected>Select Offense</option>
+                                <option>Theft</option>
+                                <option>Assault</option>
+                                <option>Drug Possession</option>
+                                <option>Fraud</option>
+                                <option>Other</option>
+                            </select>
+                        </div>
+
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Status</label>
+                            <select class="pims-form-select" name="status" required>
+                                <option value="" disabled selected>Select Status</option>
+                                <option>Active</option>
+                                <option>Inactive</option>
+                                <option>Released</option>
+                            </select>
+                        </div>
+
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Time Serve Start</label>
+                            <input class="pims-form-input" type="date" name="time_serve_start" required>
+                        </div>
+
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Time Serve Ends</label>
+                            <input class="pims-form-input" type="date" name="time_serve_end" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Contact -->
+                <div class="pims-form-card">
+                    <h2 class="pims-form-title is-size-4">
+                        <i class="fas fa-phone-alt"></i> Emergency Contact
+                    </h2>
+
+                    <div class="pims-form-grid">
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Name</label>
+                            <input class="pims-form-input" type="text" name="emergency_contact_name" placeholder="Enter emergency contact name" required>
+                        </div>
+
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Relation</label>
+                            <input class="pims-form-input" type="text" name="emergency_contact_relation" placeholder="Enter relation" required>
+                        </div>
+
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Contact #</label>
+                            <input class="pims-form-input" type="tel" name="emergency_contact_number" placeholder="Enter contact number" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="pims-form-actions">
+                    <button class="pims-btn pims-btn-secondary" type="reset">Reset</button>
+                    <button class="pims-btn pims-btn-primary" type="submit">Register Prisoner</button>
+                </div>
+            </form>
         </div>
     </div>
 
     @include('includes.footer_js')
-</body>
 
+    <script>
+        // File upload preview (optional enhancement)
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.querySelector('.pims-file-input');
+            const fileLabel = document.querySelector('.pims-file-label span');
+            
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    if (this.files && this.files[0]) {
+                        fileLabel.textContent = this.files[0].name;
+                    }
+                });
+            }
+        });
+    </script>
+</body>
 </html>
