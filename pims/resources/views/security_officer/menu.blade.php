@@ -17,7 +17,7 @@
                 </a>
                 <ul class="submenu">
                     <li><a href="{{ route('security.registerVisitor') }}">Register Visitor</a></li>
-                    <li><a href="{{ route('security.createVisitingTime') }}">Create Visiting Time Request</a></li>
+                    <li><a href="{{ route('security_officer.viewvisitors') }}">View Visitors</a></li>
                 </ul>
             </li>
 
