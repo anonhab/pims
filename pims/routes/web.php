@@ -168,6 +168,9 @@ Route::get('/viewRequests', [PoliceController::class, 'viewRequests'])->name('po
 Route::get('/viewRoomAllocations', [PoliceController::class, 'viewRoomAllocations'])->name('police.viewRoomAllocations');
 Route::get('/createvisitingtime', [SecurityController::class, 'createVisitingTime'])->name('security.createVisitingTime');
 Route::get('/registervisitor', [SecurityController::class, 'registerVisitor'])->name('security.registerVisitor');
+Route::get('/registerVisitor', [SecurityController::class, 'registerVisitor'])->name('security_officer.registerVisitor');
+
+Route::get('/viewvisitors', [SecurityController::class, 'viewVisitors'])->name('security_officer.viewvisitors');
 Route::get('/viewappointments', [SecurityController::class, 'viewAppointments'])->name('security.viewAppointments');
 Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name('security.viewPrisoners');
 Route::get('/assigncertifications', [TrainingController::class, 'assignCertifications'])->name('training.assignCertifications');
@@ -179,15 +182,15 @@ Route::get('/viewtrainingprograms', [TrainingController::class, 'viewTrainingPro
 Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest');
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
+Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
 
 //security_officer
 Route::prefix('security_officer')->group(function () {
-    Route::get('/registerVisitor', [SecurityController::class, 'registerVisitor'])->name('security_officer.registerVisitor');
     Route::post('/storeVisitor', [SecurityController::class, 'storeVisitor'])->name('security_officer.storeVisitor');
-    Route::get('/viewvisitors', [SecurityController::class, 'viewVisitors'])->name('security_officer.viewvisitors');
+
 
     // Visitor Management
-    Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
+   
     Route::put('/updateVisitor/{id}', [SecurityController::class, 'updateVisitor'])->name('security_officer.updateVisitor');
     Route::delete('/deleteVisitor/{id}', [SecurityController::class, 'deleteVisitor'])->name('security_officer.deleteVisitor');
 
