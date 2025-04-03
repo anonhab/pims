@@ -12,8 +12,10 @@ use App\Http\Controllers\training_officer\TrainingController;
 use App\Http\Controllers\visitor\VisitorController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\LoginController;
-use App\Models\Notification;
+use App\Http\Controllers\VisitingRequestController;
 
+use App\Models\Notification;
+//test
 // request
 use Illuminate\Http\Request;
 use App\Models\Requests;
@@ -178,6 +180,24 @@ Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingR
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
 
+//security_officer
+Route::prefix('security_officer')->group(function () {
+    Route::get('/registerVisitor', [SecurityController::class, 'registerVisitor'])->name('security_officer.registerVisitor');
+    Route::post('/storeVisitor', [SecurityController::class, 'storeVisitor'])->name('security_officer.storeVisitor');
+    Route::get('/viewvisitors', [SecurityController::class, 'viewVisitors'])->name('security_officer.viewvisitors');
+
+    // Visitor Management
+    Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
+    Route::put('/updateVisitor/{id}', [SecurityController::class, 'updateVisitor'])->name('security_officer.updateVisitor');
+    Route::delete('/deleteVisitor/{id}', [SecurityController::class, 'deleteVisitor'])->name('security_officer.deleteVisitor');
+
+    // Visiting Time Management
+    Route::get('/createvisitingtime', [SecurityController::class, 'createVisitingTime'])->name('security.createVisitingTime');
+
+    // Other Views
+    Route::get('/viewappointments', [SecurityController::class, 'viewAppointments'])->name('security.viewAppointments');
+    Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name('security.viewPrisoners');
+});
 
 
 

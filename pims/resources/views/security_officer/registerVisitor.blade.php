@@ -1,110 +1,89 @@
 <!DOCTYPE html>
-@include('includes.head')
-    <body>
-       
-        <!--   NAV -->
-        @include('includes.nav')
-        <div class="columns" id="app-content">
+<html lang="en">
+<head>
+    @include('includes.head')
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+    
+    <!-- NAV -->
+    @include('includes.nav')
+    
+    <div class="flex min-h-screen">
         @include('security_officer.menu')
+         
+        <div class="flex-1 p-6">
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+                <h1 class="text-2xl font-bold text-center text-gray-700 mb-6">Visitor Registration</h1>
+                
+                <form action="{{ route('security_officer.storeVisitor') }}" method="POST" class="space-y-4">
+                    @csrf  <!-- Ensure security token is included -->
 
-            <div class="column is-10" id="page-content">
-                    <div class="content-header">
-    </div>
-
-    <section class="section">
-        <div class="container">
-            <h1 class="title has-text-centered">Visitor Registration <h1>
-    
-            <form>
-                <div class="columns">
-                    <!-- Personal Information -->
-                    <div class="column is-half">
-                        <div class="card">
-                            <div class="card-content">
-                                <p class="title is-4">Personal Information</p>
-    
-                                <div class="field">
-                                    <label class="label">Visitor's Full Name</label>
-                                    <div class="control">
-                                        <input class="input" type="text" placeholder="Enter visitor's full name" required>
-                                    </div>
-                                </div>
-    
-                                <div class="field">
-                                    <label class="label">Date of Birth</label>
-                                    <div class="control">
-                                        <input class="input" type="date" required>
-                                    </div>
-                                </div>
-    
-                                <div class="field">
-                                    <label class="label">Gender</label>
-                                    <div class="control">
-                                        <div class="select is-fullwidth">
-                                            <select required>
-                                                <option value="Male" selected>Male</option>
-                                                <option value="Female">Female</option>
-                                              
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-    
-                                <div class="field">
-                                    <label class="label">Contact Information</label>
-                                    <div class="control">
-                                        <input class="input" type="tel" placeholder="Enter visitor's contact number" required>
-                                    </div>
-                                </div>
-    
-                                <div class="field">
-                                    <label class="label">Email Address</label>
-                                    <div class="control">
-                                        <input class="input" type="email" placeholder="Enter email address" required>
-                                    </div>
-                                </div>
-    
-                                <div class="field">
-                                    <label class="label">Home Address</label>
-                                    <div class="control">
-                                        <textarea class="textarea" placeholder="Enter home address" required></textarea>
-                                    </div>
-                                </div>
-    
-                                <div class="field">
-                                    <label class="label">Relationship to Prisoner</label>
-                                    <div class="control">
-                                        <input class="input" type="text" placeholder="Enter relationship to prisoner" required>
-                                    </div>
-                                </div>
-                            </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="first_name" class="block text-gray-700">First Name</label>
+                            <input id="first_name" type="text" name="first_name" placeholder="First Name" required 
+                                class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div>
+                            <label for="last_name" class="block text-gray-700">Last Name</label>
+                            <input id="last_name" type="text" name="last_name" placeholder="Last Name" required 
+                                class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
                         </div>
                     </div>
-                </div>
-    
-                <!-- Submit and Reset Buttons -->
-                <div class="field is-grouped is-grouped-left">
-                    <div class="control">
-                        <button class="button is-link">Register Visitor</button>
+
+                    <div>
+                        <label for="phone_number" class="block text-gray-700">Phone Number</label>
+                        <input id="phone_number" type="text" name="phone_number" placeholder="Phone Number" required 
+                            class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
                     </div>
-                    <div class="control">
-                        <button class="button is-light" type="reset">Reset</button>
+
+                    <div>
+                        <label for="relationship" class="block text-gray-700">Relationship</label>
+                        <input id="relationship" type="text" name="relationship" placeholder="Relationship" required 
+                            class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
                     </div>
-                </div>
-            </form>
-        </div>
-    </section>
-    
-    
-    
-    
-    
-    
-    
+
+                    <div>
+                        <label for="address" class="block text-gray-700">Address</label>
+                        <input id="address" type="text" name="address" placeholder="Address" required 
+                            class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
+                    </div>
+
+                    <div>
+                        <label for="identification_number" class="block text-gray-700">ID Number</label>
+                        <input id="identification_number" type="text" name="identification_number" placeholder="ID Number" required 
+                            class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="username" class="block text-gray-700">Username</label>
+                            <input id="username" type="text" name="username" placeholder="Username" required 
+                                class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div>
+                            <label for="password" class="block text-gray-700">Password</label>
+                            <input id="password" type="password" name="password" placeholder="Password" required 
+                                class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="bg-blue-600 text-white py-3 px-6 rounded-lg w-full hover:bg-blue-700 transition duration-300">Register</button>
+                </form>
+
+                <!-- Debugging (Remove after testing) -->
+                @if(session('success'))
+                    <p class="text-green-500 mt-4">{{ session('success') }}</p>
+                @endif
+                @if($errors->any())
+                    <p class="text-red-500 mt-4">{{ implode(', ', $errors->all()) }}</p>
+                @endif
+
             </div>
         </div>
-
-       @include('includes.footer_js')
-    </body>
-
+    </div>
+    
+    @include('includes.footer_js')
+</body>
 </html>
