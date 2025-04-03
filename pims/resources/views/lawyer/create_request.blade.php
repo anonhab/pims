@@ -49,13 +49,16 @@
                                             <label class="label">Request Type</label>
                                             <div class="control">
                                                 <div class="select is-fullwidth">
-                                                    <select name="request_type" required>
-                                                        <option value="">Select Request Type</option>
-                                                        
-                                                        <option value="backup">Legal assistance</option>
-                                                        <option value="report">Medical assistance </option>
-                                                        <option value="prison_transfer">Prison Transfer</option>
-                                                    </select>
+<select name="request_type" id="request_type" required>
+    <option value="" disabled selected>Select a Request Type</option>
+    <option value="case_review">Case Review Request</option>
+    <option value="medical_assistance">Medical Assistance Request</option>
+    <option value="prison_transfer">Prison Transfer Request</option>
+    <option value="appeal_filing">Appeal Filing Request</option>
+    <option value="visitation_approval">Visitation Approval Request</option>
+    <option value="human_rights_violation">Report Human Rights Violation</option>
+</select>
+
                                                 </div>
                                             </div>
                                         </div>

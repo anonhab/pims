@@ -31,7 +31,7 @@
                     <li><a href="{{ route('mylawyer.viewrequest') }}">View Requests</a></li>
                 </ul>
             </li>
-<!-- 
+
             <li>
                 <a href="#">
                     <span class="icon">
@@ -42,7 +42,7 @@
                     <li><a href="{{ route('mylawyer.createlegalappo') }}">Create/Update Appointment</a></li>
                     <li><a href="{{ route('mylawyer.viewappointment') }}">View Appointment Details</a></li>
                 </ul>
-            </li> -->
+            </li> 
 
 
          

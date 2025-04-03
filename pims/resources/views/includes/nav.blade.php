@@ -688,10 +688,10 @@
                     <i class="fas fa-user-lock pims-logo-icon"></i>
                     <div class="pims-logo-text">
                         PIMS
-                        <small>Prison Information Management</small>
+                        <small>Prison Information Management </small>
                     </div>
                 </div>
-                @if(session('prison'))
+                @if(session('prison_id'))
                 <div class="pims-system-title">
                     <strong>{{ session('rolename') }}</strong> | {{ session('prison') }}
                 </div>
@@ -760,69 +760,50 @@
     </div>
     @endif
 
-    <!-- Profile Modal -->
-    <div class="pims-modal pims-profile-modal" id="pimsProfileModal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-content">
-            <div class="pims-modal-header">
-                <h2><i class="fas fa-user-shield"></i> User Profile</h2>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pimsProfileModal')">&times;</button>
-            </div>
-            <div class="pims-modal-body">
-                <div class="pims-profile-header">
-                    <div class="pims-profile-avatar-container">
+  <!-- Profile Modal -->
+<div class="pims-modal pims-profile-modal" id="pimsProfileModal">
+    <div class="pims-modal-background"></div>
+    <div class="pims-modal-content">
+        <div class="pims-modal-header">
+            <h2><i class="fas fa-user-shield"></i> User Profile</h2>
+            <button class="pims-modal-close" onclick="pimsCloseModal('pimsProfileModal')">&times;</button>
+        </div>
+        <div class="pims-modal-body">
+            <div class="pims-profile-header">
+                <div class="pims-profile-avatar-container">
+                    @if(session('user_image'))
                         <img src="{{ asset('storage/' . session('user_image')) }}" alt="User Avatar" class="pims-profile-avatar">
-                    </div>
-                    <div class="pims-profile-info">
-                        <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
-                        <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
-                    </div>
+                    @endif
+                    
                 </div>
-                <div class="pims-profile-details">
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Username:</div>
-                        <div class="pims-detail-value">{{ session('username') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Full Name:</div>
-                        <div class="pims-detail-value">{{ session('first_name') }} {{ session('last_name') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Email:</div>
-                        <div class="pims-detail-value">{{ session('email') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Phone:</div>
-                        <div class="pims-detail-value">{{ session('phone') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Gender:</div>
-                        <div class="pims-detail-value">{{ session('gender') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Address:</div>
-                        <div class="pims-detail-value">{{ session('address') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Role:</div>
-                        <div class="pims-detail-value">{{ session('rolename') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Prison:</div>
-                        <div class="pims-detail-value">{{ session('prison') }}</div>
-                    </div>
-                    <div class="pims-detail-item">
-                        <div class="pims-detail-label">Prison ID:</div>
-                        <div class="pims-detail-value">{{ session('prison_id') }}</div>
-                    </div>
+                <div class="pims-profile-info">
+                    @if(session('first_name') || session('last_name'))
+                        <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
+                    @endif
+                    @if(session('rolename') || session('prison'))
+                        <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
+                    @endif
+                </div>
+            </div>
+            <div class="pims-profile-details">
+                @foreach (['username', 'first_name', 'last_name', 'email', 'phone', 'gender', 'address', 'rolename', 'prison', 'prison_id', 'law_firm', 'license_number', 'cases_handled', 'date_of_birth', 'contact_info'] as $key)
+                    @if(session($key))
+                        <div class="pims-detail-item">
+                            <div class="pims-detail-label">{{ ucwords(str_replace('_', ' ', $key)) }}:</div>
+                            <div class="pims-detail-value">{{ session($key) }}</div>
+                        </div>
+                    @endif
+                @endforeach
+                @if(session('user_id') || session('lawyer_id'))
                     <div class="pims-detail-item">
                         <div class="pims-detail-label">User ID:</div>
-                        <div class="pims-detail-value">{{ session('user_id') }}</div>
+                        <div class="pims-detail-value">{{ session('user_id') }}{{ session('lawyer_id') }}</div>
                     </div>
-                </div>
+                @endif
             </div>
         </div>
     </div>
+</div>
 
     <!-- Change Password Modal -->
     <div class="pims-modal pims-password-modal" id="pimsPasswordModal">

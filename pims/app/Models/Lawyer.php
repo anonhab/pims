@@ -24,8 +24,9 @@ class Lawyer extends Model
         'license_number',
         'cases_handled',
         'prison',
+        'profile_image', // Added profile image column
     ];
-
+    
     protected $hidden = [
         'password',
     ];
@@ -37,4 +38,9 @@ class Lawyer extends Model
     {
         return $this->hasMany(LawyerPrisonerAssignment::class, 'lawyer_id');
     }
+    public function prison()
+{
+    return $this->belongsTo(Prison::class);
+}
+
 }
