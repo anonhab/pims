@@ -253,144 +253,283 @@
             outline: none;
         }
 
-        /* Modal Styles */
-        .pims-modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
+        /* Modal Styles - Enhanced */
+.pims-modal {
+    display: none;
+    position: fixed;
+    z-index: 1001;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    opacity: 0;
+    transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
+    backdrop-filter: blur(0px);
+    overflow-y: auto;
+    padding: 2rem 0;
+}
 
-        .pims-modal.is-active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 1;
-        }
+.pims-modal.is-active {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    opacity: 1;
+    backdrop-filter: blur(3px);
+}
 
-        .pims-modal-card {
-            background: white;
-            border-radius: var(--pims-border-radius);
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-        }
+.pims-modal-card {
+    background: white;
+    border-radius: var(--pims-border-radius, 8px);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    transform: translateY(-20px);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
 
-        .pims-modal.is-active .pims-modal-card {
-            transform: translateY(0);
-        }
+.pims-modal.is-active .pims-modal-card {
+    transform: translateY(0);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+}
 
-        .pims-modal-card-head {
-            padding: 1.25rem;
-            background-color: rgba(41, 128, 185, 0.1);
-            color: var(--pims-primary);
-            border-top-left-radius: var(--pims-border-radius);
-            border-top-right-radius: var(--pims-border-radius);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.pims-modal-card-head {
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(41, 128, 185, 0.15) 0%, rgba(41, 128, 185, 0.1) 100%);
+    color: var(--pims-primary, #2980b9);
+    border-top-left-radius: var(--pims-border-radius, 8px);
+    border-top-right-radius: var(--pims-border-radius, 8px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(41, 128, 185, 0.2);
+}
 
-        .pims-modal-card-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+.pims-modal-card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+}
 
-        .pims-modal-close {
-            background: none;
-            border: none;
-            color: var(--pims-primary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-            line-height: 1;
-        }
+.pims-modal-card-title svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    fill: currentColor;
+}
 
-        .pims-modal-close:hover {
-            transform: rotate(90deg);
-        }
+.pims-modal-close {
+    background: none;
+    border: none;
+    color: var(--pims-primary, #2980b9);
+    font-size: 1.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    line-height: 1;
+    padding: 0.5rem;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-        .pims-modal-card-body {
-            padding: 1.5rem;
-            overflow-y: auto;
-        }
+.pims-modal-close:hover {
+    transform: rotate(90deg);
+    background-color: rgba(41, 128, 185, 0.1);
+}
 
-        .pims-modal-card-foot {
-            padding: 1rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
-            display: flex;
-            justify-content: center;
-            gap: 0.75rem;
-        }
+.pims-modal-close:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.3);
+}
 
-        /* Prisoner Details Styles */
-        .pims-prisoner-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
+.pims-modal-card-body {
+    padding: 2rem;
+    overflow-y: auto;
+    flex-grow: 1;
+}
 
-        .pims-prisoner-image-container {
-            flex: 1;
-            min-width: 200px;
-            text-align: center;
-        }
+.pims-modal-card-foot {
+    padding: 1.25rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    background-color: #f8f9fa;
+}
 
-        .pims-prisoner-main-image {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 4px solid var(--pims-accent);
-            margin-bottom: 0.5rem;
-        }
+/* Prisoner Details Styles - Enhanced */
+.pims-prisoner-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2.5rem;
+}
 
-        .pims-prisoner-info {
-            flex: 2;
-            min-width: 300px;
-        }
+.pims-prisoner-image-container {
+    flex: 1;
+    min-width: 550px;
+    text-align: center;
+    position: relative;
+}
 
-        .pims-info-box {
-            background-color: #f8f9fa;
-            border-radius: var(--pims-border-radius);
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
+.pims-prisoner-main-image {
+    width: 580px;
+    height: 580px;
+   
+    border-radius: 5%;
+    object-fit: cover;
+    border: 4px solid var(--pims-accent);
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-        .pims-info-box-title {
-            font-weight: 600;
-            color: var(--pims-primary);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+.pims-prisoner-main-image:hover {
+    transform: scale(3.1); /* Zoom effect */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* More intense shadow */
+}
 
-        .pims-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1rem;
-        }
+.pims-prisoner-id-badge {
+    display: inline-block;
+    background-color: var(--pims-primary, #2980b9);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-        .pims-info-item strong {
-            color: var(--pims-primary);
-            font-weight: 600;
-        }
+.pims-prisoner-info {
+    flex: 2;
+    min-width: 300px;
+}
 
+.pims-info-box {
+    background-color: #f8f9fa;
+    border-radius: var(--pims-border-radius, 8px);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--pims-primary, #2980b9);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pims-info-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.pims-info-box-title {
+    font-weight: 700;
+    color: var(--pims-primary, #2980b9);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.pims-info-box-title svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    fill: currentColor;
+}
+
+.pims-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.pims-info-item {
+    padding: 0.5rem 0;
+    border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+.pims-info-item:last-child {
+    border-bottom: none;
+}
+
+.pims-info-item strong {
+    color: var(--pims-primary, #2980b9);
+    font-weight: 600;
+    display: inline-block;
+    min-width: 100px;
+}
+
+/* Status Indicators */
+.pims-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pims-status-active {
+    background-color: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+}
+
+.pims-status-inactive {
+    background-color: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+}
+
+.pims-status-pending {
+    background-color: rgba(241, 196, 15, 0.2);
+    color: #f1c40f;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .pims-prisoner-details {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .pims-prisoner-image-container {
+        order: -1;
+    }
+    
+    .pims-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pims-modal-card-body {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pims-modal-card {
+        width: 95%;
+    }
+    
+    .pims-modal-card-head {
+        padding: 1rem;
+    }
+    
+    .pims-modal-card-title {
+        font-size: 1.25rem;
+    }
+    
+    .pims-prisoner-main-image {
+        width: 140px;
+        height: 140px;
+    }
+}
         /* Pagination */
         .pims-pagination {
             display: flex;
@@ -590,104 +729,112 @@
         </div>
     </div>
 
-    <!-- View Prisoner Modal -->
-    <div class="pims-modal" id="pims-view-prisoner-modal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-card">
-            <header class="pims-modal-card-head">
-                <p class="pims-modal-card-title">
-                    <i class="fas fa-user-lock"></i> Prisoner Details
-                </p>
-                <button class="pims-modal-close">&times;</button>
-            </header>
-            <section class="pims-modal-card-body">
-                <div class="pims-prisoner-details">
-                    <div class="pims-prisoner-image-container">
-                        <img id="pims-view-inmate-image" class="pims-prisoner-main-image" src="" alt="Prisoner Image">
-                        <p class="has-text-grey-light pims-mt-1">Prisoner Profile</p>
+   <!-- View Prisoner Modal -->
+<div class="pims-modal" id="pims-view-prisoner-modal">
+    <div class="pims-modal-background"></div>
+    <div class="pims-modal-card">
+        <header class="pims-modal-card-head">
+            <p class="pims-modal-card-title">
+                <i class="fas fa-user-lock"></i> Prisoner Details
+            </p>
+            <button class="pims-modal-close">&times;</button>
+        </header>
+        <section class="pims-modal-card-body">
+            <div class="pims-prisoner-details">
+                <!-- Prisoner Image -->
+                <div class="pims-prisoner-image-container">
+                    <img id="pims-view-inmate-image" class="pims-prisoner-main-image" src="" alt="Prisoner Image">
+                    <p class="has-text-grey-light pims-mt-1">Prisoner Profile</p>
+                </div>
+
+                <!-- Prisoner Info -->
+                <div class="pims-prisoner-info">
+                    <!-- Basic Information Box -->
+                    <div class="pims-info-box">
+                        <p class="pims-info-box-title"><i class="fas fa-id-card"></i> Basic Information</p>
+                        <div class="pims-info-grid">
+                            <div class="pims-info-item">
+                                <strong>ID:</strong> <span id="pims-view-prisoner-id">1</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Prison ID:</strong> <span id="pims-view-prison-id">N/A</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Name:</strong> <span id="pims-view-first-name">Habtamu</span> <span id="pims-view-middle-name">Bitew</span> <span id="pims-view-last-name">Gashu</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>DOB:</strong> <span id="pims-view-dob">March 13, 2025</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Gender:</strong> <span id="pims-view-sex">male</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Address:</strong> <span id="pims-view-address">Bahir dar, Ethiopia</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Marital Status:</strong> <span id="pims-view-marital-status">single</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Status:</strong> <span id="pims-view-status">released</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="pims-prisoner-info">
-                        <div class="pims-info-box">
-                            <p class="pims-info-box-title"><i class="fas fa-id-card"></i> Basic Information</p>
-                            <div class="pims-info-grid">
-                                <div class="pims-info-item">
-                                    <strong>ID:</strong> <span id="pims-view-prisoner-id">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Prison ID:</strong> <span id="pims-view-prison-id">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Name:</strong> <span id="pims-view-first-name">N/A</span> <span id="pims-view-middle-name">N/A</span> <span id="pims-view-last-name">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>DOB:</strong> <span id="pims-view-dob">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Gender:</strong> <span id="pims-view-sex">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Address:</strong> <span id="pims-view-address">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Marital Status:</strong> <span id="pims-view-marital-status">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Status:</strong> <span id="pims-view-status">N/A</span>
-                                </div>
+
+                    <!-- Incarceration Details Box -->
+                    <div class="pims-info-box">
+                        <p class="pims-info-box-title"><i class="fas fa-gavel"></i> Incarceration Details</p>
+                        <div class="pims-info-grid">
+                            <div class="pims-info-item">
+                                <strong>Crime:</strong> <span id="pims-view-crime-committed">Assault</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Sentence Start:</strong> <span id="pims-view-time-serve-start">March 12, 2025</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Sentence End:</strong> <span id="pims-view-time-serve-end">Life Sentence</span>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="pims-info-box">
-                            <p class="pims-info-box-title"><i class="fas fa-gavel"></i> Incarceration Details</p>
-                            <div class="pims-info-grid">
-                                <div class="pims-info-item">
-                                    <strong>Crime:</strong> <span id="pims-view-crime-committed">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Sentence Start:</strong> <span id="pims-view-time-serve-start">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Sentence End:</strong> <span id="pims-view-time-serve-end">N/A</span>
-                                </div>
+                    <!-- Emergency Contact Box -->
+                    <div class="pims-info-box">
+                        <p class="pims-info-box-title"><i class="fas fa-phone-emergency"></i> Emergency Contact</p>
+                        <div class="pims-info-grid">
+                            <div class="pims-info-item">
+                                <strong>Name:</strong> <span id="pims-view-emergency-contact-name">Habtamu Gashu</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Relation:</strong> <span id="pims-view-emergency-contact-relation">dsdc</span>
+                            </div>
+                            <div class="pims-info-item">
+                                <strong>Phone:</strong> <span id="pims-view-emergency-contact-number">0909029295</span>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="pims-info-box">
-                            <p class="pims-info-box-title"><i class="fas fa-phone-emergency"></i> Emergency Contact</p>
-                            <div class="pims-info-grid">
-                                <div class="pims-info-item">
-                                    <strong>Name:</strong> <span id="pims-view-emergency-contact-name">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Relation:</strong> <span id="pims-view-emergency-contact-relation">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Phone:</strong> <span id="pims-view-emergency-contact-number">N/A</span>
-                                </div>
+                    <!-- System Information Box -->
+                    <div class="pims-info-box">
+                        <p class="pims-info-box-title"><i class="fas fa-clock"></i> System Information</p>
+                        <div class="pims-info-grid">
+                            <div class="pims-info-item">
+                                <strong>Created At:</strong> <span id="pims-view-created-at">March 9, 2025, 12:50 AM</span>
                             </div>
-                        </div>
-
-                        <div class="pims-info-box">
-                            <p class="pims-info-box-title"><i class="fas fa-clock"></i> System Information</p>
-                            <div class="pims-info-grid">
-                                <div class="pims-info-item">
-                                    <strong>Created At:</strong> <span id="pims-view-created-at">N/A</span>
-                                </div>
-                                <div class="pims-info-item">
-                                    <strong>Last Updated:</strong> <span id="pims-view-updated-at">N/A</span>
-                                </div>
+                            <div class="pims-info-item">
+                                <strong>Last Updated:</strong> <span id="pims-view-updated-at">March 9, 2025, 12:50 AM</span>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-            <footer class="pims-modal-card-foot">
-                <button class="pims-btn pims-btn-secondary pims-close-modal">
-                    <i class="fas fa-times"></i> Close
-                </button>
-            </footer>
-        </div>
+            </div>
+        </section>
+        <footer class="pims-modal-card-foot">
+            <button class="pims-btn pims-btn-secondary pims-close-modal">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </footer>
     </div>
+</div>
+
 
     <!-- Delete Confirmation Modal -->
     <div class="pims-modal" id="pims-delete-prisoner-modal">
@@ -728,129 +875,139 @@
     @include('includes.footer_js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // View Prisoner Modal
-            const viewButtons = document.querySelectorAll('.pims-view-prisoner');
-            const viewModal = document.getElementById('pims-view-prisoner-modal');
-            const deleteModal = document.getElementById('pims-delete-prisoner-modal');
-            const closeModalButtons = document.querySelectorAll('.pims-modal-close, .pims-close-modal');
-            const deleteForm = document.getElementById('pims-delete-prisoner-form');
-            const deletePrisonerName = document.getElementById('pims-delete-prisoner-name');
-            let currentDeleteUrl = '';
+    // View Prisoner Modal
+    const viewButtons = document.querySelectorAll('.pims-view-prisoner');
+    const viewModal = document.getElementById('pims-view-prisoner-modal');
+    const deleteModal = document.getElementById('pims-delete-prisoner-modal');
+    const closeModalButtons = document.querySelectorAll('.pims-modal-close, .pims-close-modal');
+    const deleteForm = document.getElementById('pims-delete-prisoner-form');
+    const deletePrisonerName = document.getElementById('pims-delete-prisoner-name');
+    let currentDeleteUrl = '';
 
-            // Initialize view buttons
-            viewButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const prisonerId = this.getAttribute('data-id');
-                    
-                    // Show loading state
-                    viewModal.classList.add('is-active');
-                    document.getElementById('pims-view-inmate-image').src = '';
-                    
-                    fetch(`/prisoners/${prisonerId}`)
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            // Populate the modal with prisoner data
-                            document.getElementById('pims-view-prisoner-id').textContent = data.id || 'N/A';
-                            document.getElementById('pims-view-prison-id').textContent = data.prison_id || 'N/A';
-                            document.getElementById('pims-view-first-name').textContent = data.first_name || 'N/A';
-                            document.getElementById('pims-view-middle-name').textContent = data.middle_name || '';
-                            document.getElementById('pims-view-last-name').textContent = data.last_name || 'N/A';
-                            document.getElementById('pims-view-dob').textContent = data.dob || 'N/A';
-                            document.getElementById('pims-view-sex').textContent = data.gender || 'N/A';
-                            document.getElementById('pims-view-address').textContent = data.address || 'N/A';
-                            document.getElementById('pims-view-marital-status').textContent = data.marital_status || 'N/A';
-                            document.getElementById('pims-view-crime-committed').textContent = data.crime_committed || 'N/A';
-                            document.getElementById('pims-view-status').textContent = data.status || 'N/A';
-                            document.getElementById('pims-view-time-serve-start').textContent = data.time_serve_start || 'N/A';
-                            document.getElementById('pims-view-time-serve-end').textContent = data.time_serve_end || 'N/A';
-                            document.getElementById('pims-view-emergency-contact-name').textContent = data.emergency_contact_name || 'N/A';
-                            document.getElementById('pims-view-emergency-contact-relation').textContent = data.emergency_contact_relation || 'N/A';
-                            document.getElementById('pims-view-emergency-contact-number').textContent = data.emergency_contact_number || 'N/A';
-                            document.getElementById('pims-view-created-at').textContent = data.created_at || 'N/A';
-                            document.getElementById('pims-view-updated-at').textContent = data.updated_at || 'N/A';
-
-                            // Set image source if available
-                            const inmateImage = document.getElementById('pims-view-inmate-image');
-                            if (data.inmate_image) {
-                                inmateImage.src = '/storage/' + data.inmate_image;
-                            } else {
-                                inmateImage.src = '{{ asset("default-profile.png") }}';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error fetching prisoner data:', error);
-                            // Optionally show an error message in the modal
-                        });
-                });
-            });
-
-            // Initialize delete buttons
-            document.querySelectorAll('.pims-delete-prisoner').forEach(button => {
-                button.addEventListener('click', function() {
-                    const prisonerId = this.getAttribute('data-id');
-                    const prisonerName = this.getAttribute('data-name');
-                    
-                    deletePrisonerName.textContent = prisonerName;
-                    currentDeleteUrl = `/prisoners/${prisonerId}`;
-                    deleteModal.classList.add('is-active');
-                });
-            });
-
-            // Handle delete form submission
-            deleteForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Show loading state
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-                submitBtn.disabled = true;
-                
-                // Set the form action dynamically
-                this.action = currentDeleteUrl;
-                
-                // Submit the form
-                this.submit();
-            });
-
-            // Close modals
-            closeModalButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    viewModal.classList.remove('is-active');
-                    deleteModal.classList.remove('is-active');
-                });
-            });
-
-            // Close modal when clicking outside
-            [viewModal, deleteModal].forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        modal.classList.remove('is-active');
+    // Initialize view buttons
+    viewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const prisonerId = this.getAttribute('data-id');
+            
+            // Show loading state
+            viewModal.classList.add('is-active');
+            document.getElementById('pims-view-inmate-image').src = '';
+            
+            fetch(`/prisoners/${prisonerId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
                     }
+                    return response.json();
+                })
+                .then(data => {
+                    // Populate the modal with prisoner data
+                    document.getElementById('pims-view-prisoner-id').textContent = data.id || 'N/A';
+                    document.getElementById('pims-view-prison-id').textContent = data.prison_id || 'N/A';
+                    document.getElementById('pims-view-first-name').textContent = data.first_name || 'N/A';
+                    document.getElementById('pims-view-middle-name').textContent = data.middle_name || '';
+                    document.getElementById('pims-view-last-name').textContent = data.last_name || 'N/A';
+                    document.getElementById('pims-view-dob').textContent = data.dob || 'N/A';
+                    document.getElementById('pims-view-sex').textContent = data.gender || 'N/A';
+                    document.getElementById('pims-view-address').textContent = data.address || 'N/A';
+                    document.getElementById('pims-view-marital-status').textContent = data.marital_status || 'N/A';
+                    document.getElementById('pims-view-crime-committed').textContent = data.crime_committed || 'N/A';
+                    document.getElementById('pims-view-status').textContent = data.status || 'N/A';
+                    document.getElementById('pims-view-time-serve-start').textContent = data.time_serve_start || 'N/A';
+                    
+                    // Handle 'time_serve_end' for life sentence or death sentence
+                    if (data.time_serve_end === 'life') {
+                        document.getElementById('pims-view-time-serve-end').textContent = 'Life Sentence';
+                    } else if (data.time_serve_end === 'death') {
+                        document.getElementById('pims-view-time-serve-end').textContent = 'Death Sentence';
+                    } else {
+                        document.getElementById('pims-view-time-serve-end').textContent = data.time_serve_end || 'N/A';
+                    }
+
+                    document.getElementById('pims-view-emergency-contact-name').textContent = data.emergency_contact_name || 'N/A';
+                    document.getElementById('pims-view-emergency-contact-relation').textContent = data.emergency_contact_relation || 'N/A';
+                    document.getElementById('pims-view-emergency-contact-number').textContent = data.emergency_contact_number || 'N/A';
+                    document.getElementById('pims-view-created-at').textContent = data.created_at || 'N/A';
+                    document.getElementById('pims-view-updated-at').textContent = data.updated_at || 'N/A';
+
+                    // Set image source if available
+                    const inmateImage = document.getElementById('pims-view-inmate-image');
+                    if (data.inmate_image) {
+                        inmateImage.src = '/storage/' + data.inmate_image;
+                    } else {
+                        inmateImage.src = '{{ asset("default-profile.png") }}';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching prisoner data:', error);
+                    // Optionally show an error message in the modal
                 });
-            });
-
-            // Table Reload
-            document.getElementById('pims-reload-prisoners').addEventListener('click', function() {
-                window.location.reload();
-            });
-
-            // Table Search
-            document.getElementById('pims-search-prisoner').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const prisonerCards = document.querySelectorAll('.pims-prisoner-card');
-
-                prisonerCards.forEach(card => {
-                    const cardText = card.textContent.toLowerCase();
-                    card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
-                });
-            });
         });
+    });
+
+    // Initialize delete buttons
+    document.querySelectorAll('.pims-delete-prisoner').forEach(button => {
+        button.addEventListener('click', function() {
+            const prisonerId = this.getAttribute('data-id');
+            const prisonerName = this.getAttribute('data-name');
+            
+            deletePrisonerName.textContent = prisonerName;
+            currentDeleteUrl = `/prisoners/${prisonerId}`;
+            deleteModal.classList.add('is-active');
+        });
+    });
+
+    // Handle delete form submission
+    deleteForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+        submitBtn.disabled = true;
+        
+        // Set the form action dynamically
+        this.action = currentDeleteUrl;
+        
+        // Submit the form
+        this.submit();
+    });
+
+    // Close modals
+    closeModalButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            viewModal.classList.remove('is-active');
+            deleteModal.classList.remove('is-active');
+        });
+    });
+
+    // Close modal when clicking outside
+    [viewModal, deleteModal].forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.classList.remove('is-active');
+            }
+        });
+    });
+
+    // Table Reload
+    document.getElementById('pims-reload-prisoners').addEventListener('click', function() {
+        window.location.reload();
+    });
+
+    // Table Search
+    document.getElementById('pims-search-prisoner').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const prisonerCards = document.querySelectorAll('.pims-prisoner-card');
+
+        prisonerCards.forEach(card => {
+            const cardText = card.textContent.toLowerCase();
+            card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+});
+
     </script>
 </body>
-</html>
+</html>c

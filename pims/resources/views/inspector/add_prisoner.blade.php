@@ -9,74 +9,74 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-        :root {
-            --pims-primary: #1a2a3a;
-            /* Darker blue for more authority */
-            --pims-secondary: #2c3e50;
-            --pims-accent: #2980b9;
-            /* Slightly darker blue */
-            --pims-danger: #c0392b;
-            /* Darker red */
-            --pims-success: #27ae60;
-            /* Darker green */
-            --pims-warning: #d35400;
-            /* Darker orange */
-            --pims-text-light: #ecf0f1;
-            --pims-text-dark: #2c3e50;
-            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            --pims-border-radius: 6px;
-            --pims-nav-height: 60px;
-            --pims-sidebar-width: 250px;
-        }
+    :root {
+        --pims-primary: #1a2a3a;
+        /* Darker blue for more authority */
+        --pims-secondary: #2c3e50;
+        --pims-accent: #2980b9;
+        /* Slightly darker blue */
+        --pims-danger: #c0392b;
+        /* Darker red */
+        --pims-success: #27ae60;
+        /* Darker green */
+        --pims-warning: #d35400;
+        /* Darker orange */
+        --pims-text-light: #ecf0f1;
+        --pims-text-dark: #2c3e50;
+        --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        --pims-border-radius: 6px;
+        --pims-nav-height: 60px;
+        --pims-sidebar-width: 250px;
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        body {
-            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: var(--pims-text-dark);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
+    body {
+        font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f2f5;
+        color: var(--pims-text-dark);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+    }
 
-        /* Header Styles */
-        .header {
-            color: white;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            top: 0;
-        }
+    /* Header Styles */
+    .header {
+        color: white;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        top: 0;
+    }
 
-        /* Sidebar Styles */
-        .sidbar {
-            position: fixed;
-            top: var(--pims-nav-height);
-            left: 0;
-            width: var(--pims-sidebar-width);
-            height: calc(100vh - var(--pims-nav-height));
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            overflow-y: auto;
-            z-index: 900;
-            transition: all 0.3s ease;
-        }
+    /* Sidebar Styles */
+    .sidbar {
+        position: fixed;
+        top: var(--pims-nav-height);
+        left: 0;
+        width: var(--pims-sidebar-width);
+        height: calc(100vh - var(--pims-nav-height));
+        background: white;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        overflow-y: auto;
+        z-index: 900;
+        transition: all 0.3s ease;
+    }
 
-        /* Main Content Area */
-        #pims-page-content {
-            margin-left: 0;
-            padding: 1.5rem;
-            padding-left: 300px;
-            padding-top: 100px;
-            min-height: calc(100vh - var(--pims-nav-height));
-            transition: all 0.3s ease;
-            background-color: #f0f2f5;
-        }
+    /* Main Content Area */
+    #pims-page-content {
+        margin-left: 0;
+        padding: 1.5rem;
+        padding-left: 300px;
+        padding-top: 100px;
+        min-height: calc(100vh - var(--pims-nav-height));
+        transition: all 0.3s ease;
+        background-color: #f0f2f5;
+    }
 
 
     /* Form Styles */
@@ -266,6 +266,46 @@
             grid-template-columns: 1fr;
         }
     }
+     /* Modal styles */
+     .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding-top: 100px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 8px;
+        }
+        .modal-header, .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h2 {
+            margin: 0;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .modal-footer button {
+            padding: 8px 16px;
+            font-size: 16px;
+            cursor: pointer;
+        }
 </style>
 
 <body>
@@ -387,12 +427,12 @@
 
                         <div class="pims-form-group">
                             <label class="pims-form-label">Time Serve Start</label>
-                            <input class="pims-form-input" type="date" name="time_serve_start" required>
+                            <input class="pims-form-input" type="date" name="time_serve_start" id="time_serve_start" required onchange="openModal()">
                         </div>
 
                         <div class="pims-form-group">
                             <label class="pims-form-label">Time Serve Ends</label>
-                            <input class="pims-form-input" type="date" name="time_serve_end" required>
+                            <input class="pims-form-input" type="text" name="time_serve_end" id="time_serve_end" required readonly>
                         </div>
                     </div>
                 </div>
@@ -429,6 +469,72 @@
             </form>
         </div>
     </div>
+    <!-- Modal -->
+    <div id="sentenceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Enter Sentence Duration</h2>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div>
+                <label for="durationInput">Enter duration in years, or type "life" or "death":</label>
+                <input type="text" id="durationInput" class="pims-form-input" placeholder="e.g., 10 or life or death">
+            </div>
+            <div class="modal-footer">
+                <button onclick="setEndDate()">Set End Date</button>
+                <button onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Open the modal when the "Time Serve Start" date is selected
+        function openModal() {
+            const modal = document.getElementById("sentenceModal");
+            modal.style.display = "block";
+        }
+
+        // Close the modal
+        function closeModal() {
+            const modal = document.getElementById("sentenceModal");
+            modal.style.display = "none";
+        }
+
+        // Set the end date based on the input
+        function setEndDate() {
+            const startDate = document.getElementById("time_serve_start").value;
+            const endDateField = document.getElementById("time_serve_end");
+            const durationInput = document.getElementById("durationInput").value;
+
+            if (!startDate || !durationInput) return;
+
+            let endDate = new Date(startDate);
+
+            if (durationInput.toLowerCase() === "life") {
+                endDateField.value = "Life Sentence";
+                endDateField.readOnly = true;
+                closeModal();
+                return;
+            } 
+            if (durationInput.toLowerCase() === "death") {
+                endDateField.value = "Death Sentence";
+                endDateField.readOnly = true;
+                closeModal();
+                return;
+            }
+
+            let years = parseInt(durationInput);
+            if (isNaN(years) || years <= 0) {
+                alert("Invalid input! Please enter a valid number of years.");
+                return;
+            }
+
+            endDate.setFullYear(endDate.getFullYear() + years);
+            endDateField.value = endDate.toISOString().split("T")[0];
+            endDateField.readOnly = true;
+            closeModal();
+        }
+    </script>
+
 
     @include('includes.footer_js')
 
@@ -437,7 +543,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             const fileInput = document.querySelector('.pims-file-input');
             const fileLabel = document.querySelector('.pims-file-label span');
-            
+
             if (fileInput) {
                 fileInput.addEventListener('change', function(e) {
                     if (this.files && this.files[0]) {
@@ -448,4 +554,5 @@
         });
     </script>
 </body>
+
 </html>
