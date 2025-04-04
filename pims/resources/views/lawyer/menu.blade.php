@@ -4,6 +4,13 @@
         <i class="fas fa-bars"></i>
     </div>
     
+    <!-- Sidebar Logo/Brand -->
+    <div class="pims-sidebar-brand">
+        <i class="fas fa-user-lock pims-brand-icon"></i>
+        <span class="pims-brand-text">PIMS Lawyer</span>
+        <i class="fas fa-times pims-close-sidebar" id="pimsCloseSidebar"></i>
+    </div>
+
     <!-- Sidebar Menu -->
     <aside class="pims-menu">
         <ul class="pims-menu-list">
@@ -11,7 +18,7 @@
             <li class="pims-menu-item">
                 <a href="{{ route('mylawyer.ldashboard') }}" class="pims-menu-link">
                     <span class="pims-menu-icon">
-                        <i class="fas fa-home"></i>
+                        <i class="fas fa-home"></i> <!-- Better dashboard icon -->
                     </span>
                     <span class="pims-menu-text">Dashboard</span>
                 </a>
@@ -21,7 +28,7 @@
             <li class="pims-menu-item pims-has-submenu">
                 <a href="#" class="pims-menu-link">
                     <span class="pims-menu-icon">
-                        <i class="fas fa-user-check"></i>
+                        <i class="fas fa-user-shield"></i> <!-- More appropriate prisoner icon -->
                     </span>
                     <span class="pims-menu-text">My Prisoners</span>
                     <span class="pims-menu-arrow">
@@ -39,7 +46,7 @@
             <li class="pims-menu-item pims-has-submenu">
                 <a href="#" class="pims-menu-link">
                     <span class="pims-menu-icon">
-                        <i class="fas fa-paper-plane"></i>
+                        <i class="fas fa-file-contract"></i> <!-- Better request icon -->
                     </span>
                     <span class="pims-menu-text">Request</span>
                     <span class="pims-menu-arrow">
@@ -48,7 +55,7 @@
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="{{ route('mylawyer.createrequest') }}" class="pims-submenu-link">Create/Update Request</a>
+                        <a href="{{ route('mylawyer.createrequest')}}" class="pims-submenu-link">Create/Update Request</a>
                     </li>
                     <li class="pims-submenu-item">
                         <a href="{{ route('mylawyer.viewrequest') }}" class="pims-submenu-link">View Requests</a>
@@ -60,7 +67,7 @@
             <li class="pims-menu-item pims-has-submenu">
                 <a href="#" class="pims-menu-link">
                     <span class="pims-menu-icon">
-                        <i class="fas fa-calendar"></i>
+                        <i class="fas fa-calendar-check"></i> <!-- Better appointment icon -->
                     </span>
                     <span class="pims-menu-text">Appointment</span>
                     <span class="pims-menu-arrow">
@@ -120,6 +127,7 @@
         width: var(--pims-sidebar-collapsed-width);
     }
 
+    .pims-sidebar-container.pims-collapsed .pims-brand-text,
     .pims-sidebar-container.pims-collapsed .pims-menu-text,
     .pims-sidebar-container.pims-collapsed .pims-menu-arrow,
     .pims-sidebar-container.pims-collapsed .pims-collapse-btn span {
@@ -144,6 +152,35 @@
         background-color: var(--pims-sidebar-bg);
         border-radius: 0 5px 5px 0;
         box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Sidebar Brand */
+    .pims-sidebar-brand {
+        display: flex;
+        align-items: center;
+        padding: 20px 15px;
+        color: white;
+        border-bottom: 1px solid var(--pims-sidebar-border);
+        position: relative;
+    }
+
+    .pims-brand-icon {
+        font-size: 1.5rem;
+        color: var(--pims-sidebar-accent);
+        margin-right: 10px;
+    }
+
+    .pims-brand-text {
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: var(--pims-sidebar-transition);
+    }
+
+    .pims-close-sidebar {
+        position: absolute;
+        right: 15px;
+        cursor: pointer;
+        display: none;
     }
 
     /* Menu Styles */
@@ -299,6 +336,10 @@
             transform: translateX(0);
         }
 
+        .pims-close-sidebar {
+            display: block;
+        }
+
         .pims-sidebar-toggle {
             display: flex;
         }
@@ -337,6 +378,12 @@
     // Mobile sidebar toggle
     document.getElementById('pimsSidebarToggle').addEventListener('click', function() {
         document.getElementById('pimsSidebar').classList.toggle('pims-active');
+    });
+
+    // Close sidebar when clicking X
+    document.getElementById('pimsCloseSidebar').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('pimsSidebar').classList.remove('pims-active');
     });
 
     // Close sidebar when clicking outside on mobile
