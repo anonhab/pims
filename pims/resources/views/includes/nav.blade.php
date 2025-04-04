@@ -686,10 +686,12 @@
             <div class="pims-navbar-brand">
                 <div class="pims-logo">
                     <i class="fas fa-user-lock pims-logo-icon"></i>
+                    <a href="{{ url('/') }}">
                     <div class="pims-logo-text">
                         PIMS
                         <small>Prison Information Management </small>
                     </div>
+                    </a>
                 </div>
                 @if(session('prison_id'))
                 <div class="pims-system-title">
