@@ -1,13 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="stylesheet" href="css/app.css">
 </head>
-
 <body>
     <!-- Navigation -->
     @include('includes.nav')
@@ -54,6 +51,18 @@
                         </a>
                     </div>
                     @endforeach
+                    
+                    <!-- New Discipline Officers Section -->
+                    <div class="column is-3">
+                        <a href="{{ route('discipline_officer.evaluate_request') }}" class="box quick-stats has-background-info has-text-white">
+                            <div class="quick-stats-icon">
+                                <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
+                            </div>
+                            <div class="quick-stats-content">
+                                <h3 class="title is-4">Discipline Officers</h3>
+                            </div>
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Charts Section -->
@@ -131,10 +140,8 @@
                 })
                 .catch(error => {
                     console.error('Error fetching chart data:', error);
-                    
                 });
         });
     </script>
 </body>
-
 </html>

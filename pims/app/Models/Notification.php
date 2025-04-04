@@ -18,7 +18,7 @@ class Notification extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'account_id', 'message', 'status'
+        'id', 'account_id', 'message', 'status','prison_id'
     ];
 
     protected $casts = [

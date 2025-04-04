@@ -18,8 +18,11 @@
                     </span> Appointment Management
                 </a>
                 <ul class="submenu">
+                    <li><a href="{{ route('medical.createAppointment') }}">Create Appointment </a></li>
                     <li><a href="{{ route('medical.viewAppointments') }}">View Appointment Details</a></li>
                 </ul>
+               
+                
             </li>
 
             <li>

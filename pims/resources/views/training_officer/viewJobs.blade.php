@@ -58,35 +58,51 @@
                     <div class="card-content">
                         <!-- Card Layout for Jobs -->
                         <div class="columns is-multiline">
-                            @foreach($jobs as $index => $job)
-                                <div class="column is-4">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <p class="card-header-title">Job Title: {{ $job->job_title }}</p>
+                            @foreach($jobs as $job)
+                            <div class="column is-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <p class="card-header-title">Job Title: {{ $job->job_title }}</p>
+                                    </div>
+                                    <div class="card-content">
+                                        <p><strong>Prisoner ID:</strong> {{ $job->prisoner_id }}</p>
+                                        <p><strong>Assigned By:</strong> {{ $job->assigned_by }}</p>
+                                        <p><strong>Description:</strong> {{ $job->job_description }}</p>
+                                        <p><strong>Assigned Date:</strong> {{ $job->assigned_date }}</p>
+                                        <p><strong>Status:</strong>
+                                            <span class="tag is-{{ $job->status === 'completed' ? 'success' : ($job->status === 'terminated' ? 'danger' : 'warning') }}">
+                                                {{ ucfirst($job->status) }}
+                                            </span>
+                                        </p>
+                                        <p><strong>Created At:</strong> {{ $job->created_at->format('Y-m-d H:i') }}</p>
+                                        <p><strong>Updated At:</strong> {{ $job->updated_at->format('Y-m-d H:i') }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <div class="card-footer-item">
+                                            <button class="button is-small is-link edit-button"
+                                                data-id="{{ $job->id }}"
+                                                data-job-title="{{ $job->job_title }}"
+                                                data-prisoner-id="{{ $job->prisoner_id }}"
+                                                data-assigned-by="{{ $job->assigned_by }}"
+                                                data-job-description="{{ $job->job_description }}"
+                                                data-assigned-date="{{ $job->assigned_date }}"
+                                                data-status="{{ $job->status }}">
+                                                Edit
+                                            </button>
                                         </div>
-                                        <div class="card-content">
-                                            <p><strong>Prisoner ID:</strong> {{ $job->prisoner_id }}</p>
-                                            <p><strong>Assigned By:</strong> {{ $job->assigned_by }}</p>
-                                            <p><strong>Description:</strong> {{ $job->job_description }}</p>
-                                            <p><strong>Assigned Date:</strong> {{ $job->assigned_date }}</p>
-                                            <p><strong>Status:</strong> {{ ucfirst($job->status) }}</p>
-                                            <p><strong>Created At:</strong> {{ $job->created_at }}</p>
-                                            <p><strong>Updated At:</strong> {{ $job->updated_at }}</p>
-                                        </div>
-                                        <div class="card-footer">
-                                            <div class="card-footer-item">
-                                                <a href="#" class="button is-small is-link">Edit</a>
-                                            </div>
-                                            <div class="card-footer-item">
-                                                <form action="#" method="POST" class="delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="button is-small is-danger">Delete</button>
-                                                </form>
-                                            </div>
+                                        <div class="card-footer-item">
+                                            <form action="{{ route('jobs.destroyjob', $job->id) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="button is-small is-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this job?')">
+                                                    Delete
+                                                </button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>
@@ -96,7 +112,7 @@
 
         @include('includes.footer_js')
 
-        <!-- Modal for Create Record -->
+        <!-- Create Job Modal -->
         <div class="modal" id="create-record-modal">
             <div class="modal-background"></div>
             <div class="modal-card">
@@ -105,43 +121,43 @@
                     <button class="delete" aria-label="close" id="close-modal-button"></button>
                 </header>
                 <section class="modal-card-body">
-                    <!-- Form for creating a new job -->
-                    <form id="create-record-form">
+                    <form id="create-record-form" action="{{ route('job.assign') }}" method="POST">
+                        @csrf
                         <div class="field">
                             <label class="label">Job Title</label>
                             <div class="control">
-                                <input class="input" type="text" id="job-title" name="job-title" placeholder="Enter job title" required>
+                                <input class="input" type="text" name="job_title" placeholder="Enter job title" required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Prisoner ID</label>
                             <div class="control">
-                                <input class="input" type="text" id="prisoner-id" name="prisoner-id" placeholder="Enter prisoner ID" required>
+                                <input class="input" type="text" name="prisoner_id" placeholder="Enter prisoner ID" required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Assigned By</label>
                             <div class="control">
-                                <input class="input" type="text" id="assigned-by" name="assigned-by" placeholder="Enter assigned by" required>
+                                <input class="input" type="text" name="assigned_by" placeholder="Enter assigned by" required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Job Description</label>
                             <div class="control">
-                                <textarea class="textarea" id="job-description" name="job-description" placeholder="Enter job description" required></textarea>
+                                <textarea class="textarea" name="job_description" placeholder="Enter job description" required></textarea>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Assigned Date</label>
                             <div class="control">
-                                <input class="input" type="date" id="assigned-date" name="assigned-date" required>
+                                <input class="input" type="date" name="assigned_date" required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Status</label>
                             <div class="control">
                                 <div class="select">
-                                    <select id="status" name="status" required>
+                                    <select name="status" required>
                                         <option value="active">Active</option>
                                         <option value="completed">Completed</option>
                                         <option value="terminated">Terminated</option>
@@ -152,27 +168,97 @@
                     </form>
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button is-success" id="save-record-button">Save changes</button>
+                    <button class="button is-success" type="submit" form="create-record-form">Save changes</button>
                     <button class="button" id="cancel-modal-button">Cancel</button>
                 </footer>
             </div>
         </div>
 
+        <!-- Edit Job Modal -->
+<div class="modal" id="edit-job-modal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+        <header class="modal-card-head">
+            <p class="modal-card-title">Edit Job</p>
+            <button class="delete" aria-label="close" id="close-edit-modal-button"></button>
+        </header>
+        <section class="modal-card-body">
+            <form id="edit-job-form" method="POST" action="{{ route('jobs.update') }}">
+            @csrf
+            @method('PUT')
+                <input type="hidden" name="job_id" id="edit-job-id">
+
+                <div class="field">
+                    <label class="label">Job Title</label>
+                    <div class="control">
+                        <input class="input" type="text" name="job_title" id="edit-job-title" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Prisoner ID</label>
+                    <div class="control">
+                        <input class="input" type="text" name="prisoner_id" id="edit-prisoner-id" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Assigned By</label>
+                    <div class="control">
+                        <input class="input" type="text" name="assigned_by" id="edit-assigned-by" value="{{ session('user_id') }}" readonly>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Job Description</label>
+                    <div class="control">
+                        <textarea class="textarea" name="job_description" id="edit-job-description" required></textarea>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Assigned Date</label>
+                    <div class="control">
+                        <input class="input" type="date" name="assigned_date" id="edit-assigned-date" required>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label class="label">Status</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select name="status" id="edit-status" required>
+                                <option value="active">Active</option>
+                                <option value="completed">Completed</option>
+                                <option value="terminated">Terminated</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <footer class="modal-card-foot">
+            <button class="button is-success" type="submit" form="edit-job-form">Save changes</button>
+            <button class="button" id="cancel-edit-modal-button">Cancel</button>
+        </footer>
+    </div>
+</div>
+
+
         <script>
-            // JavaScript to handle modal and form submission
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
+                // Create Job Modal Handling
                 const createRecordButton = document.getElementById('create-record-button');
                 const closeModalButton = document.getElementById('close-modal-button');
                 const cancelModalButton = document.getElementById('cancel-modal-button');
-                const saveRecordButton = document.getElementById('save-record-button');
                 const createRecordModal = document.getElementById('create-record-modal');
 
-                // Open modal
+                // Open create modal
                 createRecordButton.addEventListener('click', () => {
                     createRecordModal.classList.add('is-active');
                 });
 
-                // Close modal
+                // Close create modal
                 closeModalButton.addEventListener('click', () => {
                     createRecordModal.classList.remove('is-active');
                 });
@@ -181,27 +267,57 @@
                     createRecordModal.classList.remove('is-active');
                 });
 
-                // Save record
-                saveRecordButton.addEventListener('click', () => {
-                    const form = document.getElementById('create-record-form');
-                    const formData = new FormData(form);
+                // Edit Job Modal Handling
+                const editButtons = document.querySelectorAll('.edit-button');
+                const editModal = document.getElementById('edit-job-modal');
+                const closeEditModalButton = document.getElementById('close-edit-modal-button');
+                const cancelEditModalButton = document.getElementById('cancel-edit-modal-button');
 
-                    // Handle the form data, e.g., send it to the server via AJAX
-                    fetch('/api/jobs', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                        createRecordModal.classList.remove('is-active');
-                        // Optionally, reload the page or dynamically add the new job
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
+                editButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const jobId = button.dataset.id;
+                        const form = document.getElementById('edit-job-form');
+
+                        // Set form action with job ID
+                        form.action = `/jobs/${jobId}`;
+
+                        // Populate form fields
+                        document.getElementById('edit-job-title').value = button.dataset.jobTitle;
+                        document.getElementById('edit-prisoner-id').value = button.dataset.prisonerId;
+                        document.getElementById('edit-assigned-by').value = button.dataset.assignedBy;
+                        document.getElementById('edit-job-description').value = button.dataset.jobDescription;
+                        document.getElementById('edit-assigned-date').value = button.dataset.assignedDate;
+                        document.getElementById('edit-status').value = button.dataset.status;
+
+                        editModal.classList.add('is-active');
                     });
+                });
+
+                // Close edit modal
+                closeEditModalButton.addEventListener('click', () => {
+                    editModal.classList.remove('is-active');
+                });
+
+                cancelEditModalButton.addEventListener('click', () => {
+                    editModal.classList.remove('is-active');
+                });
+
+                // Delete Confirmation
+                const deleteForms = document.querySelectorAll('.delete-form');
+                deleteForms.forEach(form => {
+                    form.addEventListener('submit', (e) => {
+                        if (!confirm('Are you sure you want to delete this job?')) {
+                            e.preventDefault();
+                        }
+                    });
+                });
+
+                // Reload button
+                document.getElementById('table-reload').addEventListener('click', () => {
+                    window.location.reload();
                 });
             });
         </script>
 </body>
+
 </html>

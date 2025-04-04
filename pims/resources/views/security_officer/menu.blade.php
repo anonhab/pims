@@ -17,7 +17,7 @@
                 </a>
                 <ul class="submenu">
                     <li><a href="{{ route('security.registerVisitor') }}">Register Visitor</a></li>
-                    <li><a href="{{ route('security.createVisitingTime') }}">Create Visiting Time Request</a></li>
+                    <li><a href="{{ route('security_officer.viewvisitors') }}">View Visitors</a></li>
                 </ul>
             </li>
 
@@ -28,6 +28,7 @@
                     </span> Appointment Management
                 </a>
                 <ul class="submenu">
+                <li><a href="#">Make Appointments</a></li>
                     <li><a href="{{ route('security.viewAppointments') }}">View Appointments</a></li>
                 </ul>
             </li>
@@ -39,7 +40,7 @@
                     </span> Prisoner Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('security.viewPrisoners') }}">View Prisoner Profile</a></li>
+                    <li><a href="{{ route('security.viewPrisoners') }}">View Prisoner status</a></li>
                 </ul>
             </li>
         </ul>

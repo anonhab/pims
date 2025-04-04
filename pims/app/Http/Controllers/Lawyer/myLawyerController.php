@@ -54,14 +54,35 @@ class myLawyerController extends Controller
         // Fetch all users with role_id = 5
         $users = Account::where('role_id', 2)->pluck('user_id');
 
-        // Insert notifications for each user
-        foreach ($users as $userId) {
-            Notification::create([
-                'account_id' => $userId,
-                'message' => "New request: " . $request->request_type,
-                'status' => 'unread',
-            ]);
-        }
+
+// Get prison_id from session
+$prisonId = session('prison_id');
+Log::info('Retrieved prison_id from session', ['prison_id' => $prisonId]); // Log session value
+
+// Debugging: Check if prison_id is null
+if (is_null($prisonId)) {
+    Log::error('prison_id is NULL before inserting into notifications!');
+}
+
+foreach ($users as $userId) {
+    $notification = Notification::create([
+        'account_id' => $userId,
+        'message'    => "New request: " . $request->request_type,
+        'status'     => 'unread',
+        'prison_id'  => $prisonId, // Ensure it's included
+    ]);
+
+    // Log after insertion
+    Log::info('Notification created', [
+        'notification_id' => $notification->id,
+        'account_id'      => $userId,
+        'message'         => $notification->message,
+        'status'          => $notification->status,
+        'prison_id'       => $notification->prison_id, // This should not be NULL
+    ]);
+}
+
+
 
         Log::info("Insert Data: ", $requestData);
 
@@ -117,7 +138,7 @@ class myLawyerController extends Controller
 
     public function createlegalappo()
     {
-         
+
         $lawyerId = session('lawyer_id');
 
         // Check if a lawyer is logged in
@@ -154,42 +175,41 @@ class myLawyerController extends Controller
 
     public function viewappointment()
     {
-       // Get the logged-in lawyer's ID from the session
-    $lawyerId = session('lawyer_id');
+        // Get the logged-in lawyer's ID from the session
+        $lawyerId = session('lawyer_id');
 
-    // Check if the lawyer is logged in
-    if (!$lawyerId) {
-        return redirect()->route('login')->with('error', 'Unauthorized access. Please log in.');
-    }
+        // Check if the lawyer is logged in
+        if (!$lawyerId) {
+            return redirect()->route('login')->with('error', 'Unauthorized access. Please log in.');
+        }
 
-    // Fetch the lawyer's appointments from the lawyer_appointments table using the lawyer_id from the session
-    $appointments = LawyerAppointment::where('lawyer_id', $lawyerId)
-                                      ->paginate(3);  // You can adjust the number of appointments per page as needed
+        // Fetch the lawyer's appointments from the lawyer_appointments table using the lawyer_id from the session
+        $appointments = LawyerAppointment::where('lawyer_id', $lawyerId)
+            ->paginate(3);  // You can adjust the number of appointments per page as needed
 
-    // If no appointments are found for the lawyer, return a message
-    if ($appointments->isEmpty()) {
-        return view('lawyer.view_appointments')->with('error', 'No appointments found for this lawyer.');
-    }
+        // If no appointments are found for the lawyer, return a message
+        if ($appointments->isEmpty()) {
+            return view('lawyer.view_appointments')->with('error', 'No appointments found for this lawyer.');
+        }
 
-    // Pass the appointments data to the view
-    return view('lawyer.view_appointments', compact('appointments'));
+        // Pass the appointments data to the view
+        return view('lawyer.view_appointments', compact('appointments'));
     }
     public function viewrequest()
     {
         // Retrieve the lawyer_id from the session
         $lawyer_id = session('lawyer_id');
-    
+
         // If the lawyer_id is not found in the session, you can redirect or show an error.
         if (!$lawyer_id) {
             return redirect()->route('login')->with('error', 'Please login as a lawyer');
         }
-    
+
         // Retrieve the requests associated with this lawyer_id
         $requests = Requests::where('lawyer_id', $lawyer_id)
-                           ->with('prisoner') // Assuming Request has a 'prisoner' relationship
-                           ->paginate(10); // Adjust the number of items per page as needed
-    
+            ->with('prisoner') // Assuming Request has a 'prisoner' relationship
+            ->paginate(10); // Adjust the number of items per page as needed
+
         return view('lawyer.view_requests', compact('requests'));
     }
-    
 }

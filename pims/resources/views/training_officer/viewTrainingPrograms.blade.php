@@ -2,7 +2,6 @@
 <html>
 
 @include('includes.head')
-
 <body>
     <!-- START NAV -->
     @include('includes.nav')
@@ -58,32 +57,89 @@
                     <div class="card-content">
                         <!-- Card Layout for Jobs -->
                         <div class="columns is-multiline">
-                            @foreach($trainingprograms as $index => $trainingprograms)
-                                <div class="column is-4">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <p class="card-header-title">{{ $trainingprograms->name }}</p>
+                            @foreach($trainingprograms as $trainingprogram)
+                            <div class="column is-4">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <p class="card-header-title">{{ $trainingprogram->name }}</p>
+                                    </div>
+                                    <div class="card-content">
+                                        <p><strong>Description:</strong> {{ $trainingprogram->description }}</p>
+                                        <p><strong>Created By:</strong> {{ $trainingprogram->created_by }}</p>
+                                        <p><strong>Created At:</strong> {{ $trainingprogram->created_at }}</p>
+                                        <p><strong>Start Date:</strong> {{ \Carbon\Carbon::parse($trainingprogram->start_date)->format('Y-m-d') }}</p>
+                                        <p><strong>End Date:</strong> {{ \Carbon\Carbon::parse($trainingprogram->end_date)->format('Y-m-d') }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <!-- Edit Button - Trigger the Modal -->
+                                        <div class="card-footer-item">
+                                            <button class="button is-small is-link" data-toggle="modal" data-target="#editModal{{ $trainingprogram->id }}">Edit</button>
                                         </div>
-                                        <div class="card-content">
-                                            <p><strong>Description:</strong> {{ $trainingprograms->description }}</p>
-                                            <p><strong>Created By:</strong> {{ $trainingprograms->created_by }}</p>
-                                            <p><strong>Created At:</strong> {{ $trainingprograms->created_at }}</p>
-                                            
-                                        </div>
-                                        <div class="card-footer">
-                                            <div class="card-footer-item">
-                                                <a href="#" class="button is-small is-link">Edit</a>
-                                            </div>
-                                            <div class="card-footer-item">
-                                                <form action="#" method="POST" class="delete-form">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="button is-small is-danger">Delete</button>
-                                                </form>
-                                            </div>
+                                        <!-- Delete Button -->
+                                        <div class="card-footer-item">
+                                            <form action="{{ route('training_officer.destroy', $trainingprogram->id) }}" method="POST" class="delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="button is-small is-danger">Delete</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+
+                            <!-- Modal for Editing Training Program -->
+                            <div class="modal" id="editModal{{ $trainingprogram->id }}">
+                                <div class="modal-background"></div>
+                                <div class="modal-card">
+                                    <header class="modal-card-head">
+                                        <p class="modal-card-title">Edit Training Program</p>
+                                        <button class="delete" aria-label="close" data-close-modal="{{ $trainingprogram->id }}"></button>
+                                    </header>
+                                    <section class="modal-card-body">
+                                        <form action="{{ route('training_officer.update', $trainingprogram->id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+
+                                            <div class="field">
+                                                <label class="label">Program Name</label>
+                                                <div class="control">
+                                                    <input class="input" type="text" name="name" value="{{ $trainingprogram->name }}" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="field">
+                                                <label class="label">Description</label>
+                                                <div class="control">
+                                                    <textarea class="textarea" name="description" required>{{ $trainingprogram->description }}</textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="field">
+                                                <label class="label">Start Date</label>
+                                                <div class="control">
+                                                    <input class="input" type="date" name="start_date" value="{{ $trainingprogram->start_date->format('Y-m-d') }}" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="field">
+                                                <label class="label">End Date</label>
+                                                <div class="control">
+                                                    <input class="input" type="date" name="end_date" value="{{ $trainingprogram->end_date->format('Y-m-d') }}" required>
+                                                </div>
+                                            </div>
+
+                                            <div class="field is-grouped">
+                                                <div class="control">
+                                                    <button class="button is-link" type="submit">Save Changes</button>
+                                                </div>
+                                                <div class="control">
+                                                    <button class="button is-light" type="button" data-close-modal="{{ $trainingprogram->id }}">Cancel</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </section>
+                                </div>
+                            </div>
                             @endforeach
                         </div>
                     </div>
@@ -103,49 +159,77 @@
                 </header>
                 <section class="modal-card-body">
                     <!-- Form for creating a new training program -->
-                    <form id="create-record-form">
+                    <form id="create-record-form" action="{{ route('training_officer.store') }}" method="POST">
+                        @csrf
                         <div class="field">
                             <label class="label">Program Title</label>
                             <div class="control">
-                                <input class="input" type="text" id="trainingprograms-title" name="trainingprograms-title" placeholder="Enter Program title" required>
+                                <input class="input" type="text" id="name" name="name" placeholder="Enter Program title" required>
                             </div>
                         </div>
                         <div class="field">
                             <label class="label">Description</label>
                             <div class="control">
-                                <textarea class="textarea" id="trainingprograms-description" name="trainingprograms-description" placeholder="Enter Program description" required></textarea>
+                                <textarea class="textarea" id="description" name="description" placeholder="Enter Program description" required></textarea>
                             </div>
                         </div>
                         <div class="field">
-                            <label class="label">Created By</label>
+                            <label class="label">Start Date</label>
                             <div class="control">
-                                <input class="input" type="text" id="created-by" name="created-by" placeholder="Enter creator name" required>
+                                <input class="input" type="date" id="start_date" name="start_date" required>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label class="label">End Date</label>
+                            <div class="control">
+                                <input class="input" type="date" id="end_date" name="end_date" required>
                             </div>
                         </div>
                     </form>
                 </section>
                 <footer class="modal-card-foot">
-                    <button class="button is-success" id="save-record-button">Save changes</button>
+                    <button class="button is-success" id="save-record-button" type="submit" form="create-record-form">Save changes</button>
                     <button class="button" id="cancel-modal-button">Cancel</button>
                 </footer>
             </div>
         </div>
 
         <script>
-            // JavaScript to handle modal and form submission
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', () => {
+                // Modal handling for edit modals
+                const closeButtons = document.querySelectorAll('[data-close-modal]');
+                const editButtons = document.querySelectorAll('[data-toggle="modal"]');
+                
+                // Close modal handlers
+                closeButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const modalId = button.getAttribute('data-close-modal');
+                        const modal = document.getElementById('editModal' + modalId) || document.getElementById('create-record-modal');
+                        modal.classList.remove('is-active');
+                    });
+                });
+
+                // Open modal handlers
+                editButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const modalId = button.getAttribute('data-target').replace('#', '');
+                        const modal = document.getElementById(modalId);
+                        modal.classList.add('is-active');
+                    });
+                });
+
+                // Create record modal handling
                 const createRecordButton = document.getElementById('create-record-button');
                 const closeModalButton = document.getElementById('close-modal-button');
                 const cancelModalButton = document.getElementById('cancel-modal-button');
-                const saveRecordButton = document.getElementById('save-record-button');
                 const createRecordModal = document.getElementById('create-record-modal');
 
-                // Open modal
+                // Open create modal
                 createRecordButton.addEventListener('click', () => {
                     createRecordModal.classList.add('is-active');
                 });
 
-                // Close modal
+                // Close create modal
                 closeModalButton.addEventListener('click', () => {
                     createRecordModal.classList.remove('is-active');
                 });
@@ -154,24 +238,13 @@
                     createRecordModal.classList.remove('is-active');
                 });
 
-                // Save record
-                saveRecordButton.addEventListener('click', () => {
-                    const form = document.getElementById('create-record-form');
-                    const formData = new FormData(form);
-
-                    // Handle the form data, e.g., send it to the server via AJAX
-                    fetch('/api/trainingprograms', {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Success:', data);
-                        createRecordModal.classList.remove('is-active');
-                        // Optionally, reload the page or dynamically add the new training program
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
+                // Delete confirmation
+                const deleteForms = document.querySelectorAll('.delete-form');
+                deleteForms.forEach(form => {
+                    form.addEventListener('submit', (e) => {
+                        if (!confirm('Are you sure you want to delete this training program?')) {
+                            e.preventDefault();
+                        }
                     });
                 });
             });

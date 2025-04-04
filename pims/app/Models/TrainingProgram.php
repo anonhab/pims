@@ -18,14 +18,21 @@ class TrainingProgram extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'name', 'description', 'created_by'
+        'name', 
+        'description', 
+        'created_by', 
+        'start_date', 
+        'end_date',
+        'prison_id',
     ];
 
+    // Cast datetime fields to Carbon instances
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
-
     // Relationship with Account (Created By)
     public function createdBy()
     {

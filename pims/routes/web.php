@@ -12,10 +12,18 @@ use App\Http\Controllers\training_officer\TrainingController;
 use App\Http\Controllers\visitor\VisitorController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\VisitingRequestController;
+
 use App\Models\Notification;
+//test
+// request
 use Illuminate\Http\Request;
 use App\Models\Requests;
 use Illuminate\Support\Facades\Session;
+use App\Http\Controllers\RequestController;
+use App\Http\Controllers\DisciplineOfficerController;
+use App\Http\Controllers\DashboardController;
+
 
 Route::get('/allactor', function () {
     return view('dashboard');
@@ -35,12 +43,17 @@ Route::get('/roles', function () {
 ;
 Route::get('/notifications', function () {
     $userId = session('user_id'); 
+    $prisonId = session('prison_id'); // Assuming prison_id is stored in session
+
     $notifications = Notification::where('account_id', $userId)
+        ->where('prison_id', $prisonId) // Filtering by prison_id
         ->where('status', 'unread') 
         ->orderBy('created_at', 'desc')
         ->get();
+        
     return response()->json($notifications);
 });
+
 Route::post('/notifications/read/{id}', function ($id) {
     $notification = Notification::find($id);
     if ($notification) {
@@ -155,6 +168,9 @@ Route::get('/viewRequests', [PoliceController::class, 'viewRequests'])->name('po
 Route::get('/viewRoomAllocations', [PoliceController::class, 'viewRoomAllocations'])->name('police.viewRoomAllocations');
 Route::get('/createvisitingtime', [SecurityController::class, 'createVisitingTime'])->name('security.createVisitingTime');
 Route::get('/registervisitor', [SecurityController::class, 'registerVisitor'])->name('security.registerVisitor');
+Route::get('/registerVisitor', [SecurityController::class, 'registerVisitor'])->name('security_officer.registerVisitor');
+
+Route::get('/viewvisitors', [SecurityController::class, 'viewVisitors'])->name('security_officer.viewvisitors');
 Route::get('/viewappointments', [SecurityController::class, 'viewAppointments'])->name('security.viewAppointments');
 Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name('security.viewPrisoners');
 Route::get('/assigncertifications', [TrainingController::class, 'assignCertifications'])->name('training.assignCertifications');
@@ -163,9 +179,65 @@ Route::get('/createtrainingprograms', [TrainingController::class, 'createTrainin
 Route::get('/viewcertifications', [TrainingController::class, 'viewCertifications'])->name('training.viewCertifications');
 Route::get('/viewjobs', [TrainingController::class, 'viewJobs'])->name('training.viewJobs');
 Route::get('/viewtrainingprograms', [TrainingController::class, 'viewTrainingPrograms'])->name('training.viewTrainingPrograms');
+Route::get('/assigntrainingprograms', [TrainingController::class, 'assignTrainingPrograms'])->name('training.assignTrainingPrograms');
+Route::get('/viewassignedTrainingPrograms', [TrainingController::class, 'viewAssignedPrograms'])->name('training.viewassignedTrainingPrograms');
+Route::post('/training-programs/store', [TrainingController::class, 'storeTrainingProgram'])->name('training_officer.store');
+Route::put('/assign-training/unassign/{id}', [TrainingController::class, 'unassignTrainingProgram'])->name('assign_training.unassign');
+Route::post('/assigntraining-programs/store', [TrainingController::class, 'assignTrainingProgram'])->name('assign_training.store');
+Route::get('/assignjobs', [TrainingController::class, 'assignjobs'])->name('training.assignjobs');
+Route::post('/assignJob', [TrainingController::class, 'assignJob'])->name('job.assign');
+Route::delete('/jobs/{job}', [TrainingController::class, 'destroyjob'])
+    ->name('jobs.destroyjob');
+Route::put('training-programs/{id}', [TrainingController::class, 'update'])->name('training_officer.update');
+Route::delete('training-programs/{id}', [TrainingController::class, 'destroy'])->name('training_officer.destroy');
+Route::put('/jobs/update', [TrainingController::class, 'updatejob'])->name('jobs.update');
+
+
 Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest');
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
+Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
+
+//security_officer
+Route::prefix('security_officer')->group(function () {
+    Route::post('/storeVisitor', [SecurityController::class, 'storeVisitor'])->name('security_officer.storeVisitor');
+
+
+    // Visitor Management
+   
+    Route::put('/updateVisitor/{id}', [SecurityController::class, 'updateVisitor'])->name('security_officer.updateVisitor');
+    Route::delete('/deleteVisitor/{id}', [SecurityController::class, 'deleteVisitor'])->name('security_officer.deleteVisitor');
+
+    // Visiting Time Management
+    Route::get('/createvisitingtime', [SecurityController::class, 'createVisitingTime'])->name('security.createVisitingTime');
+
+    // Other Views
+    Route::get('/viewappointments', [SecurityController::class, 'viewAppointments'])->name('security.viewAppointments');
+    Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name('security.viewPrisoners');
+});
+
+
+
+//Route::post('/discipline_officer/requests/evaluate', [DisciplineOfficerController::class, 'evaluateRequest'])->name('discipline_officer.evaluate_request');
+Route::post('/discipline_officer/requests/evaluate', [DisciplineOfficerController::class, 'evaluate'])
+    ->name('discipline_officer.evaluate_request');
+
+Route::match(['get', 'post'], '/discipline_officer/requests/evaluate', [DisciplineOfficerController::class, 'showEvaluationForm'])->name('discipline_officer.evaluate_request');
+// To show the form to evaluate the request
+//Route::get('/discipline_officer/requests/evaluate/{request}', [DisciplineOfficerController::class, 'showEvaluationForm'])->name('discipline_officer.show_evaluation_form');
+
+// Disciplinary Actions Routes for Discipline Officer
+Route::get('discipline_officer/assign_penalty', [DisciplineOfficerController::class, 'assignPenalty'])->name('discipline_officer.assign_penalty');
+Route::get('discipline_officer/view_penalties', [DisciplineOfficerController::class, 'viewPenalties'])->name('discipline_officer.view_penalties');
+
+// Reports & Logs Routes for Discipline Officer
+Route::get('discipline_officer/generate_reports', [DisciplineOfficerController::class, 'generateReports'])->name('discipline_officer.generate_reports');
+Route::get('discipline_officer/view_logs', [DisciplineOfficerController::class, 'viewLogs'])->name('discipline_officer.view_logs');
+
+Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
+Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
+Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
+
 
 
 // Home Page

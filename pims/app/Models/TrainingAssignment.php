@@ -44,4 +44,5 @@ class TrainingAssignment extends Model
     {
         return $this->belongsTo(Account::class, 'assigned_by', 'user_id');
     }
+    
 }
