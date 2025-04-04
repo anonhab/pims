@@ -467,7 +467,7 @@
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    opacity: 0;
+   
     transition: opacity 0.3s ease;
 }
 

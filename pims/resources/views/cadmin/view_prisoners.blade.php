@@ -482,9 +482,7 @@
                         <i class="fas fa-user-lock"></i> Prisoner Management
                     </h2>
                     <div class="pims-card-actions">
-                        <a href="{{ route('prisoner.add') }}" class="pims-btn pims-btn-primary">
-                            <i class="fas fa-plus"></i> Create Prisoner
-                        </a>
+                   
                         <button id="pims-reload-prisoners" class="pims-btn pims-btn-secondary">
                             <i class="fas fa-sync-alt"></i> Refresh
                         </button>
@@ -542,11 +540,7 @@
                                             <i class="fas fa-eye"></i> View
                                         </button>
 
-                                        <button class="pims-btn pims-btn-danger pims-btn-sm pims-delete-prisoner"
-                                            data-id="{{ $prisoner->prisoner_id }}"
-                                            data-name="{{ $prisoner->first_name }} {{ $prisoner->last_name }}">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
+                                      
                                     </div>
                                 </div>
                             </div>

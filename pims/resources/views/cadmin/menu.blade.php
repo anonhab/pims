@@ -62,6 +62,26 @@
                     </li>
                 </ul>
             </li>
+            <!-- Prison Management -->
+            <li class="pims-menu-item pims-has-submenu">
+                <a href="#" class="pims-menu-link">
+                    <span class="pims-menu-icon">
+                        <i class="fas fa-building"></i>
+                    </span>
+                    <span class="pims-menu-text">Prison Management</span>
+                    <span class="pims-menu-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </span>
+                </a>
+                <ul class="pims-submenu">
+                    <li class="pims-submenu-item">
+                        <a href="{{ route('prison.add') }}" class="pims-submenu-link">Add/Update Prison</a>
+                    </li>
+                    <li class="pims-submenu-item">
+                        <a href="{{ route('prison.view') }}" class="pims-submenu-link">View Prison Details</a>
+                    </li>
+                </ul>
+            </li>
 
             <!-- Report Generation -->
             <li class="pims-menu-item pims-has-submenu">
@@ -105,26 +125,7 @@
                 </ul>
             </li>
 
-            <!-- Prison Management -->
-            <li class="pims-menu-item pims-has-submenu">
-                <a href="#" class="pims-menu-link">
-                    <span class="pims-menu-icon">
-                        <i class="fas fa-building"></i>
-                    </span>
-                    <span class="pims-menu-text">Prison Management</span>
-                    <span class="pims-menu-arrow">
-                        <i class="fas fa-angle-down"></i>
-                    </span>
-                </a>
-                <ul class="pims-submenu">
-                    <li class="pims-submenu-item">
-                        <a href="{{ route('prison.add') }}" class="pims-submenu-link">Add/Update Prison</a>
-                    </li>
-                    <li class="pims-submenu-item">
-                        <a href="{{ route('prison.view') }}" class="pims-submenu-link">View Prison Details</a>
-                    </li>
-                </ul>
-            </li>
+            
         </ul>
         
         <!-- Collapse Button (Desktop) -->
