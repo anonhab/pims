@@ -495,7 +495,7 @@
             <div class="pims-card">
                 <div class="pims-card-header">
                     <h2 class="pims-card-title">
-                        <i class="fas fa-user-shield"></i> Prisoner Management
+                        <i class="fas fa-user-shield"></i>MY PRISONER
                     </h2>
                     <div class="pims-card-actions">
                         <button id="pims-table-reload" class="pims-btn pims-btn-secondary">
@@ -510,13 +510,6 @@
                             <i class="fas fa-search pims-search-icon"></i>
                             <input type="text" id="pims-prisoner-search" class="pims-search-input" 
                                    placeholder="Search prisoners by name or crime...">
-                        </div>
-                        <div class="pims-select pims-filter-select">
-                            <select id="pims-status-filter" class="pims-form-control">
-                                <option value="">All Statuses</option>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
                         </div>
                     </div>
 
