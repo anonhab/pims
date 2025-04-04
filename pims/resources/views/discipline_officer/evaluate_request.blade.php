@@ -235,16 +235,7 @@
         <div class="sidebar">
         @include('includes.nav')
             <ul class="nav flex-column sidebar-menu">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">
-                        <i class="fas fa-tasks"></i> Request Evaluation
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-user-shield"></i> Prisoner Management
-                    </a>
-                </li>
+            @include('discipline_officer.menu')
                
             </ul>
         </div>

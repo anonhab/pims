@@ -266,46 +266,53 @@
             grid-template-columns: 1fr;
         }
     }
-     /* Modal styles */
-     .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            padding-top: 100px;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 400px;
-            border-radius: 8px;
-        }
-        .modal-header, .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h2 {
-            margin: 0;
-        }
-        .modal-close {
-            background: transparent;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        .modal-footer button {
-            padding: 8px 16px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        padding-top: 100px;
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+        border-radius: 8px;
+    }
+
+    .modal-header,
+    .modal-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+    }
+
+    .modal-close {
+        background: transparent;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .modal-footer button {
+        padding: 8px 16px;
+        font-size: 16px;
+        cursor: pointer;
+    }
 </style>
 
 <body>
@@ -403,26 +410,52 @@
                     </h2>
 
                     <div class="pims-form-grid">
-                        <div class="pims-form-group">
-                            <label class="pims-form-label">Crime Committed</label>
-                            <select class="pims-form-select" name="crime_committed" required>
-                                <option value="" disabled selected>Select Offense</option>
-                                <option>Theft</option>
-                                <option>Assault</option>
-                                <option>Drug Possession</option>
-                                <option>Fraud</option>
-                                <option>Other</option>
-                            </select>
-                        </div>
+                    <div class="pims-form-group">
+    <label class="pims-form-label">Crime Committed</label>
+    <select class="pims-form-select" name="crime_committed" id="crime_committed" required>
+        <option value="" disabled selected>Select Offense</option>
+        <option value="Theft">Theft</option>
+        <option value="Assault">Assault</option>
+        <option value="Drug Possession">Drug Possession</option>
+        <option value="Fraud">Fraud</option>
+        <option value="Murder">Murder</option>
+        <option value="Burglary">Burglary</option>
+        <option value="Vandalism">Vandalism</option>
+        <option value="Robbery">Robbery</option>
+        <option value="Domestic Violence">Domestic Violence</option>
+        <option value="Rape">Rape</option>
+        <option value="Arson">Arson</option>
+        <option value="Money Laundering">Money Laundering</option>
+        <option value="Kidnapping">Kidnapping</option>
+        <option value="Tax Evasion">Tax Evasion</option>
+        <option value="Embezzlement">Embezzlement</option>
+        <option value="Corruption">Corruption</option>
+        <option value="Hate Crimes">Hate Crimes</option>
+        <option value="Smuggling">Smuggling</option>
+        <option value="Child Abuse">Child Abuse</option>
+        <option value="Bribery">Bribery</option>
+        <option value="Counterfeiting">Counterfeiting</option>
+        <option value="Terrorism">Terrorism</option>
+        <option value="Sexual Harassment">Sexual Harassment</option>
+        <option value="Public Disorder">Public Disorder</option>
+        <option value="Other">Other (for any crime not listed above)</option>
+    </select>
+</div>
+
+<!-- Input field for custom crime, hidden by default -->
+<div class="pims-form-group" id="other-crime-group" style="display: none;">
+    <label class="pims-form-label">Please specify the crime</label>
+    <input type="text" class="pims-form-input" name="other_crime" id="other_crime" placeholder="Enter crime">
+</div>
+
+
 
                         <div class="pims-form-group">
                             <label class="pims-form-label">Status</label>
                             <select class="pims-form-select" name="status" required>
-                                <option value="" disabled selected>Select Status</option>
-                                <option>Active</option>
-                                <option>Inactive</option>
-                                <option>Released</option>
+                                <option value="active" selected hidden>Active</option>
                             </select>
+
                         </div>
 
                         <div class="pims-form-group">
@@ -487,6 +520,15 @@
         </div>
     </div>
     <script>
+    // JavaScript to show input field when "Other" is selected
+    document.getElementById('crime_committed').addEventListener('change', function() {
+        var otherOption = this.value === 'Other';
+        var otherCrimeGroup = document.getElementById('other-crime-group');
+        otherCrimeGroup.style.display = otherOption ? 'block' : 'none';
+    });
+</script>
+
+    <script>
         // Open the modal when the "Time Serve Start" date is selected
         function openModal() {
             const modal = document.getElementById("sentenceModal");
@@ -514,7 +556,7 @@
                 endDateField.readOnly = true;
                 closeModal();
                 return;
-            } 
+            }
             if (durationInput.toLowerCase() === "death") {
                 endDateField.value = "Death Sentence";
                 endDateField.readOnly = true;
