@@ -1,36 +1,34 @@
- 
-
-@include('includes.head')
-<meta name="csrf-token" content="{{ csrf_token() }}">
-<meta charset="UTF-8">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @include('includes.head')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIMS - Secure Dashboard</title>
-
+    <title>PIMS - Lawyer Dashboard</title>
+    
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <!-- Chart.js for data visualization -->
+    
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    
     <style>
         :root {
             --pims-primary: #1a2a3a;
-            /* Darker blue for more authority */
             --pims-secondary: #2c3e50;
             --pims-accent: #2980b9;
-            /* Slightly darker blue */
             --pims-danger: #c0392b;
-            /* Darker red */
             --pims-success: #27ae60;
-            /* Darker green */
             --pims-warning: #d35400;
-            /* Darker orange */
+            --pims-info: #3498db;
             --pims-text-light: #ecf0f1;
             --pims-text-dark: #2c3e50;
-            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            --pims-border-radius: 6px;
+            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --pims-border-radius: 8px;
             --pims-nav-height: 60px;
             --pims-sidebar-width: 250px;
+            --pims-transition: all 0.3s ease;
         }
 
         * {
@@ -41,180 +39,229 @@
 
         body {
             font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
+            background-color: #f5f7fa;
             color: var(--pims-text-dark);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
+            line-height: 1.6;
         }
 
-        /* Header Styles */
-        .header {
-            color: white;
-            z-index: 1000;
+        /* Layout Structure */
+        .pims-app-container {
             display: flex;
-            align-items: center;
-            top: 0;
+            min-height: 100vh;
+            padding-top: var(--pims-nav-height);
         }
 
-        /* Sidebar Styles */
-        .sidbar {
+        .pims-sidebar {
+            width: var(--pims-sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
             position: fixed;
             top: var(--pims-nav-height);
             left: 0;
-            width: var(--pims-sidebar-width);
-            height: calc(100vh - var(--pims-nav-height));
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            bottom: 0;
             overflow-y: auto;
             z-index: 900;
-            transition: all 0.3s ease;
+            transition: var(--pims-transition);
         }
 
-        /* Main Content Area */
-        #pims-page-content {
-            margin-left: 0;
+        .pims-content-area {
+            flex: 1;
+            margin-left: var(--pims-sidebar-width);
             padding: 1.5rem;
-            padding-left: 300px;
-            min-height: calc(100vh - var(--pims-nav-height));
-            transition: all 0.3s ease;
-            background-color: #f0f2f5;
+            transition: var(--pims-transition);
         }
 
-        /* Dashboard Cards */
-        .pims-dashboard-card {
+        /* Header Styles */
+        .pims-content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .pims-content-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--pims-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pims-welcome-message {
+            font-size: 0.95rem;
+            color: var(--pims-secondary);
+        }
+
+        /* Stats Grid */
+        .pims-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Stat Card */
+        .pims-stat-card {
             background: white;
             border-radius: var(--pims-border-radius);
             box-shadow: var(--pims-card-shadow);
-            transition: all 0.3s ease;
-            height: 100%;
-            border-left: 4px solid var(--pims-accent);
+            padding: 1.5rem;
+            transition: var(--pims-transition);
             position: relative;
             overflow: hidden;
-            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
         }
 
-        .pims-dashboard-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        .pims-stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
-        .pims-dashboard-card .pims-card-icon {
-            font-size: 1.8rem;
-            margin-bottom: 0.75rem;
-            color: var(--pims-accent);
+        .pims-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--pims-accent);
         }
 
-        .pims-dashboard-card h3 {
-            font-size: 1rem;
-            font-weight: 600;
+        .pims-stat-card.active::before {
+            background-color: var(--pims-success);
+        }
+
+        .pims-stat-card.pending::before {
+            background-color: var(--pims-warning);
+        }
+
+        .pims-stat-card.urgent::before {
+            background-color: var(--pims-danger);
+        }
+
+        .pims-stat-card.info::before {
+            background-color: var(--pims-info);
+        }
+
+        .pims-stat-title {
+            font-size: 0.9rem;
+            color: var(--pims-secondary);
             margin-bottom: 0.5rem;
-            color: var(--pims-primary);
-            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .pims-dashboard-card p {
+        .pims-stat-value {
             font-size: 1.75rem;
             font-weight: 700;
-            color: var(--pims-secondary);
-            margin-bottom: 0;
-            letter-spacing: -0.5px;
+            color: var(--pims-primary);
+            margin-bottom: 0.25rem;
         }
 
-        .pims-dashboard-card .pims-card-footer {
-            font-size: 0.75rem;
-            color: #7f8c8d;
-            margin-top: 0.5rem;
+        .pims-stat-change {
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 0.25rem;
         }
 
-        /* Security Elements */
-        .pims-security-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: var(--pims-primary);
-            color: white;
-            padding: 0.2rem 0.6rem;
-            border-radius: 12px;
-            font-size: 0.65rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        .pims-stat-change.positive {
+            color: var(--pims-success);
         }
 
-        .pims-security-badge.alert {
-            background-color: var(--pims-danger);
-            animation: pulse 2s infinite;
+        .pims-stat-change.negative {
+            color: var(--pims-danger);
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.4);
-            }
+        /* Charts Grid */
+        .pims-charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
 
-            70% {
-                box-shadow: 0 0 0 8px rgba(231, 76, 60, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(231, 76, 60, 0);
+        @media (max-width: 1024px) {
+            .pims-charts-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        /* Stats Box */
-        .pims-stats-box {
+        /* Chart Card */
+        .pims-chart-card {
             background: white;
             border-radius: var(--pims-border-radius);
-            padding: 1.25rem;
             box-shadow: var(--pims-card-shadow);
-            margin-top: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+            padding: 1.5rem;
+            transition: var(--pims-transition);
         }
 
-        .pims-stats-box h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            color: var(--pims-primary);
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
+        .pims-chart-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .pims-chart-header {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 8px;
+            margin-bottom: 1rem;
         }
 
-        .pims-stats-box h2 i {
-            color: var(--pims-accent);
+        .pims-chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--pims-primary);
         }
 
-        /* Chart Container */
+        .pims-chart-period {
+            font-size: 0.8rem;
+            color: var(--pims-secondary);
+        }
+
         .pims-chart-container {
             position: relative;
             height: 300px;
-            margin-top: 1rem;
+            width: 100%;
         }
 
         /* Recent Activity */
+        .pims-activity-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-card-shadow);
+            padding: 1.5rem;
+            transition: var(--pims-transition);
+        }
+
+        .pims-activity-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .pims-activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .pims-activity-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--pims-primary);
+        }
+
         .pims-activity-list {
             list-style: none;
-            padding: 0;
-            margin: 0;
         }
 
         .pims-activity-item {
-            padding: 0.85rem 0;
+            padding: 1rem 0;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
-            align-items: center;
-            transition: background 0.2s ease;
-        }
-
-        .pims-activity-item:hover {
-            background: rgba(0, 0, 0, 0.02);
+            gap: 1rem;
         }
 
         .pims-activity-item:last-child {
@@ -222,363 +269,334 @@
         }
 
         .pims-activity-icon {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            background-color: var(--pims-primary);
-            color: white;
+            background-color: rgba(41, 128, 185, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1rem;
+            color: var(--pims-accent);
             flex-shrink: 0;
+        }
+
+        .pims-activity-content {
+            flex: 1;
+        }
+
+        .pims-activity-description {
             font-size: 0.9rem;
-        }
-
-        .pims-activity-details {
-            flex-grow: 1;
-        }
-
-        .pims-activity-details strong {
-            font-weight: 600;
-            color: var(--pims-primary);
+            margin-bottom: 0.25rem;
         }
 
         .pims-activity-time {
-            font-size: 0.7rem;
-            color: #7f8c8d;
-            margin-top: 0.2rem;
-            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            color: var(--pims-secondary);
         }
 
-        /* Status Tags */
-        .pims-status-tag {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.6rem;
-            border-radius: 12px;
+        .pims-activity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-left: 0.5rem;
         }
 
-        .pims-status-tag.critical {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--pims-danger);
-        }
-
-        .pims-status-tag.completed {
-            background-color: rgba(46, 204, 113, 0.1);
+        .pims-activity-badge.new {
+            background-color: rgba(39, 174, 96, 0.1);
             color: var(--pims-success);
         }
 
-        .pims-status-tag.system {
-            background-color: rgba(52, 152, 219, 0.1);
-            color: var(--pims-accent);
-        }
-
-        /* System Alert */
-        .pims-system-alert {
-            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
-            color: white;
-            padding: 0.85rem 1.25rem;
-            border-radius: var(--pims-border-radius);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid var(--pims-danger);
-        }
-
-        .pims-system-alert .alert-content {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .pims-system-alert .alert-icon {
-            font-size: 1.2rem;
+        .pims-activity-badge.urgent {
+            background-color: rgba(192, 57, 43, 0.1);
             color: var(--pims-danger);
         }
 
-        .pims-system-alert .alert-close {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease;
-        }
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .pims-sidebar {
+                transform: translateX(-100%);
+            }
 
-        .pims-system-alert .alert-close:hover {
-            opacity: 1;
-        }
+            .pims-sidebar.is-active {
+                transform: translateX(0);
+            }
 
-        /* Grid Layout */
-        .pims-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.25rem;
-        }
+            .pims-content-area {
+                margin-left: 0;
+                padding: 1rem;
+            }
 
-        /* Section Title */
-        .pims-section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.25rem;
-            color: var(--pims-primary);
-            position: relative;
-            padding-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .pims-section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background-color: var(--pims-accent);
-        }
-
-        .pims-section-title i {
-            margin-right: 10px;
-            color: var(--pims-accent);
+            .pims-stats-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
-
+</head>
 <body>
-    <!-- START NAV -->
+    <!-- Navigation -->
     @include('includes.nav')
-    <!-- END NAV -->
 
- 
+    <div class="pims-app-container">
         @include('lawyer.menu')
 
-        
-            <!-- Main Content -->
-            <div id="pims-page-content">
-                <h1 class="pims-section-title">
-                    <i class="fas fa-shield-alt"></i> Security Dashboard
-                </h1>
-
-                <div class="pims-system-alert">
-                    <div class="alert-content">
-                        <i class="fas fa-exclamation-triangle alert-icon"></i>
-                        <div>
-                            <strong>SECURITY ALERT:</strong> 3 unauthorized access attempts detected in the last 24 hours
-                        </div>
-                    </div>
-                    <button class="alert-close">
-                        <i class="fas fa-times"></i>
+        <div class="pims-content-area">
+            <!-- Dashboard Header -->
+            <div class="pims-content-header">
+                <div>
+                    <h1 class="pims-content-title">
+                        <i class="fas fa-tachometer-alt"></i> Lawyer Dashboard
+                    </h1>
+                   
+                </div>
+                <div>
+                    <button class="pims-btn pims-btn-primary">
+                        <i class="fas fa-plus"></i> New Case
                     </button>
                 </div>
+            </div>
 
-                <div class="pims-grid">
-                    <!-- Account Management -->
-                    <div class="pims-dashboard-card">
-                        <span class="pims-security-badge">SECURED</span>
-                        <div class="pims-card-icon">
-                            <i class="fas fa-user-shield"></i>
-                        </div>
-                        <h3>Admin Accounts</h3>
-                        <p>24</p>
-                        <div class="pims-card-footer">
-                            <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All accounts secured
-                        </div>
+            <!-- Stats Cards -->
+            <div class="pims-stats-grid">
+                <div class="pims-stat-card active">
+                    <div class="pims-stat-title">
+                        <i class="fas fa-briefcase"></i> Active Cases
                     </div>
-
-                    <!-- Prisoner Management -->
-                    <div class="pims-dashboard-card">
-                        <span class="pims-security-badge alert">ALERT</span>
-                        <div class="pims-card-icon">
-                            <i class="fas fa-user-lock"></i>
-                        </div>
-                        <h3>Prisoner Count</h3>
-                        <p>1,245</p>
-                        <div class="pims-card-footer">
-                            <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> 5 transfers pending
-                        </div>
-                    </div>
-
-                    <!-- Report Generation -->
-                    <div class="pims-dashboard-card">
-                        <span class="pims-security-badge">ENCRYPTED</span>
-                        <div class="pims-card-icon">
-                            <i class="fas fa-file-shield"></i>
-                        </div>
-                        <h3>Secure Reports</h3>
-                        <p>187</p>
-                        <div class="pims-card-footer">
-                            <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> 3 reports in progress
-                        </div>
-                    </div>
-
-                    <!-- Backup & Recovery -->
-                    <div class="pims-dashboard-card">
-                        <span class="pims-security-badge">PROTECTED</span>
-                        <div class="pims-card-icon">
-                            <i class="fas fa-database"></i>
-                        </div>
-                        <h3>System Backups</h3>
-                        <p>12</p>
-                        <div class="pims-card-footer">
-                            <i class="fas fa-clock" style="color: var(--pims-accent);"></i> Next backup in 3h 22m
-                        </div>
+                    <div class="pims-stat-value">24</div>
+                    <div class="pims-stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 12% from last month
                     </div>
                 </div>
 
-                <!-- Data Visualization -->
-                <div class="pims-stats-box">
-                    <h2><i class="fas fa-chart-line"></i> Security Activity</h2>
-                    <div class="pims-chart-container">
-                        <canvas id="pims-stats-chart"></canvas>
+                <div class="pims-stat-card pending">
+                    <div class="pims-stat-title">
+                        <i class="fas fa-clock"></i> Pending Appointments
+                    </div>
+                    <div class="pims-stat-value">8</div>
+                    <div class="pims-stat-change negative">
+                        <i class="fas fa-arrow-down"></i> 3 from last week
                     </div>
                 </div>
 
-                <!-- Recent Activity -->
-                <div class="pims-stats-box mt-4">
-                    <h2><i class="fas fa-history"></i> Recent Security Events</h2>
-                    <ul class="pims-activity-list">
-                        <li class="pims-activity-item">
-                            <div class="pims-activity-icon">
-                                <i class="fas fa-user-times"></i>
-                            </div>
-                            <div class="pims-activity-details">
-                                <strong>Unauthorized access attempt</strong> - Blocked IP: 192.168.1.45
-                                <div class="pims-activity-time">2023-11-15 14:32:45 UTC</div>
-                            </div>
-                            <span class="pims-status-tag critical">Critical</span>
-                        </li>
-                        <li class="pims-activity-item">
-                            <div class="pims-activity-icon">
-                                <i class="fas fa-file-export"></i>
-                            </div>
-                            <div class="pims-activity-details">
-                                <strong>Sensitive report exported</strong> - Monthly prisoner transfer log
-                                <div class="pims-activity-time">2023-11-15 12:18:22 UTC</div>
-                            </div>
-                            <span class="pims-status-tag completed">Audited</span>
-                        </li>
-                        <li class="pims-activity-item">
-                            <div class="pims-activity-icon">
-                                <i class="fas fa-key"></i>
-                            </div>
-                            <div class="pims-activity-details">
-                                <strong>Admin credentials rotated</strong> - User: mjohnson
-                                <div class="pims-activity-time">2023-11-15 09:45:11 UTC</div>
-                            </div>
-                            <span class="pims-status-tag completed">Completed</span>
-                        </li>
-                        <li class="pims-activity-item">
-                            <div class="pims-activity-icon">
-                                <i class="fas fa-server"></i>
-                            </div>
-                            <div class="pims-activity-details">
-                                <strong>Database maintenance</strong> - Security patches applied
-                                <div class="pims-activity-time">2023-11-14 23:15:37 UTC</div>
-                            </div>
-                            <span class="pims-status-tag system">System</span>
-                        </li>
-                    </ul>
+                <div class="pims-stat-card urgent">
+                    <div class="pims-stat-title">
+                        <i class="fas fa-exclamation-circle"></i> Urgent Matters
+                    </div>
+                    <div class="pims-stat-value">5</div>
+                    <div class="pims-stat-change positive">
+                        <i class="fas fa-arrow-up"></i> 2 new today
+                    </div>
+                </div>
+
+                <div class="pims-stat-card info">
+                    <div class="pims-stat-title">
+                        <i class="fas fa-calendar-check"></i> Upcoming Hearings
+                    </div>
+                    <div class="pims-stat-value">3</div>
+                    <div class="pims-stat-change">
+                        Next: Tomorrow, 10:30 AM
+                    </div>
                 </div>
             </div>
-             
 
-            
-</body>
-<script>
-                // Initialize Chart
-                document.addEventListener('DOMContentLoaded', function() {
-                    const ctx = document.getElementById('pims-stats-chart').getContext('2d');
-                    const chart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
-                            datasets: [{
-                                    label: 'Security Events',
-                                    data: [2, 5, 8, 12, 7, 4, 3],
-                                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                                    borderColor: 'rgba(231, 76, 60, 1)',
-                                    borderWidth: 2,
-                                    tension: 0.3,
-                                    fill: true
-                                },
-                                {
-                                    label: 'Authorized Logins',
-                                    data: [15, 30, 45, 60, 45, 30, 15],
-                                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                                    borderColor: 'rgba(46, 204, 113, 1)',
-                                    borderWidth: 2,
-                                    tension: 0.3,
-                                    fill: true
-                                }
-                            ]
+            <!-- Charts Section -->
+            <div class="pims-charts-grid">
+                <!-- Main Chart -->
+                <div class="pims-chart-card">
+                    <div class="pims-chart-header">
+                        <h3 class="pims-chart-title">Case Activity (Last 30 Days)</h3>
+                        <span class="pims-chart-period">June 1 - June 30</span>
+                    </div>
+                    <div class="pims-chart-container">
+                        <canvas id="pims-case-activity-chart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="pims-chart-card">
+                    <div class="pims-chart-header">
+                        <h3 class="pims-chart-title">Case Distribution</h3>
+                        <span class="pims-chart-period">By Category</span>
+                    </div>
+                    <div class="pims-chart-container">
+                        <canvas id="pims-case-distribution-chart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="pims-activity-card">
+                <div class="pims-activity-header">
+                    <h3 class="pims-activity-title">Recent Activity</h3>
+                    <button class="pims-btn pims-btn-secondary pims-btn-sm">
+                        View All
+                    </button>
+                </div>
+                <ul class="pims-activity-list">
+                    <li class="pims-activity-item">
+                        <div class="pims-activity-icon">
+                            <i class="fas fa-file-signature"></i>
+                        </div>
+                        <div class="pims-activity-content">
+                            <p class="pims-activity-description">
+                                New case filed: <strong>State vs. Johnson</strong>
+                                <span class="pims-activity-badge new">New</span>
+                            </p>
+                            <p class="pims-activity-time">Today, 9:42 AM</p>
+                        </div>
+                    </li>
+                    <li class="pims-activity-item">
+                        <div class="pims-activity-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="pims-activity-content">
+                            <p class="pims-activity-description">
+                                Court hearing scheduled for <strong>Smith case</strong>
+                            </p>
+                            <p class="pims-activity-time">Yesterday, 3:15 PM</p>
+                        </div>
+                    </li>
+                    <li class="pims-activity-item">
+                        <div class="pims-activity-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="pims-activity-content">
+                            <p class="pims-activity-description">
+                                Urgent motion filed in <strong>Doe appeal</strong>
+                                <span class="pims-activity-badge urgent">Urgent</span>
+                            </p>
+                            <p class="pims-activity-time">Yesterday, 11:20 AM</p>
+                        </div>
+                    </li>
+                    <li class="pims-activity-item">
+                        <div class="pims-activity-icon">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="pims-activity-content">
+                            <p class="pims-activity-description">
+                                Client consultation completed: <strong>Williams</strong>
+                            </p>
+                            <p class="pims-activity-time">June 28, 2:00 PM</p>
+                        </div>
+                    </li>
+                    <li class="pims-activity-item">
+                        <div class="pims-activity-icon">
+                            <i class="fas fa-gavel"></i>
+                        </div>
+                        <div class="pims-activity-content">
+                            <p class="pims-activity-description">
+                                Court ruling received for <strong>Anderson case</strong>
+                            </p>
+                            <p class="pims-activity-time">June 27, 4:30 PM</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    @include('includes.footer_js')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Case Activity Chart (Line)
+            const caseActivityCtx = document.getElementById('pims-case-activity-chart').getContext('2d');
+            const caseActivityChart = new Chart(caseActivityCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jun 1', 'Jun 5', 'Jun 10', 'Jun 15', 'Jun 20', 'Jun 25', 'Jun 30'],
+                    datasets: [
+                        {
+                            label: 'New Cases',
+                            data: [3, 5, 2, 6, 4, 7, 5],
+                            borderColor: 'rgba(41, 128, 185, 1)',
+                            backgroundColor: 'rgba(41, 128, 185, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
                         },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: {
-                                legend: {
-                                    position: 'top',
-                                    labels: {
-                                        usePointStyle: true,
-                                        padding: 20,
-                                        font: {
-                                            weight: '600'
-                                        }
-                                    }
-                                },
-                                tooltip: {
-                                    mode: 'index',
-                                    intersect: false,
-                                    backgroundColor: 'rgba(26, 42, 58, 0.9)',
-                                    titleFont: {
-                                        weight: 'bold'
-                                    }
-                                }
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true,
-                                    grid: {
-                                        drawBorder: false,
-                                        color: 'rgba(0,0,0,0.05)'
-                                    },
-                                    ticks: {
-                                        stepSize: 10
-                                    }
-                                },
-                                x: {
-                                    grid: {
-                                        display: false,
-                                        drawBorder: false
-                                    }
-                                }
-                            },
-                            elements: {
-                                point: {
-                                    radius: 4,
-                                    hoverRadius: 6
+                        {
+                            label: 'Closed Cases',
+                            data: [1, 3, 2, 4, 3, 5, 4],
+                            borderColor: 'rgba(39, 174, 96, 1)',
+                            backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 2
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Case Distribution Chart (Doughnut)
+            const caseDistributionCtx = document.getElementById('pims-case-distribution-chart').getContext('2d');
+            const caseDistributionChart = new Chart(caseDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Criminal', 'Civil', 'Family', 'Corporate', 'Other'],
+                    datasets: [{
+                        data: [35, 25, 20, 15, 5],
+                        backgroundColor: [
+                            'rgba(41, 128, 185, 0.8)',
+                            'rgba(39, 174, 96, 0.8)',
+                            'rgba(211, 84, 0, 0.8)',
+                            'rgba(155, 89, 182, 0.8)',
+                            'rgba(149, 165, 166, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(41, 128, 185, 1)',
+                            'rgba(39, 174, 96, 1)',
+                            'rgba(211, 84, 0, 1)',
+                            'rgba(155, 89, 182, 1)',
+                            'rgba(149, 165, 166, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} (${percentage}%)`;
                                 }
                             }
                         }
-                    });
-
-                    // Close alert
-                    document.querySelector('.alert-close').addEventListener('click', () => {
-                        document.querySelector('.pims-system-alert').style.display = 'none';
-                    });
-
-                    // Make security badge pulse
-                    const alertBadge = document.querySelector('.pims-security-badge.alert');
-                    if (alertBadge) {
-                        setInterval(() => {
-                            alertBadge.style.opacity = alertBadge.style.opacity === '0.8' ? '1' : '0.8';
-                        }, 1000);
-                    }
-                });
-            </script>
+                    },
+                    cutout: '70%',
+                }
+            });
+        });
+    </script>
+</body>
 </html>
