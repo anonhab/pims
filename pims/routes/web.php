@@ -179,6 +179,20 @@ Route::get('/createtrainingprograms', [TrainingController::class, 'createTrainin
 Route::get('/viewcertifications', [TrainingController::class, 'viewCertifications'])->name('training.viewCertifications');
 Route::get('/viewjobs', [TrainingController::class, 'viewJobs'])->name('training.viewJobs');
 Route::get('/viewtrainingprograms', [TrainingController::class, 'viewTrainingPrograms'])->name('training.viewTrainingPrograms');
+Route::get('/assigntrainingprograms', [TrainingController::class, 'assignTrainingPrograms'])->name('training.assignTrainingPrograms');
+Route::get('/viewassignedTrainingPrograms', [TrainingController::class, 'viewAssignedPrograms'])->name('training.viewassignedTrainingPrograms');
+Route::post('/training-programs/store', [TrainingController::class, 'storeTrainingProgram'])->name('training_officer.store');
+Route::put('/assign-training/unassign/{id}', [TrainingController::class, 'unassignTrainingProgram'])->name('assign_training.unassign');
+Route::post('/assigntraining-programs/store', [TrainingController::class, 'assignTrainingProgram'])->name('assign_training.store');
+Route::get('/assignjobs', [TrainingController::class, 'assignjobs'])->name('training.assignjobs');
+Route::post('/assignJob', [TrainingController::class, 'assignJob'])->name('job.assign');
+Route::delete('/jobs/{job}', [TrainingController::class, 'destroyjob'])
+    ->name('jobs.destroyjob');
+Route::put('training-programs/{id}', [TrainingController::class, 'update'])->name('training_officer.update');
+Route::delete('training-programs/{id}', [TrainingController::class, 'destroy'])->name('training_officer.destroy');
+Route::put('/jobs/update', [TrainingController::class, 'updatejob'])->name('jobs.update');
+
+
 Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest');
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');

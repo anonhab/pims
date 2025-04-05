@@ -81,4 +81,13 @@ class Prisoner extends Model
     {
         return $this->hasMany(Requests::class, 'prisoner_id', 'id');
     }
+    /**
+ * Relationship with TrainingAssignment
+ * A prisoner can have many training assignments.
+ */
+public function trainingAssignments()
+{
+    return $this->hasMany(TrainingAssignment::class, 'prisoner_id', 'id');
+}
+
 }
