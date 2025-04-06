@@ -10,6 +10,7 @@ use App\Http\Controllers\police_officer\PoliceController;
 use App\Http\Controllers\security_officer\SecurityController;
 use App\Http\Controllers\training_officer\TrainingController;
 use App\Http\Controllers\visitor\VisitorController;
+use App\Http\Controllers\police_commisioner\CommisinerControler;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VisitingRequestController;
@@ -69,6 +70,7 @@ Route::post('/requests/update-status/{id}', function ($id, Request $request) {
     }
     return response()->json(['success' => false, 'message' => 'Invalid status or request not found.']);
 });
+Route::get('/cdashboard', [CommisinerControler::class, 'dashboard'])->name('commisioner.comissioner');
 
 
 Route::get('/chart-data', [cAccountController::class, 'getChartData']);
@@ -159,7 +161,9 @@ Route::get('/medicalappointments', [MedicalController::class, 'createMedicalAppo
 Route::get('/medicalreports', [MedicalController::class, 'createMedicalReport'])->name('medical.createReport');
 Route::get('/viewmedicalappointments', [MedicalController::class, 'viewAppointments'])->name('medical.viewAppointments');
 Route::get('/viewmedicalreports', [MedicalController::class, 'viewReports'])->name('medical.viewReports');
-Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom');
+Route::post('/appointments/store', [MedicalController::class, 'mstore'])->name('appointments.store');
+
+Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom')->middleware('role:8');
 Route::post('/storeRoomAllocation', [PoliceController::class, 'storeRoomAllocation'])->name('police.storeRoomAllocation');
 Route::get('/createRequest', [PoliceController::class, 'createRequest'])->name('police.createRequest');
 Route::post('/storeRequest', [PoliceController::class, 'storeRequest'])->name('police.storeRequest');

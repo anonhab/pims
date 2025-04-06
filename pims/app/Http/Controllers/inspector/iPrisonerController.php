@@ -63,14 +63,14 @@ class iPrisonerController extends Controller
             ->whereNull('room_id')
             ->paginate(9);
 
-        $rooms = Room::all();
+        $rooms = Room::where('prison_id', session('prison_id'))->paginate(9);
         return view('police_officer.allocate_room', compact('prisoners', 'rooms'));
     }
 
     public function roomassign()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
-        $rooms = Room::paginate(9);
+        $rooms = Room::where('prison_id', session('prison_id'))->paginate(9);
         return view('police_officer.view _allocation', compact('prisoners', 'rooms'));
     }
 

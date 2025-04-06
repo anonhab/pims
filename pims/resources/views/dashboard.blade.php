@@ -3,145 +3,200 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/app.css">
+    <style>
+        /* Base Styles */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        #app-content {
+            padding: 20px;
+        }
+        
+        .columns {
+            display: flex;
+            flex-wrap: wrap;
+            margin: -0.75rem;
+        }
+        
+        .column {
+            display: block;
+            flex-basis: 0;
+            flex-grow: 1;
+            flex-shrink: 1;
+            padding: 0.75rem;
+        }
+        
+        .column.is-3 {
+            flex: none;
+            width: 25%;
+        }
+        
+        .is-multiline {
+            flex-wrap: wrap;
+        }
+        
+        /* Box Styles */
+        .box {
+            background-color: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 3px rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.1);
+            display: block;
+            padding: 1.25rem;
+            transition: transform 0.2s ease;
+        }
+        
+        .box:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Quick Stats Styles */
+        .quick-stats {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            height: 100%;
+            text-decoration: none;
+        }
+        
+        .quick-stats-icon {
+            margin-bottom: 1rem;
+        }
+        
+        .quick-stats-content {
+            width: 100%;
+        }
+        
+        .title {
+            color: inherit;
+            font-weight: 600;
+            line-height: 1.125;
+            margin-bottom: 0;
+        }
+        
+        .title.is-4 {
+            font-size: 1.5rem;
+        }
+        
+        .icon {
+            align-items: center;
+            display: inline-flex;
+            justify-content: center;
+            height: 1.5rem;
+            width: 1.5rem;
+        }
+        
+        .icon.is-large {
+            height: 3rem;
+            width: 3rem;
+        }
+        
+        /* Color Classes */
+        .has-background-primary {
+            background-color: #00d1b2 !important;
+        }
+        
+        .has-background-danger {
+            background-color: #ff3860 !important;
+        }
+        
+        .has-background-info {
+            background-color: #209cee !important;
+        }
+        
+        .has-background-warning {
+            background-color: #ffdd57 !important;
+        }
+        
+        .has-background-link {
+            background-color: #3273dc !important;
+        }
+        
+        .has-background-grey-dark {
+            background-color: #363636 !important;
+        }
+        
+        .has-background-dark {
+            background-color: #0a0a0a !important;
+        }
+        
+        .has-text-white {
+            color: white !important;
+        }
+        
+        /* Responsive Adjustments */
+        @media screen and (max-width: 1023px) {
+            .column.is-3 {
+                width: 33.3333%;
+            }
+        }
+        
+        @media screen and (max-width: 768px) {
+            .column.is-3 {
+                width: 50%;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .column.is-3 {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
-    @include('includes.nav')
+ 
 
     <main class="columns" id="app-content">
-        <!-- Side Menu -->
-        @include('includes.menu')
-
-        <!-- Main Content -->
-        <div class="column is-10" id="page-content">
-            <!-- Header Section -->
-            <header class="content-header">
-                <h4 class="title is-4">Dashboard</h4>
-                <!-- Breadcrumb Navigation -->
-                <nav class="breadcrumb has-bullet-separator" aria-label="breadcrumbs">
-                    <ul>
-                        <li><a href="#">General</a></li>
-                        <li class="is-active"><a href="#" aria-current="page">Dashboard</a></li>
-                    </ul>
-                </nav>
-            </header>
-
-            <!-- Content Body -->
-            <section class="content-body">
-                <!-- Quick Stats Section -->
-                <div class="columns is-multiline">
-                    @foreach([['account.show_all', 'Central Administrators', 'user-cog', 'primary'],
-                              ['prisoner.showAll', 'Inspectors', 'user-secret', 'danger'],
-                              ['mylawyer.myprisoner', 'Lawyers', 'user-tie', 'info'],
-                              ['medical.createAppointment', 'Medical Officers', 'user-md', 'warning'],
-                              ['police.allocateRoom', 'Police Officers', 'user', 'link'],
-                              ['security.registerVisitor', 'Security Officers', 'user-lock', 'grey-dark'],
-                              ['saccount.show_all', 'System Admins', 'user-cog', 'dark'],
-                              ['training.assignCertifications', 'Training Officers', 'user-graduate', 'info'],
-                              ['visitor.createVisitingRequest', 'Visitors', 'user-friends', 'warning']] as $role)
-                    <div class="column is-3">
-                        <a href="{{ route($role[0]) }}" class="box quick-stats has-background-{{ $role[3] }} has-text-white" aria-label="{{ $role[1] }}">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-{{ $role[2] }}" aria-hidden="true"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">{{ $role[1] }}</h3>
-                            </div>
-                        </a>
-                    </div>
-                    @endforeach
-                    
-                    <!-- New Discipline Officers Section -->
-                    <div class="column is-3">
-                        <a href="{{ route('discipline_officer.evaluate_request') }}" class="box quick-stats has-background-info has-text-white">
-                            <div class="quick-stats-icon">
-                                <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
-                            </div>
-                            <div class="quick-stats-content">
-                                <h3 class="title is-4">Discipline Officers</h3>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Charts Section -->
-                <div class="columns is-multiline">
-                    @foreach([['Visitors', 'chart1', '#4bc0c0'], ['Prisoners', 'chart2', '#ff6384'],
-                              ['Prisons', 'chart3', '#36a2eb'], ['Staffs', 'chart4', '#ff9f40']] as $chart)
-                    <div class="column is-6">
-                        <div class="card">
-                            <div class="card-content">
-                                <p class="title is-4">{{ $chart[0] }}</p>
-                                <!-- Color Picker for Chart Customization -->
-                                <label for="color-{{ $chart[1] }}" class="is-sr-only">Choose color for {{ $chart[0] }} chart</label>
-                                <input type="color" id="color-{{ $chart[1] }}" value="{{ $chart[2] }}" class="mb-3" aria-label="Choose color for {{ $chart[0] }} chart" />
-                                <!-- Chart Canvas -->
-                                <canvas id="{{ $chart[1] }}" aria-label="{{ $chart[0] }} Chart" role="img"></canvas>
-                            </div>
+        <!-- Content Body -->
+        <section class="content-body">
+            <!-- Quick Stats Section -->
+            <div class="columns is-multiline">
+                @foreach([['account.show_all', 'Central Administrators', 'user-cog', 'primary'],
+                          ['prisoner.showAll', 'Inspectors', 'user-secret', 'danger'],
+                          ['mylawyer.myprisoner', 'Lawyers', 'user-tie', 'info'],
+                          ['commisioner.comissioner', 'Commisioner', 'user-tie', 'info', 'Legal representation'],
+                          ['medical.createAppointment', 'Medical Officers', 'user-md', 'warning'],
+                          ['police.allocateRoom', 'Police Officers', 'user', 'link'],
+                          ['security.registerVisitor', 'Security Officers', 'user-lock', 'grey-dark'],
+                          ['saccount.show_all', 'System Admins', 'user-cog', 'dark'],
+                          ['training.assignCertifications', 'Training Officers', 'user-graduate', 'info'],
+                          ['visitor.createVisitingRequest', 'Visitors', 'user-friends', 'warning']] as $role)
+                <div class="column is-3">
+                    <a href="{{ route($role[0]) }}" class="box quick-stats has-background-{{ $role[3] }} has-text-white" aria-label="{{ $role[1] }}">
+                        <div class="quick-stats-icon">
+                            <span class="icon is-large"><i class="fa fa-3x fa-{{ $role[2] }}" aria-hidden="true"></i></span>
                         </div>
-                    </div>
-                    @endforeach
+                        <div class="quick-stats-content">
+                            <h3 class="title is-4">{{ $role[1] }}</h3>
+                        </div>
+                    </a>
                 </div>
-            </section>
-        </div>
+                @endforeach
+                
+                <!-- New Discipline Officers Section -->
+                <div class="column is-3">
+                    <a href="{{ route('discipline_officer.evaluate_request') }}" class="box quick-stats has-background-info has-text-white">
+                        <div class="quick-stats-icon">
+                            <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
+                        </div>
+                        <div class="quick-stats-content">
+                            <h3 class="title is-4">Discipline Officers</h3>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- External JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Fetch Chart Data from Server
-            fetch('/chart-data')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(chartData => {
-                    const dates = chartData.map(item => item.date);
-                    const categories = ['Visitors', 'Prisoners', 'Prisons', 'Staffs'];
-                    const colors = ['#4bc0c0', '#ff6384', '#36a2eb', '#ff9f40'];
-
-                    // Initialize Charts
-                    categories.forEach((category, index) => {
-                        const ctx = document.getElementById(`chart${index + 1}`).getContext('2d');
-                        const chart = new Chart(ctx, {
-                            type: 'line',
-                            data: {
-                                labels: dates,
-                                datasets: [{
-                                    label: category,
-                                    data: chartData.map(item => item[category.toLowerCase()]),
-                                    borderColor: colors[index],
-                                    tension: 0.1
-                                }]
-                            },
-                            options: {
-                                responsive: true,
-                                plugins: {
-                                    legend: {
-                                        position: 'top',
-                                    },
-                                    tooltip: {
-                                        enabled: true
-                                    }
-                                }
-                            }
-                        });
-
-                        // Update Chart Color Dynamically
-                        document.getElementById(`color-chart${index + 1}`).addEventListener('change', (e) => {
-                            chart.data.datasets[0].borderColor = e.target.value;
-                            chart.update();
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error('Error fetching chart data:', error);
-                });
-        });
-    </script>
 </body>
 </html>
