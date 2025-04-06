@@ -15,12 +15,14 @@
         
         #app-content {
             padding: 20px;
+            margin: 50px;
         }
         
         .columns {
             display: flex;
             flex-wrap: wrap;
-            margin: -0.75rem;
+            margin-left: 17%;
+            align-items:center;
         }
         
         .column {
@@ -186,16 +188,16 @@
         <section class="content-body">
             <!-- Quick Stats Section -->
             <div class="columns is-multiline">
-                @foreach([['account.show_all', 'Central Administrators', 'user-cog', 'primary', 85],
-                          ['prisoner.showAll', 'Inspectors', 'user-secret', 'danger', 80],
-                          ['mylawyer.myprisoner', 'Lawyers', 'user-tie', 'info', 68],
-                          ['commisioner.comissioner', 'Commisioner', 'user-tie', 'info', 55, 'Legal representation'],
-                          ['medical.createAppointment', 'Medical Officers', 'user-md', 'warning', 60],
-                          ['police.allocateRoom', 'Police Officers', 'user', 'link', 78],
-                          ['security.registerVisitor', 'Security Officers', 'user-lock', 'grey-dark', 50],
+                @foreach([['account.show_all', 'Central Administrators', 'user-cog', 'dark', 85],
+                          ['prisoner.showAll', 'Inspectors', 'user-secret', 'dark', 80],
+                          ['mylawyer.myprisoner', 'Lawyers', 'user-tie', 'dark', 68],
+                          ['commisioner.comissioner', 'Commisioner', 'user-tie', 'dark', 55, 'Legal representation'],
+                          ['medical.createAppointment', 'Medical Officers', 'user-md', 'dark', 60],
+                          ['police.allocateRoom', 'Police Officers', 'user', 'dark', 78],
+                          ['security.registerVisitor', 'Security Officers', 'user-lock', 'dark', 50],
                           ['saccount.show_all', 'System Admins', 'user-cog', 'dark', 70],
-                          ['training.assignCertifications', 'Training Officers', 'user-graduate', 'info', 60],
-                          ['visitor.createVisitingRequest', 'Visitors', 'user-friends', 'warning', 15]] as $role)
+                          ['training.assignCertifications', 'Training Officers', 'user-graduate', 'dark', 60],
+                          ['visitor.createVisitingRequest', 'Visitors', 'user-friends', 'dark', 15]] as $role)
                 <div class="column is-3">
                     <a href="{{ route($role[0]) }}" class="box quick-stats has-background-{{ $role[3] }} has-text-white" aria-label="{{ $role[1] }}">
                         <div class="quick-stats-icon">
@@ -209,8 +211,9 @@
                                     <span>{{ $role[4] }}%</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: {{ $role[4] }}%"></div>
-                                </div>
+    <div class="progress-fill" style="width: {{ $role[4] }}%;"></div>
+</div>
+
                             </div>
                         </div>
                     </a>
@@ -219,7 +222,7 @@
                 
                 <!-- New Discipline Officers Section -->
                 <div class="column is-3">
-                    <a href="{{ route('discipline_officer.evaluate_request') }}" class="box quick-stats has-background-info has-text-white">
+                    <a href="{{ route('discipline_officer.evaluate_request') }}" class="box quick-stats has-background-dark has-text-white">
                         <div class="quick-stats-icon">
                             <span class="icon is-large"><i class="fa fa-3x fa-user-shield"></i></span>
                         </div>
