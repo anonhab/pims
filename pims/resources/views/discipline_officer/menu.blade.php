@@ -55,7 +55,6 @@
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="/discipline_officer/view_requests" class="pims-submenu-link">View Requests</a>
                     </li>
                     <li class="pims-submenu-item">
                         <a href="{{ route('discipline_officer.evaluate_request') }}" class="pims-submenu-link">Evaluate Request</a>

@@ -97,6 +97,33 @@
             width: 3rem;
         }
         
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+            font-size: 0.75rem;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.3);
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            background-color: white;
+            transition: width 0.5s ease;
+        }
+        
         /* Color Classes */
         .has-background-primary {
             background-color: #00d1b2 !important;
@@ -159,16 +186,16 @@
         <section class="content-body">
             <!-- Quick Stats Section -->
             <div class="columns is-multiline">
-                @foreach([['account.show_all', 'Central Administrators', 'user-cog', 'primary'],
-                          ['prisoner.showAll', 'Inspectors', 'user-secret', 'danger'],
-                          ['mylawyer.myprisoner', 'Lawyers', 'user-tie', 'info'],
-                          ['commisioner.comissioner', 'Commisioner', 'user-tie', 'info', 'Legal representation'],
-                          ['medical.createAppointment', 'Medical Officers', 'user-md', 'warning'],
-                          ['police.allocateRoom', 'Police Officers', 'user', 'link'],
-                          ['security.registerVisitor', 'Security Officers', 'user-lock', 'grey-dark'],
-                          ['saccount.show_all', 'System Admins', 'user-cog', 'dark'],
-                          ['training.assignCertifications', 'Training Officers', 'user-graduate', 'info'],
-                          ['visitor.createVisitingRequest', 'Visitors', 'user-friends', 'warning']] as $role)
+                @foreach([['account.show_all', 'Central Administrators', 'user-cog', 'primary', 85],
+                          ['prisoner.showAll', 'Inspectors', 'user-secret', 'danger', 80],
+                          ['mylawyer.myprisoner', 'Lawyers', 'user-tie', 'info', 68],
+                          ['commisioner.comissioner', 'Commisioner', 'user-tie', 'info', 55, 'Legal representation'],
+                          ['medical.createAppointment', 'Medical Officers', 'user-md', 'warning', 60],
+                          ['police.allocateRoom', 'Police Officers', 'user', 'link', 78],
+                          ['security.registerVisitor', 'Security Officers', 'user-lock', 'grey-dark', 50],
+                          ['saccount.show_all', 'System Admins', 'user-cog', 'dark', 70],
+                          ['training.assignCertifications', 'Training Officers', 'user-graduate', 'info', 60],
+                          ['visitor.createVisitingRequest', 'Visitors', 'user-friends', 'warning', 15]] as $role)
                 <div class="column is-3">
                     <a href="{{ route($role[0]) }}" class="box quick-stats has-background-{{ $role[3] }} has-text-white" aria-label="{{ $role[1] }}">
                         <div class="quick-stats-icon">
@@ -176,6 +203,15 @@
                         </div>
                         <div class="quick-stats-content">
                             <h3 class="title is-4">{{ $role[1] }}</h3>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Progress</span>
+                                    <span>{{ $role[4] }}%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{ $role[4] }}%"></div>
+                                </div>
+                            </div>
                         </div>
                     </a>
                 </div>
@@ -189,6 +225,15 @@
                         </div>
                         <div class="quick-stats-content">
                             <h3 class="title is-4">Discipline Officers</h3>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>Progress</span>
+                                    <span>65%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                            </div>
                         </div>
                     </a>
                 </div>
@@ -198,5 +243,7 @@
 
     <!-- External JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>
