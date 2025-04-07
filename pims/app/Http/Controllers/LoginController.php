@@ -133,6 +133,7 @@ class LoginController extends Controller
                     'email'             => $visitor->email,
                     'identification_number'=> $visitor->identification_number,
                     'rolename'             => 'visitor',
+                    'role_id'    => '4',
                 ]);
     
                 Log::info('Visitor login successful:', ['email' => $visitor->username]);

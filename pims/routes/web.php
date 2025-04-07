@@ -197,7 +197,7 @@ Route::delete('training-programs/{id}', [TrainingController::class, 'destroy'])-
 Route::put('/jobs/update', [TrainingController::class, 'updatejob'])->name('jobs.update');
 
 
-Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest');
+Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest')->middleware('role:4');//visitor role id == 4
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
 Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
