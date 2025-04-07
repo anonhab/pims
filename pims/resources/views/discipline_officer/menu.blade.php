@@ -7,7 +7,7 @@
     <!-- Sidebar Logo/Brand -->
     <div class="pims-sidebar-brand">
         <i class="fas fa-user-lock pims-brand-icon"></i>
-        <span class="pims-brand-text">PIMS displin</span>
+        <span class="pims-brand-text">PIMS displine officer</span>
         <i class="fas fa-times pims-close-sidebar" id="pimsCloseSidebar"></i>
     </div>
 
@@ -16,7 +16,7 @@
         <ul class="pims-menu-list">
             <!-- Dashboard -->
             <li class="pims-menu-item">
-                <a href="/idashboard" class="pims-menu-link">
+                <a href="/ddashboard" class="pims-menu-link">
                     <span class="pims-menu-icon">
                         <i class="fas fa-home"></i>
                     </span>
