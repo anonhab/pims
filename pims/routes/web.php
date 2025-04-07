@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\DisciplineOfficerController;
 use App\Http\Controllers\DashboardController;
-
+use App\Models\Prisoner;
 
 Route::get('/allactor', function () {
     return view('dashboard');
@@ -162,6 +162,8 @@ Route::get('/medicalreports', [MedicalController::class, 'createMedicalReport'])
 Route::get('/viewmedicalappointments', [MedicalController::class, 'viewAppointments'])->name('medical.viewAppointments');
 Route::get('/viewmedicalreports', [MedicalController::class, 'viewReports'])->name('medical.viewReports');
 Route::post('/appointments/store', [MedicalController::class, 'mstore'])->name('appointments.store');
+Route::post('/medical-reports/store', [MedicalController::class, 'mrstore'])->name('medical-reports.store');
+
 
 Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom')->middleware('role:8');
 Route::post('/storeRoomAllocation', [PoliceController::class, 'storeRoomAllocation'])->name('police.storeRoomAllocation');
@@ -243,6 +245,19 @@ Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
 
 
+Route::get('/prisoners/{prisonerId}/appointments', function ($prisonerId) {
+    // Fetch the prisoner by ID (you can adjust this to your app's logic)
+    $prisoner = Prisoner::find($prisonerId);
+
+    if (!$prisoner) {
+        return response()->json(['error' => 'Prisoner not found'], 404);
+    }
+
+    // Get appointments for the prisoner (this assumes you have a relation set up)
+    $appointments = $prisoner->appointments;  // Assuming there's a relationship method in the Prisoner model
+
+    return response()->json($appointments);
+});
 
 // Home Page
 Route::get('/', function () {

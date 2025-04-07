@@ -18,13 +18,14 @@ class MedicalReport extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'prisoner_id', 'doctor_id', 'diagnosis', 'treatment', 'medications', 'follow_up_needed', 'report_date'
+        'id', 'prisoner_id', 'doctor_id', 'diagnosis', 'treatment', 'medications', 'report_date','appointment_id','follow_up_date','notes','follow_up'
     ];
 
     protected $casts = [
         'report_date' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'follow_up_date'=>'datetime',
     ];
 
     // Relationship with Prisoner

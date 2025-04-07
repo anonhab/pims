@@ -91,9 +91,8 @@
                                             </div>
 
                                             <footer class="card-footer">
-                                                <a href="#" class="card-footer-item has-text-info">View</a>
                                                 <a href="#" class="card-footer-item has-text-warning">Edit</a>
-                                                <a href="#" class="card-footer-item has-text-danger">Delete</a>
+                                              
                                             </footer>
                                         </div>
                                     </div>

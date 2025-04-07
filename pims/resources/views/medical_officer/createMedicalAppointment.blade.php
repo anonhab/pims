@@ -41,17 +41,17 @@
         <div class="column is-6">
             <div class="field">
                 <label class="label">Doctor</label>
-                <div class="control">
-                    <div class="select is-fullwidth">
-                        <select name="doctor_id" required>
-                            <option value="">-- Select Doctor --</option>
-                            @foreach($doctors as $doctor)
-                                <option value="{{ $doctor->user_id }}">{{ $doctor->first_name }} {{ $doctor->last_name }}</option>
-                            @endforeach
-                        </select>
+               
+                    <div class="control has-icons-left">
+                                                <input class="input" type="text" value="{{ session('first_name') }} {{ session('last_name') }}" disabled>
+                                                <input type="hidden" name="doctor_id" value="{{ session('user_id') }}">
+                                                <span class="icon is-small is-left">
+                                                    <i class="fas fa-user-md"></i>
+                                                </span>
+                                            </div>
                     </div>
-                </div>
-            </div>
+                
+             
         </div>
 
         <div class="column is-6">

@@ -89,5 +89,9 @@ public function trainingAssignments()
 {
     return $this->hasMany(TrainingAssignment::class, 'prisoner_id', 'id');
 }
+  public function appointments()
+    {
+        return $this->hasMany(MedicalAppointment::class);
+    }
 
 }
