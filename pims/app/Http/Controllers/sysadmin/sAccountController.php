@@ -17,7 +17,7 @@ class sAccountController extends Controller
         // Fetch accounts excluding role_id = 1 and role_id = 3
         $accounts = Account::whereNotIn('role_id', [1, 3])
             ->where('prison_id', session('prison_id'))
-            ->paginate(3);
+            ->paginate(9);
     
         // Pass the filtered accounts to the view
         return view('sysadmin.view_account', compact('accounts','roles'));

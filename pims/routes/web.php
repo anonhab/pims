@@ -10,6 +10,7 @@ use App\Http\Controllers\police_officer\PoliceController;
 use App\Http\Controllers\security_officer\SecurityController;
 use App\Http\Controllers\training_officer\TrainingController;
 use App\Http\Controllers\visitor\VisitorController;
+use App\Http\Controllers\police_commisioner\CommisinerControler;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\VisitingRequestController;
@@ -69,6 +70,7 @@ Route::post('/requests/update-status/{id}', function ($id, Request $request) {
     }
     return response()->json(['success' => false, 'message' => 'Invalid status or request not found.']);
 });
+Route::get('/cdashboard', [CommisinerControler::class, 'dashboard'])->name('commisioner.comissioner');
 
 
 Route::get('/chart-data', [cAccountController::class, 'getChartData']);
@@ -159,7 +161,9 @@ Route::get('/medicalappointments', [MedicalController::class, 'createMedicalAppo
 Route::get('/medicalreports', [MedicalController::class, 'createMedicalReport'])->name('medical.createReport');
 Route::get('/viewmedicalappointments', [MedicalController::class, 'viewAppointments'])->name('medical.viewAppointments');
 Route::get('/viewmedicalreports', [MedicalController::class, 'viewReports'])->name('medical.viewReports');
-Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom');
+Route::post('/appointments/store', [MedicalController::class, 'mstore'])->name('appointments.store');
+
+Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom')->middleware('role:8');
 Route::post('/storeRoomAllocation', [PoliceController::class, 'storeRoomAllocation'])->name('police.storeRoomAllocation');
 Route::get('/createRequest', [PoliceController::class, 'createRequest'])->name('police.createRequest');
 Route::post('/storeRequest', [PoliceController::class, 'storeRequest'])->name('police.storeRequest');
@@ -179,7 +183,21 @@ Route::get('/createtrainingprograms', [TrainingController::class, 'createTrainin
 Route::get('/viewcertifications', [TrainingController::class, 'viewCertifications'])->name('training.viewCertifications');
 Route::get('/viewjobs', [TrainingController::class, 'viewJobs'])->name('training.viewJobs');
 Route::get('/viewtrainingprograms', [TrainingController::class, 'viewTrainingPrograms'])->name('training.viewTrainingPrograms');
-Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest');
+Route::get('/assigntrainingprograms', [TrainingController::class, 'assignTrainingPrograms'])->name('training.assignTrainingPrograms');
+Route::get('/viewassignedTrainingPrograms', [TrainingController::class, 'viewAssignedPrograms'])->name('training.viewassignedTrainingPrograms');
+Route::post('/training-programs/store', [TrainingController::class, 'storeTrainingProgram'])->name('training_officer.store');
+Route::put('/assign-training/unassign/{id}', [TrainingController::class, 'unassignTrainingProgram'])->name('assign_training.unassign');
+Route::post('/assigntraining-programs/store', [TrainingController::class, 'assignTrainingProgram'])->name('assign_training.store');
+Route::get('/assignjobs', [TrainingController::class, 'assignjobs'])->name('training.assignjobs');
+Route::post('/assignJob', [TrainingController::class, 'assignJob'])->name('job.assign');
+Route::delete('/jobs/{job}', [TrainingController::class, 'destroyjob'])
+    ->name('jobs.destroyjob');
+Route::put('training-programs/{id}', [TrainingController::class, 'update'])->name('training_officer.update');
+Route::delete('training-programs/{id}', [TrainingController::class, 'destroy'])->name('training_officer.destroy');
+Route::put('/jobs/update', [TrainingController::class, 'updatejob'])->name('jobs.update');
+
+
+Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest')->middleware('role:4');//visitor role id == 4
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
 Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');

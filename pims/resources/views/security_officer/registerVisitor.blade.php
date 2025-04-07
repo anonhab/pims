@@ -57,17 +57,18 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label for="username" class="block text-gray-700">Username</label>
-                            <input id="username" type="text" name="username" placeholder="Username" required 
-                                class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
-                        </div>
-                        <div>
-                            <label for="password" class="block text-gray-700">Password</label>
-                            <input id="password" type="password" name="password" placeholder="Password" required 
-                                class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
-                        </div>
-                    </div>
+    <div>
+        <label for="email" class="block text-gray-700">Email</label>
+        <input id="email" type="email" name="email" placeholder="Email" required 
+            class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
+    </div>
+    <div>
+        <label for="password" class="block text-gray-700">Password</label>
+        <input id="password" type="password" name="password" placeholder="Password" required 
+            class="border p-3 rounded w-full focus:ring-2 focus:ring-blue-400">
+    </div>
+</div>
+
 
                     <button type="submit" class="bg-blue-600 text-white py-3 px-6 rounded-lg w-full hover:bg-blue-700 transition duration-300">Register</button>
                 </form>

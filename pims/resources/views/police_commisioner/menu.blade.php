@@ -48,14 +48,13 @@
                     <span class="pims-menu-icon">
                         <i class="fas fa-paper-plane"></i>
                     </span>
-                    <span class="pims-menu-text">Process Request</span>
+                    <span class="pims-menu-text">Execute Requests</span>
                     <span class="pims-menu-arrow">
                         <i class="fas fa-angle-down"></i>
                     </span>
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="/create_request" class="pims-submenu-link">Create/Update Request</a>
                     </li>
                     <li class="pims-submenu-item">
                         <a href="/view_requests" class="pims-submenu-link">View Requests</a>
@@ -69,17 +68,17 @@
                     <span class="pims-menu-icon">
                         <i class="fas fa-chart-line"></i>
                     </span>
-                    <span class="pims-menu-text">Report Generation</span>
+                    <span class="pims-menu-text">Release Prisoner</span>
                     <span class="pims-menu-arrow">
                         <i class="fas fa-angle-down"></i>
                     </span>
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="/generate_report" class="pims-submenu-link">Generate Report</a>
+                        <a href="/generate_report" class="pims-submenu-link">Release</a>
                     </li>
                     <li class="pims-submenu-item">
-                        <a href="/view_reports" class="pims-submenu-link">View Generated Reports</a>
+                        <a href="/view_reports" class="pims-submenu-link">View Releases</a>
                     </li>
                 </ul>
             </li>

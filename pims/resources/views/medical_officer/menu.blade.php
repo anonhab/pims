@@ -18,11 +18,9 @@
                     </span> Appointment Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('medical.createAppointment') }}">Create Appointment </a></li>
-                    <li><a href="{{ route('medical.viewAppointments') }}">View Appointment Details</a></li>
+                    <li><a href="{{ route('medical.createAppointment') }}">schedule Appointment </a></li>
+                    <li><a href="{{ route('medical.viewAppointments') }}">View Appointments</a></li>
                 </ul>
-               
-                
             </li>
 
             <li>
@@ -32,8 +30,7 @@
                     </span> Medical Management
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('medical.createReport') }}">Create/Update Medical Report</a></li>
-                    <li><a href="{{ route('medical.viewReports') }}">View Medical Reports</a></li>
+                    <li><a href="{{ route('medical.createReport') }}">Generate Medical Report</a></li>
                 </ul>
             </li>
         </ul>

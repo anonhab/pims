@@ -30,9 +30,10 @@
                     </span> Training Programs
                 </a>
                 <ul class="submenu">
-                    <li><a href="{{ route('training.createTrainingPrograms') }}">Create/Update Training Program</a></li>
-                    <li><a href="{{ route('training.viewTrainingPrograms') }}">View Training Programs</a></li>
-                    <li><a href="#">Assign Training Programs</a></li>
+                    
+                    <li><a href="{{ route('training.viewTrainingPrograms') }}"> Training Programs</a></li>
+                    <li><a href="{{ route('training.assignTrainingPrograms') }}">Assign Training Programs</a></li>
+                    <li><a href="{{ route('training.viewassignedTrainingPrograms') }}">View Assigned Programs</a></li>
                 </ul>
             </li>
 
@@ -43,8 +44,7 @@
                     </span> Jobs
                 </a>
                 <ul class="submenu">
-                <li><a href="#">Create Jobs</a></li>
-                <li><a href="#">Assign Jobs</a></li>
+                <li><a href="{{ route('training.assignjobs') }}">Assign Jobs</a></li>
                     <li><a href="{{ route('training.viewJobs') }}">View Jobs</a></li>
                     
                 </ul>

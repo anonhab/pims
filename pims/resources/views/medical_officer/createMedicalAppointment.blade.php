@@ -19,85 +19,93 @@
                 <div class="container">
                     <h1 class="title has-text-centered">Appointment Management</h1>
 
-                    <form>
-                        <div class="columns">
-                            <!-- Appointment Information -->
-                            <div class="column is-half">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <p class="title is-4">Appointment Information</p>
+                  <form method="POST" action="{{ route('appointments.store') }}" class="box mb-5" id="appointmentForm">
+    @csrf
+    <div class="columns is-multiline">
+        <div class="column is-6">
+            <div class="field">
+                <label class="label">Prisoner</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="prisoner_id" required>
+                            <option value="">-- Select Prisoner --</option>
+                            @foreach($prisoners as $prisoner)
+                                <option value="{{ $prisoner->id }}">{{ $prisoner->first_name }} {{ $prisoner->last_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                        <div class="field">
-                                            <label class="label">Prisoner</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select required>
-                                                        <option value="">Select Prisoner</option>
-                                                        <option>John Doe</option>
-                                                        <option>Jane Smith</option>
-                                                        <option>Michael Johnson</option>
-                                                        <!-- Dynamically populate this list with prisoners -->
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+        <div class="column is-6">
+            <div class="field">
+                <label class="label">Doctor</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="doctor_id" required>
+                            <option value="">-- Select Doctor --</option>
+                            @foreach($doctors as $doctor)
+                                <option value="{{ $doctor->user_id }}">{{ $doctor->first_name }} {{ $doctor->last_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                        <div class="field">
-                                            <label class="label">Medical Officer</label>
-                                            <div class="control">
-                                                <div class="select is-fullwidth">
-                                                    <select required>
-                                                        <option value="">Select Medical Officer</option>
-                                                        <option>Dr. Sarah Williams</option>
-                                                        <option>Dr. James Brown</option>
-                                                        <option>Dr. Olivia Davis</option>
-                                                        <!-- Dynamically populate this list with medical officers -->
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
+        <div class="column is-6">
+            <div class="field">
+                <label class="label">Appointment Date</label>
+                <div class="control">
+                    <input type="datetime-local" name="appointment_date" class="input" required>
+                </div>
+            </div>
+        </div>
 
-                                        <div class="field">
-                                            <label class="label">Appointment Date</label>
-                                            <div class="control">
-                                                <input class="input" type="date" required>
-                                            </div>
-                                        </div>
+        <div class="column is-6">
+            <div class="field">
+                <label class="label">Status</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="status" required>
+                            <option value="scheduled">Scheduled</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                    </div>
-                                </div>
-                            </div>
+        <div class="column is-6">
+            <div class="field">
+                <label class="label">Diagnosis</label>
+                <div class="control">
+                    <textarea class="textarea" name="diagnosis"></textarea>
+                </div>
+            </div>
+        </div>
 
-                            <!-- Appointment Details -->
-                            <div class="column is-half">
-                                <div class="card">
-                                    <div class="card-content">
-                                        <p class="title is-4">Appointment Details</p>
+        <div class="column is-6">
+            <div class="field">
+                <label class="label">Treatment</label>
+                <div class="control">
+                    <textarea class="textarea" name="treatment"></textarea>
+                </div>
+            </div>
+        </div>
 
-                                        <div class="field">
-                                            <label class="label">Notes</label>
-                                            <div class="control">
-                                                <textarea class="textarea" placeholder="Enter appointment notes"
-                                                    required></textarea>
-                                            </div>
-                                        </div>
+        <div class="column is-12 has-text-right">
+            <button type="submit" class="button is-primary">
+                <span class="icon"><i class="fa fa-save"></i></span>
+                <span>Save Appointment</span>
+            </button>
+        </div>
+    </div>
+</form>
 
-                                    </div>
-                                </div>
-                            </div>
 
-                        </div>
-
-                        <!-- Submit and Reset Button -->
-                        <div class="field is-grouped is-grouped-right">
-                            <div class="control">
-                                <button class="button is-link">Submit</button>
-                            </div>
-                            <div class="control">
-                                <button class="button is-light" type="reset">Reset</button>
-                            </div>
-                        </div>
-                    </form>
                 </div>
             </section>
 
@@ -121,36 +129,32 @@
         gtag('config', 'G-4TVE6RNN41');
     </script>
 
-    <script
-        type=application/ld+json>{"@context":"http://schema.org","@type":"WebSite","url":"https://www.nafplann.com/","name":"Abdul Manaaf | Fullstack Web Developer","author":"Abdul Manaaf","image":"https://avatars3.githubusercontent.com/u/7114259?s=460&v=4","description":"Abdul Manaaf is a Fullstack Web Developer from Indonesia","sameAs":["https://www.facebook.com/nafplann","https://instagram.com/nafplann","https://twitter.com/nafplann","https://id.linkedin.com/in/nafplann","https://github.com/nafplann"]}</script>
+    
+        <script>
+document.getElementById("appointmentForm").addEventListener("submit", function(event) {
+    let form = event.target;
+    let status = form.querySelector('[name="status"]').value;
+    let appointmentDate = new Date(form.querySelector('[name="appointment_date"]').value);
+    let now = new Date();
 
-    <script
-        type=application/ld+json>{"@context":"http://schema.org","@type":"Person","email":"mailto:nafplann@gmail.com","image":"https://avatars3.githubusercontent.com/u/7114259?s=460&v=4","jobTitle":"Fullstack Web Developer","name":"Abdul Manaaf","url":"https://www.nafplann.com/","sameAs":["https://www.facebook.com/nafplann","https://instagram.com/nafplann","https://twitter.com/nafplann","https://id.linkedin.com/in/nafplann","https://github.com/nafplann"]}</script>
+    // Check if appointment date is today or in the future
+    if (appointmentDate < now) {
+        alert("Appointment date must be today or in the future.");
+        event.preventDefault(); // Prevent form submission
+        return;
+    }
 
-    <script type=application/ld+json>{
-            "@context":"http://schema.org",
-            "@type":"BreadcrumbList",
-            "itemListElement":[
-               {
-                  "@type":"ListItem",
-                  "position":1,
-                  "item":{
-                     "@id":"https://nafplann.com/",
-                     "name":"Home",
-                     "image":"https://avatars3.githubusercontent.com/u/7114259?s=460&v=4"
-                  }
-               },
-               {
-                  "@type":"ListItem",
-                  "position":2,
-                  "item":{
-                     "@id":"https://nafplann.com/bulma-admin/",
-                     "name":"free-bulma-admin-dashboard-template",
-                     "image":"https://avatars3.githubusercontent.com/u/7114259?s=460&v=4"
-                  }
-               }
-            ]
-         }</script>
+    // Check if status is valid
+    if (!['scheduled', 'completed', 'cancelled'].includes(status)) {
+        alert("Status must be one of 'pending', 'completed', or 'cancelled'.");
+        event.preventDefault(); // Prevent form submission
+        return;
+    }
+
+    // You can add additional validation for other fields here if needed
+});
+</script>
+
 </body>
 
 
