@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inspector;
 
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\Prison;
 use App\Models\MedicalAppointment;
@@ -12,6 +13,7 @@ use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use App\Models\LawyerPrisonerAssignment;
 use App\Models\Lawyer;
+use App\Models\MedicalReport;
 use App\Models\Requests;
 use Carbon\Carbon;
 use App\Models\Room;
@@ -26,21 +28,35 @@ class iPrisonerController extends Controller
     }
 
     public function idashboard()
-    {
-        $prisonerCount = 88;
+{
+    // Example logic to fetch data — replace these with your actual logic
+    $prisonerCount = Prisoner::count();
+    $releasedThisMonth = Prisoner::whereMonth('status', now()->month)->count();
+    $activeCases = 33;
+    $securityIncidents = 88;
+    $prisonCapacity = Prison::first()->capacity ?? 1; // avoid division by zero
+    $newAdmissions = Prisoner::where('created_at', '>=', now()->subDays(30))->count();
+    $medicalCases = MedicalReport::count();
+    $staffCount = Account::count();
+    $latestPrisonerId = Prisoner::latest()->first()->id ?? 'N/A';
+    $medicalEmergencyId = 88;
+    $crimeDistribution = []; // Prepare data for your chart
 
-        $releasedThisMonth = 109;
-        $activeCases =89;
-        $securityIncidents =34;
-        $prisonCapacity =53;
-        $newAdmissions=34;
-        $medicalCases=32;
-        $staffCount=32;
-        $latestPrisonerId=32;
-        $medicalEmergencyId=33;
-        $crimeDistribution=32;
-        return view('inspector.dashboard', compact('prisonerCount','crimeDistribution','medicalEmergencyId','latestPrisonerId','staffCount','medicalCases','releasedThisMonth','activeCases','newAdmissions','securityIncidents','prisonCapacity'));
-    }
+    return view('inspector.dashboard', compact(
+        'prisonerCount',
+        'crimeDistribution',
+        'medicalEmergencyId',
+        'latestPrisonerId',
+        'staffCount',
+        'medicalCases',
+        'releasedThisMonth',
+        'activeCases',
+        'newAdmissions',
+        'securityIncidents',
+        'prisonCapacity'
+    ));
+}
+
     public function lawyer()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))

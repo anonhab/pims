@@ -71,7 +71,7 @@ class LoginController extends Controller
     
                 return match ($account->role_id) {
                     3 => view('cadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
-                    2 => view('inspector.dashboard'),
+                    2 => redirect()->to('/idashboard'),
                     1 => view('sysadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     8 => view('police_officer.dashboard'),
                     6 => view('training_officer.dashboard'),
