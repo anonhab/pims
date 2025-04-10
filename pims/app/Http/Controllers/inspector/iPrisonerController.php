@@ -25,6 +25,22 @@ class iPrisonerController extends Controller
         return view('inspector.add_prisoner');
     }
 
+    public function idashboard()
+    {
+        $prisonerCount = 88;
+
+        $releasedThisMonth = 109;
+        $activeCases =89;
+        $securityIncidents =34;
+        $prisonCapacity =53;
+        $newAdmissions=34;
+        $medicalCases=32;
+        $staffCount=32;
+        $latestPrisonerId=32;
+        $medicalEmergencyId=33;
+        $crimeDistribution=32;
+        return view('inspector.dashboard', compact('prisonerCount','crimeDistribution','medicalEmergencyId','latestPrisonerId','staffCount','medicalCases','releasedThisMonth','activeCases','newAdmissions','securityIncidents','prisonCapacity'));
+    }
     public function lawyer()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))

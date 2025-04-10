@@ -133,9 +133,9 @@ Route::get('/allocate', [iPrisonerController::class, 'allocate'])->name('room.al
 Route::post('/rooms', [iPrisonerController::class, 'roomstore'])->name('room.store')->middleware('role:2');
 Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:2');
 Route::post('/update-status/{id}', [iPrisonerController::class, 'updateStatus'])->name('update.status')->middleware('role:2');
-Route::get('/idashboard', function () {
-    return view('inspector.dashboard');
-})->middleware('role:2');
+
+Route::get('/idashboard', [iPrisonerController::class, 'idashboard'])->name('inspector.idashboard')->middleware('role:2');
+
 Route::middleware('middleware')->group(function () {
     Route::get('/myprisoner', [myLawyerController::class, 'myprisoner'])->name('mylawyer.myprisoner');
     Route::get('createlegalappo', [myLawyerController::class, 'createlegalappo'])->name('mylawyer.createlegalappo');
