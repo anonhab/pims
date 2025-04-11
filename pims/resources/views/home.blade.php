@@ -7,7 +7,6 @@
     <title>Prison Information Management System | Central Ethiopia</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Global Styles */
@@ -41,10 +40,7 @@
             padding: 0 15px;
         }
 
-        h1,
-        h2,
-        h3,
-        h4 {
+        h1, h2, h3, h4 {
             color: var(--dark-color);
             font-weight: 600;
         }
@@ -79,6 +75,17 @@
 
         .btn-accent:hover {
             background: #c0392b;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            color: var(--secondary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--secondary-color);
+            color: white;
         }
 
         .section {
@@ -442,6 +449,100 @@
             font-size: 0.9rem;
         }
 
+        /* Enhanced Visitor Registration Modal */
+        #visitorRegisterModal .modal-dialog {
+            max-width: 700px;
+        }
+
+        #visitorRegisterModal .modal-content {
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        #visitorRegisterModal .modal-header {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            color: white;
+            border-bottom: none;
+            padding: 20px 30px;
+        }
+
+        #visitorRegisterModal .modal-title {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        #visitorRegisterModal .btn-close {
+            filter: invert(1);
+            opacity: 0.8;
+        }
+
+        #visitorRegisterModal .modal-body {
+            padding: 30px;
+        }
+
+        #visitorRegisterModal .form-label {
+            font-weight: 500;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        #visitorRegisterModal .form-control {
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        #visitorRegisterModal .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+
+        #visitorRegisterModal .modal-footer {
+            border-top: none;
+            padding: 20px 30px;
+            background: #f8f9fa;
+        }
+
+        #visitorRegisterModal .btn-register {
+            background: linear-gradient(135deg, #3498db, #2c3e50);
+            border: none;
+            padding: 12px 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        #visitorRegisterModal .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        #visitorRegisterModal .btn-cancel {
+            background: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            color: var(--text-color);
+            padding: 12px 25px;
+            font-weight: 500;
+            transition: all 0.3s;
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        #visitorRegisterModal .btn-cancel:hover {
+            background: #e9ecef;
+        }
+
+        /* Form Grid Layout */
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
         /* Responsive Design */
         @media (max-width: 992px) {
             .about-content {
@@ -501,6 +602,14 @@
             .section-title h2 {
                 font-size: 2rem;
             }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            #visitorRegisterModal .modal-dialog {
+                margin: 1rem auto;
+            }
         }
 
         @media (max-width: 576px) {
@@ -514,6 +623,10 @@
 
             .section-title h2 {
                 font-size: 1.8rem;
+            }
+
+            #visitorRegisterModal .modal-body {
+                padding: 20px;
             }
         }
     </style>
@@ -541,72 +654,98 @@
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="#" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#visitorRegisterModal">Register as Visitor</a></li>
-
                     <li><a href="/login" class="btn btn-accent">Login</a></li>
                 </ul>
             </nav>
-
         </div>
     </header>
-<!-- Visitor Registration Modal -->
-<div class="modal fade" id="visitorRegisterModal" tabindex="-1" aria-labelledby="visitorRegisterModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <form action="{{ route('visitor.register.submit') }}" method="POST" class="modal-content">
-      @csrf
-      <div class="modal-header">
-        <h5 class="modal-title" id="visitorRegisterModalLabel">Visitor Registration</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
 
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="first_name" class="form-label">First Name</label>
-          <input type="text" name="first_name" class="form-control" required>
+    <!-- Enhanced Visitor Registration Modal -->
+    <div class="modal fade" id="visitorRegisterModal" tabindex="-1" aria-labelledby="visitorRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="visitorRegisterModalLabel">Visitor Registration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('visitor.register.submit') }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <div class="mb-3">
+                                <label for="first_name" class="form-label">First Name <span class="text-danger">*</span></label>
+                                <input type="text" name="first_name" class="form-control" required placeholder="Enter your first name">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="last_name" class="form-label">Last Name <span class="text-danger">*</span></label>
+                                <input type="text" name="last_name" class="form-control" required placeholder="Enter your last name">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="mb-3">
+                                <label for="phone_number" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" name="phone_number" class="form-control" required placeholder="Enter your phone number">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                                <input type="email" name="email" class="form-control" required placeholder="Enter your email address">
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="mb-3">
+                                <label for="relationship" class="form-label">Relationship to Inmate <span class="text-danger">*</span></label>
+                                <select name="relationship" class="form-control" required>
+                                    <option value="">Select relationship</option>
+                                    <option value="Family">Family</option>
+                                    <option value="Friend">Friend</option>
+                                    <option value="Lawyer">Lawyer</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="identification_number" class="form-label">ID Number <span class="text-danger">*</span></label>
+                                <input type="text" name="identification_number" class="form-control" required placeholder="Enter your identification number">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address <span class="text-danger">*</span></label>
+                            <textarea name="address" class="form-control" rows="2" required placeholder="Enter your full address"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
+                                <input type="password" name="password" class="form-control" required placeholder="Create a password">
+                                <small class="text-muted">Minimum 8 characters</small>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password_confirmation" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                <input type="password" name="password_confirmation" class="form-control" required placeholder="Confirm your password">
+                            </div>
+                        </div>
+
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="termsCheck" required>
+                            <label class="form-check-label" for="termsCheck">
+                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-register">Register as Visitor</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div class="mb-3">
-          <label for="last_name" class="form-label">Last Name</label>
-          <input type="text" name="last_name" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="phone_number" class="form-label">Phone Number</label>
-          <input type="text" name="phone_number" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="relationship" class="form-label">Relationship</label>
-          <input type="text" name="relationship" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="address" class="form-label">Address</label>
-          <input type="text" name="address" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="identification_number" class="form-label">ID Number</label>
-          <input type="text" name="identification_number" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" name="email" class="form-control" required>
-        </div>
-
-        <div class="mb-3">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" name="password" class="form-control" required>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-accent">Register</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero" id="home">
@@ -842,7 +981,8 @@
             </div>
         </div>
     </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         // Mobile Menu Toggle
@@ -887,6 +1027,27 @@
                 header.style.boxShadow = 'none';
             }
         });
+
+        // Form validation for visitor registration
+        const visitorForm = document.querySelector('#visitorRegisterModal form');
+        if (visitorForm) {
+            visitorForm.addEventListener('submit', function(e) {
+                const password = this.querySelector('input[name="password"]');
+                const confirmPassword = this.querySelector('input[name="password_confirmation"]');
+                
+                if (password.value !== confirmPassword.value) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
+                    confirmPassword.focus();
+                }
+                
+                if (password.value.length < 8) {
+                    e.preventDefault();
+                    alert('Password must be at least 8 characters long!');
+                    password.focus();
+                }
+            });
+        }
     </script>
 </body>
 
