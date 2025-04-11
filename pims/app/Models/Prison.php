@@ -43,4 +43,10 @@ class Prison extends Model
     {
         return $this->hasMany(Room::class, 'prison_id', 'id');
     }
+ 
+    public function prisoners()
+    {
+        return $this->hasMany(Prisoner::class);
+    }
+
 }

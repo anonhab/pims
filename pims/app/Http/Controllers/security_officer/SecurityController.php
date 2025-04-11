@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Security_Officer;
 
 use App\Http\Controllers\Controller;
+use App\Models\LawyerAppointment;
+use App\Models\MedicalAppointment;
+use App\Models\NewVisitingRequest;
+use App\Models\Prisoner;
 use Illuminate\Http\Request;
 use App\Models\Visitor;
 use Illuminate\Support\Str;
@@ -14,6 +18,62 @@ class SecurityController extends Controller
     public function registerVisitor()
     {
         return view('security_officer.registerVisitor');
+    }
+    // In VisitorController.php or any relevant controller
+public function validatePrisoner(Request $request)
+{
+    $validated = $request->validate([
+        'first_name' => 'required|string',
+        'middle_name' => 'nullable|string',
+        'last_name' => 'required|string',
+    ]);
+
+    // Check if the prisoner exists in the database
+    $prisoner = Prisoner::where('first_name', $validated['first_name'])
+                        ->where('middle_name', $validated['middle_name'])
+                        ->where('last_name', $validated['last_name'])
+                        ->first();
+
+    if ($prisoner) {
+        return response()->json(['status' => 'success', 'message' => 'Prisoner data matches!']);
+    } else {
+        return response()->json(['status' => 'error', 'message' => 'Prisoner data does not match.']);
+    }
+}
+
+  // Assuming Appointment is your model for storing appointments
+
+    public function viewprisonerstatus()
+    {
+        // Fetch appointments data (you can add more logic here to filter or paginate)
+        $medicalAppointments = MedicalAppointment::all();
+        $lawyerAppointments = LawyerAppointment::all();
+        $visitorAppointments = NewVisitingRequest::all();
+    
+        // Pass data to the view
+        return view('security_officer.prisoner_status', compact('medicalAppointments', 'lawyerAppointments', 'visitorAppointments'));
+    }
+    
+ 
+    public function updateStatus(Request $request)
+    {
+        // Validate the request
+       
+
+        // Find the appointment by its ID
+        $appointment = NewVisitingRequest::findOrFail($request->appointment_id);
+
+        // Update the status
+        $appointment->status = $request->status;
+
+        // Optionally update the updated_at timestamp
+        $appointment->updated_at = now();
+
+        // Save the changes to the database
+        $appointment->save();
+
+        // You can return a response or redirect after the update
+        return redirect()->back()->with('success', 'Appointment status updated successfully');
     }
 
     // Store the registered visitor information

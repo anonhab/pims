@@ -93,5 +93,5 @@ public function trainingAssignments()
     {
         return $this->hasMany(MedicalAppointment::class);
     }
-
+  
 }

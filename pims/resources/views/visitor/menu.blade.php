@@ -2,7 +2,7 @@
     <aside class="menu">
         <ul class="menu-list">
             <li>
-                <a href="/dashboard">
+                <a href="/vdashboard">
                     <span class="icon">
                         <i class="fa fa-home"></i>
                     </span> Dashboard
@@ -17,9 +17,9 @@
                     </span> Visitor menu
                  </a>
                 <ul class="submenu">
-                 
-                    <li><a href="/view_visitor_registrations">My Visiting time request </a></li>
-                    <li><a href="/view_visitor_registrations">Create Visiting Time Requests </a>
+                <li><a href="/createVisiting">Create Visiting Time Requests </a>
+                    <li><a href="/visitorvisiting-requests">My Visiting time request </a></li>
+                    
                 </ul>
             </li>
 

@@ -134,7 +134,7 @@ Route::post('/rooms', [iPrisonerController::class, 'roomstore'])->name('room.sto
 Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:2');
 Route::post('/update-status/{id}', [iPrisonerController::class, 'updateStatus'])->name('update.status')->middleware('role:2');
 
-Route::get('/idashboard', [iPrisonerController::class, 'idashboard'])->name('inspector.idashboard')->middleware('role:2');
+Route::get('/idashboard', action: [iPrisonerController::class, 'idashboard'])->name('inspector.idashboard')->middleware('role:2');
 
 Route::middleware('middleware')->group(function () {
     Route::get('/myprisoner', [myLawyerController::class, 'myprisoner'])->name('mylawyer.myprisoner');
@@ -203,6 +203,8 @@ Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingR
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
 Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
+Route::post('/validate-prisoner', [SecurityController::class, 'validatePrisoner'])->name('validatePrisoner');
+
 
 //security_officer
 Route::prefix('security_officer')->group(function () {
@@ -220,7 +222,10 @@ Route::prefix('security_officer')->group(function () {
     // Other Views
     Route::get('/viewappointments', [SecurityController::class, 'viewAppointments'])->name('security.viewAppointments');
     Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name('security.viewPrisoners');
+
 });
+Route::get('/viewprisonerstatus', [SecurityController::class, 'viewprisonerstatus'])->name('security.viewprisonerstatus');
+Route::post('/updateAppointmentStatus', [SecurityController::class, 'updateStatus'])->name('updateAppointmentStatus');
 
 
 
@@ -243,7 +248,25 @@ Route::get('discipline_officer/view_logs', [DisciplineOfficerController::class, 
 Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
 Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
+Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
+Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');
+Route::get('/vdashboard', [VisitorController::class, 'dashboard'])->name('visitor.dashboard');
+Route::get('/createVisiting', [VisitorController::class, 'createVisiting'])->name('visitor.createVisiting');
+Route::post('/visitorstore-request', [VisitorController::class, 'store'])->name('visitor.store_request');
+Route::post('/visitor/submit-request', [VisitorController::class, 'submitRequest'])->name('visitor.submitRequest');
+Route::get('/visitorvisiting-requests', [VisitorController::class, 'viewRequests'])->name('visitor.visitingRequests');
+// In web.php
+Route::post('/visiting-request/resubmit/{id}', [VisitorController::class, 'resubmitRequest'])->name('visitor.resubmitRequest');
 
+
+// Route to show the visiting form
+Route::get('/visitor/visiting-form', [VisitorController::class, 'showVisitingForm'])->name('visitor.visiting_form');
+
+// Route to fetch prisoners based on selected prison
+Route::get('/get-prisoners/{prisonId}', [VisitorController::class, 'getPrisonersByPrison']);
+
+// Route to handle the form submission
+Route::post('/visitor/visiting-request', [VisitorController::class, 'storeVisitRequest'])->name('visitor.store_request');
 
 Route::get('/prisoners/{prisonerId}/appointments', function ($prisonerId) {
     // Fetch the prisoner by ID (you can adjust this to your app's logic)

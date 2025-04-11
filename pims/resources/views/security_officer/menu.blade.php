@@ -25,22 +25,10 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-calendar"></i>
-                    </span> Appointment Management
+                    </span> Monitor
                 </a>
                 <ul class="submenu">
-                <li><a href="#">Make Appointments</a></li>
-                    <li><a href="{{ route('security.viewAppointments') }}">View Appointments</a></li>
-                </ul>
-            </li>
-
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-user-check"></i>
-                    </span> Prisoner Management
-                </a>
-                <ul class="submenu">
-                    <li><a href="{{ route('security.viewPrisoners') }}">View Prisoner status</a></li>
+                <li><a href="/viewprisonerstatus">Monitor Prisoner Status</a></li>
                 </ul>
             </li>
         </ul>
