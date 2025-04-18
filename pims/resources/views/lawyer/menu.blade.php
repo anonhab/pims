@@ -1,3 +1,4 @@
+@include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar">
     <!-- Sidebar Toggle Button (visible on mobile) -->
     <div class="pims-sidebar-toggle" id="pimsSidebarToggle">
@@ -357,6 +358,46 @@
 </style>
 
 <script>
+ document.addEventListener('DOMContentLoaded', function() {
+        // Add click handlers to all menu links
+        document.querySelectorAll('.pims-menu-link, .pims-submenu-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Only show preloader for actual navigation links
+                if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
+                    // Don't prevent default if it's a submenu toggle
+                    if (!this.parentElement.classList.contains('pims-has-submenu') || 
+                        (window.innerWidth <= 1024 || document.getElementById('pimsSidebar').classList.contains('pims-collapsed'))) {
+                        
+                        // Show preloader immediately
+                        PimsPreloader.show();
+                        
+                        // Add a small delay before navigation to ensure preloader shows
+                        e.preventDefault();
+                        const targetUrl = this.getAttribute('href');
+                        
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 50);
+                    }
+                }
+            });
+        });
+
+        // Handle AJAX navigation if you're using it
+        if (typeof Livewire !== 'undefined') {
+            Livewire.hook('message.sent', () => {
+                PimsPreloader.show();
+            });
+
+            Livewire.hook('message.processed', () => {
+                setTimeout(PimsPreloader.hide, 500);
+            });
+        }
+    });
+
+
+
+
     // Toggle submenus
     document.querySelectorAll('.pims-has-submenu > .pims-menu-link').forEach(link => {
         link.addEventListener('click', function(e) {

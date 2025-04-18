@@ -1,269 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    @include('includes.head')
+    <title>PIMS Dashboard</title>
     <style>
+        :root {
+            --pims-primary: #1a2a3a;
+            --pims-secondary: #2c3e50;
+            --pims-accent: #2980b9;
+            --pims-danger: #c0392b;
+            --pims-success: #27ae60;
+            --pims-warning: #d35400;
+            --pims-text-light: #ecf0f1;
+            --pims-text-dark: #2c3e50;
+            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --pims-border-radius: 6px;
+            --pims-nav-height: 60px;
+            --pims-sidebar-width: 250px;
+            --pims-transition: all 0.3s ease;
+        }
+
         /* General Styles */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #f4f6f9;
             margin: 0;
             padding: 0;
+            color: var(--pims-text-dark);
         }
 
-        /* Dashboard Overview Cards */
-        .dashboard-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
-            overflow: hidden;
+        /* Layout Structure */
+        .pims-app-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: var(--pims-nav-height);
         }
 
-        .dashboard-card .card-header {
-            background-color: #4e73df;
-            color: #fff;
-            font-size: 18px;
-            padding: 15px;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+        .pims-content-area {
+            flex: 1;
+            margin-left: var(--pims-sidebar-width);
+            padding: 1.5rem;
+            transition: var(--pims-transition);
         }
 
-        .dashboard-card .card-body {
-            padding: 20px;
-            font-size: 32px;
+        /* Dashboard Cards */
+        .pims-dashboard-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-card-shadow);
+            margin-bottom: 1.5rem;
+            transition: var(--pims-transition);
+            border-left: 4px solid var(--pims-accent);
+            height: 100%;
+        }
+
+        .pims-card-header {
+            padding: 1rem;
+            background-color: var(--pims-primary);
+            color: white;
+            border-top-left-radius: var(--pims-border-radius);
+            border-top-right-radius: var(--pims-border-radius);
+            font-weight: 600;
+        }
+
+        .pims-card-body {
+            padding: 1.5rem;
             text-align: center;
-            font-weight: bold;
         }
 
-        .card-body .is-size-3 {
-            font-size: 2rem;
+        .pims-stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--pims-primary);
+            margin: 1rem 0;
         }
 
-        .dashboard-card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        .pims-stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
         }
 
-        /* Recent Activity Section */
-        .card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+        /* Grid Layout */
+        .pims-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        .card-header {
-            background-color: #f0f0f0;
-            padding: 15px;
-            font-size: 18px;
-            color: #333;
-            font-weight: bold;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+        /* Activity Section */
+        .pims-activity-card {
+            height: 100%;
         }
 
-        .card-body {
-            padding: 20px;
-        }
-
-        .card-body ul {
+        .pims-activity-list {
             list-style: none;
-            padding-left: 0;
+            padding: 0;
+            margin: 0;
         }
 
-        .card-body ul li {
-            padding: 8px 0;
-            font-size: 16px;
+        .pims-activity-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
         }
 
-        .card-body ul li strong {
-            font-weight: bold;
+        .pims-activity-item:last-child {
+            border-bottom: none;
         }
 
-        .card-body ul li a {
-            color: #4e73df;
-            transition: color 0.3s ease;
+        .pims-activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(41, 128, 185, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--pims-accent);
         }
 
-        .card-body ul li a:hover {
-            color: #1e3c72;
+        .pims-activity-content {
+            flex: 1;
         }
 
-        /* Quick Actions Section */
-        .card ul {
-            list-style: none;
-            padding-left: 0;
+        .pims-activity-time {
+            font-size: 0.8rem;
+            color: #7f8c8d;
         }
 
-        .card ul li {
-            padding: 10px 0;
+        /* Quick Actions */
+        .pims-quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
         }
 
-        .card ul li a {
-            display: inline-block;
-            color: #4e73df;
-            font-size: 16px;
-            transition: color 0.3s ease;
+        .pims-action-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: var(--pims-border-radius);
+            background-color: white;
+            box-shadow: var(--pims-card-shadow);
+            transition: var(--pims-transition);
+            text-decoration: none;
+            color: var(--pims-primary);
         }
 
-        .card ul li a:hover {
-            color: #1e3c72;
+        .pims-action-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: var(--pims-accent);
         }
 
-        /* Scrollable Recent Activity */
-        .card-body {
-            padding: 20px;
+        .pims-action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(41, 128, 185, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--pims-accent);
         }
 
-        .scrollable {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 10px;
+        /* Empty State */
+        .pims-empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #7f8c8d;
+        }
+
+        .pims-empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: rgba(0, 0, 0, 0.1);
         }
 
         /* Responsive Styles */
         @media (max-width: 1024px) {
-            #app-content {
-                flex-direction: column;
-            }
-
-            #sidebar {
-                position: relative;
-                width: 100%;
-                height: auto;
-                padding: 10px;
-            }
-
-            #page-content {
+            .pims-content-area {
                 margin-left: 0;
             }
 
-            .dashboard-card, .card {
-                width: 100%;
+            .pims-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 768px) {
-            .menu-list > li > a {
-                font-size: 14px;
+            .pims-grid {
+                grid-template-columns: 1fr;
             }
 
-            .submenu li a {
-                font-size: 12px;
-            }
-
-            .dashboard-card, .card {
-                margin-bottom: 10px;
-            }
-
-            .card-header {
-                font-size: 16px;
-            }
-
-            .card-body {
-                font-size: 18px;
+            .pims-quick-actions {
+                grid-template-columns: 1fr;
             }
         }
     </style>
-    @include('includes.head')
+</head>
+<body>
+    <!-- Navigation -->
+    @include('includes.nav')
 
-    <body>
-        <!-- NAV -->
-        @include('includes.nav')
+    <div class="pims-app-container">
+        <!-- Sidebar Menu -->
+        @include('visitor.menu')
 
-        <div class="columns" id="app-content">
-            <!-- Sidebar Menu -->
-            @include('visitor.menu')
-
-            <!-- Main Content -->
-            <div class="column is-10" id="page-content">
-                <!-- Dashboard Overview Section -->
-                <section class="section">
-                    <h1 class="title">Dashboard</h1>
-
-                    <div class="columns is-multiline">
-                        <!-- Dashboard Overview Cards -->
-                        <div class="column is-3">
-                            <div class="card dashboard-card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Total Prisoners</p>
-                                </div>
-                                <div class="card-body">
-                                    <p class="is-size-3">125</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-3">
-                            <div class="card dashboard-card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Pending Requests</p>
-                                </div>
-                                <div class="card-body">
-                                    <p class="is-size-3">25</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-3">
-                            <div class="card dashboard-card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Upcoming Appointments</p>
-                                </div>
-                                <div class="card-body">
-                                    <p class="is-size-3">8</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-3">
-                            <div class="card dashboard-card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Total Visitors Today</p>
-                                </div>
-                                <div class="card-body">
-                                    <p class="is-size-3">45</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- More Detailed Overview -->
-                    <div class="columns">
-                        <div class="column is-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Recent Activity</p>
-                                </div>
-                                <div class="card-body scrollable">
-                                    <ul>
-                                     
-                                        <!-- Add more items here to test scrolling -->
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-6">
-                            <div class="card">
-                                <div class="card-header">
-                                    <p class="card-header-title">Quick Actions</p>
-                                </div>
-                                <div class="card-body">
-                                    <ul>
-                                        <li><a href="{{ route('prisoner.add') }}">Add/Update Prisoner</a></li>
-                                        <li><a href="{{ route('view.requests') }}">View Pending Requests</a></li>
-                                        <li><a href="{{ route('view.appointments') }}">View Appointments</a></li>
-                                        <li><a href="/view_visitor_registrations">View Visitor Registrations</a></li>
-                                        <li><a href="{{ route('room.allocate') }}">Allocate Room</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
+        <!-- Main Content Area -->
+        <div class="pims-content-area">
         </div>
+    </div>
 
-        @include('includes.footer_js')
-    </body>
+    @include('includes.footer_js')
+</body>
 </html>

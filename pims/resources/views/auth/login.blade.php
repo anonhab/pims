@@ -395,7 +395,7 @@
         }
     </style>
 </head>
-
+@include('components.preloader')
 <body>
     <!-- Security Grid Background -->
     <div class="security-grid"></div>

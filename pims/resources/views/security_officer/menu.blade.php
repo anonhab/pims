@@ -1,3 +1,4 @@
+@include('components.preloader')
 <div class="column is-2 is-fullheight is-hidden-touch" id="sidebar">
     <aside class="menu">
         <ul class="menu-list">
