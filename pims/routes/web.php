@@ -204,7 +204,12 @@ Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingReques
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
 Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
 Route::post('/validate-prisoner', [SecurityController::class, 'validatePrisoner'])->name('validatePrisoner');
+Route::post('/verify-prisoner', [SecurityController::class, 'verifyPrisoner'])->name('verify.prisoner');
 
+Route::post('/verify-prisoner', [SecurityController::class, 'verify'])->name('verify.prisoner');
+
+// Appointment Status Update Routes
+Route::post('/update-appointment-status', [SecurityController::class, 'updateStatus'])->name('update.appointment.status');
 
 //security_officer
 Route::prefix('security_officer')->group(function () {

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\Visitor;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class SecurityController extends Controller
 {
@@ -53,27 +54,149 @@ public function validatePrisoner(Request $request)
         // Pass data to the view
         return view('security_officer.prisoner_status', compact('medicalAppointments', 'lawyerAppointments', 'visitorAppointments'));
     }
-    
- 
-    public function updateStatus(Request $request)
+    public function verifyPrisoner(Request $request)
+{
+    $request->validate([
+        'first_name' => 'required|string',
+        'middle_name' => 'required|string',
+        'last_name' => 'required|string',
+    ]);
+
+    $firstName = $request->first_name;
+    $middleName = $request->middle_name;
+    $lastName = $request->last_name;
+
+    $prisoner = Prisoner::where('first_name', $firstName)
+                        ->where('middle_name', $middleName)
+                        ->where('last_name', $lastName)
+                        ->first();
+
+    if ($prisoner) {
+        return redirect()->back()->with('success', 'Prisoner verified successfully.');
+    } else {
+        return redirect()->back()->with('error', 'Prisoner not found with the provided names.');
+    }
+}
+
+public function verify(Request $request)
+{
+    $request->validate([
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'middle_name' => 'nullable|string|max:255',
+    ]);
+
+    try {
+        $firstName = $request->input('first_name');
+        $middleName = $request->input('middle_name');
+        $lastName = $request->input('last_name');
+
+        // Search for prisoner with matching names
+        $query = Prisoner::where('first_name', 'like', "%{$firstName}%")
+                        ->where('last_name', 'like', "%{$lastName}%");
+
+        if ($middleName) {
+            $query->where('middle_name', 'like', "%{$middleName}%");
+        }
+
+        $prisoner = $query->first();
+
+        if ($prisoner) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Prisoner verified successfully',
+                'prisoner_id' => $prisoner->id,
+                'prisoner' => [
+                    'full_name' => $prisoner->first_name . ' ' . 
+                                  ($prisoner->middle_name ? $prisoner->middle_name . ' ' : '') . 
+                                  $prisoner->last_name,
+                    'id_number' => $prisoner->id
+                ]
+            ]);
+        }
+
+        return response()->json([
+            'success' => false,
+            'message' => 'No prisoner found with matching details'
+        ], 404);
+
+    } catch (\Exception $e) {
+        Log::error('Prisoner verification failed: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'message' => 'An error occurred during verification'
+        ], 500);
+    }
+}
+public function updateStatus(Request $request)
     {
-        // Validate the request
-       
+        $request->validate([
+            'appointment_id' => 'required',
+            'appointment_type' => 'required|in:medical,lawyer,visitor',
+            'status' => 'required|in:pending,approved,rejected',
+            'notes' => 'nullable|string|max:500'
+        ]);
 
-        // Find the appointment by its ID
-        $appointment = NewVisitingRequest::findOrFail($request->appointment_id);
+        try {
+            $appointmentId = $request->input('appointment_id');
+            $type = $request->input('appointment_type');
+            $status = $request->input('status');
+            $notes = $request->input('notes');
 
-        // Update the status
-        $appointment->status = $request->status;
+            $appointment = $this->getAppointmentModel($type, $appointmentId);
 
-        // Optionally update the updated_at timestamp
-        $appointment->updated_at = now();
+            if (!$appointment) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Appointment not found'
+                ], 404);
+            }
 
-        // Save the changes to the database
-        $appointment->save();
+            // Update status
+            $appointment->status = $status;
+            
+            // Add notes if provided
+            if ($notes) {
+                if ($type === 'medical') {
+                    $appointment->doctor_notes = $notes;
+                } elseif ($type === 'lawyer') {
+                    $appointment->legal_notes = $notes;
+                } else {
+                    $appointment->admin_notes = $notes;
+                }
+            }
 
-        // You can return a response or redirect after the update
-        return redirect()->back()->with('success', 'Appointment status updated successfully');
+            $appointment->save();
+
+            
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Appointment status updated successfully',
+                'appointment' => $appointment
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Appointment status update failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update appointment status'
+            ], 500);
+        }
+    }
+
+    protected function getAppointmentModel($type, $id)
+    {
+        switch ($type) {
+            case 'medical':
+                return MedicalAppointment::find($id);
+            case 'lawyer':
+                return LawyerAppointment::find($id);
+            case 'visitor':
+                return NewVisitingRequest::find($id);
+            default:
+                return null;
+        }
     }
 
     // Store the registered visitor information
