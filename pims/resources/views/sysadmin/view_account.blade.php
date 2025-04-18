@@ -37,6 +37,7 @@
 
         /* Main Layout */
         .pims-app-container {
+            padding-top:70px;
             display: flex;
             min-height: 100vh;
         }

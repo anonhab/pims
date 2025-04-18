@@ -6,6 +6,7 @@
             <div class="pims-dot"></div>
         </div>
         <div class="pims-preloader-text">Loading<span class="pims-loading-dots">...</span></div>
+        <div class="pims-cancel-text">Click anywhere to cancel</div>
     </div>
 </div>
 
@@ -45,11 +46,17 @@
         visibility: visible;
     }
 
+    .pims-preloader.cancelling {
+        opacity: 0;
+        transition: opacity 0.3s ease-out;
+    }
+
     /* Preloader Content */
     .pims-preloader-content {
         text-align: center;
         transform: translateY(-20%);
         user-select: none;
+        position: relative;
     }
 
     /* Three Dots Animation */
@@ -114,8 +121,25 @@
         66% { content: '...'; }
     }
 
+    /* Cancel Text */
+    .pims-cancel-text {
+        position: absolute;
+        bottom: -30px;
+        left: 0;
+        right: 0;
+        color: var(--pims-preloader-text);
+        font-size: 0.9rem;
+        opacity: 0.7;
+        animation: pims-fade-in 0.5s ease 1.5s forwards;
+        opacity: 0;
+    }
+
+    @keyframes pims-fade-in {
+        to { opacity: 0.7; }
+    }
+
     /* Ripple Effect */
-    .pims-ripple-effect {
+    .pims-ripple {
         position: absolute;
         border-radius: 50%;
         background-color: rgba(211, 84, 0, 0.15);
@@ -123,162 +147,103 @@
         animation: pims-ripple 0.6s linear;
         pointer-events: none;
     }
-    
+
     @keyframes pims-ripple {
         to {
             transform: scale(4);
             opacity: 0;
         }
     }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        :root {
-            --pims-dot-size: 12px;
-            --pims-dot-spacing: 8px;
-        }
-        
-        .pims-preloader-text {
-            font-size: 1.1rem;
-        }
-        
-        .pims-three-dots {
-            margin-bottom: 20px;
-        }
-    }
 </style>
 
 <script>
-    // Professional Preloader Controller with enhanced features
-    (function() {
-        const preloader = document.getElementById('pimsPreloader');
-        let isActive = false;
-        let clickHandler = null;
-        let backButtonTimer = null;
-        let minimumShowTime = 300; // Minimum show time in ms
-        let backButtonTimeout = 2000; // 2 seconds for back button
-        
-        // Create ripple effect on click
-        function createRipple(event) {
-            const ripple = document.createElement('span');
-            ripple.classList.add('pims-ripple-effect');
-            
-            const rect = preloader.getBoundingClientRect();
-            const size = Math.max(rect.width, rect.height);
-            const x = event.clientX - rect.left - size / 2;
-            const y = event.clientY - rect.top - size / 2;
-            
-            ripple.style.width = ripple.style.height = `${size}px`;
-            ripple.style.left = `${x}px`;
-            ripple.style.top = `${y}px`;
-            
-            preloader.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
+// Enhanced preloader with click-to-cancel
+document.addEventListener('DOMContentLoaded', function() {
+    const preloader = document.getElementById('pimsPreloader');
+    let isActive = false;
+    let navigationTimeout = null;
+    let currentHref = null;
+    
+    // Show preloader
+    function show() {
+        if (isActive) return;
+        preloader.classList.remove('cancelling');
+        preloader.classList.add('active');
+        isActive = true;
+    }
+    
+    // Hide preloader
+    function hide() {
+        if (!isActive) return;
+        preloader.classList.remove('active');
+        isActive = false;
+        if (navigationTimeout) {
+            clearTimeout(navigationTimeout);
+            navigationTimeout = null;
         }
+    }
+    
+    // Cancel preloader with animation
+    function cancel() {
+        if (!isActive) return;
         
-        // Show preloader
-        function show() {
-            if (isActive) return;
-            
-            clearTimeout(backButtonTimer);
-            preloader.classList.add('active');
-            isActive = true;
-            
-            // Add click handler
-            clickHandler = function(e) {
-                createRipple(e);
-                hide();
-                
-                // Cancel any ongoing navigation
-                if (typeof window.stop === 'function') {
-                    window.stop();
-                }
-            };
-            
-            preloader.addEventListener('click', clickHandler);
-        }
+        // Add ripple effect
+        const ripple = document.createElement('div');
+        ripple.classList.add('pims-ripple');
+        ripple.style.left = (event.clientX - preloader.getBoundingClientRect().left) + 'px';
+        ripple.style.top = (event.clientY - preloader.getBoundingClientRect().top) + 'px';
+        preloader.appendChild(ripple);
         
-        // Hide preloader
-        function hide() {
-            if (!isActive) return;
-            
-            clearTimeout(backButtonTimer);
-            
-            // Remove click handler first
-            if (clickHandler) {
-                preloader.removeEventListener('click', clickHandler);
-                clickHandler = null;
-            }
-            
-            // Ensure minimum show time
-            setTimeout(() => {
-                preloader.classList.remove('active');
-                isActive = false;
-            }, minimumShowTime);
-        }
+        // Remove ripple after animation
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
         
-        // Handle back/forward navigation
-        window.addEventListener('popstate', function() {
-            if (isActive) {
-                // Hide after 2 seconds if still active
-                backButtonTimer = setTimeout(hide, backButtonTimeout);
-            }
-        });
-        
-        // Handle page load completion
-        window.addEventListener('load', function() {
+        // Cancel navigation and hide
+        preloader.classList.add('cancelling');
+        setTimeout(() => {
             hide();
-        });
-        
-        // Handle DOM ready
-        document.addEventListener('DOMContentLoaded', function() {
-            // Auto-hide if still showing
-            if (isActive) {
-                hide();
-            }
+            preloader.classList.remove('cancelling');
+        }, 300);
+    }
+    
+    // Expose to global scope
+    window.PimsPreloader = { show, hide };
+    
+    // Handle click to cancel
+    preloader.addEventListener('click', cancel);
+    
+    // Handle sidebar navigation clicks
+    document.querySelectorAll('#pimsSidebar3 .pims-menu-item > .pims-menu-link[href]:not([href="#"])').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentHref = this.href;
+            show();
             
-            // Handle link clicks
-            document.addEventListener('click', function(e) {
-                let target = e.target;
-                while (target && target !== document) {
-                    if (target.tagName === 'A' && target.href && !target.href.startsWith('javascript:') && target.href !== '#') {
-                        // Skip submenu toggles and non-navigation links
-                        if (!target.closest('.pims-has-submenu') || 
-                            (window.innerWidth <= 1024 || document.getElementById('pimsSidebar')?.classList.contains('pims-collapsed'))) {
-                            
-                            e.preventDefault();
-                            show();
-                            
-                            // Allow a small delay for the preloader to appear
-                            setTimeout(() => {
-                                window.location.href = target.href;
-                            }, 50);
-                        }
-                    }
-                    target = target.parentNode;
-                }
-            }, true);
+            // Small delay to ensure preloader shows before navigation
+            navigationTimeout = setTimeout(() => {
+                window.location.href = currentHref;
+            }, 50);
         });
-        
-        // Handle Livewire if present
-        if (typeof Livewire !== 'undefined') {
-            Livewire.hook('message.sent', () => {
-                show();
-            });
+    });
+    
+    // Handle submenu navigation clicks
+    document.querySelectorAll('#pimsSidebar3 .pims-submenu-item > .pims-submenu-link[href]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentHref = this.href;
+            show();
             
-            Livewire.hook('message.processed', () => {
-                hide();
-            });
-        }
-        
-        // Expose public API
-        window.PimsPreloader = {
-            show: show,
-            hide: hide,
-            isActive: () => isActive
-        };
-    })();
+            navigationTimeout = setTimeout(() => {
+                window.location.href = currentHref;
+            }, 50);
+        });
+    });
+    
+    // Hide preloader when page fully loads
+    window.addEventListener('load', hide);
+    
+    // Hide preloader if it's still showing when DOM is ready
+    hide();
+});
 </script>
