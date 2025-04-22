@@ -696,6 +696,16 @@
             </div>
         </div>
     </div>
+    <div id="prisonerDetailsModal" class="pims-modal" style="display:none;">
+    <div class="pims-modal-content">
+        <span class="close" onclick="closeModal('prisonerDetailsModal')">&times;</span>
+        <h3>Prisoner Details</h3>
+        <div id="prisonerDetailsBody">
+            <!-- Content populated by JS -->
+        </div>
+    </div>
+</div>
+
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

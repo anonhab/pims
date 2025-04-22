@@ -151,7 +151,9 @@ Route::get('/prisoners', [iPrisonerController::class, 'show_all'])
     ->name('prisoner.showAll')
     ->middleware('role:2,8');
     Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:8');
+    Route::delete('/rooms/{id}', [iPrisonerController::class, 'roomdestroy'])->name('rooms.destroy');
 
+Route::put('/rooms/{id}', [iPrisonerController::class, 'roomupdate'])->name('rooms.update');
 Route::get('/addroom', [iPrisonerController::class, 'addroom'])->name('room.add')->middleware('role:8');
 Route::get('/showroom', [iPrisonerController::class, 'showroom'])->name('room.show')->middleware('role:8');
 Route::get('/roomassign', [iPrisonerController::class, 'roomassign'])->name('room.assign')->middleware('role:8');

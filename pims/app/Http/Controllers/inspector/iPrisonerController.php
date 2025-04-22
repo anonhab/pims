@@ -195,6 +195,35 @@ class iPrisonerController extends Controller
 
         return back()->with('success', 'Room added successfully!');
     } 
+    public function roomupdate(Request $request, $id)
+{
+    $room = Room::findOrFail($id);
+
+    $request->validate([
+        'room_number' => 'required|string|max:20|unique:rooms,room_number,' . $room->id,
+        'capacity' => 'nullable|integer',
+        'type' => 'nullable|in:cell,medical,security,training',
+        'status' => 'nullable|string',
+    ]);
+
+    $room->room_number = $request->room_number;
+    $room->capacity = $request->capacity;
+    $room->type = $request->type;
+    $room->status = $request->status;
+    $room->prison_id = session('prison_id');
+    $room->save();
+
+    return back()->with('success', 'Room updated successfully!');
+}
+
+public function roomdestroy($id)
+{
+    $room = Room::findOrFail($id);
+    $room->delete();
+
+    return back()->with('success', 'Room deleted successfully!');
+}
+
     public function show($id)
     {
         $prisoner = Prisoner::where('prison_id', session('prison_id'))

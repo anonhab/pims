@@ -49,34 +49,12 @@ public function validatePrisoner(Request $request)
         // Fetch appointments data (you can add more logic here to filter or paginate)
         $medicalAppointments = MedicalAppointment::all();
         $lawyerAppointments = LawyerAppointment::all();
-        $visitorAppointments = NewVisitingRequest::all();
+        $visitorAppointments = NewVisitingRequest::where('prison_id', session('prison_id'))->get();
     
         // Pass data to the view
         return view('security_officer.prisoner_status', compact('medicalAppointments', 'lawyerAppointments', 'visitorAppointments'));
     }
-    public function verifyPrisoner(Request $request)
-{
-    $request->validate([
-        'first_name' => 'required|string',
-        'middle_name' => 'required|string',
-        'last_name' => 'required|string',
-    ]);
 
-    $firstName = $request->first_name;
-    $middleName = $request->middle_name;
-    $lastName = $request->last_name;
-
-    $prisoner = Prisoner::where('first_name', $firstName)
-                        ->where('middle_name', $middleName)
-                        ->where('last_name', $lastName)
-                        ->first();
-
-    if ($prisoner) {
-        return redirect()->back()->with('success', 'Prisoner verified successfully.');
-    } else {
-        return redirect()->back()->with('error', 'Prisoner not found with the provided names.');
-    }
-}
 
 public function verify(Request $request)
 {
@@ -91,9 +69,10 @@ public function verify(Request $request)
         $middleName = $request->input('middle_name');
         $lastName = $request->input('last_name');
 
-        // Search for prisoner with matching names
+        // Search for prisoner with matching names and prison_id from session
         $query = Prisoner::where('first_name', 'like', "%{$firstName}%")
-                        ->where('last_name', 'like', "%{$lastName}%");
+                        ->where('last_name', 'like', "%{$lastName}%")
+                        ->where('prison_id', session('prison_id'));
 
         if ($middleName) {
             $query->where('middle_name', 'like', "%{$middleName}%");
@@ -128,6 +107,7 @@ public function verify(Request $request)
         ], 500);
     }
 }
+
 public function updateStatus(Request $request)
     {
         $request->validate([
