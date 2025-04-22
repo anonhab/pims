@@ -18,7 +18,7 @@ class MedicalAppointment extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'prisoner_id', 'doctor_id', 'appointment_date', 'diagnosis', 'treatment', 'status', 'created_by'
+        'id', 'prisoner_id', 'doctor_id', 'appointment_date', 'diagnosis', 'treatment', 'status', 'created_by','prison_id'
     ];
 
     protected $casts = [

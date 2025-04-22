@@ -678,11 +678,7 @@
                                             <i class="fas fa-eye"></i> View
                                         </button>
 
-                                        <button class="pims-btn pims-btn-danger pims-btn-sm pims-delete-prisoner"
-                                            data-id="{{ $prisoner->prisoner_id }}"
-                                            data-name="{{ $prisoner->first_name }} {{ $prisoner->last_name }}">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
+                                      
                                     </div>
                                 </div>
                             </div>

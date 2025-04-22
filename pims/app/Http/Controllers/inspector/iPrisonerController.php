@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Inspector;
 
 use App\Http\Controllers\Controller;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use App\Models\Prison;
 use App\Models\MedicalAppointment;
@@ -12,6 +13,7 @@ use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use App\Models\LawyerPrisonerAssignment;
 use App\Models\Lawyer;
+use App\Models\MedicalReport;
 use App\Models\Requests;
 use Carbon\Carbon;
 use App\Models\Room;
@@ -24,6 +26,36 @@ class iPrisonerController extends Controller
     {
         return view('inspector.add_prisoner');
     }
+
+    public function idashboard()
+{
+    // Example logic to fetch data — replace these with your actual logic
+    $prisonerCount = Prisoner::count();
+    $releasedThisMonth = Prisoner::whereMonth('status', now()->month)->count();
+    $activeCases = 33;
+    $securityIncidents = 88;
+    $prisonCapacity = Prison::first()->capacity ?? 1; // avoid division by zero
+    $newAdmissions = Prisoner::where('created_at', '>=', now()->subDays(30))->count();
+    $medicalCases = MedicalReport::count();
+    $staffCount = Account::count();
+    $latestPrisonerId = Prisoner::latest()->first()->id ?? 'N/A';
+    $medicalEmergencyId = 88;
+    $crimeDistribution = []; // Prepare data for your chart
+
+    return view('inspector.dashboard', compact(
+        'prisonerCount',
+        'crimeDistribution',
+        'medicalEmergencyId',
+        'latestPrisonerId',
+        'staffCount',
+        'medicalCases',
+        'releasedThisMonth',
+        'activeCases',
+        'newAdmissions',
+        'securityIncidents',
+        'prisonCapacity'
+    ));
+}
 
     public function lawyer()
     {
@@ -63,14 +95,14 @@ class iPrisonerController extends Controller
             ->whereNull('room_id')
             ->paginate(9);
 
-        $rooms = Room::all();
+        $rooms = Room::where('prison_id', session('prison_id'))->paginate(9);
         return view('police_officer.allocate_room', compact('prisoners', 'rooms'));
     }
 
     public function roomassign()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
-        $rooms = Room::paginate(9);
+        $rooms = Room::where('prison_id', session('prison_id'))->paginate(9);
         return view('police_officer.view _allocation', compact('prisoners', 'rooms'));
     }
 
@@ -163,6 +195,35 @@ class iPrisonerController extends Controller
 
         return back()->with('success', 'Room added successfully!');
     } 
+    public function roomupdate(Request $request, $id)
+{
+    $room = Room::findOrFail($id);
+
+    $request->validate([
+        'room_number' => 'required|string|max:20|unique:rooms,room_number,' . $room->id,
+        'capacity' => 'nullable|integer',
+        'type' => 'nullable|in:cell,medical,security,training',
+        'status' => 'nullable|string',
+    ]);
+
+    $room->room_number = $request->room_number;
+    $room->capacity = $request->capacity;
+    $room->type = $request->type;
+    $room->status = $request->status;
+    $room->prison_id = session('prison_id');
+    $room->save();
+
+    return back()->with('success', 'Room updated successfully!');
+}
+
+public function roomdestroy($id)
+{
+    $room = Room::findOrFail($id);
+    $room->delete();
+
+    return back()->with('success', 'Room deleted successfully!');
+}
+
     public function show($id)
     {
         $prisoner = Prisoner::where('prison_id', session('prison_id'))

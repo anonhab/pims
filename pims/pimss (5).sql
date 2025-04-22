@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Apr 05, 2025 at 02:28 AM
+-- Generation Time: Apr 08, 2025 at 11:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -79,7 +79,10 @@ INSERT INTO `accounts` (`user_id`, `username`, `password`, `role_id`, `first_nam
 (71, 'displine@gmail.com', '$2y$12$6UqFp.iaxbHdwZyjSuntOOY10t6u1BJKpN3Jt8d0p9A2Z436jzErO', 11, 'Chadrick', 'Hodkiewicz', 'your.email+fakedata54427@gmail.com', 'user_images/jyAVWE5oTXquKodoFsl1JqWEsuGoyjBn0xZSAC23.png', '490-310-8342', '2024-10-18', 'female', '589 Janae Ferry', '2025-04-04 20:48:13', '2025-04-04 20:48:13', 5),
 (72, 'securityyoff@gmail.com', '$2y$12$CuDI9EsNHQ6oE.Kl2PTY0e2a6vgmUBlHRkv48aoipi7t.2mFqw2au', 10, 'Carter', 'Smith', 'kafogawa@mailinator.com', 'user_images/MPJjz3OfiUgbJMH5LY6oqOyfY7BGmCWX9989V8b3.png', '+1 (566) 758-1614', '2005-03-19', 'female', 'Numquam duis nostrud', '2025-04-04 21:04:53', '2025-04-04 21:04:53', 5),
 (73, 'medicalforkem@gmail.com', '$2y$12$kaK9e2fReQ51DAqqiCbmuuZeBXx9gTdwkI2U7/D/PmgLvRvhdlQyi', 9, 'Yuri', 'Logan', 'nafebybi@mailinator.com', 'user_images/rjJiUtfjBP1fLG9wJX0cpW6xtUg4Rt5d5Zd3GIbf.jpg', '+1 (461) 548-2899', '2000-04-30', 'male', 'Voluptatem aspernat', '2025-04-04 21:16:54', '2025-04-04 21:16:54', 5),
-(74, 'tr@gmail.com', '$2y$12$miJ68fPKhS7LLZP2ZKthSuxb3ip8TQi1.Hmljq.PDiJ0DM9gju64W', 6, 'Ronan', 'Briggs', 'meguk@mailinator.com', 'user_images/pV4F6LAXd1ppXrvQ6icYSynlMtL6kjsca6YiNuDI.jpg', '+1 (128) 264-6554', '1986-11-06', 'male', 'Dolor et eum est re', '2025-04-04 21:20:34', '2025-04-04 21:31:15', 5);
+(74, 'tr@gmail.com', '$2y$12$miJ68fPKhS7LLZP2ZKthSuxb3ip8TQi1.Hmljq.PDiJ0DM9gju64W', 6, 'Ronan', 'Briggs', 'meguk@mailinator.com', 'user_images/pV4F6LAXd1ppXrvQ6icYSynlMtL6kjsca6YiNuDI.jpg', '+1 (128) 264-6554', '1986-11-06', 'male', 'Dolor et eum est re', '2025-04-04 21:20:34', '2025-04-04 21:31:15', 5),
+(75, 'Angelita Corwin', '$2y$12$hjkbh3HLpjK0fWEnigiO1.ifF5WbkCTR7SW237AEjpjHk.ygR04QK', 8, 'Rogelio', 'Hansen', 'your.email+fakedata33587@gmail.com', 'user_images/naR0KGnKVHjHvqtPSKmJjPDHNmxckbZw6aPud60H.jpg', '995-867-0637', '2025-09-28', 'male', '888 Rubye Ramp', '2025-04-06 20:00:23', '2025-04-06 20:00:23', 5),
+(76, 'facirewyn', '$2y$12$akCSTUVe.uk9rXqhqgSgGuubzeeVYaRFo8ZxRc.7AGMl8RQMbzklW', 8, 'Elaine', 'Oneill', 'giwarexy@mailinator.com', 'user_images/kklHWy7DCtgLMLmI6O5dLuzzVBgcwyCexfNWcw2C.jpg', '+1 (775) 637-2108', '1993-12-20', 'male', 'Dignissimos dolor do', '2025-04-06 20:09:51', '2025-04-06 20:09:51', 6),
+(77, 'lol', '$2y$12$vo82.5Z5Ko9coM.6i2pcp.YcGqgNR3hqT17mowHao3Yo4kuWdyN/q', 4, 'SOME ONE', 'SOME', 'hab@gmail.com', NULL, '121221212', '2025-04-03', 'male', 'dasdsfasdf', '2025-04-07 00:17:52', '2025-04-07 00:17:52', 20);
 
 -- --------------------------------------------------------
 
@@ -191,7 +194,10 @@ CREATE TABLE `job_assignments` (
 --
 
 INSERT INTO `job_assignments` (`id`, `prisoner_id`, `assigned_by`, `job_title`, `job_description`, `assigned_date`, `status`, `created_at`, `updated_at`) VALUES
-(127, 336, 74, 'Maintenance Worker', 'mmm', '2025-05-08', 'active', '2025-04-05 04:18:11', '2025-04-05 04:18:11');
+(127, 336, 74, 'Maintenance Worker', 'mmm', '2025-05-08', 'active', '2025-04-05 04:18:11', '2025-04-05 04:18:11'),
+(128, 351, 68, 'Cook', 'jg', '2025-04-15', 'active', '2025-04-06 21:31:26', '2025-04-06 21:31:26'),
+(129, 2, NULL, 'Maintenance Worker', 'ggg', '2025-04-24', 'active', '2025-04-07 16:36:22', '2025-04-07 16:36:22'),
+(130, 3, NULL, 'Cook', 'gg', '2025-04-23', 'active', '2025-04-07 16:36:29', '2025-04-07 16:36:29');
 
 -- --------------------------------------------------------
 
@@ -255,7 +261,6 @@ INSERT INTO `lawyers` (`lawyer_id`, `first_name`, `last_name`, `date_of_birth`, 
 (39, 'Habtamu', 'Gashu', '2025-03-13', 'ss', 'bosjjks@gmail.com', '$2y$12$TGqfxkPiJrdmD7DnsQ3U.eQey56FFM6k7h2VMn0IoAB44iIBvHjWW', 'jh', 'u98;', 77300, '2025-03-30 22:13:03', '2025-03-31 19:29:35', 10, NULL),
 (41, 'Habtamu', 'Gashu', '2025-03-21', 'llllmqowpodasd', 'law222@gmail.com', '$2y$12$qu5o1IGcffqkpWeQiK5Lzez1ln4maMliXOtpxMipXgKnY.bQjg7kW', '12342277044s12121', '1212121212', 21, '2025-04-01 02:58:14', '2025-04-01 03:00:03', 6, NULL),
 (43, 'Habtamu', 'Gashu', '2025-03-14', 'llllm32ss', 'sdlksdss@gmail.com', '$2y$12$.QdZusxc.ydfnwHdIchBReu7uAn.UFGUlYiMP/Bv4uYl3/LsEBSTG', '123422772', '0s0s121277000002', 232, '2025-04-01 03:06:30', '2025-04-01 03:06:30', 6, NULL),
-(45, 'Habtamu', 'Gashu', '2025-04-04', '0909029295', 'boss1111@gmail.com', '$2y$12$VQ.YHSA3AUX5IorhMRjm3u3mh9lVQXv3x0c/9wplQW.Ulj2onY37S', '11', 's0s121277000001', 12311, '2025-04-04 15:32:53', '2025-04-04 15:32:53', 6, 'lawyer_profiles/ICMjBTt1hv2K8qlC1VEmyUnSPkCxNZgvGHLiJYq4.jpg'),
 (46, 'adisu yebelu', 'Gashu', '2025-04-12', '0909029295', 'kembatlaw@gmail.com', '$2y$12$G1RzDTJMPuiMrzDYLdUPqODO9Y3BC1L8jPBUN6/jxLl3Rj27ePCsm', '23', '3223', 32, '2025-04-04 17:16:35', '2025-04-04 17:16:35', 5, 'lawyer_profiles/yggg0FqMNOnwNntgsXWC3rqMoqohz2mkLoXQM9Yk.jpg');
 
 -- --------------------------------------------------------
@@ -337,15 +342,24 @@ CREATE TABLE `medical_appointments` (
   `status` enum('scheduled','completed','cancelled') DEFAULT NULL,
   `created_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `prison_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `medical_appointments`
 --
 
-INSERT INTO `medical_appointments` (`id`, `prisoner_id`, `doctor_id`, `appointment_date`, `diagnosis`, `treatment`, `status`, `created_by`, `created_at`, `updated_at`) VALUES
-(212, 1, 14, '2025-03-14 23:13:50', 'asdfsdfasdf', 'asdfasd', 'scheduled', 14, '2025-03-19 23:13:50', '2025-03-19 23:13:50');
+INSERT INTO `medical_appointments` (`id`, `prisoner_id`, `doctor_id`, `appointment_date`, `diagnosis`, `treatment`, `status`, `created_by`, `created_at`, `updated_at`, `prison_id`) VALUES
+(212, 1, 14, '2025-03-14 23:13:50', 'asdfsdfasdf', 'asdfasd', 'scheduled', 14, '2025-03-19 23:13:50', '2025-03-19 23:13:50', NULL),
+(213, 4, 73, '2025-04-06 14:42:05', 'Doloremque quam quas impedit non esse ea iusto necessitatibus.', 'Veritatis deleniti tempore quia in adipisci architecto beatae totam.', 'scheduled', 73, '2025-04-06 14:42:05', '2025-04-06 14:42:05', NULL),
+(214, 3, 73, '2025-04-11 15:11:00', 'xxx', 'xx', 'completed', 73, '2025-04-06 19:09:55', '2025-04-06 19:09:55', NULL),
+(215, 2, 73, '2025-04-09 15:21:00', 'aa', 'aa', 'cancelled', 73, '2025-04-06 19:18:21', '2025-04-06 19:18:21', NULL),
+(216, 336, 73, '2025-04-07 16:25:57', 'aaa', 'aaaa', 'completed', 73, '2025-04-06 19:20:49', '2025-04-07 20:25:57', 5),
+(217, 348, 68, '2025-11-13 16:50:00', 'Corrupti quibusdam', 'Quis et aut voluptat', 'completed', 68, '2025-04-06 21:34:46', '2025-04-06 21:34:46', NULL),
+(218, 354, 73, '2025-04-07 15:54:57', 'sss', 'ss', 'completed', 73, '2025-04-07 19:53:29', '2025-04-07 19:54:57', 5),
+(219, 353, 73, '2025-04-07 15:58:53', 'sss', 'ss', 'completed', 73, '2025-04-07 19:57:29', '2025-04-07 19:58:53', 5),
+(220, 344, 73, '2025-04-08 10:23:43', 'sss', 'ss', 'completed', 73, '2025-04-07 19:58:21', '2025-04-08 14:23:43', 5);
 
 -- --------------------------------------------------------
 
@@ -360,11 +374,32 @@ CREATE TABLE `medical_reports` (
   `diagnosis` text DEFAULT NULL,
   `treatment` text DEFAULT NULL,
   `medications` text DEFAULT NULL,
-  `follow_up_needed` tinyint(1) DEFAULT NULL,
   `report_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `appointment_id` int(11) DEFAULT NULL,
+  `follow_up_date` date DEFAULT NULL,
+  `notes` text NOT NULL,
+  `follow_up` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `medical_reports`
+--
+
+INSERT INTO `medical_reports` (`id`, `prisoner_id`, `doctor_id`, `diagnosis`, `treatment`, `medications`, `report_date`, `created_at`, `updated_at`, `appointment_id`, `follow_up_date`, `notes`, `follow_up`) VALUES
+(1, 336, 73, 'aaa', 'aaaa', 'aa', '2025-04-07 04:00:00', '2025-04-07 19:03:50', '2025-04-07 19:03:50', 216, NULL, 'aa', '0'),
+(2, 336, 73, 'aaa', 'aaaa', 'aa', '2025-04-07 04:00:00', '2025-04-07 19:04:54', '2025-04-07 19:04:54', 216, NULL, 'aa', '0'),
+(3, 344, 73, 'ee', 'ee', 'ee', '2025-04-07 04:00:00', '2025-04-07 19:06:55', '2025-04-07 19:06:55', NULL, NULL, 'ee', '0'),
+(4, 344, 73, 'ee', 'ee', 'ee', '2025-04-07 04:00:00', '2025-04-07 19:07:46', '2025-04-07 19:07:46', NULL, NULL, 'ee', '0'),
+(5, 344, 73, 'Fugit quo esse.', '232 Margarita Crest', 'Illo ea necessitatibus.', '2024-06-01 04:00:00', '2025-04-07 19:08:34', '2025-04-07 19:08:34', NULL, '2026-03-19', '337', '1'),
+(6, 353, 73, 'Iste quos non eos.', '868 Sigurd Squares', 'Nulla magnam delectus occaecati adipisci aliquid pariatur.', '2024-07-13 04:00:00', '2025-04-07 19:14:20', '2025-04-07 19:14:20', NULL, NULL, '323', '0'),
+(7, 336, 73, 'aaa', 'aaaa', 'Voluptatem dolorem a', '2025-04-07 04:00:00', '2025-04-07 19:15:16', '2025-04-07 19:15:16', 216, '2025-04-26', 'Do delectus error m', '1'),
+(8, 344, 73, 'kk', 'kk', 'kk', '2025-04-25 04:00:00', '2025-04-07 19:15:31', '2025-04-07 19:15:31', NULL, NULL, 'kk', '0'),
+(9, 354, 73, 'sss', 'ssaas', 'as', '2025-04-07 04:00:00', '2025-04-07 19:54:57', '2025-04-07 19:54:57', 218, NULL, 'as', '0'),
+(10, 353, 73, 'sss', 'ss', 'sd', '2025-04-17 04:00:00', '2025-04-07 19:58:53', '2025-04-07 19:58:53', 219, '2025-04-18', 'sd', '1'),
+(11, 336, 73, 'aaa', 'aaaa', 'yyy', '2025-04-07 04:00:00', '2025-04-07 20:25:57', '2025-04-07 20:25:57', 216, NULL, 'yyy', '0'),
+(12, 344, 73, 'sss.d', 'sscccccc', 'ccc', '2025-04-10 04:00:00', '2025-04-08 14:23:43', '2025-04-08 14:23:43', 220, NULL, 'cc', '0');
 
 -- --------------------------------------------------------
 
@@ -435,7 +470,19 @@ INSERT INTO `notifications` (`id`, `account_id`, `message`, `status`, `created_a
 (21398, 22, 'New request: prison_transfer', 'unread', '2025-04-05 02:06:20', '2025-04-05 02:06:20', 5),
 (21399, 25, 'New request: prison_transfer', 'unread', '2025-04-05 02:06:20', '2025-04-05 02:06:20', 5),
 (21400, 63, 'New request: prison_transfer', 'unread', '2025-04-05 02:06:20', '2025-04-05 02:06:20', 5),
-(21401, 64, 'New request: prison_transfer', 'unread', '2025-04-05 02:06:20', '2025-04-05 02:06:20', 5);
+(21401, 64, 'New request: prison_transfer', 'unread', '2025-04-05 02:06:20', '2025-04-05 02:06:20', 5),
+(21402, 14, 'New request: case_review', 'unread', '2025-04-05 04:38:42', '2025-04-05 04:38:42', 5),
+(21403, 16, 'New request: case_review', 'unread', '2025-04-05 04:38:42', '2025-04-05 04:38:42', 5),
+(21404, 22, 'New request: case_review', 'unread', '2025-04-05 04:38:42', '2025-04-05 04:38:42', 5),
+(21405, 25, 'New request: case_review', 'unread', '2025-04-05 04:38:42', '2025-04-05 04:38:42', 5),
+(21406, 63, 'New request: case_review', 'unread', '2025-04-05 04:38:42', '2025-04-05 04:38:42', 5),
+(21407, 64, 'New request: case_review', 'unread', '2025-04-05 04:38:42', '2025-04-05 04:38:42', 5),
+(21408, 14, 'New request: medical_assistance', 'unread', '2025-04-06 18:46:08', '2025-04-06 18:46:08', 6),
+(21409, 16, 'New request: medical_assistance', 'unread', '2025-04-06 18:46:08', '2025-04-06 18:46:08', 6),
+(21410, 22, 'New request: medical_assistance', 'unread', '2025-04-06 18:46:08', '2025-04-06 18:46:08', 6),
+(21411, 25, 'New request: medical_assistance', 'unread', '2025-04-06 18:46:08', '2025-04-06 18:46:08', 6),
+(21412, 63, 'New request: medical_assistance', 'read', '2025-04-06 18:46:08', '2025-04-07 01:24:44', 6),
+(21413, 64, 'New request: medical_assistance', 'unread', '2025-04-06 18:46:08', '2025-04-06 18:46:08', 6);
 
 -- --------------------------------------------------------
 
@@ -496,15 +543,17 @@ INSERT INTO `prisoners` (`id`, `first_name`, `middle_name`, `last_name`, `dob`, 
 (341, 'prisoner1', 'prisoner1', 'prisoner12', '2025-03-13', 'male', 'single', 'Assault', 'active', '2025-03-21', '2025-03-20', 'hose', 'family 1', 'family 1', 'family 1', 'inmate_images/xXVilbQOcwh1YDMGWRmOGPGL3waxzf9IY1iVoQYl.png', 6, '2025-03-19 17:48:45', '2025-03-19 18:39:29', 12),
 (342, 'prisoner1worabe', 'prisoner1worabe', 'prisoner1worabe', '2025-03-28', 'male', 'single', 'Theft', 'active', '2025-03-11', '2025-03-11', 'worabe', 'Habtamu Bitew Gashu', 'family', '0909029295', 'inmate_images/CYhtNK2Uq3693irJZKwgJ1KAdhthz7IllaQ8n5mQ.png', 6, '2025-03-19 18:38:12', '2025-03-19 18:39:35', 13),
 (343, 'Habtamu', 'Bitew', 'Gashu', '2025-03-14', 'male', 'single', 'Fraud', 'active', '2025-03-20', '2025-03-22', 'worabe', 'Habtamu Gashu', 'faam', '0909029295', 'inmate_images/3jXJXsl7pfrMmZ1moQqaubYeEWMIKrtWWm2NWmrQ.jpg', 6, '2025-03-19 23:52:02', '2025-03-22 02:25:16', 15),
-(344, 'wow', 'Bitew', 'Gashu', '2025-03-22', 'male', 'single', 'Drug Possession', 'active', '2025-03-07', '2025-03-06', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Bitew Gashu', 'rrr', '0909029295', 'inmate_images/PAHlqV6Zsd3SAIehlnRotnxNyFgoOqMhYNnBjNtU.png', 5, '2025-03-22 23:45:14', '2025-03-22 23:45:14', NULL),
+(344, 'wow', 'Bitew', 'Gashu', '2025-03-22', 'male', 'single', 'Drug Possession', 'active', '2025-03-07', '2025-03-06', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Bitew Gashu', 'rrr', '0909029295', 'inmate_images/PAHlqV6Zsd3SAIehlnRotnxNyFgoOqMhYNnBjNtU.png', 5, '2025-03-22 23:45:14', '2025-04-06 20:01:47', 19),
 (345, 'Habtamu', 'kl', 'Gashu', '2025-03-20', 'male', 'single', 'Theft', 'active', '2025-03-20', '2025-03-13', 'Ethiopia , Amhara Bahir Dar, Amhara-Mirab Gojam', 'Habtamu Gashu', 'dddd', '0909029295', 'inmate_images/hSsEMKOiAojJLpJ2qdNJAyrEgIKZc299uEXGsL1F.jpg', 10, '2025-03-30 21:05:28', '2025-03-30 21:05:28', NULL),
 (346, 'Habtamu', 'Bitew', 'Gashu', '2025-04-17', 'male', 'single', 'Theft', 'active', '2025-04-04', '2025-04-19', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Gashu', 'sdsd', '0943392332', 'inmate_images/KqRq8s4MCkQh0zGP8Qvjpzd2ZfMudr9PGa9g6r9l.jpg', 10, '2025-04-03 21:59:42', '2025-04-03 21:59:42', NULL),
 (347, 'Habtamu', 'Bitew', 'Gashu', '2025-04-30', 'male', 'single', 'Assault', 'active', '2025-04-18', 'life', 'Ethiopia , Amhara Bahir Dar, Amhara-Mirab Gojam', 'Habtamu Gashu', 'dddd', '0943392332', 'inmate_images/0IJS5ee1Jbdm9vtrbD25t8u5sMxzCMDaLym0v5BW.jpg', 10, '2025-04-04 01:48:08', '2025-04-04 01:48:08', NULL),
 (348, 'Habtamu', 'Bitew', 'Gashu', '2025-04-18', 'male', 'single', 'Theft', 'active', '2024-04-17', 'death', 'Ethiopia , Amhara Bahir Dar, Amhara-Mirab Gojam', 'Habtamu Gashu', 'sdsd', '0909029295', 'inmate_images/gsTJopq1N5oeA0pxkYVsffOp6pm3uWCTVQ9kA8Xy.jpg', 10, '2025-04-04 01:53:28', '2025-04-04 01:53:28', NULL),
 (349, 'Habtamu', 'Bitew', 'Gashu', '2025-04-26', 'male', 'single', 'Drug Possession', 'active', '2025-04-03', 'Death Sentence', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Gashu', 'sdfsd', '0943392332', 'inmate_images/8DmqyXEGh6N3WNaSH88EGDMRld8QNNc9wkrWdKZl.jpg', 10, '2025-04-04 03:16:50', '2025-04-04 03:16:50', NULL),
 (350, 'Habtamu', 'Bitew', 'Gashu', '2025-04-11', 'male', 'single', 'Assault', 'active', '2025-04-03', 'Life Sentence', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Gashu', 'dddd', '0909029295', 'inmate_images/nzBHzzT9O0A1ITji4dvOkHJEjqu9SSq1gfdg49Kr.jpg', 10, '2025-04-04 03:19:21', '2025-04-04 03:19:21', NULL),
-(351, 'Habtamu', 'Bitew', 'Gashu', '2025-04-05', 'male', 'single', 'Other', 'active', '2025-04-04', '2048-04-04', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Gashu', 'dddd', '0909029295', 'inmate_images/UtL30vt2S6lmINALl2KJOBjcDq1faq9PRDexUtqV.jpg', 5, '2025-04-04 03:57:00', '2025-04-04 03:57:00', NULL),
-(352, 'Habtamu', 'Bitew', 'Gashu', '2025-04-15', 'male', 'single', 'Hate Crimes', 'active', '2025-04-04', '2035-04-04', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Gashu', 'sdfsd', '0943392332', 'inmate_images/knYRdfmwIQTnu9yEeYnsotAFBOCki6h5iCmbYiao.jpg', 11, '2025-04-04 15:27:56', '2025-04-04 15:29:20', 11);
+(351, 'Habtamu', 'Bitew', 'Gashu', '2025-04-05', 'male', 'single', 'Other', 'active', '2025-04-04', '2048-04-04', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Gashu', 'dddd', '0909029295', 'inmate_images/UtL30vt2S6lmINALl2KJOBjcDq1faq9PRDexUtqV.jpg', 5, '2025-04-04 03:57:00', '2025-04-06 20:01:57', 15),
+(352, 'Habtamu', 'Bitew', 'Gashu', '2025-04-15', 'male', 'single', 'Hate Crimes', 'active', '2025-04-04', '2035-04-04', 'Bahir dar\r\nBahir dar,Ethiopia', 'Habtamu Gashu', 'sdfsd', '0943392332', 'inmate_images/knYRdfmwIQTnu9yEeYnsotAFBOCki6h5iCmbYiao.jpg', 11, '2025-04-04 15:27:56', '2025-04-04 15:29:20', 11),
+(353, 'Albertha', 'Reanna Cremin', 'Hickle', '2026-03-11', 'female', 'widowed', 'Fraud', 'active', '2025-09-12', '2053-09-12', '57556 Maggio Highway', 'Evie Hansen', 'Montserrat', '463-395-3425', 'inmate_images/cUs3EqldkZJjoaqhRNxwCPzySO6RpNWMY5wTqonJ.jpg', 5, '2025-04-06 20:06:21', '2025-04-06 20:07:20', 17),
+(354, 'Philip', 'Ila Cartwright', 'Kautzer', '2026-01-26', 'female', 'married', 'Robbery', 'active', '2025-11-21', 'Death Sentence', '81435 Quigley Views', 'Mozell Hegmann', 'Eswatini', '416-008-7372', 'inmate_images/5wyDLEuEl5QsSC2f5DjbjjZIbvdMQS8Pc5NcJA5o.jpg', 5, '2025-04-06 21:27:26', '2025-04-06 21:29:34', 22);
 
 -- --------------------------------------------------------
 
@@ -618,7 +667,7 @@ INSERT INTO `requests` (`id`, `request_type`, `status`, `approved_by`, `request_
 (2150, 'medical_assistance', 'rejected', NULL, ',ll', 340, '2025-03-31 20:47:58', '2025-04-01 04:15:36', 22, NULL, 'mm'),
 (2151, 'medical_assistance', 'rejected', NULL, 'jjj', 340, '2025-03-31 20:48:05', '2025-04-01 04:15:41', 22, NULL, 'kjk'),
 (2152, 'case_review', 'rejected', NULL, 'ddd', 340, '2025-03-31 20:49:37', '2025-04-01 04:15:50', 22, NULL, 'jkik'),
-(2153, 'medical_assistance', 'pending', NULL, 'dd', 340, '2025-03-31 20:49:43', '2025-04-01 04:16:04', 22, NULL, 'kjklj;lkj'),
+(2153, 'medical_assistance', 'approved', NULL, 'dd', 340, '2025-03-31 20:49:43', '2025-04-06 21:33:03', 22, NULL, 'yyyy'),
 (2154, 'medical_assistance', 'pending', NULL, 'xxx', 340, '2025-03-31 20:51:19', '2025-04-01 04:09:23', 22, NULL, 'xx'),
 (2155, 'medical_assistance', 'approved', NULL, 'sss', 340, '2025-03-31 20:54:42', '2025-04-01 04:09:12', 22, NULL, 'xx'),
 (2156, 'case_review', 'approved', NULL, 'sss', 340, '2025-03-31 20:56:11', '2025-04-01 04:16:09', 22, NULL, 'jhjk'),
@@ -626,7 +675,9 @@ INSERT INTO `requests` (`id`, `request_type`, `status`, `approved_by`, `request_
 (2158, 'appeal_filing', 'approved', NULL, 'n', 335, '2025-04-01 01:44:25', '2025-04-04 04:13:38', 12, NULL, 'asfasdf'),
 (2159, 'prison_transfer', 'approved', NULL, 'i want khoaskdfm asjkdhfjkashfln okjsdjfkasdf', 344, '2025-04-01 04:24:44', '2025-04-03 16:47:50', 12, NULL, 'm asjkdhfjkashfln okjsdjfkasd'),
 (2160, 'case_review', 'pending', NULL, 'jjjj', 337, '2025-04-05 02:05:58', '2025-04-05 02:05:58', 12, NULL, NULL),
-(2161, 'prison_transfer', 'pending', NULL, 'mmm', 344, '2025-04-05 02:06:20', '2025-04-05 02:06:20', 12, NULL, NULL);
+(2161, 'prison_transfer', 'approved', NULL, 'mmm', 344, '2025-04-05 02:06:20', '2025-04-05 20:44:02', 12, NULL, 'k'),
+(2162, 'case_review', 'rejected', NULL, 'fd', 337, '2025-04-05 04:38:42', '2025-04-06 21:32:51', 12, NULL, 'nnnnn'),
+(2163, 'medical_assistance', 'approved', NULL, 'fasfasd', 340, '2025-04-06 18:46:08', '2025-04-06 21:32:57', 22, 40, 'hjhjh');
 
 -- --------------------------------------------------------
 
@@ -700,7 +751,8 @@ INSERT INTO `rooms` (`id`, `room_number`, `capacity`, `type`, `status`, `created
 (18, '44444', 4, 'cell', 'available', '2025-03-23 17:42:52', '2025-03-23 17:42:52', 11),
 (19, '22222', 2, 'cell', 'available', '2025-03-31 03:07:31', '2025-03-31 03:07:31', 11),
 (20, '98999', 89899, 'cell', 'available', '2025-04-01 16:07:55', '2025-04-01 16:07:55', 11),
-(21, '121221', 12212, 'security', 'under_maintenance', '2025-04-04 17:11:18', '2025-04-04 17:11:18', 11);
+(21, '121221', 12212, 'security', 'under_maintenance', '2025-04-04 17:11:18', '2025-04-04 17:11:18', 11),
+(22, '2', 6, 'cell', 'available', '2025-04-06 21:28:58', '2025-04-06 21:28:58', 5);
 
 -- --------------------------------------------------------
 
@@ -722,7 +774,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('x5YXqnXRbUnbH0H2uv8jaB7JSBEM33LUVCP35XWy', NULL, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36', 'YToxNzp7czo2OiJfdG9rZW4iO3M6NDA6ImpLTExiblhpd1ppRFc1OGpqQjZablliTlJDS1BPMkVPZ1podWlDZTYiO3M6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbm90aWZpY2F0aW9ucyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6OToicHJpc29uX2lkIjtpOjU7czo4OiJwYXNzd29yZCI7czo2MDoiJDJ5JDEyJG1pSjY4ZlBLaFM3TExaUDJaS3RoU3V4YjNpcDhUUWkxLkhtbGpxLlBEaUowRE05Z2p1NjRXIjtzOjg6InVzZXJuYW1lIjtzOjEyOiJ0ckBnbWFpbC5jb20iO3M6NzoidXNlcl9pZCI7aTo3NDtzOjY6InByaXNvbiI7czoxNDoia2VtYmF0YSBwcmlzb24iO3M6NToiZW1haWwiO3M6MjA6Im1lZ3VrQG1haWxpbmF0b3IuY29tIjtzOjY6ImdlbmRlciI7czo0OiJtYWxlIjtzOjc6ImFkZHJlc3MiO3M6MTk6IkRvbG9yIGV0IGV1bSBlc3QgcmUiO3M6NToicGhvbmUiO3M6MTc6IisxICgxMjgpIDI2NC02NTU0IjtzOjEwOiJmaXJzdF9uYW1lIjtzOjU6IlJvbmFuIjtzOjk6Imxhc3RfbmFtZSI7czo2OiJCcmlnZ3MiO3M6MTA6InVzZXJfaW1hZ2UiO3M6NTY6InVzZXJfaW1hZ2VzL3BWNEY2TEFYZDFwcFhydlE2aWNZU3lubE10TDZranNjYTZZaU51REkuanBnIjtzOjc6InJvbGVfaWQiO2k6NjtzOjg6InJvbGVuYW1lIjtzOjE2OiJUcmFpbmluZyBPZmZpY2VyIjt9', 1743812868);
+('lyFLUbhZdEA3JGrKO0NJaMRObFzlKCQgz52I2beJ', NULL, '127.0.0.1', 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36', 'YToxNzp7czo2OiJfdG9rZW4iO3M6NDA6IlRPWFRraklaN0tuamFna2ZDd3pEdVNzYmRCMEdQY0ZITzREaFRRSDAiO3M6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM1OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvbm90aWZpY2F0aW9ucyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6ODoicGFzc3dvcmQiO3M6NjA6IiQyeSQxMiRtaUo2OGZQS2hTN0xMWlAyWkt0aFN1eGIzaXA4VFFpMS5IbWxqcS5QRGlKMERNOWdqdTY0VyI7czo4OiJ1c2VybmFtZSI7czoxMjoidHJAZ21haWwuY29tIjtzOjc6InVzZXJfaWQiO2k6NzQ7czo2OiJwcmlzb24iO3M6MTQ6ImtlbWJhdGEgcHJpc29uIjtzOjU6ImVtYWlsIjtzOjIwOiJtZWd1a0BtYWlsaW5hdG9yLmNvbSI7czo2OiJnZW5kZXIiO3M6NDoibWFsZSI7czo3OiJhZGRyZXNzIjtzOjE5OiJEb2xvciBldCBldW0gZXN0IHJlIjtzOjU6InBob25lIjtzOjE3OiIrMSAoMTI4KSAyNjQtNjU1NCI7czoxMDoiZmlyc3RfbmFtZSI7czo1OiJSb25hbiI7czo5OiJsYXN0X25hbWUiO3M6NjoiQnJpZ2dzIjtzOjEwOiJ1c2VyX2ltYWdlIjtzOjU2OiJ1c2VyX2ltYWdlcy9wVjRGNkxBWGQxcHBYcnZRNmljWVN5bmxNdEw2a2pzY2E2WWlOdURJLmpwZyI7czo5OiJwcmlzb25faWQiO2k6NTtzOjc6InJvbGVfaWQiO2k6NjtzOjg6InJvbGVuYW1lIjtzOjE2OiJUcmFpbmluZyBPZmZpY2VyIjt9', 1744109534);
 
 -- --------------------------------------------------------
 
@@ -764,9 +816,13 @@ INSERT INTO `training_assignments` (`id`, `prisoner_id`, `training_id`, `assigne
 (1, NULL, NULL, 74, '2025-04-11', NULL, '2025-04-05 02:25:43', '2025-04-05 02:52:30'),
 (2, NULL, NULL, 74, '2025-04-17', NULL, '2025-04-05 02:34:01', '2025-04-05 02:52:35'),
 (3, NULL, NULL, 74, '2025-04-04', NULL, '2025-04-05 02:55:57', '2025-04-05 03:05:05'),
-(4, 344, 222, 74, '2025-04-17', 'in_progress', '2025-04-05 03:05:16', '2025-04-05 03:05:16'),
+(4, NULL, NULL, 74, '2025-04-17', NULL, '2025-04-05 03:05:16', '2025-04-05 20:36:15'),
 (5, 336, 222, 74, '2025-04-17', 'in_progress', '2025-04-05 03:05:23', '2025-04-05 03:05:23'),
-(6, 351, 222, 74, '2025-04-24', 'in_progress', '2025-04-05 03:05:33', '2025-04-05 03:05:33');
+(6, NULL, NULL, 74, '2025-04-24', NULL, '2025-04-05 03:05:33', '2025-04-06 01:49:44'),
+(7, 344, 222, 74, '2025-04-18', 'in_progress', '2025-04-06 01:49:33', '2025-04-06 01:49:33'),
+(8, 354, 222, 68, '2025-04-11', 'in_progress', '2025-04-06 21:31:08', '2025-04-06 21:31:08'),
+(9, NULL, NULL, NULL, '2025-04-17', NULL, '2025-04-07 16:35:39', '2025-04-07 16:36:07'),
+(10, 3, 219, NULL, '2025-05-01', 'in_progress', '2025-04-07 16:35:51', '2025-04-07 16:35:51');
 
 -- --------------------------------------------------------
 
@@ -792,7 +848,8 @@ CREATE TABLE `training_programs` (
 
 INSERT INTO `training_programs` (`id`, `name`, `description`, `created_by`, `created_at`, `updated_at`, `start_date`, `end_date`, `prison_id`) VALUES
 (219, 'vocal', 'this is the first vocal', 74, '2025-04-05 00:58:37', '2025-04-05 01:20:00', '2025-04-04', '2025-04-11', NULL),
-(222, 'DDnn', 'ajkdfaskdf', NULL, '2025-04-05 02:00:42', '2025-04-05 02:00:42', '2025-04-04', '2025-04-05', 5);
+(222, 'DDnn', 'ajkdfaskdf', NULL, '2025-04-05 02:00:42', '2025-04-05 02:00:42', '2025-04-04', '2025-04-05', 5),
+(223, 'jjjj', 'jjj', NULL, '2025-04-06 21:30:53', '2025-04-06 21:30:53', '2025-04-08', '2025-04-18', 5);
 
 -- --------------------------------------------------------
 
@@ -842,7 +899,7 @@ CREATE TABLE `visitors` (
   `relationship` varchar(50) DEFAULT NULL,
   `address` text DEFAULT NULL,
   `identification_number` varchar(100) DEFAULT NULL,
-  `username` text NOT NULL,
+  `email` text NOT NULL,
   `password` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -852,8 +909,14 @@ CREATE TABLE `visitors` (
 -- Dumping data for table `visitors`
 --
 
-INSERT INTO `visitors` (`id`, `first_name`, `last_name`, `phone_number`, `relationship`, `address`, `identification_number`, `username`, `password`, `created_at`, `updated_at`) VALUES
-(2, 'Habtamu', 'Gashu', '0909029295', 'eee', 'Bahir dar', '2323', 'habyesu@gmail.com', '$2y$12$zP/92CfrEfxy0dwaLXx0yOO1BrOJiGwgEBquRR8VCcLH.lKmy0CoO', '2025-04-03 21:50:21', '2025-04-03 21:50:21');
+INSERT INTO `visitors` (`id`, `first_name`, `last_name`, `phone_number`, `relationship`, `address`, `identification_number`, `email`, `password`, `created_at`, `updated_at`) VALUES
+(2, 'Habtamu', 'Gashu', '0909029295', 'eee', 'Bahir dar', '2323', 'habyesuuuuuuuuuuuuuuuuuuuuuu@gmail.com', '$2y$12$8y9BWQ39rUYSw4zpoKTGSuz/AVN8chouFKjl0TMaCu2s90j.1HtYW', '2025-04-03 21:50:21', '2025-04-03 21:50:21'),
+(3, 'TaShya', 'Walsh', '+1 (252) 961-6605', 'Dolores quia aut odi', 'Modi consequatur Pl', '15', 'losikazofu', '$2y$12$NSF9paRS6bo57/0kBYdAIOtYn.knVGASc5rYbo1ds6HYkg5ogIMV6', '2025-04-07 04:09:04', '2025-04-07 04:09:04'),
+(4, 'SOME ONE', 'SOME', '121212', 'asdfsadas', 'asfasdfsdf', '121212asdfad', 'habbbbbbbbb@gmail.com', '$2y$12$vo82.5Z5Ko9coM.6i2pcp.YcGqgNR3hqT17mowHao3Yo4kuWdyN/q', '2025-04-07 00:18:52', '2025-04-07 00:18:52'),
+(5, 'Jaylen', 'King', '407-014-9588', 'Deserunt', '20502 Minnie Turnpike', '459', 'Bernadette_Davis@gmail.com', '$2y$12$5R/nIYgBTsv2SGvhEFHWZerZmZOjC5Ev9ae2M2SlrzBPFVlauQj5G', '2025-04-07 04:33:52', '2025-04-07 04:33:52'),
+(6, 'Geo', 'Orn', '155-638-4077', 'Harum', '8569 Cade Neck', '206', 'Lula.Batz', '$2y$12$emSLXoXw5HGdLscblExqTuiu2A4brQjlxfWwx07BBhWgVraI4Gu0K', '2025-04-07 04:37:01', '2025-04-07 04:37:01'),
+(7, 'Trystan', 'Dibbert', '761-160-3700', 'Sint tempore', '574 Schinner Mall', '392', 'your.email+fakedata60508@gmail.com', '$2y$12$pGMGy3qK6fiRvEqwk4/xI.a6a3bVvZaJSHEB.uD02gb8YR6gYV3Xe', '2025-04-07 04:52:03', '2025-04-07 04:52:03'),
+(8, 'Kaci', 'Thiel', '614-495-0695', 'Possimus id blanditiis.', '8342 Batz Ways', '589', 'sssssss@gmail.com', '$2y$12$kKp8MYXSww4lsfeCxsFKsu5uBm.qc81ruyTK9tzT3sPf3JVClWXh2', '2025-04-07 04:53:30', '2025-04-07 04:53:30');
 
 --
 -- Indexes for dumped tables
@@ -958,7 +1021,8 @@ ALTER TABLE `medical_appointments`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_medical_appointments_prisoner` (`prisoner_id`),
   ADD KEY `fk_medical_appointments_doctor` (`doctor_id`),
-  ADD KEY `fk_medical_appointments_created_by` (`created_by`);
+  ADD KEY `fk_medical_appointments_created_by` (`created_by`),
+  ADD KEY `fk_prisonformedical` (`prison_id`);
 
 --
 -- Indexes for table `medical_reports`
@@ -966,7 +1030,8 @@ ALTER TABLE `medical_appointments`
 ALTER TABLE `medical_reports`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_medical_reports_prisoner` (`prisoner_id`),
-  ADD KEY `fk_medical_reports_doctor` (`doctor_id`);
+  ADD KEY `fk_medical_reports_doctor` (`doctor_id`),
+  ADD KEY `fk_appointment` (`appointment_id`);
 
 --
 -- Indexes for table `migrations`
@@ -1105,7 +1170,7 @@ ALTER TABLE `visitors`
 -- AUTO_INCREMENT for table `accounts`
 --
 ALTER TABLE `accounts`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=75;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- AUTO_INCREMENT for table `backups`
@@ -1135,7 +1200,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `job_assignments`
 --
 ALTER TABLE `job_assignments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=128;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
 
 --
 -- AUTO_INCREMENT for table `lawyers`
@@ -1159,13 +1224,13 @@ ALTER TABLE `lawyer_prisoner_assignment`
 -- AUTO_INCREMENT for table `medical_appointments`
 --
 ALTER TABLE `medical_appointments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=213;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=221;
 
 --
 -- AUTO_INCREMENT for table `medical_reports`
 --
 ALTER TABLE `medical_reports`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -1177,13 +1242,13 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21402;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21414;
 
 --
 -- AUTO_INCREMENT for table `prisoners`
 --
 ALTER TABLE `prisoners`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=353;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=355;
 
 --
 -- AUTO_INCREMENT for table `prisons`
@@ -1207,7 +1272,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2164;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -1219,7 +1284,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `system_logs`
@@ -1231,13 +1296,13 @@ ALTER TABLE `system_logs`
 -- AUTO_INCREMENT for table `training_assignments`
 --
 ALTER TABLE `training_assignments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `training_programs`
 --
 ALTER TABLE `training_programs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=223;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=224;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -1255,7 +1320,7 @@ ALTER TABLE `visiting_requests`
 -- AUTO_INCREMENT for table `visitors`
 --
 ALTER TABLE `visitors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- Constraints for dumped tables
@@ -1325,6 +1390,7 @@ ALTER TABLE `medical_appointments`
   ADD CONSTRAINT `fk_medical_appointments_created_by` FOREIGN KEY (`created_by`) REFERENCES `accounts` (`user_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_medical_appointments_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `accounts` (`user_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_medical_appointments_prisoner` FOREIGN KEY (`prisoner_id`) REFERENCES `prisoners` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_prisonformedical` FOREIGN KEY (`prison_id`) REFERENCES `prisons` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `medical_appointments_ibfk_1` FOREIGN KEY (`prisoner_id`) REFERENCES `prisoners` (`id`),
   ADD CONSTRAINT `medical_appointments_ibfk_2` FOREIGN KEY (`doctor_id`) REFERENCES `accounts` (`user_id`),
   ADD CONSTRAINT `medical_appointments_ibfk_3` FOREIGN KEY (`created_by`) REFERENCES `accounts` (`user_id`);
@@ -1333,6 +1399,7 @@ ALTER TABLE `medical_appointments`
 -- Constraints for table `medical_reports`
 --
 ALTER TABLE `medical_reports`
+  ADD CONSTRAINT `fk_appointment` FOREIGN KEY (`appointment_id`) REFERENCES `medical_appointments` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_medical_reports_doctor` FOREIGN KEY (`doctor_id`) REFERENCES `accounts` (`user_id`) ON DELETE SET NULL,
   ADD CONSTRAINT `fk_medical_reports_prisoner` FOREIGN KEY (`prisoner_id`) REFERENCES `prisoners` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `medical_reports_ibfk_1` FOREIGN KEY (`prisoner_id`) REFERENCES `prisoners` (`id`),

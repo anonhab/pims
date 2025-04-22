@@ -10,7 +10,7 @@ class PoliceController extends Controller
     // Show form to allocate a room
     public function allocateRoom()
     {
-        return view('police_officer.allocateRoom');
+        return view('police_officer.allocate_room');
     }
 
     // Store the room allocation

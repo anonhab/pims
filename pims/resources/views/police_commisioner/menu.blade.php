@@ -1,3 +1,4 @@
+@include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar2">
     <!-- Sidebar Toggle Button (visible on mobile) -->
     <div class="pims-sidebar-toggle" id="pimsSidebarToggle2">
@@ -48,14 +49,13 @@
                     <span class="pims-menu-icon">
                         <i class="fas fa-paper-plane"></i>
                     </span>
-                    <span class="pims-menu-text">Process Request</span>
+                    <span class="pims-menu-text">Execute Requests</span>
                     <span class="pims-menu-arrow">
                         <i class="fas fa-angle-down"></i>
                     </span>
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="/create_request" class="pims-submenu-link">Create/Update Request</a>
                     </li>
                     <li class="pims-submenu-item">
                         <a href="/view_requests" class="pims-submenu-link">View Requests</a>
@@ -69,17 +69,17 @@
                     <span class="pims-menu-icon">
                         <i class="fas fa-chart-line"></i>
                     </span>
-                    <span class="pims-menu-text">Report Generation</span>
+                    <span class="pims-menu-text">Release Prisoner</span>
                     <span class="pims-menu-arrow">
                         <i class="fas fa-angle-down"></i>
                     </span>
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="/generate_report" class="pims-submenu-link">Generate Report</a>
+                        <a href="/generate_report" class="pims-submenu-link">Release</a>
                     </li>
                     <li class="pims-submenu-item">
-                        <a href="/view_reports" class="pims-submenu-link">View Generated Reports</a>
+                        <a href="/view_reports" class="pims-submenu-link">View Releases</a>
                     </li>
                 </ul>
             </li>
@@ -94,6 +94,45 @@
 </div>
 
 <script>
+ document.addEventListener('DOMContentLoaded', function() {
+        // Add click handlers to all menu links
+        document.querySelectorAll('.pims-menu-link, .pims-submenu-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Only show preloader for actual navigation links
+                if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
+                    // Don't prevent default if it's a submenu toggle
+                    if (!this.parentElement.classList.contains('pims-has-submenu') || 
+                        (window.innerWidth <= 1024 || document.getElementById('pimsSidebar').classList.contains('pims-collapsed'))) {
+                        
+                        // Show preloader immediately
+                        PimsPreloader.show();
+                        
+                        // Add a small delay before navigation to ensure preloader shows
+                        e.preventDefault();
+                        const targetUrl = this.getAttribute('href');
+                        
+                        setTimeout(() => {
+                            window.location.href = targetUrl;
+                        }, 50);
+                    }
+                }
+            });
+        });
+
+        // Handle AJAX navigation if you're using it
+        if (typeof Livewire !== 'undefined') {
+            Livewire.hook('message.sent', () => {
+                PimsPreloader.show();
+            });
+
+            Livewire.hook('message.processed', () => {
+                setTimeout(PimsPreloader.hide, 500);
+            });
+        }
+    });
+    
+
+
     // Toggle submenus for second sidebar
     document.querySelectorAll('#pimsSidebar2 .pims-has-submenu > .pims-menu-link').forEach(link => {
         link.addEventListener('click', function(e) {

@@ -20,7 +20,7 @@ class Visitor extends Authenticatable
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'first_name', 'last_name', 'phone_number', 'relationship', 'address', 'identification_number', 'user name', 'password'
+        'id', 'first_name', 'last_name', 'phone_number', 'relationship', 'address', 'identification_number', 'email', 'password'
     ];
 
     protected $casts = [
@@ -31,8 +31,5 @@ class Visitor extends Authenticatable
     /**
      * Automatically hash the password before saving.
      */
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = Hash::make($value);
-    }
+    
 }

@@ -395,6 +395,7 @@
         }
     </style>
 </head>
+@include('components.preloader')
 <body>
     <!-- Security Grid Background -->
     <div class="security-grid"></div>
@@ -426,17 +427,24 @@
                 <h1>Prison Information Management System</h1>
                 <p>Central Ethiopia Regional Administration</p>
             </div>
-
             @if ($errors->any())
-            <div id="alert" class="alert">
-                <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
+    <div id="alert" class="alert">
+        <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if (session('success'))
+    <div id="alert-success" class="alert alert-success">
+        <span class="close-btn" onclick="this.parentElement.style.display='none';">&times;</span>
+        <p>{{ session('success') }}</p>
+    </div>
+@endif
+
 
             <form method="POST" action="{{ route('login') }}">
                 @csrf
