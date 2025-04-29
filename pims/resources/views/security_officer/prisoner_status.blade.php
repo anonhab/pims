@@ -481,17 +481,13 @@
                                 <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
                                 {{ $appointment->status }}
                             </span>
-                            <button class="pims-btn pims-btn-small {{ $appointment->status == 'Pending' ? 'pims-btn-primary' : 'pims-btn-secondary' }}"
-                                onclick="openStatusModal('{{ $appointment->id }}', 'medical', '{{ $appointment->status }}')">
-                                <i class="fas fa-{{ $appointment->status == 'Pending' ? 'edit' : 'eye' }}"></i>
-                                {{ $appointment->status == 'Pending' ? 'Update' : 'View' }}
-                            </button>
+                           
                         </div>
                     </div>
                     @endforeach
                 </div>
                 @else
-                <div class="alert alert-info">
+                <div class="alert alert-info"> 
                     <i class="fas fa-info-circle"></i> No medical appointments found.
                 </div>
                 @endif
@@ -549,6 +545,36 @@
                 </div>
                 @endif
             </div>
+<!-- New Prisoner View Modal -->
+<div class="modal fade" id="viewPrisonerModal" tabindex="-1" aria-labelledby="viewPrisonerModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg"> <!-- bigger modal -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="viewPrisonerModalLabel">Prisoner Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="text-center mb-3">
+          <img id="viewPrisonerImage" src="" alt="Inmate Image" class="img-fluid rounded" width="150">
+        </div>
+
+        <p><strong>Full Name:</strong> <span id="viewPrisonerFullName"></span></p>
+        <p><strong>Date of Birth:</strong> <span id="viewPrisonerDOB"></span></p>
+        <p><strong>Gender:</strong> <span id="viewPrisonerGender"></span></p>
+        <p><strong>Address:</strong> <span id="viewPrisonerAddress"></span></p>
+        <p><strong>Marital Status:</strong> <span id="viewPrisonerMaritalStatus"></span></p>
+        <p><strong>Crime Committed:</strong> <span id="viewPrisonerCrime"></span></p>
+        <p><strong>Status:</strong> <span id="viewPrisonerStatus"></span></p>
+        <p><strong>Time Serve Start:</strong> <span id="viewPrisonerStart"></span></p>
+        <p><strong>Time Serve End:</strong> <span id="viewPrisonerEnd"></span></p>
+        <p><strong>Emergency Contact:</strong> <span id="viewPrisonerEmergency"></span></p>
+        <p><strong>Prison Name:</strong> <span id="viewPrisonerPrisonName"></span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
 
             <!-- Visitor Appointments -->
             <div id="visitorAppointments" class="pims-report-content">
@@ -689,11 +715,12 @@
             </div>
 
             <!-- View Prisoner Button (initially hidden) -->
-            <div id="viewPrisonerBtn" class="mt-3 text-center" style="display: none;">
-                <a href="#" id="viewPrisonerLink" class="pims-btn pims-btn-success w-100">
-                    <i class="fas fa-eye"></i> View Prisoner Details
-                </a>
-            </div>
+<div id="viewPrisonerBtn" class="mt-3 text-center" style="display: none;">
+    <a href="#" id="viewPrisonerLink" class="pims-btn pims-btn-success w-100">
+        <i class="fas fa-eye"></i> View Prisoner Details
+    </a>
+</div>
+
         </div>
     </div>
     <div id="prisonerDetailsModal" class="pims-modal" style="display:none;">
@@ -709,7 +736,51 @@
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    // Call this when you know which prisoner to view (e.g., after selecting a row)
+function showViewPrisonerButton(prisonerId) {
+    $('#viewPrisonerLink').data('id', prisonerId); // set prisoner ID
+    $('#viewPrisonerBtn').show(); // show the button
+}
+$(document).ready(function() {
+    $('#viewPrisonerLink').click(function(e) {
+        e.preventDefault();
+
+        const prisonerId = $(this).data('id');
+
+        $.ajax({
+            url: '/prisoners/' + prisonerId,
+            type: 'GET',
+            success: function(data) {
+                $('#viewPrisonerImage').attr('src', '/' + data.inmate_image);
+                $('#viewPrisonerFullName').text(data.first_name + ' ' + data.middle_name + ' ' + data.last_name);
+                $('#viewPrisonerDOB').text(data.dob);
+                $('#viewPrisonerGender').text(data.gender);
+                $('#viewPrisonerAddress').text(data.address);
+                $('#viewPrisonerMaritalStatus').text(data.marital_status);
+                $('#viewPrisonerCrime').text(data.crime_committed);
+                $('#viewPrisonerStatus').text(data.status);
+                $('#viewPrisonerStart').text(data.time_serve_start);
+                $('#viewPrisonerEnd').text(data.time_serve_end);
+                $('#viewPrisonerEmergency').text(
+                    data.emergency_contact_name + ' (' + data.emergency_contact_relation + ') - ' + data.emergency_contact_number
+                );
+                $('#viewPrisonerPrisonName').text(data.prison_name);
+
+                $('#viewPrisonerModal').modal('show'); // show NEW modal
+            },
+            error: function() {
+                alert('Failed to load prisoner info.');
+            }
+        });
+    });
+});
+
+
+</script>
+
     <script>
         // Enhanced Tab Management with LocalStorage Persistence
         document.addEventListener('DOMContentLoaded', function() {
@@ -878,12 +949,16 @@
                 if (data.success) {
                     showVerificationResult(data.message, true);
                     if (data.prisoner_id) {
-                        // Show view prisoner button with link
-                        const viewBtn = document.getElementById('viewPrisonerBtn');
-                        const viewLink = document.getElementById('viewPrisonerLink');
-                        viewLink.href = `/prisoners/${data.prisoner_id}`;
-                        viewBtn.style.display = 'block';
-                    }
+    const viewBtn = document.getElementById('viewPrisonerBtn');
+    const viewLink = document.getElementById('viewPrisonerLink');
+
+    // Dynamically set the data-id (no need to set href)
+    showViewPrisonerButton(data.prisoner_id);
+
+    // Show the view button
+    viewBtn.style.display = 'block';
+}
+
                 } else {
                     showVerificationResult(data.message || 'Verification failed', false);
                 }
