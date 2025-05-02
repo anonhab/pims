@@ -1,249 +1,549 @@
 <!DOCTYPE html>
 <html>
-
-@include('includes.head')
-<style>
-    :root {
-        --primary-color: #4361ee;
-        --primary-light: #eef2ff;
-        --secondary-color: #3f37c9;
-        --success-color: #4cc9f0;
-        --danger-color: #f72585;
-        --dark-color: #1a1a2e;
-        --light-color: #f8f9fa;
-        --border-color: #dee2e6;
-        --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        --transition: all 0.3s ease;
-    }
-
-    body {
-        background-color: #f9fafb;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        color: #333;
-        line-height: 1.6;
-    }
-
-    /* Card styling */
-    .card {
-        border-radius: 12px;
-        border: none;
-        box-shadow: var(--shadow);
-        overflow: hidden;
-        transition: var(--transition);
-    }
-
-    .card:hover {
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-    }
-
-    /* Header */
-    .card-header {
-        padding: 1.25rem 1.5rem;
-        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-        color: white;
-        font-weight: 600;
-        font-size: 1.25rem;
-        border-bottom: none;
-    }
-
-    /* Table styling */
-    .table-responsive {
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    .table {
-        margin-bottom: 0;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
-    .table thead th {
-        background-color: var(--primary-light);
-        color: var(--primary-color);
-        font-weight: 600;
-        border: none;
-        padding: 1rem;
-        white-space: nowrap;
-    }
-
-    .table tbody td {
-        padding: 1rem;
-        vertical-align: middle;
-        border-top: 1px solid var(--border-color);
-    }
-
-    .table tbody tr:first-child td {
-        border-top: none;
-    }
-
-    .table tbody tr:hover {
-        background-color: rgba(67, 97, 238, 0.05);
-    }
-
-    /* Badge styling */
-    .badge {
-        padding: 0.5em 0.75em;
-        font-weight: 500;
-        border-radius: 8px;
-        font-size: 0.8em;
-    }
-
-    .bg-success {
-        background-color: #2ecc71 !important;
-    }
-
-    /* Buttons and links */
-    .btn {
-        padding: 0.6rem 1.2rem;
-        font-weight: 500;
-        border-radius: 8px;
-        transition: var(--transition);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .btn-sm {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.875rem;
-    }
-
-    .btn-view {
-        color: var(--primary-color);
-        background-color: rgba(67, 97, 238, 0.1);
-        border: none;
-    }
-
-    .btn-view:hover {
-        background-color: rgba(67, 97, 238, 0.2);
-        color: var(--secondary-color);
-    }
-
-    .btn-view i {
-        font-size: 0.9em;
-    }
-
-    /* Alert messages */
-    .alert {
-        margin-bottom: 1.5rem;
-        border-radius: 8px;
-        padding: 1rem 1.5rem;
-        font-size: 0.95rem;
-        border: none;
-    }
-
-    .alert-success {
-        background-color: rgba(46, 204, 113, 0.15);
-        color: #27ae60;
-    }
-
-    /* Empty state */
-    .empty-state {
-        padding: 3rem 1rem;
-        text-align: center;
-        color: #6c757d;
-    }
-
-    .empty-state i {
-        font-size: 3rem;
-        color: #adb5bd;
-        margin-bottom: 1rem;
-    }
-
-    /* Page spacing */
-    .container {
-        padding-bottom: 3rem;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .table thead {
-            display: none;
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Prison Information Management System - Released Prisoners</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --pims-primary: #2c3e50;
+            --pims-secondary: #34495e;
+            --pims-accent: #3498db;
+            --pims-light: #ecf0f1;
+            --pims-lighter: #f8f9fa;
+            --pims-danger: #e74c3c;
+            --pims-success: #2ecc71;
+            --pims-warning: #f39c12;
+            --pims-border-radius: 8px;
+            --pims-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --pims-transition: all 0.3s ease;
         }
 
-        .table, .table tbody, .table tr, .table td {
-            display: block;
-            width: 100%;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        .table tr {
-            margin-bottom: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--pims-primary);
+            line-height: 1.6;
         }
 
-        .table td {
-            padding: 0.75rem;
-            text-align: right;
-            position: relative;
-            border-top: none;
-            border-bottom: 1px solid var(--border-color);
+        /* Main Layout */
+        .pims-app-container {
+            padding-top: 70px;
+            display: flex;
+            min-height: 100vh;
         }
 
-        .table td:before {
-            content: attr(data-label);
-            position: absolute;
-            left: 1rem;
-            top: 0.75rem;
+        .pims-main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            margin-left: 250px;
+            transition: var(--pims-transition);
+        }
+
+        .pims-content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .pims-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .pims-page-title {
+            font-size: 1.75rem;
             font-weight: 600;
-            color: var(--primary-color);
-            text-align: left;
+            color: var(--pims-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
         }
 
-        .table td:last-child {
+        .pims-page-title i {
+            color: var(--pims-accent);
+        }
+
+        .pims-breadcrumb {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .pims-breadcrumb li {
+            display: flex;
+            align-items: center;
+        }
+
+        .pims-breadcrumb li:not(:last-child)::after {
+            content: '/';
+            margin: 0 0.5rem;
+            color: var(--pims-secondary);
+        }
+
+        .pims-breadcrumb a {
+            color: var(--pims-accent);
+            text-decoration: none;
+            transition: var(--pims-transition);
+        }
+
+        .pims-breadcrumb a:hover {
+            color: var(--pims-primary);
+        }
+
+        .pims-breadcrumb .pims-active {
+            color: var(--pims-primary);
+            font-weight: 500;
+        }
+
+        /* Card Styles */
+        .pims-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-box-shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .pims-card-header {
+            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pims-card-header h5 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .pims-card-body {
+            padding: 1.5rem;
+        }
+
+        /* Table Styles */
+        .pims-table-container {
+            overflow-x: auto;
+        }
+
+        .pims-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--pims-border-radius);
+            overflow: hidden;
+        }
+
+        .pims-table th {
+            background-color: var(--pims-primary);
+            color: white;
+            font-weight: 500;
+            text-align: left;
+            padding: 1rem;
+        }
+
+        .pims-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
+        }
+
+        .pims-table tr:last-child td {
             border-bottom: none;
         }
 
-        .badge {
-            float: right;
+        .pims-table tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
         }
-    }
-</style>
 
+        /* Status Badges */
+        .pims-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .pims-badge-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--pims-success);
+        }
+
+        /* Button Styles */
+        .pims-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: var(--pims-border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--pims-transition);
+            border: none;
+            font-size: 0.9rem;
+            gap: 0.5rem;
+        }
+
+        .pims-btn i {
+            font-size: 0.9em;
+        }
+
+        .pims-btn-primary {
+            background-color: var(--pims-accent);
+            color: white;
+        }
+
+        .pims-btn-primary:hover {
+            background-color: #2980b9;
+        }
+
+        .pims-btn-secondary {
+            background-color: var(--pims-secondary);
+            color: white;
+        }
+
+        .pims-btn-secondary:hover {
+            background-color: #2c3e50;
+        }
+
+        .pims-btn-light {
+            background-color: var(--pims-light);
+            color: var(--pims-secondary);
+        }
+
+        .pims-btn-light:hover {
+            background-color: #dfe6e9;
+        }
+
+        .pims-btn-sm {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+        }
+
+        /* Alert Styles */
+        .pims-alert {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--pims-border-radius);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pims-alert-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--pims-success);
+            border-left: 4px solid var(--pims-success);
+        }
+
+        .pims-alert i {
+            font-size: 1.25rem;
+        }
+
+        /* Empty State */
+        .pims-empty-state {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .pims-empty-state i {
+            font-size: 3rem;
+            color: var(--pims-accent);
+            margin-bottom: 1rem;
+        }
+
+        .pims-empty-state h5 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: var(--pims-primary);
+        }
+
+        .pims-empty-state p {
+            color: var(--pims-secondary);
+        }
+
+        /* Pagination */
+        .pims-pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .pims-pagination-list {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            gap: 0.5rem;
+        }
+
+        .pims-pagination-item {
+            display: flex;
+        }
+
+        .pims-pagination-link {
+            padding: 0.5rem 1rem;
+            border-radius: var(--pims-border-radius);
+            color: var(--pims-primary);
+            text-decoration: none;
+            transition: var(--pims-transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pims-pagination-link:hover {
+            background-color: var(--pims-light);
+        }
+
+        .pims-pagination-link.active {
+            background-color: var(--pims-accent);
+            color: white;
+        }
+
+        .pims-pagination-link.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Modal Styles */
+        .pims-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .pims-modal.active {
+            display: flex;
+        }
+
+        .pims-modal-container {
+            background-color: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .pims-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pims-modal-header h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--pims-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pims-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--pims-secondary);
+            transition: var(--pims-transition);
+        }
+
+        .pims-modal-close:hover {
+            color: var(--pims-primary);
+        }
+
+        .pims-modal-body {
+            padding: 1.5rem;
+        }
+
+        .pims-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        /* Details Grid */
+        .pims-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pims-detail-item {
+            margin-bottom: 1rem;
+        }
+
+        .pims-detail-item strong {
+            display: block;
+            margin-bottom: 0.25rem;
+            color: var(--pims-secondary);
+            font-weight: 500;
+        }
+
+        .pims-detail-item span {
+            display: block;
+            padding: 0.5rem;
+            background-color: var(--pims-lighter);
+            border-radius: var(--pims-border-radius);
+        }
+
+        .pims-inmate-image {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: block;
+            background-color: var(--pims-light);
+            padding: 1rem;
+        }
+
+        /* Loading Spinner */
+        .pims-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 0.25rem solid rgba(52, 152, 219, 0.2);
+            border-top-color: var(--pims-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .pims-main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            
+            .pims-table th, 
+            .pims-table td {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pims-page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .pims-card-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .pims-table th:nth-child(4),
+            .pims-table td:nth-child(4),
+            .pims-table th:nth-child(5),
+            .pims-table td:nth-child(5) {
+                display: none;
+            }
+            
+            .pims-details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .pims-table th:nth-child(3),
+            .pims-table td:nth-child(3),
+            .pims-table th:nth-child(6),
+            .pims-table td:nth-child(6) {
+                display: none;
+            }
+            
+            .pims-modal-container {
+                width: 95%;
+                max-height: 85vh;
+            }
+        }
+    </style>
+</head>
 <body>
-    <!-- START NAV -->
-    @include('includes.nav')
-    <!-- END NAV -->
-
-    <div class="columns" id="app-content">
+    <div class="pims-app-container">
+        <!-- Navigation -->
+        @include('includes.nav')
+        
+        <!-- Sidebar -->
         @include('police_commisioner.menu')
-
-        <div class="column is-10" id="page-content">
-            <div class="content-header">
-                <nav class="breadcrumb is-small" aria-label="breadcrumbs">
-                    <ul>
-                        <li><a href="#">Dashboard</a></li>
-                        <li><a href="#">Prisoners</a></li>
-                        <li class="is-active"><a href="#" aria-current="page">Released Prisoners</a></li>
-                    </ul>
-                </nav>
-                <h2 class="title is-4">Released Prisoners Management</h2>
-            </div>
-
-            <div class="container mt-5">
-                <div class="card shadow">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">Released Prisoners Registry</h5>
-                        <div class="header-actions">
-                            <button class="btn btn-sm" style="background-color: var(--primary-light); color: var(--primary-color);">
-                                <i class="fas fa-download"></i> Export
-                            </button>
-                        </div>
+        
+        <main class="pims-main-content">
+            <div class="pims-content-container">
+             
+                
+                <!-- Page Header -->
+                <div class="pims-page-header">
+                    <h2 class="pims-page-title">
+                        <i class="fas fa-user-check"></i> Released Prisoners Management
+                    </h2>
+                </div>
+                
+                <!-- Main Card -->
+                <div class="pims-card">
+                    <div class="pims-card-header">
+                        <h5>Released Prisoners Registry</h5>
+                        <button class="pims-btn pims-btn-light pims-btn-sm">
+                            <i class="fas fa-download"></i> Export
+                        </button>
                     </div>
-
-                    <div class="card-body">
+                    
+                    <div class="pims-card-body">
                         <!-- Success Message -->
                         @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show">
-                            <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        <div class="pims-alert pims-alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            {{ session('success') }}
                         </div>
                         @endif
-
+                        
                         <!-- Released Prisoners Table -->
-                        <div class="table-responsive">
-                            <table class="table">
+                        <div class="pims-table-container">
+                            <table class="pims-table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -258,20 +558,21 @@
                                 <tbody>
                                     @forelse($releasedPrisoners as $index => $prisoner)
                                     <tr>
-                                        <td data-label="#">{{ $index + 1 }}</td>
-                                        <td data-label="Full Name">{{ $prisoner->first_name }} {{ $prisoner->last_name }}</td>
-                                        <td data-label="Prisoner ID">{{ $prisoner->id }}</td>
-                                        <td data-label="Release Date">{{ \Carbon\Carbon::parse($prisoner->release_date)->format('M d, Y') }}</td>
-                                        <td data-label="Reason">
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ $prisoner->first_name }} {{ $prisoner->last_name }}</td>
+                                        <td>{{ $prisoner->id }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($prisoner->release_date)->format('M d, Y') }}</td>
+                                        <td>
                                             <span class="text-capitalize">{{ str_replace('_', ' ', $prisoner->release_reason) }}</span>
                                         </td>
-                                        <td data-label="Status">
-                                            <span class="badge bg-success">
-                                                <i class="fas fa-check-circle me-1"></i> Released
+                                        <td>
+                                            <span class="pims-badge pims-badge-success">
+                                                <i class="fas fa-check-circle"></i> Released
                                             </span>
                                         </td>
-                                        <td data-label="Actions">
-                                            <button class="btn btn-view btn-sm" onclick="viewPrisonerDetails('{{ $prisoner->id }}')">
+                                        <td>
+                                            <button class="pims-btn pims-btn-outline pims-btn-sm pims-view-prisoner" 
+                                                    data-id="{{ $prisoner->id }}">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
                                         </td>
@@ -279,10 +580,10 @@
                                     @empty
                                     <tr>
                                         <td colspan="7">
-                                            <div class="empty-state">
+                                            <div class="pims-empty-state">
                                                 <i class="fas fa-box-open"></i>
                                                 <h5>No released prisoners found</h5>
-                                                <p class="mt-2">There are currently no prisoners marked as released in the system.</p>
+                                                <p>There are currently no prisoners marked as released in the system.</p>
                                             </div>
                                         </td>
                                     </tr>
@@ -290,163 +591,188 @@
                                 </tbody>
                             </table>
                         </div>
-
+                        
                         <!-- Pagination -->
                         @if($releasedPrisoners->hasPages())
-                        <div class="d-flex justify-content-center mt-4">
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination">
-                                    @if($releasedPrisoners->onFirstPage())
-                                    <li class="page-item disabled">
-                                        <span class="page-link"><i class="fas fa-chevron-left"></i></span>
-                                    </li>
-                                    @else
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ $releasedPrisoners->previousPageUrl() }}"><i class="fas fa-chevron-left"></i></a>
-                                    </li>
-                                    @endif
-
-                                    @foreach(range(1, $releasedPrisoners->lastPage()) as $i)
-                                    <li class="page-item {{ $releasedPrisoners->currentPage() == $i ? 'active' : '' }}">
-                                        <a class="page-link" href="{{ $releasedPrisoners->url($i) }}">{{ $i }}</a>
-                                    </li>
-                                    @endforeach
-
-                                    @if($releasedPrisoners->hasMorePages())
-                                    <li class="page-item">
-                                        <a class="page-link" href="{{ $releasedPrisoners->nextPageUrl() }}"><i class="fas fa-chevron-right"></i></a>
-                                    </li>
-                                    @else
-                                    <li class="page-item disabled">
-                                        <span class="page-link"><i class="fas fa-chevron-right"></i></span>
-                                    </li>
-                                    @endif
-                                </ul>
-                            </nav>
+                        <div class="pims-pagination">
+                            <ul class="pims-pagination-list">
+                                @if($releasedPrisoners->onFirstPage())
+                                <li class="pims-pagination-item">
+                                    <span class="pims-pagination-link disabled">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </span>
+                                </li>
+                                @else
+                                <li class="pims-pagination-item">
+                                    <a href="{{ $releasedPrisoners->previousPageUrl() }}" class="pims-pagination-link">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                                @endif
+                                
+                                @foreach(range(1, $releasedPrisoners->lastPage()) as $i)
+                                <li class="pims-pagination-item">
+                                    <a href="{{ $releasedPrisoners->url($i) }}" 
+                                       class="pims-pagination-link {{ $releasedPrisoners->currentPage() == $i ? 'active' : '' }}">
+                                        {{ $i }}
+                                    </a>
+                                </li>
+                                @endforeach
+                                
+                                @if($releasedPrisoners->hasMorePages())
+                                <li class="pims-pagination-item">
+                                    <a href="{{ $releasedPrisoners->nextPageUrl() }}" class="pims-pagination-link">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                                @else
+                                <li class="pims-pagination-item">
+                                    <span class="pims-pagination-link disabled">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </span>
+                                </li>
+                                @endif
+                            </ul>
                         </div>
                         @endif
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
-
-    <!-- Modal for prisoner details -->
-    <div class="modal fade" id="prisonerModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Prisoner Release Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="prisonerDetailsContent">
-                    <!-- Content will be loaded here via AJAX -->
-                    <div class="text-center py-5">
-                        <div class="spinner-border text-primary" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" onclick="printReleaseDocument()">
-                        <i class="fas fa-print me-2"></i> Print Release
-                    </button>
-                </div>
+    
+    <!-- Prisoner Details Modal -->
+    <div class="pims-modal" id="pims-prisoner-modal">
+        <div class="pims-modal-container">
+            <div class="pims-modal-header">
+                <h5><i class="fas fa-user"></i> Prisoner Release Details</h5>
+                <button class="pims-modal-close">&times;</button>
             </div>
-        </div>
-    </div>
-
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Font Awesome -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-<!-- JS Section -->
-<script>
-    // View prisoner details
-    function viewPrisonerDetails(prisonerId) {
-        // In a real application, this would be an AJAX call to fetch prisoner details
-        console.log(`Viewing details for prisoner ID: ${prisonerId}`);
-        
-        // Show loading state
-        const modalContent = document.getElementById('prisonerDetailsContent');
-        modalContent.innerHTML = `
-            <div class="text-center py-5">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-        `;
-        
-        // Open modal
-        const modal = new bootstrap.Modal(document.getElementById('prisonerModal'));
-        modal.show();
-        
-        // Simulate AJAX delay
-        setTimeout(() => {
-            // This would be replaced with actual data from your backend
-            const mockData = {
-                id: prisonerId,
-                name: "John Doe",
-                age: 42,
-                crime: "Burglary",
-                sentence: "5 years",
-                releaseDate: "2023-06-15",
-                releaseReason: "Sentence Completed",
-                notes: "Prisoner has completed rehabilitation program successfully.",
-                image: "/path/to/image.jpg"
-            };
             
-            // Update modal content
-            modalContent.innerHTML = `
-                <div class="row">
-                    <div class="col-md-4 text-center">
-                        <div class="mb-3" style="width: 150px; height: 150px; background-color: #eee; border-radius: 50%; margin: 0 auto; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-user fa-3x text-muted"></i>
-                        </div>
-                        <h5>${mockData.name}</h5>
-                        <p class="text-muted">Prisoner ID: ${mockData.id}</p>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <p><strong>Age:</strong> ${mockData.age}</p>
-                                <p><strong>Crime:</strong> ${mockData.crime}</p>
-                            </div>
-                            <div class="col-6">
-                                <p><strong>Original Sentence:</strong> ${mockData.sentence}</p>
-                                <p><strong>Release Date:</strong> ${new Date(mockData.releaseDate).toLocaleDateString()}</p>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <h6>Release Details</h6>
-                            <p><strong>Reason:</strong> <span class="text-capitalize">${mockData.releaseReason.replace('_', ' ')}</span></p>
-                            <p><strong>Notes:</strong> ${mockData.notes}</p>
-                        </div>
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle me-2"></i> This prisoner has been successfully released from custody.
-                        </div>
-                    </div>
-                </div>
-            `;
-        }, 800);
-    }
+            <div class="pims-modal-body" id="pims-prisoner-details-content">
+                <div class="pims-spinner"></div>
+            </div>
+            
+            <div class="pims-modal-footer">
+                <button class="pims-btn pims-btn-secondary pims-modal-close-btn">Close</button>
+                <button class="pims-btn pims-btn-primary" onclick="pimsPrintReleaseDocument()">
+                    <i class="fas fa-print"></i> Print Release
+                </button>
+            </div>
+        </div>
+    </div>
 
-    // Print release document
-    function printReleaseDocument() {
-        console.log("Printing release document...");
-        // In a real app, this would open a print dialog with a formatted document
-        window.print();
-    }
-
-    // Initialize tooltips
-    document.addEventListener('DOMContentLoaded', function() {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-            return new bootstrap.Tooltip(tooltipTriggerEl);
+    <script>
+        // View prisoner details
+        function pimsViewPrisonerDetails(prisonerId) {
+            const modal = document.getElementById('pims-prisoner-modal');
+            const content = document.getElementById('pims-prisoner-details-content');
+            
+            // Show loading state
+            content.innerHTML = '<div class="pims-spinner"></div>';
+            
+            // Open modal
+            modal.classList.add('active');
+            
+            // Simulate AJAX call (replace with actual API call)
+            setTimeout(() => {
+                // Mock data - replace with actual data from your backend
+                const mockData = {
+                    id: prisonerId,
+                    firstName: "John",
+                    lastName: "Doe",
+                    age: 42,
+                    crime: "Burglary",
+                    sentence: "5 years",
+                    releaseDate: "2023-06-15",
+                    releaseReason: "Sentence Completed",
+                    notes: "Prisoner has completed rehabilitation program successfully.",
+                    image: "default-profile.png"
+                };
+                
+                // Update modal content
+                content.innerHTML = `
+                    <div class="pims-details-grid">
+                        <div style="text-align: center;">
+                            <div class="pims-inmate-image">
+                                <i class="fas fa-user fa-3x" style="color: var(--pims-secondary);"></i>
+                            </div>
+                            <h4 style="margin-top: 1rem;">${mockData.firstName} ${mockData.lastName}</h4>
+                            <p style="color: var(--pims-secondary);">Prisoner ID: ${mockData.id}</p>
+                        </div>
+                        
+                        <div>
+                            <div class="pims-detail-item">
+                                <strong>Age</strong>
+                                <span>${mockData.age}</span>
+                            </div>
+                            <div class="pims-detail-item">
+                                <strong>Crime</strong>
+                                <span>${mockData.crime}</span>
+                            </div>
+                            <div class="pims-detail-item">
+                                <strong>Original Sentence</strong>
+                                <span>${mockData.sentence}</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="pims-detail-item">
+                                <strong>Release Date</strong>
+                                <span>${new Date(mockData.releaseDate).toLocaleDateString()}</span>
+                            </div>
+                            <div class="pims-detail-item">
+                                <strong>Release Reason</strong>
+                                <span class="text-capitalize">${mockData.releaseReason.replace('_', ' ')}</span>
+                            </div>
+                            <div class="pims-detail-item">
+                                <strong>Notes</strong>
+                                <span>${mockData.notes}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pims-alert pims-alert-success" style="margin-top: 1.5rem;">
+                        <i class="fas fa-check-circle"></i>
+                        This prisoner has been successfully released from custody.
+                    </div>
+                `;
+            }, 800);
+        }
+        
+        // Print release document
+        function pimsPrintReleaseDocument() {
+            console.log("Printing release document...");
+            // In a real app, this would open a print dialog with a formatted document
+            window.print();
+        }
+        
+        // Initialize modal functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // View buttons
+            document.querySelectorAll('.pims-view-prisoner').forEach(button => {
+                button.addEventListener('click', function() {
+                    const prisonerId = this.getAttribute('data-id');
+                    pimsViewPrisonerDetails(prisonerId);
+                });
+            });
+            
+            // Close modal buttons
+            document.querySelectorAll('.pims-modal-close, .pims-modal-close-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    document.getElementById('pims-prisoner-modal').classList.remove('active');
+                });
+            });
+            
+            // Close when clicking outside modal
+            document.getElementById('pims-prisoner-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
         });
-    });
-</script>
+    </script>
+    
+    @include('includes.footer_js')
 </body>
-
 </html>
