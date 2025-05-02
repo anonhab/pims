@@ -58,7 +58,7 @@
                     <li class="pims-submenu-item">
                     </li>
                     <li class="pims-submenu-item">
-                        <a href="/view_requests" class="pims-submenu-link">View Requests</a>
+                        <a href="{{ route('commisioner.ExecuteRequests') }}"  class="pims-submenu-link">View Requests</a>
                     </li>
                 </ul>
             </li>
@@ -75,11 +75,11 @@
                     </span>
                 </a>
                 <ul class="pims-submenu">
-                    <li class="pims-submenu-item">
-                        <a href="/generate_report" class="pims-submenu-link">Release</a>
+                <li class="pims-submenu-item">
+                        <a href="{{ route('commisioner.release_prisoner') }}" class="pims-submenu-link">Release Prisoner</a>
                     </li>
                     <li class="pims-submenu-item">
-                        <a href="/view_reports" class="pims-submenu-link">View Releases</a>
+                        <a href="{{ route('commisioner.releasedprisoners') }}" class="pims-submenu-link">View Releases</a>
                     </li>
                 </ul>
             </li>

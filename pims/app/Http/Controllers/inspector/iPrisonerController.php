@@ -134,10 +134,18 @@ class iPrisonerController extends Controller
         return redirect()->back()->with('success', 'Assignment created successfully.');
     }
     public function show_all()
-    {
-        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+{
+    $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+    
+    if (session('role_id') == 8) {
         return view('police_officer.view_Prisoner', compact('prisoners'));
+    } elseif (session('role_id') == 5) {
+        return view('police_commisioner.view_prisoner', compact('prisoners'));
+    } else {
+        abort(403, 'Unauthorized action.');
     }
+}
+
     public function show_allforin()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);

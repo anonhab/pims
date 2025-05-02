@@ -71,6 +71,12 @@ Route::post('/requests/update-status/{id}', function ($id, Request $request) {
     return response()->json(['success' => false, 'message' => 'Invalid status or request not found.']);
 });
 Route::get('/cdashboard', [CommisinerControler::class, 'dashboard'])->name('commisioner.comissioner');
+Route::get('/release', [CommisinerControler::class, 'release_prisoner'])->name('commisioner.release_prisoner');
+Route::get('/releasedprisoners', [CommisinerControler::class, 'releasedprisoners'])->name('commisioner.releasedprisoners');
+Route::get('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])->name('commisioner.ExecuteRequests');
+Route::post('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])->name('requests.start');
+Route::post('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])->name('requests.execute.cancel');
+
 
 
 Route::get('/chart-data', [cAccountController::class, 'getChartData']);
@@ -149,7 +155,7 @@ Route::middleware('middleware')->group(function () {
 });
 Route::get('/prisoners', [iPrisonerController::class, 'show_all'])
     ->name('prisoner.showAll')
-    ->middleware('role:2,8');
+    ->middleware('role:2,8,5');
     Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:8');
     Route::delete('/rooms/{id}', [iPrisonerController::class, 'roomdestroy'])->name('rooms.destroy');
 
