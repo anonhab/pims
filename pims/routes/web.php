@@ -76,6 +76,11 @@ Route::get('/releasedprisoners', [CommisinerControler::class, 'releasedprisoners
 Route::get('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])->name('commisioner.ExecuteRequests');
 Route::post('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])->name('requests.start');
 Route::post('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])->name('requests.execute.cancel');
+Route::post('/releasePrisoner', [CommisinerControler::class, 'releasePrisoner'])->name('release_prisoner');
+Route::get('/prisonershow/{id}', [CommisinerControler::class, 'show']);
+Route::get('/evaluate', [CommisinerControler::class, 'showEvaluationForm'])->name('commisinerControler.evaluate_request');
+
+
 
 
 
@@ -128,9 +133,11 @@ Route::get('/lawyer', [iPrisonerController::class, 'lawyer'])->name('lawyer.add'
 Route::post('/lawyerstore', [iPrisonerController::class, 'lstore'])->name('lawyers.lstore');
 Route::put('/lawyers/{id}', [iPrisonerController::class, 'update'])->name('lawyers.update'); // Update lawyer
 Route::delete('/lawyers/{id}', [iPrisonerController::class, 'destroy'])->name('lawyers.destroy'); 
-
+Route::get('/policeofficer', [iPrisonerController::class, 'policeofficer'])->name('assign.policeofficer');
+ 
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
+Route::post('/policeassignments', [iPrisonerController::class, 'assignpolice'])->name('assign_officer');
 Route::get('/assignments', [iPrisonerController::class, 'asslawyer'])->name('assignments.view');
 Route::get('/addroom', [iPrisonerController::class, 'addroom'])->name('room.add')->middleware('role:2');
 Route::get('/showroom', [iPrisonerController::class, 'showroom'])->name('room.show')->middleware('role:2');
@@ -153,6 +160,10 @@ Route::middleware('middleware')->group(function () {
     Route::post('/requests/store', [myLawyerController::class, 'rstore'])->name('requests.store');
     Route::post('/appointments/store', [myLawyerController::class, 'astore'])->name('lawyer_appointments.store');
 });
+Route::post('/requestspstore', [myLawyerController::class, 'prstore'])->name('requestsfrompolice.store');
+
+Route::get('/createrequestpolice', [myLawyerController::class, 'createrequestpolice'])->name('createrequestpolice');
+Route::get('/viewrequestpolice', [myLawyerController::class, 'viewrequestpolice'])->name('viewrequestpolice');
 Route::get('/prisoners', [iPrisonerController::class, 'show_all'])
     ->name('prisoner.showAll')
     ->middleware('role:2,8,5');

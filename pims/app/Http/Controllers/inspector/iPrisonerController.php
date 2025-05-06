@@ -12,6 +12,7 @@ use App\Models\JobAssignment;
 use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use App\Models\LawyerPrisonerAssignment;
+use App\Models\PolicePrisonerAssignment;
 use App\Models\Lawyer;
 use App\Models\MedicalReport;
 use App\Models\Requests;
@@ -27,7 +28,16 @@ class iPrisonerController extends Controller
         return view('inspector.add_prisoner');
     }
 
-    public function idashboard()
+    public function policeofficer()
+    {
+        $officers=Account::all();
+        $prisoners=Prisoner::all();
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+        $lawyer = Lawyer::where('prison', session('prison_id'))->paginate(9);
+        $assignments = PolicePrisonerAssignment::where('prison_id', session('prison_id'))->paginate(9);
+        return view('inspector.assign_policeofficer',compact('officers','prisoners','assignments'));
+    }
+        public function idashboard()
 {
     // Example logic to fetch data — replace these with your actual logic
     $prisonerCount = Prisoner::count();
@@ -126,6 +136,20 @@ class iPrisonerController extends Controller
         LawyerPrisonerAssignment::create([
             'prisoner_id' => $request->prisoner_id,
             'lawyer_id' => $request->lawyer_id,
+            'prison_id' => $request->prison_id,
+            'assigned_by' => $request->assigned_by,
+            'assignment_date' => $request->assignment_date,
+        ]);
+
+        return redirect()->back()->with('success', 'Assignment created successfully.');
+    }
+    public function assignpolice(Request $request)
+    {
+
+
+        PolicePrisonerAssignment::create([
+            'prisoner_id' => $request->prisoner_id,
+            'officer_id' => $request->officer_id,
             'prison_id' => $request->prison_id,
             'assigned_by' => $request->assigned_by,
             'assignment_date' => $request->assignment_date,

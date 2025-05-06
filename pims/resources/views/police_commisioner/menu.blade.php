@@ -17,7 +17,7 @@
         <ul class="pims-menu-list">
             <!-- Dashboard -->
             <li class="pims-menu-item">
-                <a href="/dashboard" class="pims-menu-link">
+                <a href="/cdashboard" class="pims-menu-link">
                     <span class="pims-menu-icon">
                         <i class="fas fa-home"></i>
                     </span>
@@ -58,7 +58,7 @@
                     <li class="pims-submenu-item">
                     </li>
                     <li class="pims-submenu-item">
-                        <a href="{{ route('commisioner.ExecuteRequests') }}"  class="pims-submenu-link">View Requests</a>
+                        <a href="{{ route('commisinerControler.evaluate_request') }}"  class="pims-submenu-link">View Requests</a>
                     </li>
                 </ul>
             </li>

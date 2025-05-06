@@ -35,7 +35,6 @@
             line-height: 1.6;
         }
 
-        /* Main Layout */
         .pims-app-container {
             padding-top: 70px;
             display: flex;
@@ -54,7 +53,6 @@
             margin: 0 auto;
         }
 
-        /* Header Styles */
         .pims-page-header {
             display: flex;
             justify-content: space-between;
@@ -75,7 +73,6 @@
             color: var(--pims-accent);
         }
 
-        /* Card Styles */
         .pims-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -100,7 +97,6 @@
             padding: 1.5rem;
         }
 
-        /* Form Styles */
         .pims-form-group {
             margin-bottom: 1.5rem;
         }
@@ -130,6 +126,10 @@
             box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
+        .pims-form-select:invalid {
+            border-color: var(--pims-danger);
+        }
+
         .pims-form-check {
             display: flex;
             align-items: center;
@@ -141,13 +141,13 @@
             width: 1.25rem;
             height: 1.25rem;
             cursor: pointer;
+            accent-color: var(--pims-accent);
         }
 
         .pims-form-check-label {
             cursor: pointer;
         }
 
-        /* Button Styles */
         .pims-btn {
             display: inline-flex;
             align-items: center;
@@ -162,8 +162,9 @@
             gap: 0.5rem;
         }
 
-        .pims-btn i {
-            font-size: 0.9em;
+        .pims-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .pims-btn-primary {
@@ -171,7 +172,7 @@
             color: white;
         }
 
-        .pims-btn-primary:hover {
+        .pims-btn-primary:hover:not(:disabled) {
             background-color: #2980b9;
         }
 
@@ -180,7 +181,7 @@
             color: white;
         }
 
-        .pims-btn-secondary:hover {
+        .pims-btn-secondary:hover:not(:disabled) {
             background-color: #2c3e50;
         }
 
@@ -189,20 +190,10 @@
             color: white;
         }
 
-        .pims-btn-success:hover {
+        .pims-btn-success:hover:not(:disabled) {
             background-color: #27ae60;
         }
 
-        .pims-btn-danger {
-            background-color: var(--pims-danger);
-            color: white;
-        }
-
-        .pims-btn-danger:hover {
-            background-color: #c0392b;
-        }
-
-        /* Alert Messages */
         .pims-alert {
             padding: 1rem;
             margin-bottom: 1.5rem;
@@ -210,6 +201,7 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            animation: slideIn 0.3s ease;
         }
 
         .pims-alert-success {
@@ -224,30 +216,95 @@
             border-left: 4px solid var(--pims-danger);
         }
 
-        .pims-alert-warning {
-            background-color: rgba(243, 156, 18, 0.2);
-            color: var(--pims-warning);
-            border-left: 4px solid var(--pims-warning);
-        }
-
-        .pims-alert-info {
-            background-color: rgba(52, 152, 219, 0.2);
-            color: var(--pims-accent);
-            border-left: 4px solid var(--pims-accent);
-        }
-
         .pims-alert-hidden {
             display: none;
         }
 
-        /* Action Buttons */
         .pims-action-buttons {
             display: flex;
             justify-content: space-between;
             margin-top: 2rem;
+            gap: 1rem;
         }
 
-        /* Responsive Styles */
+        .pims-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .pims-modal.active {
+            display: flex;
+        }
+
+        .pims-modal-container {
+            background-color: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .pims-modal.active .pims-modal-container {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .pims-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pims-modal-header h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--pims-primary);
+        }
+
+        .pims-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--pims-secondary);
+        }
+
+        .pims-modal-body {
+            padding: 1.5rem;
+        }
+
+        .pims-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         @media (max-width: 992px) {
             .pims-main-content {
                 margin-left: 0;
@@ -260,7 +317,7 @@
                 flex-direction: column;
                 gap: 1rem;
             }
-            
+
             .pims-btn {
                 width: 100%;
             }
@@ -270,143 +327,186 @@
             .pims-card-body {
                 padding: 1rem;
             }
-            
+
             .pims-page-title {
                 font-size: 1.5rem;
+            }
+
+            .pims-modal-container {
+                width: 90%;
             }
         }
     </style>
 </head>
 <body>
     <div class="pims-app-container">
-        <!-- Navigation -->
         @include('includes.nav')
-        
-        <!-- Sidebar -->
         @include('police_commisioner.menu')
-        
         <main class="pims-main-content">
             <div class="pims-content-container">
-                <!-- Page Header -->
                 <div class="pims-page-header">
                     <h2 class="pims-page-title">
                         <i class="fas fa-user-check"></i> Release Prisoner
                     </h2>
                 </div>
-                
-                <!-- Main Card -->
-                <div class="pims-card">
-                    <div class="pims-card-header">
-                        <h5>Release Prisoners</h5>
-                    </div>
-                    
-                    <div class="pims-card-body">
-                        <!-- System Message -->
-                        <div id="pims-system-message" class="pims-alert pims-alert-hidden"></div>
-                        
-                        <!-- Prisoner Selection -->
-                        <div class="pims-form-group">
-                            <label for="pims-prisoner-select" class="pims-form-label">Select Prisoner</label>
-                            <select id="pims-prisoner-select" class="pims-form-select">
-                                <option value="">-- Select a Prisoner --</option>
-                                <option value="1">John Doe - #P102</option>
-                                <option value="2">Jane Smith - #P103</option>
-                                <option value="3">Ali Yusuf - #P104</option>
-                            </select>
+
+                <form id="release-prisoner-form" method="POST" action="{{ route('release_prisoner') }}">
+                    @csrf
+                    <input type="hidden" id="prisoner-id" name="prisoner_id">
+                    <input type="hidden" id="sentence-completed" name="sentence_completed">
+
+                    <div class="pims-card">
+                        <div class="pims-card-header">
+                            <h5>Release Prisoners</h5>
                         </div>
-                        
-                        <!-- Legal Requirements Checklist -->
-                        <div class="pims-form-group">
-                            <h6 style="margin-bottom: 1rem; font-weight: 500; color: var(--pims-primary);">Verify Legal Requirements</h6>
-                            
-                            <div class="pims-form-check">
-                                <input class="pims-form-check-input" type="checkbox" id="pims-sentence-completed">
-                                <label class="pims-form-check-label" for="pims-sentence-completed">Sentence Completed</label>
+                        <div class="pims-card-body">
+                            <div id="pims-system-message" class="pims-alert pims-alert-hidden"></div>
+
+                            <div class="pims-form-group">
+                                <label for="pims-prisoner-select" class="pims-form-label">Select Prisoner</label>
+                                <select id="pims-prisoner-select" class="pims-form-select" required aria-required="true">
+                                    <option value="">-- Select a Prisoner --</option>
+                                    @foreach($prisoners as $prisoner)
+                                    <option value="{{ $prisoner->id }}" data-sentence-end="{{ $prisoner->time_serve_end }}"
+                                        data-name="{{ $prisoner->first_name }} {{ $prisoner->middle_name }} {{ $prisoner->last_name }}">
+                                        {{ $prisoner->first_name }}
+                                        @if($prisoner->middle_name)
+                                        {{ $prisoner->middle_name }}
+                                        @endif
+                                        {{ $prisoner->last_name }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
-                            
-                            <div class="pims-form-check">
-                                <input class="pims-form-check-input" type="checkbox" id="pims-no-pending-cases">
-                                <label class="pims-form-check-label" for="pims-no-pending-cases">No Pending Legal Cases</label>
+
+                            <div class="pims-form-group">
+                                <h6 style="margin-bottom: 1rem; font-weight: 500; color: var(--pims-primary);">Verify Legal Requirements</h6>
+                                <div class="pims-form-check">
+                                    <input class="pims-form-check-input" type="checkbox" id="pims-sentence-completed" disabled aria-disabled="true">
+                                    <label class="pims-form-check-label" for="pims-sentence-completed">Sentence Completed</label>
+                                </div>
                             </div>
-                            
-                            <div class="pims-form-check">
-                                <input class="pims-form-check-input" type="checkbox" id="pims-behavior-approved">
-                                <label class="pims-form-check-label" for="pims-behavior-approved">Good Behavior Report Available</label>
+
+                            <div class="pims-action-buttons">
+                                <button type="button" class="pims-btn pims-btn-secondary" onclick="window.history.back()">
+                                    <i class="fas fa-arrow-left"></i> Cancel
+                                </button>
+                                <button type="button" class="pims-btn pims-btn-success" id="release-btn" disabled>
+                                    <i class="fas fa-check-circle"></i> Release Prisoner
+                                </button>
                             </div>
-                        </div>
-                        
-                        <!-- Action Buttons -->
-                        <div class="pims-action-buttons">
-                            <button class="pims-btn pims-btn-secondary" onclick="window.history.back()">
-                                <i class="fas fa-arrow-left"></i> Cancel
-                            </button>
-                            <button class="pims-btn pims-btn-success" onclick="pimsAttemptRelease()">
-                                <i class="fas fa-check-circle"></i> Release Prisoner
-                            </button>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </main>
     </div>
 
+    <div class="pims-modal" id="pims-confirm-modal">
+        <div class="pims-modal-container">
+            <div class="pims-modal-header">
+                <h5><i class="fas fa-exclamation-circle"></i> Confirm Release</h5>
+                <button class="pims-modal-close">×</button>
+            </div>
+            <div class="pims-modal-body">
+                <p>Are you sure you want to release <span id="confirm-prisoner-name"></span>? This action cannot be undone.</p>
+            </div>
+            <div class="pims-modal-footer">
+                <button class="pims-btn pims-btn-secondary pims-modal-close-btn">Cancel</button>
+                <button class="pims-btn pims-btn-success" id="confirm-release-btn">
+                    <i class="fas fa-check-circle"></i> Confirm Release
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function pimsAttemptRelease() {
-            const sentence = document.getElementById('pims-sentence-completed').checked;
-            const cases = document.getElementById('pims-no-pending-cases').checked;
-            const behavior = document.getElementById('pims-behavior-approved').checked;
-            const prisoner = document.getElementById('pims-prisoner-select').value;
-            const messageBox = document.getElementById('pims-system-message');
+        function showMessage(message, type = 'success') {
+            const messageDiv = document.getElementById('pims-system-message');
+            messageDiv.className = `pims-alert pims-alert-${type}`;
+            messageDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+            messageDiv.scrollIntoView({ behavior: 'smooth' });
+            setTimeout(() => {
+                messageDiv.className = 'pims-alert pims-alert-hidden';
+            }, 5000);
+        }
 
-            // Reset message box
-            messageBox.className = 'pims-alert pims-alert-hidden';
-            messageBox.innerHTML = '';
+        function setPrisonerId() {
+            const prisonerSelect = document.getElementById('pims-prisoner-select');
+            const selectedOption = prisonerSelect.options[prisonerSelect.selectedIndex];
+            const prisonerId = selectedOption.value;
+            const sentenceEndDate = selectedOption.getAttribute('data-sentence-end');
+            const prisonerName = selectedOption.getAttribute('data-name');
 
-            if (!prisoner) {
-                pimsShowMessage('Please select a prisoner.', 'danger');
-                return;
-            }
+            document.getElementById('prisoner-id').value = prisonerId;
+            document.getElementById('confirm-prisoner-name').textContent = prisonerName || 'the selected prisoner';
 
-            if (sentence && cases && behavior) {
-                // Simulate release success (in a real app, you would submit a form or use AJAX here)
-                pimsShowMessage('Prisoner released successfully and system updated.', 'success');
-                
-                // Reset form
-                document.getElementById('pims-prisoner-select').value = '';
-                document.getElementById('pims-sentence-completed').checked = false;
-                document.getElementById('pims-no-pending-cases').checked = false;
-                document.getElementById('pims-behavior-approved').checked = false;
+            const currentDate = new Date();
+            const endDate = new Date(sentenceEndDate);
+            const checkbox = document.getElementById('pims-sentence-completed');
+            const releaseBtn = document.getElementById('release-btn');
+
+            if (prisonerId && endDate <= currentDate) {
+                checkbox.checked = true;
+                checkbox.disabled = false;
+                document.getElementById('sentence-completed').value = 1;
+                releaseBtn.disabled = false;
+                showMessage('Prisoner is eligible for release.', 'success');
+            } else if (prisonerId) {
+                checkbox.checked = false;
+                checkbox.disabled = true;
+                document.getElementById('sentence-completed').value = 0;
+                releaseBtn.disabled = true;
+                showMessage('Prisoner is not yet eligible for release.', 'danger');
             } else {
-                // Ineligible for release
-                pimsShowMessage('Prisoner is not eligible for release. Please check all conditions.', 'warning');
+                checkbox.checked = false;
+                checkbox.disabled = true;
+                releaseBtn.disabled = true;
+                document.getElementById('sentence-completed').value = 0;
             }
         }
 
-        function pimsShowMessage(message, type) {
-            const box = document.getElementById('pims-system-message');
-            box.textContent = message;
-            box.className = `pims-alert pims-alert-${type}`;
-            
-            // Add appropriate icon
-            const icon = document.createElement('i');
-            switch(type) {
-                case 'success':
-                    icon.className = 'fas fa-check-circle';
-                    break;
-                case 'danger':
-                    icon.className = 'fas fa-exclamation-circle';
-                    break;
-                case 'warning':
-                    icon.className = 'fas fa-exclamation-triangle';
-                    break;
-                default:
-                    icon.className = 'fas fa-info-circle';
-            }
-            
-            box.prepend(icon);
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('release-prisoner-form');
+            const prisonerSelect = document.getElementById('pims-prisoner-select');
+            const releaseBtn = document.getElementById('release-btn');
+            const confirmModal = document.getElementById('pims-confirm-modal');
+            const confirmReleaseBtn = document.getElementById('confirm-release-btn');
+
+            prisonerSelect.addEventListener('change', setPrisonerId);
+
+            releaseBtn.addEventListener('click', () => {
+                if (!prisonerSelect.value) {
+                    showMessage('Please select a prisoner.', 'danger');
+                    return;
+                }
+                confirmModal.classList.add('active');
+            });
+
+            confirmReleaseBtn.addEventListener('click', () => {
+                form.submit();
+            });
+
+            document.querySelectorAll('.pims-modal-close, .pims-modal-close-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    confirmModal.classList.remove('active');
+                });
+            });
+
+            confirmModal.addEventListener('click', e => {
+                if (e.target === confirmModal) {
+                    confirmModal.classList.remove('active');
+                }
+            });
+
+            form.addEventListener('submit', (e) => {
+                if (!prisonerSelect.value) {
+                    e.preventDefault();
+                    showMessage('Please select a prisoner.', 'danger');
+                }
+            });
+        });
     </script>
-    
     @include('includes.footer_js')
 </body>
 </html>

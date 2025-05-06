@@ -24,6 +24,7 @@
                     <span class="pims-menu-text">Dashboard</span>
                 </a>
             </li>
+            
 
             <!-- Prisoner Management -->
             <li class="pims-menu-item pims-has-submenu">
@@ -68,6 +69,14 @@
                         <a href="{{ route('assignments.view') }}" class="pims-submenu-link">Assign Lawyer to Prisoner</a>
                     </li>
                 </ul>
+            </li>
+            <li class="pims-menu-item">
+                <a href="/policeofficer" class="pims-menu-link">
+                    <span class="pims-menu-icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                    <span class="pims-menu-text">Assign Police Officer</span>
+                </a>
             </li>
         </ul>
         

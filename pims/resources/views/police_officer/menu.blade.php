@@ -1,3 +1,8 @@
+</li>
+            @php
+    $userId = session('user_id');
+    $isAssigned = \App\Models\LawyerPrisonerAssignment::where('officer_id', $userId)->exists();
+@endphp
 @include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar">
     <!-- Sidebar Toggle Button (visible on mobile) -->
@@ -65,7 +70,31 @@
                         <a href="{{ route('room.assign') }}" class="pims-submenu-link">View allocations</a>
                     </li>
                 </ul>
+      
+
+            <!-- Conditionally Display Request Menu -->
+            @if($isAssigned)
+            <li class="pims-menu-item pims-has-submenu">
+                <a href="#" class="pims-menu-link">
+                    <span class="pims-menu-icon">
+                        <i class="fas fa-file-contract"></i> <!-- Better request icon -->
+                    </span>
+                    <span class="pims-menu-text">Request</span>
+                    <span class="pims-menu-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </span>
+                </a>
+                <ul class="pims-submenu">
+                    <li class="pims-submenu-item">
+                        <a href="{{ route('createrequestpolice')}}" class="pims-submenu-link">Create/Update Request</a>
+                    </li>
+                    <li class="pims-submenu-item">
+                        <a href="{{ route('viewrequestpolice') }}" class="pims-submenu-link">View Requests</a>
+                    </li>
+                </ul>
             </li>
+            @endif
+            
         </ul>
         
         <!-- Collapse Button (Desktop) -->

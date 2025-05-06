@@ -35,7 +35,6 @@
             line-height: 1.6;
         }
 
-        /* Main Layout */
         .pims-app-container {
             padding-top: 70px;
             display: flex;
@@ -54,7 +53,6 @@
             margin: 0 auto;
         }
 
-        /* Header Styles */
         .pims-page-header {
             display: flex;
             justify-content: space-between;
@@ -75,41 +73,27 @@
             color: var(--pims-accent);
         }
 
-        .pims-breadcrumb {
+        .pims-search-container {
             display: flex;
-            list-style: none;
-            padding: 0;
-            margin-bottom: 1rem;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pims-search-input {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--pims-border-radius);
             font-size: 0.9rem;
-        }
-
-        .pims-breadcrumb li {
-            display: flex;
-            align-items: center;
-        }
-
-        .pims-breadcrumb li:not(:last-child)::after {
-            content: '/';
-            margin: 0 0.5rem;
-            color: var(--pims-secondary);
-        }
-
-        .pims-breadcrumb a {
-            color: var(--pims-accent);
-            text-decoration: none;
+            width: 300px;
             transition: var(--pims-transition);
         }
 
-        .pims-breadcrumb a:hover {
-            color: var(--pims-primary);
+        .pims-search-input:focus {
+            outline: none;
+            border-color: var(--pims-accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
 
-        .pims-breadcrumb .pims-active {
-            color: var(--pims-primary);
-            font-weight: 500;
-        }
-
-        /* Card Styles */
         .pims-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -137,7 +121,6 @@
             padding: 1.5rem;
         }
 
-        /* Table Styles */
         .pims-table-container {
             overflow-x: auto;
         }
@@ -156,6 +139,9 @@
             font-weight: 500;
             text-align: left;
             padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
         }
 
         .pims-table td {
@@ -164,15 +150,10 @@
             vertical-align: middle;
         }
 
-        .pims-table tr:last-child td {
-            border-bottom: none;
-        }
-
         .pims-table tr:hover {
             background-color: rgba(52, 152, 219, 0.05);
         }
 
-        /* Status Badges */
         .pims-badge {
             display: inline-flex;
             align-items: center;
@@ -187,7 +168,6 @@
             color: var(--pims-success);
         }
 
-        /* Button Styles */
         .pims-btn {
             display: inline-flex;
             align-items: center;
@@ -200,10 +180,6 @@
             border: none;
             font-size: 0.9rem;
             gap: 0.5rem;
-        }
-
-        .pims-btn i {
-            font-size: 0.9em;
         }
 
         .pims-btn-primary {
@@ -224,21 +200,11 @@
             background-color: #2c3e50;
         }
 
-        .pims-btn-light {
-            background-color: var(--pims-light);
-            color: var(--pims-secondary);
-        }
-
-        .pims-btn-light:hover {
-            background-color: #dfe6e9;
-        }
-
         .pims-btn-sm {
             padding: 0.25rem 0.75rem;
             font-size: 0.8rem;
         }
 
-        /* Alert Styles */
         .pims-alert {
             padding: 1rem;
             margin-bottom: 1.5rem;
@@ -254,11 +220,6 @@
             border-left: 4px solid var(--pims-success);
         }
 
-        .pims-alert i {
-            font-size: 1.25rem;
-        }
-
-        /* Empty State */
         .pims-empty-state {
             text-align: center;
             padding: 2rem;
@@ -270,60 +231,6 @@
             margin-bottom: 1rem;
         }
 
-        .pims-empty-state h5 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: var(--pims-primary);
-        }
-
-        .pims-empty-state p {
-            color: var(--pims-secondary);
-        }
-
-        /* Pagination */
-        .pims-pagination {
-            display: flex;
-            justify-content: center;
-            margin-top: 2rem;
-        }
-
-        .pims-pagination-list {
-            display: flex;
-            list-style: none;
-            padding: 0;
-            gap: 0.5rem;
-        }
-
-        .pims-pagination-item {
-            display: flex;
-        }
-
-        .pims-pagination-link {
-            padding: 0.5rem 1rem;
-            border-radius: var(--pims-border-radius);
-            color: var(--pims-primary);
-            text-decoration: none;
-            transition: var(--pims-transition);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .pims-pagination-link:hover {
-            background-color: var(--pims-light);
-        }
-
-        .pims-pagination-link.active {
-            background-color: var(--pims-accent);
-            color: white;
-        }
-
-        .pims-pagination-link.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Modal Styles */
         .pims-modal {
             position: fixed;
             top: 0;
@@ -346,15 +253,17 @@
             border-radius: var(--pims-border-radius);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             max-height: 90vh;
             overflow-y: auto;
-            animation: modalFadeIn 0.3s ease;
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
         }
 
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .pims-modal.active .pims-modal-container {
+            transform: scale(1);
+            opacity: 1;
         }
 
         .pims-modal-header {
@@ -366,25 +275,17 @@
         }
 
         .pims-modal-header h5 {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 600;
             color: var(--pims-primary);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
         }
 
         .pims-modal-close {
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             cursor: pointer;
             color: var(--pims-secondary);
-            transition: var(--pims-transition);
-        }
-
-        .pims-modal-close:hover {
-            color: var(--pims-primary);
         }
 
         .pims-modal-body {
@@ -399,15 +300,14 @@
             gap: 0.75rem;
         }
 
-        /* Details Grid */
         .pims-details-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
         .pims-detail-item {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
         }
 
         .pims-detail-item strong {
@@ -419,23 +319,26 @@
 
         .pims-detail-item span {
             display: block;
-            padding: 0.5rem;
+            padding: 0.75rem;
             background-color: var(--pims-lighter);
             border-radius: var(--pims-border-radius);
+            word-break: break-word;
         }
 
-        .pims-inmate-image {
-            width: 150px;
-            height: 150px;
+        .pims-inmate-image img {
+            width: 180px;
+            height: 180px;
             object-fit: cover;
             border-radius: 50%;
-            margin: 0 auto;
-            display: block;
-            background-color: var(--pims-light);
-            padding: 1rem;
+            border: 4px solid var(--pims-light);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
 
-        /* Loading Spinner */
+        .pims-inmate-image img:hover {
+            transform: scale(1.05);
+        }
+
         .pims-spinner {
             width: 3rem;
             height: 3rem;
@@ -447,20 +350,19 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        /* Responsive Styles */
         @media (max-width: 992px) {
             .pims-main-content {
                 margin-left: 0;
                 padding: 1.5rem;
             }
-            
-            .pims-table th, 
-            .pims-table td {
-                padding: 0.75rem;
-                font-size: 0.9rem;
+
+            .pims-search-input {
+                width: 100%;
             }
         }
 
@@ -470,20 +372,14 @@
                 align-items: flex-start;
                 gap: 1rem;
             }
-            
-            .pims-card-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
+
             .pims-table th:nth-child(4),
             .pims-table td:nth-child(4),
             .pims-table th:nth-child(5),
             .pims-table td:nth-child(5) {
                 display: none;
             }
-            
+
             .pims-details-grid {
                 grid-template-columns: 1fr;
             }
@@ -491,59 +387,50 @@
 
         @media (max-width: 576px) {
             .pims-table th:nth-child(3),
-            .pims-table td:nth-child(3),
-            .pims-table th:nth-child(6),
-            .pims-table td:nth-child(6) {
+            .pims-table td:nth-child(3) {
                 display: none;
             }
-            
-            .pims-modal-container {
-                width: 95%;
-                max-height: 85vh;
+
+            .pims-inmate-image img {
+                width: 150px;
+                height: 150px;
             }
         }
     </style>
 </head>
 <body>
     <div class="pims-app-container">
-        <!-- Navigation -->
         @include('includes.nav')
-        
-        <!-- Sidebar -->
         @include('police_commisioner.menu')
-        
         <main class="pims-main-content">
             <div class="pims-content-container">
-             
-                
-                <!-- Page Header -->
                 <div class="pims-page-header">
                     <h2 class="pims-page-title">
                         <i class="fas fa-user-check"></i> Released Prisoners Management
                     </h2>
                 </div>
-                
-                <!-- Main Card -->
+
+                <div class="pims-search-container">
+                    <input type="text" class="pims-search-input" id="pims-search" placeholder="Search by name or ID...">
+                    <button class="pims-btn pims-btn-primary" onclick="clearSearch()">
+                        <i class="fas fa-times"></i> Clear
+                    </button>
+                </div>
+
                 <div class="pims-card">
                     <div class="pims-card-header">
                         <h5>Released Prisoners Registry</h5>
-                        <button class="pims-btn pims-btn-light pims-btn-sm">
-                            <i class="fas fa-download"></i> Export
-                        </button>
                     </div>
-                    
                     <div class="pims-card-body">
-                        <!-- Success Message -->
                         @if(session('success'))
                         <div class="pims-alert pims-alert-success">
                             <i class="fas fa-check-circle"></i>
                             {{ session('success') }}
                         </div>
                         @endif
-                        
-                        <!-- Released Prisoners Table -->
+
                         <div class="pims-table-container">
-                            <table class="pims-table">
+                            <table class="pims-table" id="pims-prisoners-table">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -559,20 +446,18 @@
                                     @forelse($releasedPrisoners as $index => $prisoner)
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
-                                        <td>{{ $prisoner->first_name }} {{ $prisoner->last_name }}</td>
+                                        <td>{{ $prisoner->first_name }} {{ $prisoner->middle_name }} {{ $prisoner->last_name }}</td>
                                         <td>{{ $prisoner->id }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($prisoner->release_date)->format('M d, Y') }}</td>
-                                        <td>
-                                            <span class="text-capitalize">{{ str_replace('_', ' ', $prisoner->release_reason) }}</span>
-                                        </td>
+                                        <td>{{ \Carbon\Carbon::parse($prisoner->time_serve_end)->format('M d, Y') }}</td>
+                                        <td class="text-capitalize">{{ $prisoner->crime_committed }}</td>
                                         <td>
                                             <span class="pims-badge pims-badge-success">
-                                                <i class="fas fa-check-circle"></i> Released
+                                                <i class="fas fa-check-circle"></i> {{ ucfirst($prisoner->status) }}
                                             </span>
                                         </td>
                                         <td>
-                                            <button class="pims-btn pims-btn-outline pims-btn-sm pims-view-prisoner" 
-                                                    data-id="{{ $prisoner->id }}">
+                                            <button class="pims-btn pims-btn-primary pims-btn-sm pims-view-prisoner"
+                                                data-id="{{ $prisoner->id }}">
                                                 <i class="fas fa-eye"></i> View
                                             </button>
                                         </td>
@@ -591,8 +476,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
-                        <!-- Pagination -->
+
                         @if($releasedPrisoners->hasPages())
                         <div class="pims-pagination">
                             <ul class="pims-pagination-list">
@@ -609,16 +493,16 @@
                                     </a>
                                 </li>
                                 @endif
-                                
+
                                 @foreach(range(1, $releasedPrisoners->lastPage()) as $i)
                                 <li class="pims-pagination-item">
-                                    <a href="{{ $releasedPrisoners->url($i) }}" 
-                                       class="pims-pagination-link {{ $releasedPrisoners->currentPage() == $i ? 'active' : '' }}">
+                                    <a href="{{ $releasedPrisoners->url($i) }}"
+                                        class="pims-pagination-link {{ $releasedPrisoners->currentPage() == $i ? 'active' : '' }}">
                                         {{ $i }}
                                     </a>
                                 </li>
                                 @endforeach
-                                
+
                                 @if($releasedPrisoners->hasMorePages())
                                 <li class="pims-pagination-item">
                                     <a href="{{ $releasedPrisoners->nextPageUrl() }}" class="pims-pagination-link">
@@ -640,19 +524,16 @@
             </div>
         </main>
     </div>
-    
-    <!-- Prisoner Details Modal -->
+
     <div class="pims-modal" id="pims-prisoner-modal">
         <div class="pims-modal-container">
             <div class="pims-modal-header">
                 <h5><i class="fas fa-user"></i> Prisoner Release Details</h5>
-                <button class="pims-modal-close">&times;</button>
+                <button class="pims-modal-close">×</button>
             </div>
-            
             <div class="pims-modal-body" id="pims-prisoner-details-content">
                 <div class="pims-spinner"></div>
             </div>
-            
             <div class="pims-modal-footer">
                 <button class="pims-btn pims-btn-secondary pims-modal-close-btn">Close</button>
                 <button class="pims-btn pims-btn-primary" onclick="pimsPrintReleaseDocument()">
@@ -663,116 +544,167 @@
     </div>
 
     <script>
-        // View prisoner details
-        function pimsViewPrisonerDetails(prisonerId) {
+        // Enhanced view prisoner details
+        async function pimsViewPrisonerDetails(prisonerId) {
             const modal = document.getElementById('pims-prisoner-modal');
             const content = document.getElementById('pims-prisoner-details-content');
-            
-            // Show loading state
+
             content.innerHTML = '<div class="pims-spinner"></div>';
-            
-            // Open modal
             modal.classList.add('active');
-            
-            // Simulate AJAX call (replace with actual API call)
-            setTimeout(() => {
-                // Mock data - replace with actual data from your backend
-                const mockData = {
-                    id: prisonerId,
-                    firstName: "John",
-                    lastName: "Doe",
-                    age: 42,
-                    crime: "Burglary",
-                    sentence: "5 years",
-                    releaseDate: "2023-06-15",
-                    releaseReason: "Sentence Completed",
-                    notes: "Prisoner has completed rehabilitation program successfully.",
-                    image: "default-profile.png"
-                };
-                
-                // Update modal content
+
+            try {
+                const response = await fetch(`/prisonershow/${prisonerId}`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+
+                const releaseStatus = data.status?.replace('_', ' ') || 'N/A';
+                const maritalStatus = data.marital_status?.replace('_', ' ') || 'N/A';
+                const crimeCommitted = data.crime_committed || 'N/A';
+                const timeServeStart = data.time_serve_start ? new Date(data.time_serve_start).toLocaleDateString() : 'N/A';
+                const timeServeEnd = data.time_serve_end ? new Date(data.time_serve_end).toLocaleDateString() : 'N/A';
+                const address = data.address?.replace(/\r\n/g, ', ') || 'N/A';
+                const emergencyContact = data.emergency_contact_name 
+                    ? `${data.emergency_contact_name} (${data.emergency_contact_relation}) - ${data.emergency_contact_number}` 
+                    : 'N/A';
+                const inmateImagePath = data.inmate_image ? `/storage/${data.inmate_image}` : '/images/default-profile.png';
+
                 content.innerHTML = `
                     <div class="pims-details-grid">
                         <div style="text-align: center;">
                             <div class="pims-inmate-image">
-                                <i class="fas fa-user fa-3x" style="color: var(--pims-secondary);"></i>
+                                <img src="${inmateImagePath}" alt="Inmate Image" onerror="this.src='/images/default-profile.png'">
                             </div>
-                            <h4 style="margin-top: 1rem;">${mockData.firstName} ${mockData.lastName}</h4>
-                            <p style="color: var(--pims-secondary);">Prisoner ID: ${mockData.id}</p>
+                            <h4 style="margin-top: 1rem;">${data.first_name || ''} ${data.last_name || ''}</h4>
+                            <p style="color: var(--pims-secondary);">Prisoner ID: ${data.id || 'N/A'}</p>
                         </div>
-                        
                         <div>
                             <div class="pims-detail-item">
                                 <strong>Age</strong>
-                                <span>${mockData.age}</span>
+                                <span>${calculateAge(data.dob)}</span>
                             </div>
                             <div class="pims-detail-item">
-                                <strong>Crime</strong>
-                                <span>${mockData.crime}</span>
+                                <strong>Crime Committed</strong>
+                                <span>${crimeCommitted}</span>
                             </div>
                             <div class="pims-detail-item">
                                 <strong>Original Sentence</strong>
-                                <span>${mockData.sentence}</span>
+                                <span>${timeServeStart} to ${timeServeEnd}</span>
+                            </div>
+                            <div class="pims-detail-item">
+                                <strong>Gender</strong>
+                                <span>${data.gender || 'N/A'}</span>
                             </div>
                         </div>
-                        
                         <div>
                             <div class="pims-detail-item">
-                                <strong>Release Date</strong>
-                                <span>${new Date(mockData.releaseDate).toLocaleDateString()}</span>
+                                <strong>Status</strong>
+                                <span class="text-capitalize">${releaseStatus}</span>
                             </div>
                             <div class="pims-detail-item">
-                                <strong>Release Reason</strong>
-                                <span class="text-capitalize">${mockData.releaseReason.replace('_', ' ')}</span>
+                                <strong>Marital Status</strong>
+                                <span class="text-capitalize">${maritalStatus}</span>
                             </div>
                             <div class="pims-detail-item">
-                                <strong>Notes</strong>
-                                <span>${mockData.notes}</span>
+                                <strong>Address</strong>
+                                <span>${address}</span>
+                            </div>
+                            <div class="pims-detail-item">
+                                <strong>Emergency Contact</strong>
+                                <span>${emergencyContact}</span>
                             </div>
                         </div>
                     </div>
-                    
                     <div class="pims-alert pims-alert-success" style="margin-top: 1.5rem;">
                         <i class="fas fa-check-circle"></i>
                         This prisoner has been successfully released from custody.
                     </div>
                 `;
-            }, 800);
+            } catch (error) {
+                console.error('Error loading prisoner details:', error);
+                content.innerHTML = `
+                    <div class="pims-alert pims-alert-danger">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Error loading prisoner details. Please try again later.
+                    </div>
+                `;
+            }
         }
-        
-        // Print release document
+
+        function calculateAge(dob) {
+            if (!dob) return 'N/A';
+            const birthDate = new Date(dob);
+            const ageDifMs = Date.now() - birthDate.getTime();
+            const ageDate = new Date(ageDifMs);
+            return Math.abs(ageDate.getUTCFullYear() - 1970);
+        }
+
         function pimsPrintReleaseDocument() {
-            console.log("Printing release document...");
-            // In a real app, this would open a print dialog with a formatted document
-            window.print();
+            const printContent = document.getElementById('pims-prisoner-details-content').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Prisoner Release Document</title>
+                        <style>
+                            body { font-family: 'Poppins', sans-serif; padding: 2rem; }
+                            .pims-details-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; }
+                            .pims-detail-item { margin-bottom: 1rem; }
+                            .pims-detail-item strong { display: block; margin-bottom: 0.25rem; }
+                            .pims-detail-item span { display: block; padding: 0.75rem; background: #f8f9fa; border-radius: 8px; }
+                            .pims-inmate-image img { width: 180px; height: 180px; border-radius: 50%; }
+                            .pims-alert { padding: 1rem; background: rgba(46, 204, 113, 0.2); border-radius: 8px; }
+                        </style>
+                    </head>
+                    <body>
+                        <h2>Prisoner Release Document</h2>
+                        ${printContent}
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
         }
-        
-        // Initialize modal functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            // View buttons
+
+        function searchPrisoners() {
+            const searchTerm = document.getElementById('pims-search').value.toLowerCase();
+            const rows = document.querySelectorAll('#pims-prisoners-table tbody tr');
+
+            rows.forEach(row => {
+                const name = row.cells[1].textContent.toLowerCase();
+                const id = row.cells[2].textContent.toLowerCase();
+                row.style.display = (name.includes(searchTerm) || id.includes(searchTerm)) ? '' : 'none';
+            });
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('pims-search');
+            searchInput.value = '';
+            searchPrisoners();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
             document.querySelectorAll('.pims-view-prisoner').forEach(button => {
-                button.addEventListener('click', function() {
-                    const prisonerId = this.getAttribute('data-id');
+                button.addEventListener('click', () => {
+                    const prisonerId = button.getAttribute('data-id');
                     pimsViewPrisonerDetails(prisonerId);
                 });
             });
-            
-            // Close modal buttons
+
             document.querySelectorAll('.pims-modal-close, .pims-modal-close-btn').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', () => {
                     document.getElementById('pims-prisoner-modal').classList.remove('active');
                 });
             });
-            
-            // Close when clicking outside modal
-            document.getElementById('pims-prisoner-modal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    this.classList.remove('active');
+
+            document.getElementById('pims-prisoner-modal').addEventListener('click', e => {
+                if (e.target === e.currentTarget) {
+                    e.currentTarget.classList.remove('active');
                 }
             });
+
+            document.getElementById('pims-search').addEventListener('input', searchPrisoners);
         });
     </script>
-    
     @include('includes.footer_js')
 </body>
 </html>
