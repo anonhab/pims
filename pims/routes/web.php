@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\cadmin\cAccountController;
 use App\Http\Controllers\cadmin\RoleController;
@@ -25,6 +26,10 @@ use App\Http\Controllers\RequestController;
 use App\Http\Controllers\DisciplineOfficerController;
 use App\Http\Controllers\DashboardController;
 use App\Models\Prisoner;
+use App\Models\MedicalAppointment;
+use App\Models\LawyerAppointment;
+use App\Models\NewVisitingRequest;
+use App\Models\Visitor;
 
 Route::get('/allactor', function () {
     return view('dashboard');
@@ -41,17 +46,32 @@ Route::get('/', function () {
 Route::get('/roles', function () {
     return view('cadmin.add_roles');
 });
-;
+Route::get('/sdashboard', function () {
+    $pendingMedicalAppointments = MedicalAppointment::where('status', 'pending')->count();
+    $pendingLawyerAppointments = LawyerAppointment::where('status', 'pending')->count();
+    $pendingVisitorAppointments = NewVisitingRequest::where('status', 'pending')->count();
+    $totalVisitors = Visitor::count();
+
+
+
+    return view('security_officer.dashboard', compact(
+        'pendingMedicalAppointments',
+        'pendingLawyerAppointments',
+        'pendingVisitorAppointments',
+        'totalVisitors'
+
+    ));
+});
 Route::get('/notifications', function () {
-    $userId = session('user_id'); 
+    $userId = session('user_id');
     $prisonId = session('prison_id'); // Assuming prison_id is stored in session
 
     $notifications = Notification::where('account_id', $userId)
         ->where('prison_id', $prisonId) // Filtering by prison_id
-        ->where('status', 'unread') 
+        ->where('status', 'unread')
         ->orderBy('created_at', 'desc')
         ->get();
-        
+
     return response()->json($notifications);
 });
 
@@ -63,9 +83,9 @@ Route::post('/notifications/read/{id}', function ($id) {
     return response()->json(['success' => true]);
 });
 Route::post('/requests/update-status/{id}', function ($id, Request $request) {
-    $requestItem = Requests::find($id); 
+    $requestItem = Requests::find($id);
     if ($requestItem && in_array($request->status, ['pending', 'approved', 'rejected'])) {
-        $requestItem->update(['status' => $request->status]); 
+        $requestItem->update(['status' => $request->status]);
         return response()->json(['success' => true, 'new_status' => $request->status]);
     }
     return response()->json(['success' => false, 'message' => 'Invalid status or request not found.']);
@@ -108,6 +128,8 @@ Route::middleware('role:3')->group(function () {
     Route::get('/caddprison', [cAccountController::class, 'add_prison'])->name('add.prison');
     Route::get('/cviewprison', [cAccountController::class, 'view_prison'])->name('view.prison');
     Route::get('/generate', [cAccountController::class, 'generate'])->name('cadmin.generate');
+    Route::get('/prisons', [cAccountController::class, 'getPrisons']);
+    Route::get('/reports', [cAccountController::class, 'generateReport']);
 });
 Route::resource('prisoners', iPrisonerController::class);
 Route::resource('accounts', cAccountController::class);
@@ -132,9 +154,9 @@ Route::get('/inspectorviewtrainingprograms', [iPrisonerController::class, 'viewT
 Route::get('/lawyer', [iPrisonerController::class, 'lawyer'])->name('lawyer.add')->middleware('role:2');
 Route::post('/lawyerstore', [iPrisonerController::class, 'lstore'])->name('lawyers.lstore');
 Route::put('/lawyers/{id}', [iPrisonerController::class, 'update'])->name('lawyers.update'); // Update lawyer
-Route::delete('/lawyers/{id}', [iPrisonerController::class, 'destroy'])->name('lawyers.destroy'); 
+Route::delete('/lawyers/{id}', [iPrisonerController::class, 'destroy'])->name('lawyers.destroy');
 Route::get('/policeofficer', [iPrisonerController::class, 'policeofficer'])->name('assign.policeofficer');
- 
+
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
 Route::post('/policeassignments', [iPrisonerController::class, 'assignpolice'])->name('assign_officer');
@@ -167,8 +189,8 @@ Route::get('/viewrequestpolice', [myLawyerController::class, 'viewrequestpolice'
 Route::get('/prisoners', [iPrisonerController::class, 'show_all'])
     ->name('prisoner.showAll')
     ->middleware('role:2,8,5');
-    Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:8');
-    Route::delete('/rooms/{id}', [iPrisonerController::class, 'roomdestroy'])->name('rooms.destroy');
+Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:8');
+Route::delete('/rooms/{id}', [iPrisonerController::class, 'roomdestroy'])->name('rooms.destroy');
 
 Route::put('/rooms/{id}', [iPrisonerController::class, 'roomupdate'])->name('rooms.update');
 Route::get('/addroom', [iPrisonerController::class, 'addroom'])->name('room.add')->middleware('role:8');
@@ -218,7 +240,7 @@ Route::delete('training-programs/{id}', [TrainingController::class, 'destroy'])-
 Route::put('/jobs/update', [TrainingController::class, 'updatejob'])->name('jobs.update');
 
 
-Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest')->middleware('role:4');//visitor role id == 4
+Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest')->middleware('role:4'); //visitor role id == 4
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
 Route::get('/editVisitor/{id}', [SecurityController::class, 'editVisitor'])->name('security_officer.editVisitor');
@@ -236,7 +258,7 @@ Route::prefix('security_officer')->group(function () {
 
 
     // Visitor Management
-   
+
     Route::put('/updateVisitor/{id}', [SecurityController::class, 'updateVisitor'])->name('security_officer.updateVisitor');
     Route::delete('/deleteVisitor/{id}', [SecurityController::class, 'deleteVisitor'])->name('security_officer.deleteVisitor');
 
@@ -246,7 +268,6 @@ Route::prefix('security_officer')->group(function () {
     // Other Views
     Route::get('/viewappointments', [SecurityController::class, 'viewAppointments'])->name('security.viewAppointments');
     Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name('security.viewPrisoners');
-
 });
 Route::get('/viewprisonerstatus', [SecurityController::class, 'viewprisonerstatus'])->name('security.viewprisonerstatus');
 Route::post('/updateAppointmentStatus', [SecurityController::class, 'updateStatus'])->name('updateAppointmentStatus');

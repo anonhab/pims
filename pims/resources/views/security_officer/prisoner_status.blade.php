@@ -12,411 +12,424 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #f39c12;
-            --danger-color: #e74c3c;
-            --light-gray: #ecf0f1;
-            --dark-gray: #7f8c8d;
-        }
+/* General Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        /* Base Styles */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f7fa;
-            color: #333;
-        }
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f6f9;
+    color: #333;
+    line-height: 1.6;
+}
 
-        /* Layout */
-        .pims-app-container {
-            display: flex;
-            min-height: 100vh;
-        }
+/* App Container */
+.pims-app-container {
+    display: flex;
+    min-height: 100vh;
+    padding: 20px;
+}
 
-        .pims-report-container {
-            flex-grow: 1;
-            padding: 25px;
-            background-color: #f9f9f9;
-        }
+/* Sidebar Menu (Assuming included from security_officer.menu) */
+.pims-menu {
+    width: 250px;
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-right: 20px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-        .pims-report-title {
-            font-size: 2rem;
-            margin-bottom: 25px;
-            display: flex;
-            align-items: center;
-            color: var(--primary-color);
-        }
+.pims-menu a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
 
-        .pims-report-title i {
-            margin-right: 15px;
-            color: var(--secondary-color);
-        }
+.pims-menu a:hover {
+    background-color: #34495e;
+}
 
-        /* Enhanced Tabs Styling */
-        .pims-tabs {
-            display: flex;
-            margin-bottom: 25px;
-            border-bottom: 2px solid #ddd;
-            position: relative;
-        }
+/* Report Container */
+.pims-report-container {
+    flex: 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-        .pims-tablink {
-            background-color: transparent;
-            border: none;
-            border-bottom: 3px solid transparent;
-            padding: 12px 25px;
-            margin-right: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            font-weight: 600;
-            color: var(--dark-gray);
-            position: relative;
-            font-size: 1rem;
-        }
+.pims-report-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .pims-tablink i {
-            margin-right: 8px;
-            font-size: 1.1rem;
-        }
+/* Tabs */
+.pims-tabs {
+    display: flex;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px;
+}
 
-        .pims-tablink.active {
-            border-bottom-color: var(--secondary-color);
-            color: var(--primary-color);
-            background-color: rgba(52, 152, 219, 0.1);
-        }
+.pims-tablink {
+    background-color: #f8f9fa;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 4px 4px 0 0;
+    margin-right: 5px;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
-        .pims-tablink:hover:not(.active) {
-            background-color: rgba(52, 152, 219, 0.05);
-            color: var(--primary-color);
-        }
+.pims-tablink:hover {
+    background-color: #e9ecef;
+    color: #2c3e50;
+}
 
-        .pims-tablink.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
+.pims-tablink.active {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+}
 
-        /* Enhanced Cards Styling */
-        .pims-card-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
-        }
+/* Report Content */
+.pims-report-content {
+    display: none;
+}
 
-        .pims-appointment-card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: 1px solid #e0e0e0;
-        }
+.pims-report-content[style*="display: block"] {
+    display: block;
+}
 
-        .pims-appointment-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
+/* Card Grid */
+.pims-card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
 
-        .card-header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 15px;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-        }
+/* Appointment Card */
+.pims-appointment-card {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+}
 
-        .card-header i {
-            margin-right: 10px;
-            font-size: 1.3rem;
-        }
+.pims-appointment-card:hover {
+    transform: translateY(-5px);
+}
 
-        .card-body {
-            padding: 20px;
-        }
+.card-header {
+    background-color: #f8f9fa;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
 
-        .card-field {
-            display: flex;
-            margin-bottom: 12px;
-            align-items: flex-start;
-        }
+.card-header h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
 
-        .card-label {
-            font-weight: 600;
-            width: 120px;
-            color: var(--primary-color);
-        }
+.card-body {
+    padding: 15px;
+}
 
-        .card-value {
-            color: #555;
-            flex: 1;
-            word-break: break-word;
-        }
+.card-field {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
+}
 
-        .card-footer {
-            padding: 15px;
-            background-color: var(--light-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #e0e0e0;
-        }
+.card-label {
+    font-weight: 600;
+    color: #6c757d;
+    flex: 0 0 100px;
+}
 
-        /* Enhanced Status Badges */
-        .pims-status-badge {
-            display: inline-flex;
-            align-items: center;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
+.card-value {
+    flex: 1;
+    color: #333;
+    text-align: right;
+}
 
-        .pims-status-pending {
-            background-color: var(--warning-color);
-            color: #fff;
-        }
+.card-footer {
+    padding: 15px;
+    border-top: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .pims-status-approved {
-            background-color: var(--success-color);
-            color: white;
-        }
+/* Status Badges */
+.pims-status-badge {
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
 
-        .pims-status-rejected {
-            background-color: var(--danger-color);
-            color: white;
-        }
+.pims-status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+}
 
-        /* Enhanced Buttons */
-        .pims-btn {
-            padding: 8px 16px;
-            font-size: 0.9rem;
-            border-radius: 6px;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
+.pims-status-approved {
+    background-color: #d4edda;
+    color: #155724;
+}
 
-        .pims-btn-primary {
-            background-color: var(--secondary-color);
-            color: white;
-        }
+.pims-status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+}
 
-        .pims-btn-secondary {
-            background-color: var(--dark-gray);
-            color: white;
-        }
+/* Buttons */
+.pims-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
 
-        .pims-btn-danger {
-            background-color: var(--danger-color);
-            color: white;
-        }
+.pims-btn-small {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+}
 
-        .pims-btn-success {
-            background-color: var(--success-color);
-            color: white;
-        }
+.pims-btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
 
-        .pims-btn-small {
-            padding: 6px 12px;
-            font-size: 0.85rem;
-        }
+.pims-btn-primary:hover {
+    background-color: #0056b3;
+}
 
-        .pims-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+.pims-btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
 
-        /* Enhanced Modal Styling */
-        .pims-modal {
-            display: none;
-            position: fixed;
-            z-index: 1050;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            overflow: auto;
-            backdrop-filter: blur(3px);
-        }
+.pims-btn-secondary:hover {
+    background-color: #545b62;
+}
 
-        .pims-modal-content {
-            background-color: white;
-            margin: 5% auto;
-            padding: 30px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            animation: modalFadeIn 0.3s ease;
-        }
+.pims-btn-success {
+    background-color: #28a745;
+    color: #fff;
+}
 
-        @keyframes modalFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+.pims-btn-success:hover {
+    background-color: #218838;
+}
 
-        .pims-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
+/* Alerts */
+.alert {
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        .pims-modal-title {
-            margin: 0;
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
 
-        .pims-modal-close {
-            font-size: 1.8rem;
-            font-weight: bold;
-            color: var(--dark-gray);
-            cursor: pointer;
-            background: none;
-            border: none;
-            transition: color 0.2s;
-        }
+/* Modal Styles */
+.pims-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1050;
+    overflow: auto;
+}
 
-        .pims-modal-close:hover {
-            color: var(--danger-color);
-        }
+.pims-modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
 
-        .pims-form-group {
-            margin-bottom: 20px;
-        }
+.pims-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
 
-        .pims-form-label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 8px;
-            color: var(--primary-color);
-        }
+.pims-modal-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
 
-        .pims-form-control {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
+.pims-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.3s;
+}
 
-        .pims-form-control:focus {
-            border-color: var(--secondary-color);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-        }
+.pims-modal-close:hover {
+    color: #dc3545;
+}
 
-        textarea.pims-form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
+.pims-form-group {
+    margin-bottom: 15px;
+}
 
-        select.pims-form-control {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 12px;
-        }
+.pims-form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    display: block;
+    margin-bottom: 5px;
+}
 
-        /* Alert Styles */
-        .alert {
-            padding: 12px 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-        }
+.pims-form-control {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    color: #333;
+}
 
-        .alert-success {
-            background-color: rgba(39, 174, 96, 0.1);
-            color: var(--success-color);
-            border: 1px solid rgba(39, 174, 96, 0.2);
-        }
+.pims-form-control[readonly] {
+    background-color: #e9ecef;
+}
 
-        .alert-danger {
-            background-color: rgba(231, 76, 60, 0.1);
-            color: var(--danger-color);
-            border: 1px solid rgba(231, 76, 60, 0.2);
-        }
+.pims-form-control:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
 
-        /* Responsive Styling */
-        @media (max-width: 992px) {
-            .pims-card-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-        }
+textarea.pims-form-control {
+    resize: vertical;
+    min-height: 100px;
+}
 
-        @media (max-width: 768px) {
-            .pims-tabs {
-                flex-wrap: wrap;
-            }
-            
-            .pims-tablink {
-                padding: 10px 15px;
-                font-size: 0.95rem;
-                margin-bottom: 5px;
-            }
-            
-            .pims-card-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .pims-modal-content {
-                width: 95%;
-                margin: 15% auto;
-                padding: 20px;
-            }
+/* Bootstrap Modal Customization */
+.modal-content {
+    border-radius: 8px;
+}
 
-            .card-field {
-                flex-direction: column;
-                gap: 5px;
-            }
+.modal-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+}
 
-            .card-label {
-                width: 100%;
-            }
-        }
+.modal-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
 
-        @media (max-width: 576px) {
-            .pims-report-container {
-                padding: 15px;
-            }
+.modal-body {
+    padding: 20px;
+}
 
-            .pims-report-title {
-                font-size: 1.7rem;
-            }
+/* Responsive Design */
+@media (max-width: 992px) {
+    .pims-app-container {
+        flex-direction: column;
+    }
 
-            .card-footer {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
-            }
-        }
+    .pims-menu {
+        width: 100%;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+
+    .pims-tabs {
+        flex-direction: column;
+        border-bottom: none;
+    }
+
+    .pims-tablink {
+        border-radius: 4px;
+        margin-bottom: 5px;
+    }
+}
+
+@media (max-width: 576px) {
+    .pims-report-title {
+        font-size: 1.5rem;
+    }
+
+    .pims-appointment-card {
+        font-size: 0.9rem;
+    }
+
+    .card-field {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .card-label {
+        flex: none;
+    }
+
+    .card-value {
+        text-align: left;
+    }
+
+    .pims-modal-content {
+        margin: 20% auto;
+        width: 95%;
+    }
+}
     </style>
 </head>
 
@@ -458,7 +471,7 @@
                             <div class="card-field">
                                 <span class="card-label">Prisoner:</span>
                                 <span class="card-value">
-                                    {{ $appointment->prisoner->firstname }} {{ $appointment->prisoner->middlename }} {{ $appointment->prisoner->lastname }} ({{ $appointment->prisoner->id }})
+                                    {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->middle_name }} {{ $appointment->prisoner->last_name }} ({{ $appointment->prisoner->id }})
                                 </span>
                             </div>
                             <div class="card-field">
@@ -467,7 +480,7 @@
                             </div>
                             <div class="card-field">
                                 <span class="card-label">Doctor:</span>
-                                <span class="card-value">{{ $appointment->doctor->name }}</span>
+                                <span class="card-value">{{ $appointment->doctor->first_name }} {{ $appointment->doctor->last_name }}</span>
                             </div>
                             <div class="card-field">
                                 <span class="card-label">Reason:</span>
@@ -481,11 +494,7 @@
                                 <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
                                 {{ $appointment->status }}
                             </span>
-                            <button class="pims-btn pims-btn-small {{ $appointment->status == 'Pending' ? 'pims-btn-primary' : 'pims-btn-secondary' }}"
-                                onclick="openStatusModal('{{ $appointment->id }}', 'medical', '{{ $appointment->status }}')">
-                                <i class="fas fa-{{ $appointment->status == 'Pending' ? 'edit' : 'eye' }}"></i>
-                                {{ $appointment->status == 'Pending' ? 'Update' : 'View' }}
-                            </button>
+                            
                         </div>
                     </div>
                     @endforeach
@@ -511,7 +520,7 @@
                             <div class="card-field">
                                 <span class="card-label">Prisoner:</span>
                                 <span class="card-value">
-                                    {{ $appointment->prisoner->firstname }} {{ $appointment->prisoner->middlename }} {{ $appointment->prisoner->lastname }} ({{ $appointment->prisoner->id }})
+                                    {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->middle_name }} {{ $appointment->prisoner->last_name }} ({{ $appointment->prisoner->id }})
                                 </span>
                             </div>
                             <div class="card-field">
@@ -520,12 +529,9 @@
                             </div>
                             <div class="card-field">
                                 <span class="card-label">Lawyer:</span>
-                                <span class="card-value">{{ $appointment->lawyer->name }}</span>
+                                <span class="card-value">{{ $appointment->lawyer->first_name }} {{ $appointment->lawyer->last_name }} </span>
                             </div>
-                            <div class="card-field">
-                                <span class="card-label">Case Type:</span>
-                                <span class="card-value">{{ $appointment->case_type ?? 'Not specified' }}</span>
-                            </div>
+                            
                         </div>
                         <div class="card-footer">
                             <span class="pims-status-badge 
@@ -534,11 +540,7 @@
                                 <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
                                 {{ $appointment->status }}
                             </span>
-                            <button class="pims-btn pims-btn-small {{ $appointment->status == 'Pending' ? 'pims-btn-primary' : 'pims-btn-secondary' }}"
-                                onclick="openStatusModal('{{ $appointment->id }}', 'lawyer', '{{ $appointment->status }}')">
-                                <i class="fas fa-{{ $appointment->status == 'Pending' ? 'edit' : 'eye' }}"></i>
-                                {{ $appointment->status == 'Pending' ? 'Update' : 'View' }}
-                            </button>
+                           
                         </div>
                     </div>
                     @endforeach
@@ -659,12 +661,12 @@
         </div>
     </div>
 
-    <!-- Prisoner Verification Modal -->
-    <div id="prisonerModal" class="pims-modal">
+     <!-- Prisoner Verification Modal -->
+     <div id="prisonerModal" class="pims-modal">
         <div class="pims-modal-content">
             <div class="pims-modal-header">
                 <h3 class="pims-modal-title">Verify Prisoner Details</h3>
-                <button class="pims-modal-close" onclick="closeModal('prisonerModal')">&times;</button>
+                <button class="pims-modal-close" onclick="closeModal('prisonerModal')">×</button>
             </div>
             <div class="pims-form-group">
                 <label class="pims-form-label">First Name</label>
@@ -687,131 +689,162 @@
                     <i class="fas fa-check-circle"></i> Verify
                 </button>
             </div>
-
             <!-- View Prisoner Button (initially hidden) -->
             <div id="viewPrisonerBtn" class="mt-3 text-center" style="display: none;">
-                <a href="#" id="viewPrisonerLink" class="pims-btn pims-btn-success w-100">
+                <button class="pims-btn pims-btn-success w-100" id="viewPrisonerLink">
                     <i class="fas fa-eye"></i> View Prisoner Details
-                </a>
+                </button>
             </div>
         </div>
     </div>
-    <div id="prisonerDetailsModal" class="pims-modal" style="display:none;">
-    <div class="pims-modal-content">
-        <span class="close" onclick="closeModal('prisonerDetailsModal')">&times;</span>
-        <h3>Prisoner Details</h3>
-        <div id="prisonerDetailsBody">
-            <!-- Content populated by JS -->
+
+    <!-- Bootstrap Inmate Details Modal -->
+    <div class="modal fade" id="inmateModal" tabindex="-1" aria-labelledby="inmateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inmateModalLabel">Inmate Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="inmateDetails">
+                    <!-- JSON data will be populated here -->
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // Enhanced Tab Management with LocalStorage Persistence
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check for saved tab in localStorage
+        // Configurable base URL for API requests (adjust as needed)
+        const BASE_URL = ''; // e.g., '/api' or 'https://yourdomain.com/api'
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Tab Management with LocalStorage Persistence
             const savedTab = localStorage.getItem('activeAppointmentTab');
-            
-            // If there's a saved tab and it exists on the page, activate it
             if (savedTab && document.getElementById(savedTab)) {
                 openSavedTab(savedTab);
             } else {
-                // Default to first tab if no saved tab
                 const firstTab = document.querySelector('.pims-tablink');
-                if (firstTab) {
-                    firstTab.click();
-                }
+                if (firstTab) firstTab.click();
             }
-            
-            // Add event listeners for all tabs
+
             document.querySelectorAll('.pims-tablink').forEach(tab => {
-                tab.addEventListener('click', function() {
+                tab.addEventListener('click', function () {
                     const tabId = this.getAttribute('data-tab') || 
-                                 this.getAttribute('onclick').match(/'([^']+)'/)[1];
-                    localStorage.setItem('activeAppointmentTab', tabId);
+                                 this.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                    if (tabId) localStorage.setItem('activeAppointmentTab', tabId);
                 });
             });
+
+            // View Prisoner Button Event Listener
+            const viewPrisonerBtn = document.getElementById('viewPrisonerLink');
+            if (viewPrisonerBtn) {
+                viewPrisonerBtn.addEventListener('click', async function () {
+                    const prisonerId = document.getElementById('viewPrisonerBtn').dataset.id;
+                    console.log('View Prisoner clicked, ID:', prisonerId); // Debug
+                    if (!prisonerId) {
+                        alert('No prisoner ID found. Please verify the prisoner again.');
+                        return;
+                    }
+
+                    try {
+                        // Construct the endpoint URL (adjust '/inmate/' if needed)
+                        const endpoint = `${BASE_URL}/prisoners/${prisonerId}`;
+                        console.log('Fetching from:', endpoint); // Debug
+                        const res = await fetch(endpoint);
+                        if (!res.ok) {
+                            if (res.status === 404) {
+                                throw new Error(`Inmate with ID ${prisonerId} not found`);
+                            }
+                            throw new Error(`HTTP error! Status: ${res.status}`);
+                        }
+                        const data = await res.json();
+                        console.log('Fetched inmate data:', data); // Debug
+
+                        // Validate required fields
+                        if (!data.first_name || !data.last_name) {
+                            throw new Error('Incomplete inmate data received');
+                        }
+
+                        const details = `
+                            <img src="/storage/${data.inmate_image || 'default.jpg'}" alt="Inmate Image" class="img-thumbnail mb-3" width="150">
+                            <p><strong>Name:</strong> ${data.first_name} ${data.middle_name || ''} ${data.last_name}</p>
+                            <p><strong>DOB:</strong> ${data.dob || 'N/A'}</p>
+                            <p><strong>Gender:</strong> ${data.gender || 'N/A'}</p>
+                            <p><strong>Address:</strong> ${(data.address || 'N/A').replace(/\r\n/g, '<br>')}</p>
+                            <p><strong>Marital Status:</strong> ${data.marital_status || 'N/A'}</p>
+                            <p><strong>Crime:</strong> ${data.crime_committed || 'N/A'}</p>
+                            <p><strong>Status:</strong> ${data.status || 'N/A'}</p>
+                            <p><strong>Time Served:</strong> ${data.time_serve_start || 'N/A'} - ${data.time_serve_end || 'N/A'}</p>
+                            <hr>
+                            <p><strong>Emergency Contact:</strong> ${data.emergency_contact_name || 'N/A'} (${data.emergency_contact_relation || 'N/A'}) - ${data.emergency_contact_number || 'N/A'}</p>
+                            <p><strong>Prison Name:</strong> ${data.prison_name || 'N/A'}</p>
+                            <p><strong>Created:</strong> ${data.created_at || 'N/A'}</p>
+                            <p><strong>Updated:</strong> ${data.updated_at || 'N/A'}</p>
+                        `;
+                        document.getElementById('inmateDetails').innerHTML = details;
+
+                        // Close verification modal and show inmate modal
+                        closeModal('prisonerModal');
+                        const modal = new bootstrap.Modal(document.getElementById('inmateModal'), {
+                            backdrop: 'static',
+                            keyboard: true
+                        });
+                        modal.show();
+                    } catch (error) {
+                        console.error('Error fetching inmate data:', error);
+                        alert(`Failed to load inmate data: ${error.message}`);
+                    }
+                });
+            } else {
+                console.error('viewPrisonerLink element not found');
+            }
         });
 
         function openSavedTab(tabId) {
-            // Hide all tab contents
             document.querySelectorAll('.pims-report-content').forEach(content => {
                 content.style.display = 'none';
             });
-            
-            // Remove active class from all tabs
             document.querySelectorAll('.pims-tablink').forEach(tab => {
                 tab.classList.remove('active');
             });
-            
-            // Show the saved tab content
             const tabContent = document.getElementById(tabId);
-            if (tabContent) {
-                tabContent.style.display = 'block';
-            }
-            
-            // Activate the corresponding tab button
-            const tabButton = document.querySelector(`.pims-tablink[data-tab="${tabId}"], 
-                                                   .pims-tablink[onclick*="${tabId}"]`);
-            if (tabButton) {
-                tabButton.classList.add('active');
-            }
+            if (tabContent) tabContent.style.display = 'block';
+            const tabButton = document.querySelector(`.pims-tablink[data-tab="${tabId}"], .pims-tablink[onclick*="${tabId}"]`);
+            if (tabButton) tabButton.classList.add('active');
         }
 
-        // Tab switching function
         function openReportTab(evt, reportName) {
-            // Hide all report contents
             document.querySelectorAll('.pims-report-content').forEach(el => {
                 el.style.display = 'none';
             });
-            
-            // Remove active class from all tabs
             document.querySelectorAll('.pims-tablink').forEach(el => {
                 el.classList.remove('active');
             });
-            
-            // Show the selected report content
             const tabContent = document.getElementById(reportName);
             if (tabContent) {
                 tabContent.style.display = 'block';
-                // Smooth scroll to top of the content
                 tabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            
-            // Add active class to the clicked tab
-            if (evt && evt.currentTarget) {
-                evt.currentTarget.classList.add('active');
-            }
-            
-            // Store the active tab in localStorage
+            if (evt?.currentTarget) evt.currentTarget.classList.add('active');
             localStorage.setItem('activeAppointmentTab', reportName);
         }
 
-        // Modal Functions
         function openStatusModal(appointmentId, appointmentType, currentStatus) {
             document.getElementById('appointment_id').value = appointmentId;
             document.getElementById('appointment_type').value = appointmentType;
             document.getElementById('status').value = currentStatus.toLowerCase();
-            
-            // Reset notes field
             document.getElementById('notes').value = '';
-            
             showModal('statusModal');
         }
 
         function openPrisonerModal(firstName, middleName, lastName) {
-            document.getElementById('verifyFirstName').value = firstName;
-            document.getElementById('verifyMiddleName').value = middleName;
-            document.getElementById('verifyLastName').value = lastName;
-            
-            // Hide previous verification results
+            document.getElementById('verifyFirstName').value = firstName || '';
+            document.getElementById('verifyMiddleName').value = middleName || '';
+            document.getElementById('verifyLastName').value = lastName || '';
             document.getElementById('verificationResult').style.display = 'none';
             document.getElementById('viewPrisonerBtn').style.display = 'none';
-            
             showModal('prisonerModal');
         }
 
@@ -819,7 +852,7 @@
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.style.display = 'block';
-                document.body.style.overflow = 'hidden'; // Prevent scrolling
+                document.body.style.overflow = 'hidden';
             }
         }
 
@@ -827,38 +860,33 @@
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.style.display = 'none';
-                document.body.style.overflow = ''; // Restore scrolling
+                document.body.style.overflow = '';
             }
         }
 
-        // Close modal when clicking outside content
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (event.target.classList.contains('pims-modal')) {
                 closeModal(event.target.id);
             }
-        }
+        };
 
-        // Close modal with Escape key
-        document.addEventListener('keydown', function(event) {
+        document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 const openModal = document.querySelector('.pims-modal[style="display: block;"]');
-                if (openModal) {
-                    closeModal(openModal.id);
-                }
+                if (openModal) closeModal(openModal.id);
             }
         });
 
-        // Enhanced Prisoner Verification
         async function verifyPrisoner() {
             const firstName = document.getElementById('verifyFirstName').value.trim();
             const middleName = document.getElementById('verifyMiddleName').value.trim();
             const lastName = document.getElementById('verifyLastName').value.trim();
-            
+
             if (!firstName || !lastName) {
                 showVerificationResult('Please provide at least first and last name', false);
                 return;
             }
-            
+
             try {
                 const response = await fetch('/verify-prisoner', {
                     method: 'POST',
@@ -872,22 +900,21 @@
                         last_name: lastName
                     })
                 });
-                
+
                 const data = await response.json();
-                
-                if (data.success) {
-                    showVerificationResult(data.message, true);
-                    if (data.prisoner_id) {
-                        // Show view prisoner button with link
-                        const viewBtn = document.getElementById('viewPrisonerBtn');
-                        const viewLink = document.getElementById('viewPrisonerLink');
-                        viewLink.href = `/prisoners/${data.prisoner_id}`;
-                        viewBtn.style.display = 'block';
-                    }
+                console.log('Verification response:', data); // Debug
+
+                if (data.success && data.prisoner_id) {
+                    showVerificationResult(data.message || 'Prisoner verified successfully', true);
+                    const viewBtn = document.getElementById('viewPrisonerBtn');
+                    viewBtn.dataset.id = data.prisoner_id;
+                    viewBtn.style.display = 'block';
+                    console.log('View button shown with ID:', data.prisoner_id); // Debug
                 } else {
                     showVerificationResult(data.message || 'Verification failed', false);
                 }
             } catch (error) {
+                console.error('Verification error:', error);
                 showVerificationResult('Error verifying prisoner: ' + error.message, false);
             }
         }
@@ -897,24 +924,19 @@
             resultDiv.textContent = message;
             resultDiv.className = `alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
             resultDiv.style.display = 'block';
-            
-            // Scroll to the result
             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // Enhanced Form Submission with Fetch
-        document.getElementById('statusForm').addEventListener('submit', async function(e) {
+        document.getElementById('statusForm')?.addEventListener('submit', async function (e) {
             e.preventDefault();
-            
             const form = e.target;
             const formData = new FormData(form);
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalBtnText = submitBtn.innerHTML;
-            
-            // Show loading state
+
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            
+
             try {
                 const response = await fetch(form.action, {
                     method: 'POST',
@@ -924,15 +946,11 @@
                     },
                     body: formData
                 });
-                
+
                 const data = await response.json();
-                
                 if (data.success) {
-                    // Show success message
                     alert('Status updated successfully!');
-                    // Close modal
                     closeModal('statusModal');
-                    // Reload the page to see changes
                     window.location.reload();
                 } else {
                     alert(data.message || 'Failed to update status');
@@ -940,13 +958,10 @@
             } catch (error) {
                 alert('Error updating status: ' + error.message);
             } finally {
-                // Restore button state
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnText;
             }
         });
     </script>
-
-    @include('includes.footer_js')
 </body>
 </html>

@@ -134,18 +134,8 @@ public function updateStatus(Request $request)
 
             // Update status
             $appointment->status = $status;
-            
-            // Add notes if provided
-            if ($notes) {
-                if ($type === 'medical') {
-                    $appointment->doctor_notes = $notes;
-                } elseif ($type === 'lawyer') {
-                    $appointment->legal_notes = $notes;
-                } else {
-                    $appointment->admin_notes = $notes;
-                }
-            }
-
+            $appointment->note = $notes;
+           
             $appointment->save();
 
             

@@ -226,19 +226,19 @@
                 <div class="pims-stat-card" aria-labelledby="totalPrisonersLabel">
                     <i class="fas fa-users" aria-hidden="true"></i>
                     <h6 id="totalPrisonersLabel">Total Prisoners</h6>
-                    <div class="pims-stat-value" id="totalPrisoners">{{ $totalPrisoners }}</div>
+                    <div class="pims-stat-value" id="totalPrisoners">{{ $totalPrisoners ?? 5 }}</div>
                 </div>
 
                 <div class="pims-stat-card" aria-labelledby="releasedThisMonthLabel">
                     <i class="fas fa-user-check" aria-hidden="true"></i>
                     <h6 id="releasedThisMonthLabel">Released This Month</h6>
-                    <div class="pims-stat-value" id="releasedThisMonth">{{ $releasedThisMonth }}</div>
+                    <div class="pims-stat-value" id="releasedThisMonth">{{ $releasedThisMonth ?? 6 }}</div>
                 </div>
 
                 <div class="pims-stat-card" aria-labelledby="pendingRequestsLabel">
                     <i class="fas fa-paper-plane" aria-hidden="true"></i>
                     <h6 id="pendingRequestsLabel">Pending Requests</h6>
-                    <div class="pims-stat-value" id="pendingRequests">{{ $pendingRequests }}</div>
+                    <div class="pims-stat-value" id="pendingRequests">{{ $pendingRequests ?? 6 }}</div>
                 </div>
             </div>
 
