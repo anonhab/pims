@@ -130,9 +130,14 @@ Route::middleware('role:3')->group(function () {
     Route::get('/generate', [cAccountController::class, 'generate'])->name('cadmin.generate');
     Route::get('/prisons', [cAccountController::class, 'getPrisons']);
     Route::get('/reports', [cAccountController::class, 'generateReport']);
+    Route::post('/reports/store', [cAccountController::class, 'storeReport'])->name('reports.store');
+    Route::get('/view_reports', [cAccountController::class, 'viewReports'])->name('cadmin.view_reports');
+    Route::post('/initiate_backup', [cAccountController::class, 'initiateBackup'])->name('initiate_backup');
+    Route::get('/view_backup_recovery_logs', [cAccountController::class, 'viewBackupLogs'])->name('view_backup_recovery_logs');
 });
 Route::resource('prisoners', iPrisonerController::class);
 Route::resource('accounts', cAccountController::class);
+
 Route::put('/saccount/update/{id}', [sAccountController::class, 'update'])->name('saccount.update');
 Route::delete('/saccount/delete/{id}', [sAccountController::class, 'destroy'])->name('saccount.destroy');
 Route::put('/caccount/update/{id}', [cAccountController::class, 'update'])->name('caccount.update');

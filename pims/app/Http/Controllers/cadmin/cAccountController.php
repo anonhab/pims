@@ -5,20 +5,23 @@ namespace App\Http\Controllers\cadmin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Account;
+use App\Models\Backup;
 use App\Models\Prison;
 use App\Models\Requests;
 use App\Models\Prisoner;
 use App\Models\Role;
 use App\Models\Visitor;
+use App\Models\Report;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class cAccountController extends Controller
 {
-    // Show all accounts
+    // Existing methods from previous response
     public function getChartData()
     {
         $startDate = Carbon::now()->subDays(7);
@@ -194,7 +197,6 @@ class cAccountController extends Controller
         return redirect()->back()->with('success', 'User deleted successfully!');
     }
 
-    // Web route methods
     public function getPrisons()
     {
         try {
@@ -203,7 +205,7 @@ class cAccountController extends Controller
                 'name' => $prison->name,
                 'location' => $prison->location,
                 'capacity' => $prison->capacity,
-                'status' => 'Operational', // Hardcoded, adjust if status field exists
+                'status' => 'Operational',
             ]);
             Log::info('Fetched prisons', ['count' => $prisons->count()]);
             return response()->json($prisons);
@@ -238,14 +240,14 @@ class cAccountController extends Controller
                             'id' => $account->id,
                             'name' => $account->first_name . ' ' . $account->last_name,
                             'role' => $account->role ? $account->role->name : 'Unknown',
-                            'status' => 'Active', // Hardcoded, adjust if status field exists
+                            'status' => 'Active',
                             'prison' => $account->prison ? $account->prison->name : null,
                         ]),
                         'prisoners' => $prisoners->map(fn($prisoner) => [
                             'id' => $prisoner->id,
                             'name' => $prisoner->name,
                             'sentence' => $prisoner->sentence ?? 'Unknown',
-                            'status' => $prisoner->status ?? 'Incarcerated', // Adjust if status field exists
+                            'status' => $prisoner->status ?? 'Incarcerated',
                             'prison' => $prisoner->prison ? $prisoner->prison->name : null,
                         ]),
                     ]);
@@ -261,7 +263,7 @@ class cAccountController extends Controller
                             'id' => $account->id,
                             'name' => $account->first_name . ' ' . $account->last_name,
                             'role' => $account->role ? $account->role->name : 'Unknown',
-                            'status' => 'Active', // Hardcoded, adjust if status field exists
+                            'status' => 'Active',
                             'prison' => $account->prison ? $account->prison->name : null,
                         ])
                     );
@@ -275,10 +277,11 @@ class cAccountController extends Controller
                     return response()->json(
                         $prisoners->map(fn($prisoner) => [
                             'id' => $prisoner->id,
-                            'name' => $prisoner->first_name,
-'sentence' => ($prisoner->time_serve_start && $prisoner->time_serve_end)
-    ? Carbon::parse($prisoner->time_serve_start)->diff(Carbon::parse($prisoner->time_serve_end))->format('%y years, %m months')
-    : 'Unknown',                            'status' => $prisoner->status ?? 'Incarcerated', // Adjust if status field exists
+                            'name' => $prisoner->first_name . ' ' . $prisoner->middle_name . ' ' . $prisoner->last_name,
+                            'sentence' => ($prisoner->time_serve_start && $prisoner->time_serve_end)
+                                ? Carbon::parse($prisoner->time_serve_start)->diff(Carbon::parse($prisoner->time_serve_end))->format('%y years, %m months')
+                                : 'Unknown',
+                            'status' => $prisoner->status ?? 'Incarcerated',
                             'prison' => $prisoner->prison ? $prisoner->prison->name : null,
                         ])
                     );
@@ -294,7 +297,7 @@ class cAccountController extends Controller
                             'name' => $prison->name,
                             'location' => $prison->location,
                             'capacity' => $prison->capacity,
-                            'status' => 'Operational', // Hardcoded, adjust if status field exists
+                            'status' => 'Operational',
                         ])
                     );
 
@@ -304,6 +307,163 @@ class cAccountController extends Controller
         } catch (\Exception $e) {
             Log::error('Failed to generate report', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Failed to generate report'], 500);
+        }
+    }
+    public function initiateBackup(Request $request)
+    {
+        try {
+            Log::info('Backup process initiated by user.', [
+                'user_id' => session('user_id'),
+            ]);
+
+            // Create backup record (in_progress)
+            $backup = Backup::create([
+                'initiated_by' =>  session('user_id'),
+                'backup_status' => 'completed'
+            ]);
+
+            $backupFile = 'backup_' . date('Ymd_His') . '.sql';
+            $backupDir = storage_path('app/backups');
+            $backupPath = $backupDir . '/' . $backupFile;
+
+            if (!file_exists($backupDir)) {
+                mkdir($backupDir, 0755, true);
+                Log::info('Backup directory created.', ['path' => $backupDir]);
+            }
+
+            $db = config('database.connections.mysql');
+            $username = escapeshellarg($db['username'] ?? 'root');
+            $password = $db['password'] ?? '';
+            $host = escapeshellarg($db['host'] ?? '127.0.0.1');
+            $database = escapeshellarg($db['database'] ?? 'your_database_name');
+
+            // Handle empty password properly
+            $passwordPart = $password !== '' ? "-p" . escapeshellarg($password) : '';
+
+            $command = "mysqldump -u {$username} {$passwordPart} -h {$host} {$database} > {$backupPath}";
+            Log::info('Executing mysqldump command.', ['command' => $command]);
+
+            exec($command, $output, $returnVar);
+
+            if ($returnVar !== 0 || !file_exists($backupPath)) {
+                $backup->update(['backup_status' => 'failed']);
+                Log::error('mysqldump failed.', [
+                    'return_code' => $returnVar,
+                    'output' => $output
+                ]);
+                throw new \Exception('Backup failed. Please check mysqldump access and permissions.');
+            }
+
+            // Update backup status to completed
+            $backup->update(['backup_status' => 'completed']);
+
+            Log::info('Database backup file created successfully.', ['file' => $backupFile]);
+
+            $content = [
+                'title' => 'Database Backup',
+                'filename' => $backupFile,
+                'generated_date' => now()->toDateTimeString(),
+            ];
+
+            Log::info('Sending backup file for download.', ['file' => $backupFile]);
+
+            return response()->download($backupPath)->deleteFileAfterSend(true);
+        } catch (\Exception $e) {
+            if (isset($backup)) {
+                $backup->update(['backup_status' => 'failed']);
+            }
+            Log::error('Backup process failed.', [
+                'message' => $e->getMessage(),
+                'user_id' =>   session('user_id'),
+            ]);
+            return response()->json(['error' => 'Backup failed: ' . $e->getMessage()], 500);
+        }
+    }
+
+    public function viewBackupLogs()
+    {
+        try {
+            $backups = Backup::leftJoin('users', 'backups.initiated_by', '=', 'users.id')
+                ->select('backups.id', 'users.name as initiated_by', 'backups.backup_date', 'backups.backup_status')
+                ->orderBy('backups.backup_date', 'desc')
+                ->get();
+
+            return view('cadmin.view_backup_logs', compact('backups'));
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch backup logs: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Failed to load backup logs');
+        }
+    }
+
+    // New method to store report generation/export
+    public function storeReport(Request $request)
+    {
+        try {
+            $request->validate([
+                'report_type' => 'required|in:daily,monthly,annual,incident',
+                'content' => 'required|json',
+            ]);
+
+            $generatedBy = session('user_id');
+            $reportType = $request->report_type;
+            $content = $request->content;
+
+            // Check for duplicate report within 5 seconds
+            $recentReport = Report::where('generated_by', $generatedBy)
+                ->where('report_type', $reportType)
+                ->where('content', $content)
+                ->where('created_at', '>=', now()->subSeconds(5))
+                ->first();
+
+            if ($recentReport) {
+                Log::warning('Duplicate report detected, skipping storage', [
+                    'generated_by' => $generatedBy,
+                    'report_type' => $reportType,
+                    'content' => $content,
+                ]);
+                return response()->json(['success' => true, 'id' => $recentReport->id], 200);
+            }
+
+            $report = Report::create([
+                'generated_by' => $generatedBy,
+                'report_type' => $reportType,
+                'content' => $content,
+            ]);
+
+            Log::info('Report stored successfully', [
+                'id' => $report->id,
+                'generated_by' => $report->generated_by,
+                'report_type' => $report->report_type,
+            ]);
+
+            return response()->json(['success' => true, 'id' => $report->id], 201);
+        } catch (\Exception $e) {
+            Log::error('Failed to store report', ['error' => $e->getMessage()]);
+            return response()->json(['error' => 'Failed to store report'], 500);
+        }
+    }
+    public function viewReports()
+    {
+        try {
+            $reports = Report::with('user')->get()->map(function ($report) {
+                return [
+                    'id' => $report->id,
+                    'generated_by' => $report->user ? $report->user->first_name . ' ' . $report->user->last_name : ($report->generated_by ?? 'Unknown'),
+                    'report_type' => ucfirst($report->report_type),
+                    'created_at' => $report->created_at->format('M d, Y H:i:s'),
+                    'content' => $report->content, // JSON string, not decoded
+                ];
+            });
+
+            Log::info('Fetched reports for view', ['count' => $reports->count()]);
+
+            return view('cadmin.view_reports', compact('reports'));
+        } catch (\JsonException $e) {
+            Log::error('JSON encoding failed in viewReports', ['error' => $e->getMessage()]);
+            return view('cadmin.view_reports', ['reports' => []])->with('error', 'Failed to process report data.');
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch reports', ['error' => $e->getMessage()]);
+            return view('cadmin.view_reports', ['reports' => []])->with('error', 'Failed to load reports.');
         }
     }
 }

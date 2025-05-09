@@ -28,42 +28,41 @@ class CommisinerControler extends Controller
 
         return view('police_commisioner.release_form',compact('prisoners'));
     }
-    public function releasePrisoner(Request $request) {
-        // Get prisoner ID and sentence completed status from the request
+    public function releasePrisoner(Request $request)
+    {
+        // Retrieve prisoner ID and sentence completion status from the request
         $prisonerId = $request->input('prisoner_id');
         $sentenceCompleted = $request->input('sentence_completed');
-        
-        // Find the prisoner by ID
+    
+        // Attempt to find the prisoner by ID
         $prisoner = Prisoner::find($prisonerId);
     
-        // Check if prisoner exists
+        // Check if the prisoner exists
         if (!$prisoner) {
             return back()->with('error', 'Prisoner not found.');
         }
     
-        // Check if the sentence is completed (this will include a check for the sentence end date)
-        if ($sentenceCompleted) {
-            // Ensure the current date is greater than or equal to the sentence end date
-            $currentDate = now();
-            $timeServeEnd = $prisoner->time_serve_end;
+        // Check if the sentence completion checkbox is checked
+        if (!$sentenceCompleted) {
+            return back()->with('error', 'Please confirm that the sentence is completed.');
+        }
     
-            // If the sentence is complete, update the prisoner's status
-            if ($currentDate >= $timeServeEnd) {
-                // Update the prisoner's status to 'released'
-                $prisoner->status = 'released';
+        // Check if the current date is on or after the sentence end date
+        $currentDate = now();
+        $sentenceEndDate = $prisoner->time_serve_end;
     
-                // Save the updated prisoner record
-                $prisoner->save();
+        if ($currentDate >= $sentenceEndDate) {
+            // Update prisoner status to 'released' and set release date
+            $prisoner->status = 'released';
+            $prisoner->release_date = now();
+            $prisoner->save();
     
-                return back()->with('success', 'Prisoner released successfully.');
-            } else {
-                return back()->with('error', 'Sentence is not completed. Prisoner cannot be released.');
-            }
+            return back()->with('success', 'Prisoner released successfully.');
         } else {
-            // If the checkbox isn't checked, handle the error accordingly
-            return back()->with('error', 'Please check if the sentence is completed.');
+            return back()->with('error', 'Sentence is not yet completed. Prisoner cannot be released.');
         }
     }
+    
     public function show($id)
     {
         $prisoner = Prisoner::find($id);

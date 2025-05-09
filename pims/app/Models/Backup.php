@@ -17,17 +17,12 @@ class Backup extends Model
 
     protected $keyType = 'string';
 
-    protected $fillable = [
-        'id', 'initiated_by', 'backup_date', 'backup_status'
-    ];
+    protected $fillable = ['initiated_by', 'backup_status'];
 
-    protected $casts = [
-        'backup_date' => 'datetime',
-    ];
+      public function user()
+      {
+          return $this->belongsTo(Account::class, 'initiated_by');
+      }
 
-    // Relationship with Account (Initiated By)
-    public function initiatedBy()
-    {
-        return $this->belongsTo(Account::class, 'initiated_by', 'user_id');
-    }
+  
 }
