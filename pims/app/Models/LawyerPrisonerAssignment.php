@@ -9,7 +9,7 @@ class LawyerPrisonerAssignment extends Model
 {
     use HasFactory;
 
-    protected $table = 'police_prisoner_assignment';
+    protected $table = 'lawyer_prisoner_assignment';
     protected $primaryKey='assignment_id';
 
     protected $fillable = [

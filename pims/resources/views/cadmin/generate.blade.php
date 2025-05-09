@@ -436,9 +436,58 @@
   <script>
     const BASE_URL = 'http://127.0.0.1:8000/';
     const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const CURRENT_USER = "{{ session('user_name') ?? 'Unknown User' }}";
     let lastReportRequest = 0;
     const DEBOUNCE_MS = 1000; // 1 second debounce
 
+    // Backup functionality
+    async function initiateBackup() {
+        const btn = document.getElementById('initiateBackupBtn');
+        btn.disabled = true;
+
+        let percent = 0;
+        const progressInterval = setInterval(() => {
+            percent += Math.floor(Math.random() * 10) + 5; // simulate random progress
+            if (percent >= 100) {
+                percent = 100;
+                clearInterval(progressInterval);
+            }
+            btn.textContent = `Backing Up... (${CURRENT_USER}) ${percent}%`;
+        }, 300);
+
+        try {
+            const response = await fetch(`${BASE_URL}initiate_backup`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Backup failed');
+            }
+
+            const filename = response.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] || 'backup.sql';
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            alert('Backup downloaded: ' + filename);
+        } catch (error) {
+            console.error('Backup error:', error.message);
+            alert('Backup failed: ' + error.message);
+        } finally {
+            clearInterval(progressInterval);
+            btn.disabled = false;
+            btn.textContent = 'Initiate Backup';
+        }
+    }
+
+    // Report functionality
     function getReportTypeEnum(reportType) {
       const mapping = {
         all_accounts: 'daily',
@@ -566,7 +615,6 @@
             day: 'numeric'
           })
         };
- 
 
         switch (reportType) {
           case 'all_accounts':
@@ -825,6 +873,6 @@
     window.onload = () => {
       loadPrisonDropdown();
     };
-  </script>
+</script>
 </body>
 </html>

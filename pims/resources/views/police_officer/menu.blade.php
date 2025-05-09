@@ -1,7 +1,7 @@
 </li>
             @php
     $userId = session('user_id');
-    $isAssigned = \App\Models\LawyerPrisonerAssignment::where('officer_id', $userId)->exists();
+    $isAssigned = \App\Models\PolicePrisonerAssignment::where('officer_id', $userId)->exists();
 @endphp
 @include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar">

@@ -352,6 +352,7 @@
     </style>
 </head>
 
+
 <body>
     <!-- Navigation -->
     @include('includes.nav')
@@ -411,6 +412,9 @@
                                         </button>
                                         <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject" disabled>
                                             <i class="fas fa-times"></i> Reject
+                                        </button>
+                                        <button class="pims-btn pims-btn-primary pims-btn-action pims-btn-transfer" disabled>
+                                            <i class="fas fa-exchange-alt"></i> Transfer
                                         </button>
                                     </div>
                                 </div>
@@ -511,10 +515,11 @@
                 const card = textarea.closest('.pims-request-card');
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
+                const transferBtn = card.querySelector('.pims-btn-transfer');
                 
                 textarea.addEventListener('input', () => {
                     const evaluation = textarea.value.trim();
-                    approveBtn.disabled = rejectBtn.disabled = evaluation === '';
+                    approveBtn.disabled = rejectBtn.disabled = transferBtn.disabled = evaluation === '';
                 });
             });
             
@@ -620,11 +625,11 @@
                 });
             });
             
-            // Handle request approval/rejection
+            // Handle request approval/rejection/transfer
             document.querySelectorAll('.pims-request-card').forEach(card => {
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
-                const textarea = card.querySelector('.pims-evaluation-textarea');
+                const transferBtn = card.querySelector('.pims-btn-transfer');
                 
                 approveBtn.addEventListener('click', async () => {
                     await pimsHandleRequestAction(card, 'approve');
@@ -632,6 +637,10 @@
                 
                 rejectBtn.addEventListener('click', async () => {
                     await pimsHandleRequestAction(card, 'reject');
+                });
+                
+                transferBtn.addEventListener('click', async () => {
+                    await pimsHandleRequestAction(card, 'transfer');
                 });
             });
             
@@ -645,8 +654,8 @@
                     return;
                 }
                 
-                const actionVerb = action === 'approve' ? 'approved' : 'rejected';
-                const btnClass = action === 'approve' ? 'success' : 'danger';
+                const actionVerb = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : 'transferred';
+                const btnClass = action === 'approve' ? 'success' : action === 'reject' ? 'danger' : 'primary';
                 
                 try {
                     const response = await fetch(`/${action}-request/${requestId}`, {
@@ -673,13 +682,14 @@
                         card.style.opacity = '0.7';
                         card.querySelector('.pims-btn-approve').disabled = true;
                         card.querySelector('.pims-btn-reject').disabled = true;
+                        card.querySelector('.pims-btn-transfer').disabled = true;
                         card.querySelector('.pims-evaluation-textarea').readOnly = true;
                         
                         // Change button to show status
                         const buttonsDiv = card.querySelector('.d-flex');
                         buttonsDiv.innerHTML = `
-                            <span class="pims-status-badge pims-status-${action === 'approve' ? 'approved' : 'rejected'} p-2">
-                                <i class="fas fa-${action === 'approve' ? 'check' : 'times'} me-1"></i>
+                            <span class="pims-status-badge pims-status-${action} p-2">
+                                <i class="fas fa-${action === 'approve' ? 'check' : action === 'reject' ? 'times' : 'exchange-alt'} me-1"></i>
                                 Request ${actionVerb}
                             </span>
                         `;

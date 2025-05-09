@@ -131,8 +131,6 @@ class iPrisonerController extends Controller
     }
     public function assignlawyer(Request $request)
     {
-
-
         LawyerPrisonerAssignment::create([
             'prisoner_id' => $request->prisoner_id,
             'lawyer_id' => $request->lawyer_id,

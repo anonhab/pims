@@ -75,7 +75,7 @@ class CommisinerControler extends Controller
     }
     public function showEvaluationForm()
     {
-        $requests = ModelsRequest::where('status', 'pending')->get(); // Adjust query as needed
+        $requests = ModelsRequest::where('status', 'transferred')->get(); // Adjust query as needed
     
         return view('police_commisioner.evaluate_request', compact('requests'));
     }

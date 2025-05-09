@@ -363,7 +363,7 @@
             <div class="pims-card">
                 <div class="pims-card-header">
                     <h2 class="pims-card-title">
-                        <i class="fas fa-clipboard-list"></i> Pending Requests
+                        <i class="fas fa-clipboard-list"></i> Transferred  Requests
                     </h2>
                 </div>
                 <div class="pims-card-body">
@@ -420,8 +420,8 @@
                         <div class="pims-card">
                             <div class="pims-card-body text-center py-4">
                                 <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-accent);"></i>
-                                <h5 class="pims-card-title">No Pending Requests</h5>
-                                <p class="text-muted">There are currently no pending requests to evaluate.</p>
+                                <h5 class="pims-card-title">No Transferred Requests</h5>
+                                <p class="text-muted">There are currently no transferred requests to evaluate.</p>
                             </div>
                         </div>
                     @endif

@@ -100,10 +100,6 @@ Route::post('/releasePrisoner', [CommisinerControler::class, 'releasePrisoner'])
 Route::get('/prisonershow/{id}', [CommisinerControler::class, 'show']);
 Route::get('/evaluate', [CommisinerControler::class, 'showEvaluationForm'])->name('commisinerControler.evaluate_request');
 
-
-
-
-
 Route::get('/chart-data', [cAccountController::class, 'getChartData']);
 Route::get('/login', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
@@ -276,27 +272,10 @@ Route::prefix('security_officer')->group(function () {
 });
 Route::get('/viewprisonerstatus', [SecurityController::class, 'viewprisonerstatus'])->name('security.viewprisonerstatus');
 Route::post('/updateAppointmentStatus', [SecurityController::class, 'updateStatus'])->name('updateAppointmentStatus');
-
-
-
-//Route::post('/discipline_officer/requests/evaluate', [DisciplineOfficerController::class, 'evaluateRequest'])->name('discipline_officer.evaluate_request');
-Route::post('/discipline_officer/requests/evaluate', [DisciplineOfficerController::class, 'evaluate'])
-    ->name('discipline_officer.evaluate_request');
-
-Route::match(['get', 'post'], '/discipline_officer/requests/evaluate', [DisciplineOfficerController::class, 'showEvaluationForm'])->name('discipline_officer.evaluate_request');
-// To show the form to evaluate the request
-//Route::get('/discipline_officer/requests/evaluate/{request}', [DisciplineOfficerController::class, 'showEvaluationForm'])->name('discipline_officer.show_evaluation_form');
-
-// Disciplinary Actions Routes for Discipline Officer
-Route::get('discipline_officer/assign_penalty', [DisciplineOfficerController::class, 'assignPenalty'])->name('discipline_officer.assign_penalty');
-Route::get('discipline_officer/view_penalties', [DisciplineOfficerController::class, 'viewPenalties'])->name('discipline_officer.view_penalties');
-
-// Reports & Logs Routes for Discipline Officer
-Route::get('discipline_officer/generate_reports', [DisciplineOfficerController::class, 'generateReports'])->name('discipline_officer.generate_reports');
-Route::get('discipline_officer/view_logs', [DisciplineOfficerController::class, 'viewLogs'])->name('discipline_officer.view_logs');
-
+Route::get('/discipline_officer/requests/evaluate', [RequestController::class, 'showEvaluationForm'])->name('discipline_officer.evaluate_request');
 Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
 Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
+Route::post('/transfer-request/{id}', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
 Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
 Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');
