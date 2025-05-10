@@ -5,7 +5,7 @@
     <div class="pims-sidebar-toggle" id="pimsSidebarToggle">
         <i class="fas fa-bars"></i>
     </div>
-    
+
     <!-- Sidebar Logo/Brand -->
     <div class="pims-sidebar-brand">
         <i class="fas fa-user-lock pims-brand-icon"></i>
@@ -119,17 +119,17 @@
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="#" class="pims-submenu-link" id="initiateBackupBtn" onclick="initiateBackup()" >Initiate Backup</a>
+                        <a href="#" class="pims-submenu-link" id="initiateBackupBtn" onclick="initiateBackup()">Initiate Backup</a>
                     </li>
                     <li class="pims-menu-item">
-              <a href="/view_backup_recovery_logs" class="pims-menu-link">View Backup/Recovery Logs</a>
-          </li>
+                        <a href="/view_backup" class="pims-menu-link">View Backup/Recovery Logs</a>
+                    </li>
                 </ul>
             </li>
 
-            
+
         </ul>
-        
+
         <!-- Collapse Button (Desktop) -->
         <div class="pims-collapse-btn" id="pimsCollapseBtn">
             <i class="fas fa-chevron-left"></i>
@@ -410,16 +410,16 @@
                 // Only show preloader for actual navigation links
                 if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
                     // Don't prevent default if it's a submenu toggle
-                    if (!this.parentElement.classList.contains('pims-has-submenu') || 
+                    if (!this.parentElement.classList.contains('pims-has-submenu') ||
                         (window.innerWidth <= 1024 || document.getElementById('pimsSidebar').classList.contains('pims-collapsed'))) {
-                        
+
                         // Show preloader immediately
                         PimsPreloader.show();
-                        
+
                         // Add a small delay before navigation to ensure preloader shows
                         e.preventDefault();
                         const targetUrl = this.getAttribute('href');
-                        
+
                         setTimeout(() => {
                             window.location.href = targetUrl;
                         }, 50);
@@ -449,7 +449,7 @@
                 e.preventDefault();
                 const parent = this.parentElement;
                 parent.classList.toggle('active');
-                
+
                 // Close other open submenus at the same level
                 Array.from(parent.parentElement.children).forEach(item => {
                     if (item !== parent) {
@@ -475,9 +475,9 @@
     document.addEventListener('click', function(e) {
         const sidebar = document.getElementById('pimsSidebar');
         const toggleBtn = document.getElementById('pimsSidebarToggle');
-        
-        if (window.innerWidth <= 1024 && 
-            !sidebar.contains(e.target) && 
+
+        if (window.innerWidth <= 1024 &&
+            !sidebar.contains(e.target) &&
             e.target !== toggleBtn &&
             !toggleBtn.contains(e.target) &&
             sidebar.classList.contains('pims-active')) {

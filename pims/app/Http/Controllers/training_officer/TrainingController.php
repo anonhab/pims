@@ -3,21 +3,193 @@
 namespace App\Http\Controllers\training_officer;
 
 use App\Http\Controllers\Controller;
+use App\Models\CertificationRecord;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use App\Models\TrainingAssignment;
+use OwenIt\Auditing\Models\Audit;
 
 use App\Models\JobAssignment;
 
 class TrainingController extends Controller
 {
     // Show form to assign certifications
-    public function assignCertifications()
+   
+    /**
+     * Escape special characters for HTML.
+     *
+     * @param string|null $string
+     * @return string
+     */
+    protected function escapeHtml($string)
     {
-        return view('training_officer.assignCertifications');
+        return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
     }
 
+    public function assignCertifications()
+    {
+        $prisonId = session('prison_id');
+
+        $prisoners = Prisoner::where('prison_id', $prisonId)
+            ->where(function ($query) {
+                $query->whereHas('jobAssignments', function ($q) {
+                    $q->where('status', 'completed');
+                })->orWhereHas('trainingAssignments', function ($q) {
+                    $q->where('status', 'completed');
+                });
+            })
+            ->select('id', 'first_name', 'middle_name', 'last_name')
+            ->get();
+
+        $prisonerDetails = $prisoners->map(function ($prisoner) {
+            return [
+                'id' => $prisoner->id,
+                'first_name' => $prisoner->first_name,
+                'middle_name' => $prisoner->middle_name,
+                'last_name' => $prisoner->last_name,
+            ];
+        })->toArray();
+
+        return view('training_officer.assignCertifications', compact('prisonerDetails'));
+    }
+
+    public function getPrisonerDetails(Request $request)
+    {
+        $prisonerId = $request->input('prisoner_id');
+        $prisonId = session('prison_id');
+
+        if (!$prisonerId || !$prisonId) {
+            return response()->json(['error' => 'Invalid prisoner or prison ID'], 400);
+        }
+
+        $prisoner = Prisoner::where('id', $prisonerId)
+            ->where('prison_id', $prisonId)
+            ->with([
+                'jobAssignments' => function ($query) {
+                    $query->where('status', 'completed')
+                        ->select('id', 'prisoner_id', 'job_title', 'job_description', 'end_date');
+                },
+                'trainingAssignments' => function ($query) {
+                    $query->where('status', 'completed')
+                        ->select('id', 'prisoner_id', 'training_id', 'end_date');
+                },
+                'trainingAssignments.trainingProgram' => function ($query) {
+                    $query->select('id', 'title');
+                }
+            ])
+            ->select('id', 'first_name', 'middle_name', 'last_name')
+            ->first();
+
+        if (!$prisoner) {
+            return response()->json(['error' => 'Prisoner not found'], 404);
+        }
+
+        $details = [
+            'id' => $prisoner->id,
+            'full_name' => trim(implode(' ', array_filter([
+                $prisoner->first_name,
+                $prisoner->middle_name,
+                $prisoner->last_name
+            ]))),
+            'completed_jobs' => $prisoner->jobAssignments->map(function ($job) {
+                return [
+                    'job_title' => $job->job_title,
+                    'job_description' => $job->job_description ?? 'No description available',
+                    'completed_date' => $job->end_date->format('M d, Y'),
+                ];
+            })->toArray(),
+            'completed_trainings' => $prisoner->trainingAssignments->map(function ($training) {
+                return [
+                    'training_title' => optional($training->trainingProgram)->title ?? 'Unknown Training',
+                    'completed_date' => $training->end_date->format('M d, Y'),
+                ];
+            })->toArray()
+        ];
+
+        return response()->json($details);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'certification_type' => 'required|in:job_completion,training_program_completion',
+            'certification_details' => 'nullable|string|max:65535',
+            'issued_by' => 'required|exists:accounts,user_id',
+            'issued_date' => 'required|date',
+        ]);
+
+        $prisonId = session('prison_id');
+
+        $prisoner = Prisoner::where('id', $validated['prisoner_id'])
+            ->where('prison_id', $prisonId)
+            ->with([
+                'jobAssignments' => function ($query) {
+                    $query->where('status', 'completed')
+                        ->select('id', 'prisoner_id', 'job_title', 'job_description', 'end_date');
+                },
+                'trainingAssignments' => function ($query) {
+                    $query->where('status', 'completed')
+                        ->select('id', 'prisoner_id', 'training_id', 'end_date');
+                },
+                'trainingAssignments.trainingProgram' => function ($query) {
+                    $query->select('id', 'title');
+                }
+            ])
+            ->select('id', 'first_name', 'middle_name', 'last_name')
+            ->firstOrFail();
+
+        $certification = CertificationRecord::create([
+            'prisoner_id' => $validated['prisoner_id'],
+            'issued_by' => $validated['issued_by'],
+            'certification_type' => $validated['certification_type'],
+            'certification_details' => $validated['certification_details'],
+            'issued_date' => $validated['issued_date'],
+            'status' => 'issued',
+        ]);
+
+        $prisonerName = trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ])));
+
+        $data = [
+            'prisoner_name' => $this->escapeHtml($prisonerName),
+            'certification_type' => $validated['certification_type'] === 'job_completion' ? 'Job Completion' : 'Training Program Completion',
+            'certification_details' => $this->escapeHtml($validated['certification_details'] ?? 'No additional details provided.'),
+            'issued_by' => $this->escapeHtml(trim(session('first_name') . ' ' . session('last_name'))),
+            'issued_date' => \Carbon\Carbon::parse($certification->issued_date)->format('F d, Y'),
+            'completed_jobs' => $prisoner->jobAssignments->map(function ($job) {
+                return [
+                    'job_title' => $this->escapeHtml($job->job_title),
+                    'completed_date' => $job->end_date->format('M d, Y'),
+                ];
+            })->toArray(),
+            'completed_trainings' => $prisoner->trainingAssignments->map(function ($training) {
+                return [
+                    'training_title' => $this->escapeHtml(optional($training->trainingProgram)->title ?? 'Unknown Training'),
+                    'completed_date' => $training->end_date->format('M d, Y'),
+                ];
+            })->toArray(),
+            'today' => now()->format('F d, Y'),
+        ];
+
+        // Render HTML certificate view
+        return view('training_officer.certificate', $data);
+
+        // Optional: Generate PDF from HTML
+        /*
+        $pdf = Pdf::loadView('training_officer.certificate', $data);
+        return $pdf->download('certificate_' . $prisoner->id . '_' . now()->format('Ymd') . '.pdf');
+        */
+    }
+    public function dashboard()
+    {
+        return view('training_officer.dashboard');
+    }
     // Store the assigned certifications
     public function storeCertifications(Request $request)
     {
@@ -31,10 +203,10 @@ class TrainingController extends Controller
     public function assignJobs()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->get();
-    
+
         return view('training_officer.assignJobs', compact('prisoners'));
     }
-    
+
 
     public function assignJob(Request $request)
     {
@@ -43,24 +215,26 @@ class TrainingController extends Controller
             'prisoner_id' => 'required|exists:prisoners,id',
             'job_title' => 'required|string|max:100',
             'assigned_date' => 'required|date',
+            'end_date' => 'required|date',
             'status' => 'required|in:active,completed,terminated',
             'job_description' => 'nullable|string',
         ]);
-    
+
         // Create the job assignment record
         JobAssignment::create([
             'prisoner_id' => $validated['prisoner_id'],
             'assigned_by' => session('user_id'),
             'job_title' => $validated['job_title'],
             'assigned_date' => $validated['assigned_date'],
+            'end_date' => $validated['end_date'],
             'status' => $validated['status'],
             'job_description' => $validated['job_description'] ?? null,
         ]);
-    
+
         // Redirect back with success message
         return redirect()->back()->with('success', 'Job assigned successfully.');
     }
-    
+
     // Store the assigned jobs
     public function storeJobs(Request $request)
     {
@@ -83,53 +257,55 @@ class TrainingController extends Controller
             ->whereDoesntHave('trainingAssignments') // Assumes the prisoner model has a trainingAssignments relationship
             ->get();
         $programs = TrainingProgram::where('prison_id', session('prison_id'))->get();
-         // Fetch training assignments with the related training program
-    $assignments = TrainingAssignment::with('trainingProgram')->get();
+        // Fetch training assignments with the related training program
+        $assignments = TrainingAssignment::with('trainingProgram')->get();
 
-        return view('training_officer.assignTrainingPrograms', compact('prisoners', 'programs','assignments'));
+        return view('training_officer.assignTrainingPrograms', compact('prisoners', 'programs', 'assignments'));
     }
     public function viewAssignedPrograms()
-{
-    // Fetch the training assignments where prison_id matches session's prison_id
-    $assignments = TrainingAssignment::whereHas('prisoner', function ($query) {
-        $query->where('prison_id', session('prison_id'));
-    })->get();
+    {
+        // Fetch the training assignments where prison_id matches session's prison_id
+        $assignments = TrainingAssignment::whereHas('prisoner', function ($query) {
+            $query->where('prison_id', session('prison_id'));
+        })->get();
 
-    return view('training_officer.viewAssignedPrograms', compact('assignments'));
-}
+        return view('training_officer.viewAssignedPrograms', compact('assignments'));
+    }
 
-// Assuming you're using AssignedTraining model
-public function unassignTrainingProgram($id)
-{
-    // Find the assignment by ID
-    $assignment = TrainingAssignment::findOrFail($id);
+    // Assuming you're using AssignedTraining model
+    public function unassignTrainingProgram($id)
+    {
+        // Find the assignment by ID
+        $assignment = TrainingAssignment::findOrFail($id);
 
-    // Clear the prisoner_id or training_id, or you could change the status to 'unassigned'
-    $assignment->update([
-        'prisoner_id' => null,
-        'training_id' => null,
-        'status' => null, // or any status you prefer
-    ]);
+        // Clear the prisoner_id or training_id, or you could change the status to 'unassigned'
+        $assignment->update([
+            'prisoner_id' => null,
+            'training_id' => null,
+            'status' => null, // or any status you prefer
+        ]);
 
-    // Redirect with success message
-    return redirect()->back()->with('success', 'Training program unassigned successfully.');
-}
+        // Redirect with success message
+        return redirect()->back()->with('success', 'Training program unassigned successfully.');
+    }
 
 
     public function storeTrainingProgram(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:100',
+            'title' => 'required|string|max:100',
             'description' => 'nullable|string',
-            'created_by' => 'nullable|integer',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+
         ]);
 
         // Add prison_id from session
         $data['prison_id'] = session('prison_id');
+        $data['created_by'] = session('user_id');
 
-        TrainingProgram::create($data);
+        // Disable auditing for this operation
+        $trainingProgram = TrainingProgram::withoutAuditing(function () use ($data) {
+            return TrainingProgram::create($data);
+        });
 
         return redirect()->back()->with('success', 'Training program created successfully.');
     }
@@ -142,6 +318,7 @@ public function unassignTrainingProgram($id)
             'prisoner_id' => 'required|exists:prisoners,id',
             'training_id' => 'required|exists:training_programs,id',
             'assigned_date' => 'required|date',
+            'end_date' => 'required|date',
             'status' => 'required|in:in_progress,completed',
         ]);
 
@@ -167,7 +344,7 @@ public function unassignTrainingProgram($id)
             'assigned_date' => 'required|date',
             'status' => 'required|in:active,completed,terminated',
         ]);
-    
+
         $job = JobAssignment::findOrFail($validated['job_id']);
         $job->update([
             'prisoner_id' => $validated['prisoner_id'],
@@ -177,10 +354,10 @@ public function unassignTrainingProgram($id)
             'assigned_date' => $validated['assigned_date'],
             'status' => $validated['status'],
         ]);
-    
+
         return redirect()->back()->with('success', 'Job updated successfully.');
     }
-    
+
     // View list of certifications
     public function viewCertifications()
     {
@@ -203,8 +380,9 @@ public function unassignTrainingProgram($id)
     public function viewTrainingPrograms()
     {
         $trainingprograms = TrainingProgram::paginate(9);
+        $activities = Audit::with('user')->latest()->take(20)->get();
 
-        return view('training_officer.viewTrainingPrograms', compact('trainingprograms'));
+        return view('training_officer.viewTrainingPrograms', compact('trainingprograms', 'activities'));
     }
     public function update(Request $request, $id)
     {
@@ -223,11 +401,13 @@ public function unassignTrainingProgram($id)
     }
     public function destroy($id)
     {
-        $trainingProgram = TrainingProgram::findOrFail($id);
-        $trainingProgram->delete();
+        $program = TrainingProgram::findOrFail($id);
+        $program->delete();
 
         return redirect()->back()->with('success', 'Training program deleted successfully.');
-    }public function destroyjob(JobAssignment $job) // Type-hint the Job model
+    }
+
+    public function destroyjob(JobAssignment $job) // Type-hint the Job model
     {
         $job->delete();
         return redirect()->back()->with('success', 'Job deleted successfully');

@@ -5,8 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class JobAssignment extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class JobAssignment extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+    use HasFactory;
     use HasFactory;
 
     protected $table = 'job_assignments';
@@ -18,10 +22,11 @@ class JobAssignment extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'prisoner_id', 'assigned_by', 'job_title', 'job_description', 'assigned_date', 'status'
+        'id', 'prisoner_id', 'assigned_by', 'job_title', 'job_description', 'assigned_date', 'status','end_date'
     ];
 
     protected $casts = [
+        'end_date' => 'date',
         'assigned_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

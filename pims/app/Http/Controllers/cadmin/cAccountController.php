@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-
+use OwenIt\Auditing\Models\Audit;
 class cAccountController extends Controller
 {
     // Existing methods from previous response
@@ -41,7 +41,8 @@ class cAccountController extends Controller
 
     public function dashboard()
     {
-        return view('cadmin.dashboard');
+        $activities = Audit::with('user')->latest()->take(20)->get();
+        return view('cadmin.dashboard', compact('activities'));
     }
 
     public function generate()

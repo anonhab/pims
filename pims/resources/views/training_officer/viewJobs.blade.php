@@ -361,12 +361,16 @@
                                     <div class="pims-content-text">
                                         <strong><i class="fas fa-user-tie"></i> Assigned By:</strong> {{ $job->assigned_by }}
                                     </div>
+                                    
                                     <div class="pims-content-text">
                                         <strong><i class="fas fa-align-left"></i> Description:</strong> 
                                         {{ Str::limit($job->job_description, 100) }}
                                     </div>
                                     <div class="pims-content-text">
                                         <strong><i class="fas fa-calendar-day"></i> Assigned Date:</strong> {{ $job->assigned_date }}
+                                    </div>
+                                    <div class="pims-content-text">
+                                        <strong><i class="fas fa-calendar-day"></i> End Date:</strong> {{ $job->end_date }}
                                     </div>
                                     <div class="pims-content-text">
                                         <strong><i class="fas fa-info-circle"></i> Status:</strong>

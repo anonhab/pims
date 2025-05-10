@@ -5,8 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TrainingProgram extends Model
+use OwenIt\Auditing\Contracts\Auditable;
+
+class TrainingProgram extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
     use HasFactory;
 
     protected $table = 'training_programs';
@@ -18,11 +22,9 @@ class TrainingProgram extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'name', 
+        'title', 
         'description', 
         'created_by', 
-        'start_date', 
-        'end_date',
         'prison_id',
     ];
 
@@ -30,8 +32,6 @@ class TrainingProgram extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'start_date' => 'datetime',
-        'end_date' => 'datetime',
     ];
     // Relationship with Account (Created By)
     public function createdBy()

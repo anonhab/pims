@@ -4,7 +4,7 @@
     <div class="pims-sidebar-toggle" id="pimsSidebarToggle3">
         <i class="fas fa-bars"></i>
     </div>
-    
+
     <!-- Sidebar Logo/Brand -->
     <div class="pims-sidebar-brand">
         <i class="fas fa-user-shield pims-brand-icon"></i>
@@ -59,10 +59,10 @@
                 </a>
                 <ul class="pims-submenu">
                     <li class="pims-submenu-item">
-                        <a href="/generate_report" class="pims-submenu-link">Generate Report</a>
+                        <a href="/sysadmin/generate_report" class="pims-submenu-link">Generate Report</a>
                     </li>
                     <li class="pims-submenu-item">
-                        <a href="/view_reports" class="pims-submenu-link">View Generated Reports</a>
+                        <a href="/sysadmin/view_reports" class="pims-submenu-link">View Generated Reports</a>
                     </li>
                 </ul>
             </li>
@@ -79,16 +79,16 @@
                     </span>
                 </a>
                 <ul class="pims-submenu">
-                    <li class="pims-submenu-item">
-                        <a href="/initiate_backup" class="pims-submenu-link">Initiate Backup</a>
+                    <li class="pims-menu-item">
+                        <a href="#" class="pims-menu-link" id="initiateBackupBtn" onclick="initiateBackup()">Initiate Backup</a>
                     </li>
-                    <li class="pims-submenu-item">
-                        <a href="/view_backup_recovery_logs" class="pims-submenu-link">View Backup/Recovery Logs</a>
+                    <li class="pims-menu-item">
+                        <a href="/view_backup_recovery_logs" class="pims-menu-link">View Backup/Recovery Logs</a>
                     </li>
                 </ul>
             </li>
         </ul>
-        
+
         <!-- Collapse Button (Desktop) -->
         <div class="pims-collapse-btn" id="pimsCollapseBtn3">
             <i class="fas fa-chevron-left"></i>
@@ -98,23 +98,23 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
         // Add click handlers to all menu links
         document.querySelectorAll('.pims-menu-link, .pims-submenu-link').forEach(link => {
             link.addEventListener('click', function(e) {
                 // Only show preloader for actual navigation links
                 if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
                     // Don't prevent default if it's a submenu toggle
-                    if (!this.parentElement.classList.contains('pims-has-submenu') || 
+                    if (!this.parentElement.classList.contains('pims-has-submenu') ||
                         (window.innerWidth <= 1024 || document.getElementById('pimsSidebar').classList.contains('pims-collapsed'))) {
-                        
+
                         // Show preloader immediately
                         PimsPreloader.show();
-                        
+
                         // Add a small delay before navigation to ensure preloader shows
                         e.preventDefault();
                         const targetUrl = this.getAttribute('href');
-                        
+
                         setTimeout(() => {
                             window.location.href = targetUrl;
                         }, 50);
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 const parent = this.parentElement;
                 parent.classList.toggle('active');
-                
+
                 // Close other open submenus at the same level
                 Array.from(parent.parentElement.children).forEach(item => {
                     if (item !== parent) {
@@ -171,9 +171,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.addEventListener('click', function(e) {
         const sidebar = document.getElementById('pimsSidebar3');
         const toggleBtn = document.getElementById('pimsSidebarToggle3');
-        
-        if (window.innerWidth <= 1024 && 
-            !sidebar.contains(e.target) && 
+
+        if (window.innerWidth <= 1024 &&
+            !sidebar.contains(e.target) &&
             e.target !== toggleBtn &&
             !toggleBtn.contains(e.target) &&
             sidebar.classList.contains('pims-active')) {

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Assigned Training Programs</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -210,6 +211,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     @include('includes.nav')
@@ -220,9 +222,9 @@
         <div class="pims-content-area">
             <!-- Success Notification -->
             @if(session('success'))
-                <div class="pims-notification pims-notification-success">
-                    <i class="fas fa-check-circle"></i> {{ session('success') }}
-                </div>
+            <div class="pims-notification pims-notification-success">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            </div>
             @endif
 
             <div class="pims-page-header">
@@ -238,9 +240,9 @@
                         <header class="pims-card-header">
                             <p class="pims-card-title">
                                 @if($assignment->trainingProgram)
-                                    <i class="fas fa-graduation-cap"></i> {{ $assignment->trainingProgram->name }}
+                                <i class="fas fa-graduation-cap"></i> {{ $assignment->trainingProgram->name }}
                                 @else
-                                    <i class="fas fa-exclamation-circle"></i> Not assigned
+                                <i class="fas fa-exclamation-circle"></i> Not assigned
                                 @endif
                             </p>
                         </header>
@@ -248,32 +250,38 @@
                             <div class="pims-content">
                                 <p class="pims-content-text"><strong><i class="fas fa-id-card"></i> Prisoner ID:</strong> {{ $assignment->prisoner_id }}</p>
                                 <p class="pims-content-text"><strong><i class="fas fa-graduation-cap"></i> Program ID:</strong> {{ $assignment->training_id }}</p>
-                                <p class="pims-content-text"><strong><i class="fas fa-align-left"></i> Description:</strong> 
+                                <p class="pims-content-text"><strong><i class="fas fa-align-left"></i> Description:</strong>
                                     @if($assignment->trainingProgram)
-                                        {{ Str::limit($assignment->trainingProgram->description, 100) }}
+                                    {{ Str::limit($assignment->trainingProgram->description, 100) }}
                                     @else
-                                        Not assigned
+                                    Not assigned
                                     @endif
                                 </p>
                                 <p class="pims-content-text"><strong><i class="fas fa-user-tie"></i> Assigned By:</strong> {{ $assignment->assigned_by }}</p>
-                                <p class="pims-content-text"><strong><i class="fas fa-calendar-day"></i> Assigned Date:</strong> {{ $assignment->assigned_date }}</p>
+                                <p class="pims-content-text">
+                                    <strong><i class="fas fa-calendar-day"></i> Assigned Date:</strong> {{ $assignment->assigned_date }}
+                                </p>
+                                <p class="pims-content-text">
+                                    <strong><i class="fas fa-calendar-check"></i> End Date:</strong> {{ $assignment->end_date }}
+                                </p>
+
                                 <p class="pims-content-text"><strong><i class="fas fa-info-circle"></i> Status:</strong>
                                     <span class="pims-status-badge pims-status-{{ $assignment->status === 'completed' ? 'completed' : 'in-progress' }}">
                                         {{ ucfirst($assignment->status) }}
                                     </span>
                                 </p>
-                                <p class="pims-content-text"><strong><i class="fas fa-calendar-alt"></i> Dates:</strong> 
+                                <p class="pims-content-text"><strong><i class="fas fa-calendar-alt"></i> Dates:</strong>
                                     @if($assignment->trainingProgram)
-                                        {{ $assignment->trainingProgram->start_date }} to {{ $assignment->trainingProgram->end_date }}
+                                    {{ $assignment->trainingProgram->start_date }} to {{ $assignment->trainingProgram->end_date }}
                                     @else
-                                        Not assigned
+                                    Not assigned
                                     @endif
                                 </p>
-                                <p class="pims-content-text"><strong><i class="fas fa-building"></i> Prison ID:</strong> 
+                                <p class="pims-content-text"><strong><i class="fas fa-building"></i> Prison ID:</strong>
                                     @if($assignment->trainingProgram)
-                                        {{ $assignment->trainingProgram->prison_id }}
+                                    {{ $assignment->trainingProgram->prison_id }}
                                     @else
-                                        Not assigned
+                                    Not assigned
                                     @endif
                                 </p>
                                 <p class="pims-meta-text">
@@ -309,4 +317,5 @@
 
     @include('includes.footer_js')
 </body>
+
 </html>

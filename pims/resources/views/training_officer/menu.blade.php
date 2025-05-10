@@ -17,7 +17,7 @@
         <ul class="pims-menu-list">
             <!-- Dashboard -->
             <li class="pims-menu-item">
-                <a href="/dashboard" class="pims-menu-link">
+                <a href="/tdashboard" class="pims-menu-link">
                     <span class="pims-menu-icon">
                         <i class="fas fa-home"></i>
                     </span>

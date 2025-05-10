@@ -129,15 +129,28 @@ Route::middleware('role:3')->group(function () {
     Route::post('/reports/store', [cAccountController::class, 'storeReport'])->name('reports.store');
     Route::get('/view_reports', [cAccountController::class, 'viewReports'])->name('cadmin.view_reports');
     Route::post('/initiate_backup', [cAccountController::class, 'initiateBackup'])->name('initiate_backup');
-    Route::get('/view_backup_recovery_logs', [cAccountController::class, 'viewBackupLogs'])->name('view_backup_recovery_logs');
+    Route::get('/view_backup', [cAccountController::class, 'viewBackupLogs'])->name('view_backup');
 });
-Route::resource('prisoners', iPrisonerController::class);
-Route::resource('accounts', cAccountController::class);
+ 
 
 Route::put('/saccount/update/{id}', [sAccountController::class, 'update'])->name('saccount.update');
 Route::delete('/saccount/delete/{id}', [sAccountController::class, 'destroy'])->name('saccount.destroy');
 Route::put('/caccount/update/{id}', [cAccountController::class, 'update'])->name('caccount.update');
 Route::delete('/caccount/delete/{id}', [cAccountController::class, 'destroy'])->name('caccount.destroy');
+
+Route::get('/sysadmin/generate_report', [sAccountController::class, 'generate'])->name('sysadmin.generate_report');
+Route::get('/sreports', [sAccountController::class, 'generateReport'])->name('reports.generate');
+Route::post('/sreports/store', [sAccountController::class, 'storeReport'])->name('reports.store');
+Route::post('/sinitiate_backup', [sAccountController::class, 'initiateBackup'])->name('initiate_backup');
+Route::get('/view_backup_recovery_logs', [sAccountController::class, 'viewBackupLogs'])->name('view_backup_recovery_logs');
+Route::get('/sprison', [sAccountController::class, 'getPrisons'])->name('prisons.index');
+Route::get('/sysadmin/view_account', [sAccountController::class, 'show_all'])->name('sysadmin.view_account');
+Route::get('/sysadmin/create_account', [sAccountController::class, 'account_add'])->name('sysadmin.create_account');
+Route::post('/sysadmin/store', [sAccountController::class, 'store'])->name('sysadmin.store');
+Route::put('/sysadmin/update/{id}', [sAccountController::class, 'update'])->name('sysadmin.update');
+Route::delete('/sysadmin/destroy/{id}', [sAccountController::class, 'destroy'])->name('sysadmin.destroy');
+Route::get('/sysadmin/view_reports', [sAccountController::class, 'viewReports'])->name('sysadmin.view_reports');
+
 
 
 Route::get('/saccounts', [sAccountController::class, 'show_all'])->name('saccount.show_all')->middleware('role:1');
@@ -239,8 +252,14 @@ Route::delete('/jobs/{job}', [TrainingController::class, 'destroyjob'])
 Route::put('training-programs/{id}', [TrainingController::class, 'update'])->name('training_officer.update');
 Route::delete('training-programs/{id}', [TrainingController::class, 'destroy'])->name('training_officer.destroy');
 Route::put('/jobs/update', [TrainingController::class, 'updatejob'])->name('jobs.update');
+Route::delete('/training_officer/{id}', [TrainingController::class, 'destroy'])->name('trainingprogram.destroy');
+Route::get('/tdashboard', [TrainingController::class, 'dashboard'])->name('training.dashboard');
 
-
+ 
+Route::post('/training-officer/prisoner-details', [TrainingController::class, 'getPrisonerDetails'])
+    ->name('training_officer.getPrisonerDetails');
+Route::post('/training-officer/certifications', [TrainingController::class, 'store'])
+    ->name('training_officer.storeCertification');
 Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest')->middleware('role:4'); //visitor role id == 4
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
