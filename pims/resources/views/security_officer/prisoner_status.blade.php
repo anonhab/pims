@@ -12,424 +12,492 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-/* General Reset and Base Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+        :root {
+            --pims-primary: #2c3e50;
+            --pims-secondary: #34495e;
+            --pims-accent: #3498db;
+            --pims-light: #ecf0f1;
+            --pims-lighter: #f8f9fa;
+            --pims-danger: #e74c3c;
+            --pims-success: #2ecc71;
+            --pims-warning: #f39c12;
+            --pims-border-radius: 8px;
+            --pims-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --pims-transition: all 0.3s ease;
+        }
 
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f4f6f9;
-    color: #333;
-    line-height: 1.6;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-/* App Container */
-.pims-app-container {
-    display: flex;
-    min-height: 100vh;
-    padding: 20px;
-}
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--pims-primary);
+            line-height: 1.6;
+        }
 
-/* Sidebar Menu (Assuming included from security_officer.menu) */
-.pims-menu {
-    width: 250px;
-    background-color: #2c3e50;
-    color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    margin-right: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        .pims-app-container {
+            padding-top: 70px;
+            display: flex;
+            min-height: 100vh;
+        }
 
-.pims-menu a {
-    color: #fff;
-    text-decoration: none;
-    display: block;
-    padding: 10px;
-    margin-bottom: 5px;
-    border-radius: 4px;
-    transition: background-color 0.3s;
-}
+        .pims-menu {
+            width: 250px;
+            background-color: var(--pims-primary);
+            color: white;
+            padding: 20px;
+            border-radius: var(--pims-border-radius);
+            margin-right: 20px;
+            box-shadow: var(--pims-box-shadow);
+            transition: var(--pims-transition);
+        }
 
-.pims-menu a:hover {
-    background-color: #34495e;
-}
+        .pims-menu a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
 
-/* Report Container */
-.pims-report-container {
-    flex: 1;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+        .pims-menu a:hover {
+            background-color: var(--pims-secondary);
+        }
 
-.pims-report-title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        .pims-main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            margin-left: 250px;
+            transition: var(--pims-transition);
+        }
 
-/* Tabs */
-.pims-tabs {
-    display: flex;
-    border-bottom: 2px solid #e0e0e0;
-    margin-bottom: 20px;
-}
+        .pims-content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
 
-.pims-tablink {
-    background-color: #f8f9fa;
-    border: none;
-    padding: 12px 20px;
-    font-size: 1rem;
-    font-weight: 500;
-    color: #6c757d;
-    cursor: pointer;
-    border-radius: 4px 4px 0 0;
-    margin-right: 5px;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+        .pims-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
 
-.pims-tablink:hover {
-    background-color: #e9ecef;
-    color: #2c3e50;
-}
+        .pims-page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--pims-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
 
-.pims-tablink.active {
-    background-color: #007bff;
-    color: #fff;
-    font-weight: 600;
-}
+        .pims-page-title i {
+            color: var(--pims-accent);
+        }
 
-/* Report Content */
-.pims-report-content {
-    display: none;
-}
+        .pims-tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 20px;
+        }
 
-.pims-report-content[style*="display: block"] {
-    display: block;
-}
+        .pims-tablink {
+            background-color: var(--pims-lighter);
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6c757d;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            margin-right: 5px;
+            transition: var(--pims-transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-/* Card Grid */
-.pims-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 20px;
-}
+        .pims-tablink:hover {
+            background-color: #e9ecef;
+            color: var(--pims-primary);
+        }
 
-/* Appointment Card */
-.pims-appointment-card {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s;
-}
+        .pims-tablink.active {
+            background-color: var(--pims-accent);
+            color: #fff;
+            font-weight: 600;
+        }
 
-.pims-appointment-card:hover {
-    transform: translateY(-5px);
-}
+        .pims-report-content {
+            display: none;
+        }
 
-.card-header {
-    background-color: #f8f9fa;
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    border-bottom: 1px solid #e0e0e0;
-}
+        .pims-report-content[style*="display: block"] {
+            display: block;
+        }
 
-.card-header h3 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin: 0;
-}
+        .pims-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
 
-.card-body {
-    padding: 15px;
-}
+        .pims-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-box-shadow);
+            overflow: hidden;
+            margin-bottom: 2rem;
+            transition: transform 0.3s;
+        }
 
-.card-field {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.95rem;
-}
+        .pims-card:hover {
+            transform: translateY(-5px);
+        }
 
-.card-label {
-    font-weight: 600;
-    color: #6c757d;
-    flex: 0 0 100px;
-}
+        .pims-card-header {
+            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
+            color: white;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.card-value {
-    flex: 1;
-    color: #333;
-    text-align: right;
-}
+        .pims-card-header h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
 
-.card-footer {
-    padding: 15px;
-    border-top: 1px solid #e0e0e0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .pims-card-body {
+            padding: 1.5rem;
+        }
 
-/* Status Badges */
-.pims-status-badge {
-    padding: 6px 12px;
-    border-radius: 12px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+        .pims-card-field {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+        }
 
-.pims-status-pending {
-    background-color: #fff3cd;
-    color: #856404;
-}
+        .pims-card-label {
+            font-weight: 600;
+            color: var(--pims-secondary);
+            flex: 0 0 100px;
+        }
 
-.pims-status-approved {
-    background-color: #d4edda;
-    color: #155724;
-}
+        .pims-card-value {
+            flex: 1;
+            color: var(--pims-primary);
+            text-align: right;
+        }
 
-.pims-status-rejected {
-    background-color: #f8d7da;
-    color: #721c24;
-}
+        .pims-card-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-/* Buttons */
-.pims-btn {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
+        .pims-status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-.pims-btn-small {
-    padding: 6px 12px;
-    font-size: 0.85rem;
-}
+        .pims-status-pending {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: var(--pims-warning);
+        }
 
-.pims-btn-primary {
-    background-color: #007bff;
-    color: #fff;
-}
+        .pims-status-approved {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--pims-success);
+        }
 
-.pims-btn-primary:hover {
-    background-color: #0056b3;
-}
+        .pims-status-rejected {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--pims-danger);
+        }
 
-.pims-btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
-}
+        .pims-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            border-radius: var(--pims-border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--pims-transition);
+            border: none;
+            font-size: 0.9rem;
+            gap: 0.5rem;
+        }
 
-.pims-btn-secondary:hover {
-    background-color: #545b62;
-}
+        .pims-btn-small {
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+        }
 
-.pims-btn-success {
-    background-color: #28a745;
-    color: #fff;
-}
+        .pims-btn-primary {
+            background-color: var(--pims-accent);
+            color: white;
+        }
 
-.pims-btn-success:hover {
-    background-color: #218838;
-}
+        .pims-btn-primary:hover {
+            background-color: #2980b9;
+        }
 
-/* Alerts */
-.alert {
-    padding: 12px;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        .pims-btn-secondary {
+            background-color: var(--pims-secondary);
+            color: white;
+        }
 
-.alert-info {
-    background-color: #d1ecf1;
-    color: #0c5460;
-}
+        .pims-btn-secondary:hover {
+            background-color: #2c3e50;
+        }
 
-/* Modal Styles */
-.pims-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1050;
-    overflow: auto;
-}
+        .pims-btn-success {
+            background-color: var(--pims-success);
+            color: white;
+        }
 
-.pims-modal-content {
-    background-color: #fff;
-    margin: 10% auto;
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
+        .pims-btn-success:hover {
+            background-color: #25a25a;
+        }
 
-.pims-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
+        .pims-alert {
+            padding: 1rem;
+            border-radius: var(--pims-border-radius);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1.5rem;
+        }
 
-.pims-modal-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #2c3e50;
-}
+        .pims-alert-info {
+            background-color: rgba(52, 152, 219, 0.2);
+            color: var(--pims-accent);
+            border-left: 4px solid var(--pims-accent);
+        }
 
-.pims-modal-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    color: #6c757d;
-    cursor: pointer;
-    transition: color 0.3s;
-}
+        .pims-alert-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--pims-success);
+            border-left: 4px solid var(--pims-success);
+        }
 
-.pims-modal-close:hover {
-    color: #dc3545;
-}
+        .pims-alert-danger {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--pims-danger);
+            border-left: 4px solid var(--pims-danger);
+        }
 
-.pims-form-group {
-    margin-bottom: 15px;
-}
+        .pims-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
 
-.pims-form-label {
-    font-weight: 600;
-    color: #2c3e50;
-    display: block;
-    margin-bottom: 5px;
-}
+        .pims-modal.active {
+            display: flex;
+        }
 
-.pims-form-control {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    color: #333;
-}
+        .pims-modal-container {
+            background-color: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
 
-.pims-form-control[readonly] {
-    background-color: #e9ecef;
-}
+        .pims-modal.active .pims-modal-container {
+            transform: scale(1);
+            opacity: 1;
+        }
 
-.pims-form-control:focus {
-    border-color: #007bff;
-    outline: none;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
-}
+        .pims-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-textarea.pims-form-control {
-    resize: vertical;
-    min-height: 100px;
-}
+        .pims-modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--pims-primary);
+        }
 
-/* Bootstrap Modal Customization */
-.modal-content {
-    border-radius: 8px;
-}
+        .pims-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: var(--pims-secondary);
+        }
 
-.modal-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #e0e0e0;
-}
+        .pims-modal-body {
+            padding: 1.5rem;
+        }
 
-.modal-title {
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: #2c3e50;
-}
+        .pims-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
 
-.modal-body {
-    padding: 20px;
-}
+        .pims-form-group {
+            margin-bottom: 1rem;
+        }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-    .pims-app-container {
-        flex-direction: column;
-    }
+        .pims-form-label {
+            font-weight: 600;
+            color: var(--pims-secondary);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
 
-    .pims-menu {
-        width: 100%;
-        margin-right: 0;
-        margin-bottom: 20px;
-    }
+        .pims-form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--pims-border-radius);
+            font-size: 0.95rem;
+            color: var(--pims-primary);
+            transition: var(--pims-transition);
+        }
 
-    .pims-tabs {
-        flex-direction: column;
-        border-bottom: none;
-    }
+        .pims-form-control:focus {
+            outline: none;
+            border-color: var(--pims-accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
 
-    .pims-tablink {
-        border-radius: 4px;
-        margin-bottom: 5px;
-    }
-}
+        textarea.pims-form-control {
+            resize: vertical;
+            min-height: 100px;
+        }
 
-@media (max-width: 576px) {
-    .pims-report-title {
-        font-size: 1.5rem;
-    }
+        .pims-spinner {
+            width: 3rem;
+            height: 3rem;
+            border: 0.25rem solid rgba(52, 152, 219, 0.2);
+            border-top-color: var(--pims-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
 
-    .pims-appointment-card {
-        font-size: 0.9rem;
-    }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
 
-    .card-field {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 5px;
-    }
+        /* Bootstrap Modal Customization */
+        .modal-content {
+            border-radius: var(--pims-border-radius);
+            border: none;
+            box-shadow: var(--pims-box-shadow);
+        }
 
-    .card-label {
-        flex: none;
-    }
+        .modal-header {
+            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
+            color: white;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
 
-    .card-value {
-        text-align: left;
-    }
+        .modal-title {
+            font-weight: 600;
+        }
 
-    .pims-modal-content {
-        margin: 20% auto;
-        width: 95%;
-    }
-}
+        .btn-close {
+            filter: invert(1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .pims-main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .pims-menu {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+
+            .pims-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+
+            .pims-tablink {
+                border-radius: var(--pims-border-radius);
+                margin-bottom: 5px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pims-card-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pims-card-field {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .pims-card-label {
+                flex: none;
+            }
+
+            .pims-card-value {
+                text-align: left;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .pims-page-title {
+                font-size: 1.5rem;
+            }
+
+            .pims-modal-container {
+                width: 95%;
+            }
+        }
     </style>
 </head>
 
@@ -440,204 +508,203 @@ textarea.pims-form-control {
     <div class="pims-app-container">
         @include('security_officer.menu')
 
-        <div class="pims-report-container">
-            <h1 class="pims-report-title">
-                <i class="fas fa-calendar-alt"></i> Prisoner Appointments
-            </h1>
+        <main class="pims-main-content">
+            <div class="pims-content-container">
+                <h1 class="pims-page-title">
+                    <i class="fas fa-calendar-alt"></i> Prisoner Appointments
+                </h1>
 
-            <div class="pims-tabs">
-                <button class="pims-tablink active" onclick="openReportTab(event, 'medicalAppointments')" data-tab="medicalAppointments">
-                    <i class="fas fa-stethoscope"></i> Medical
-                </button>
-                <button class="pims-tablink" onclick="openReportTab(event, 'lawyerAppointments')" data-tab="lawyerAppointments">
-                    <i class="fas fa-balance-scale"></i> Lawyer
-                </button>
-                <button class="pims-tablink" onclick="openReportTab(event, 'visitorAppointments')" data-tab="visitorAppointments">
-                    <i class="fas fa-user-friends"></i> Visitor
-                </button>
-            </div>
+                <div class="pims-tabs">
+                    <button class="pims-tablink active" onclick="pimsOpenReportTab(event, 'pimsMedicalAppointments')" data-tab="pimsMedicalAppointments">
+                        <i class="fas fa-stethoscope"></i> Medical
+                    </button>
+                    <button class="pims-tablink" onclick="pimsOpenReportTab(event, 'pimsLawyerAppointments')" data-tab="pimsLawyerAppointments">
+                        <i class="fas fa-balance-scale"></i> Lawyer
+                    </button>
+                    <button class="pims-tablink" onclick="pimsOpenReportTab(event, 'pimsVisitorAppointments')" data-tab="pimsVisitorAppointments">
+                        <i class="fas fa-user-friends"></i> Visitor
+                    </button>
+                </div>
 
-            <!-- Medical Appointments -->
-            <div id="medicalAppointments" class="pims-report-content" style="display: block;">
-                @if(count($medicalAppointments) > 0)
-                <div class="pims-card-grid">
-                    @foreach ($medicalAppointments as $appointment)
-                    <div class="pims-appointment-card">
-                        <div class="card-header">
-                            <i class="fas fa-stethoscope"></i>
-                            <h3>Medical Appointment</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-field">
-                                <span class="card-label">Prisoner:</span>
-                                <span class="card-value">
-                                    {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->middle_name }} {{ $appointment->prisoner->last_name }} ({{ $appointment->prisoner->id }})
+                <!-- Medical Appointments -->
+                <div id="pimsMedicalAppointments" class="pims-report-content" style="display: block;">
+                    @if(count($medicalAppointments) > 0)
+                    <div class="pims-card-grid">
+                        @foreach ($medicalAppointments as $appointment)
+                        <div class="pims-card">
+                            <div class="pims-card-header">
+                                <i class="fas fa-stethoscope"></i>
+                                <h3>Medical Appointment</h3>
+                            </div>
+                            <div class="pims-card-body">
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Prisoner:</span>
+                                    <span class="pims-card-value">
+                                        {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->middle_name }} {{ $appointment->prisoner->last_name }} ({{ $appointment->prisoner->id }})
+                                    </span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Date:</span>
+                                    <span class="pims-card-value">{{ date('M d, Y h:i A', strtotime($appointment->appointment_date)) }}</span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Doctor:</span>
+                                    <span class="pims-card-value">{{ $appointment->doctor->first_name }} {{ $appointment->doctor->last_name }}</span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Reason:</span>
+                                    <span class="pims-card-value">{{ $appointment->reason ?? 'Not specified' }}</span>
+                                </div>
+                            </div>
+                            <div class="pims-card-footer">
+                                <span class="pims-status-badge 
+                                    {{ $appointment->status == 'Pending' ? 'pims-status-pending' : 
+                                    ($appointment->status == 'Approved' ? 'pims-status-approved' : 'pims-status-rejected') }}">
+                                    <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
+                                    {{ $appointment->status }}
                                 </span>
                             </div>
-                            <div class="card-field">
-                                <span class="card-label">Date:</span>
-                                <span class="card-value">{{ date('M d, Y h:i A', strtotime($appointment->appointment_date)) }}</span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Doctor:</span>
-                                <span class="card-value">{{ $appointment->doctor->first_name }} {{ $appointment->doctor->last_name }}</span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Reason:</span>
-                                <span class="card-value">{{ $appointment->reason ?? 'Not specified' }}</span>
-                            </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="pims-status-badge 
-                                {{ $appointment->status == 'Pending' ? 'pims-status-pending' : 
-                                ($appointment->status == 'Approved' ? 'pims-status-approved' : 'pims-status-rejected') }}">
-                                <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
-                                {{ $appointment->status }}
-                            </span>
-                            
-                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    @else
+                    <div class="pims-alert pims-alert-info">
+                        <i class="fas fa-info-circle"></i> No medical appointments found.
+                    </div>
+                    @endif
                 </div>
-                @else
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No medical appointments found.
-                </div>
-                @endif
-            </div>
 
-            <!-- Lawyer Appointments -->
-            <div id="lawyerAppointments" class="pims-report-content">
-                @if(count($lawyerAppointments) > 0)
-                <div class="pims-card-grid">
-                    @foreach ($lawyerAppointments as $appointment)
-                    <div class="pims-appointment-card">
-                        <div class="card-header">
-                            <i class="fas fa-balance-scale"></i>
-                            <h3>Legal Consultation</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-field">
-                                <span class="card-label">Prisoner:</span>
-                                <span class="card-value">
-                                    {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->middle_name }} {{ $appointment->prisoner->last_name }} ({{ $appointment->prisoner->id }})
+                <!-- Lawyer Appointments -->
+                <div id="pimsLawyerAppointments" class="pims-report-content">
+                    @if(count($lawyerAppointments) > 0)
+                    <div class="pims-card-grid">
+                        @foreach ($lawyerAppointments as $appointment)
+                        <div class="pims-card">
+                            <div class="pims-card-header">
+                                <i class="fas fa-balance-scale"></i>
+                                <h3>Legal Consultation</h3>
+                            </div>
+                            <div class="pims-card-body">
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Prisoner:</span>
+                                    <span class="pims-card-value">
+                                        {{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->middle_name }} {{ $appointment->prisoner->last_name }} ({{ $appointment->prisoner->id }})
+                                    </span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Date:</span>
+                                    <span class="pims-card-value">{{ date('M d, Y h:i A', strtotime($appointment->appointment_date)) }}</span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Lawyer:</span>
+                                    <span class="pims-card-value">{{ $appointment->lawyer->first_name }} {{ $appointment->lawyer->last_name }}</span>
+                                </div>
+                            </div>
+                            <div class="pims-card-footer">
+                                <span class="pims-status-badge 
+                                    {{ $appointment->status == 'Pending' ? 'pims-status-pending' : 
+                                    ($appointment->status == 'Approved' ? 'pims-status-approved' : 'pims-status-rejected') }}">
+                                    <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
+                                    {{ $appointment->status }}
                                 </span>
                             </div>
-                            <div class="card-field">
-                                <span class="card-label">Date:</span>
-                                <span class="card-value">{{ date('M d, Y h:i A', strtotime($appointment->appointment_date)) }}</span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Lawyer:</span>
-                                <span class="card-value">{{ $appointment->lawyer->first_name }} {{ $appointment->lawyer->last_name }} </span>
-                            </div>
-                            
                         </div>
-                        <div class="card-footer">
-                            <span class="pims-status-badge 
-                                {{ $appointment->status == 'Pending' ? 'pims-status-pending' : 
-                                ($appointment->status == 'Approved' ? 'pims-status-approved' : 'pims-status-rejected') }}">
-                                <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
-                                {{ $appointment->status }}
-                            </span>
-                           
-                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    @else
+                    <div class="pims-alert pims-alert-info">
+                        <i class="fas fa-info-circle"></i> No lawyer appointments found.
+                    </div>
+                    @endif
                 </div>
-                @else
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No lawyer appointments found.
-                </div>
-                @endif
-            </div>
 
-            <!-- Visitor Appointments -->
-            <div id="visitorAppointments" class="pims-report-content">
-                @if(count($visitorAppointments) > 0)
-                <div class="pims-card-grid">
-                    @foreach ($visitorAppointments as $appointment)
-                    <div class="pims-appointment-card">
-                        <div class="card-header">
-                            <i class="fas fa-user-friends"></i>
-                            <h3>Visitor Appointment</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="card-field">
-                                <span class="card-label">Prisoner:</span>
-                                <span class="card-value">
-                                    {{ $appointment->prisoner_firstname }} {{ $appointment->prisoner_middlename }} {{ $appointment->prisoner_lastname }}
-                                    <button class="pims-btn pims-btn-small pims-btn-success ms-2" 
-                                            onclick="openPrisonerModal(
-                                                '{{ $appointment->prisoner_firstname }}',
-                                                '{{ $appointment->prisoner_middlename }}',
-                                                '{{ $appointment->prisoner_lastname }}'
-                                            )">
-                                        <i class="fas fa-search"></i> Verify
-                                    </button>
+                <!-- Visitor Appointments -->
+                <div id="pimsVisitorAppointments" class="pims-report-content">
+                    @if(count($visitorAppointments) > 0)
+                    <div class="pims-card-grid">
+                        @foreach ($visitorAppointments as $appointment)
+                        <div class="pims-card">
+                            <div class="pims-card-header">
+                                <i class="fas fa-user-friends"></i>
+                                <h3>Visitor Appointment</h3>
+                            </div>
+                            <div class="pims-card-body">
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Prisoner:</span>
+                                    <span class="pims-card-value">
+                                        {{ $appointment->prisoner_firstname }} {{ $appointment->prisoner_middlename }} {{ $appointment->prisoner_lastname }}
+                                        <button class="pims-btn pims-btn-small pims-btn-success pims-ms-2" 
+                                                onclick="pimsOpenPrisonerModal(
+                                                    '{{ $appointment->prisoner_firstname }}',
+                                                    '{{ $appointment->prisoner_middlename }}',
+                                                    '{{ $appointment->prisoner_lastname }}'
+                                                )">
+                                            <i class="fas fa-search"></i> Verify
+                                        </button>
+                                    </span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Visitor:</span>
+                                    <span class="pims-card-value">{{ $appointment->visitor->first_name }} {{ $appointment->visitor->last_name }}</span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Date:</span>
+                                    <span class="pims-card-value">{{ date('M d, Y', strtotime($appointment->requested_date)) }}</span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Time:</span>
+                                    <span class="pims-card-value">{{ date('h:i A', strtotime($appointment->requested_time)) }}</span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Relationship:</span>
+                                    <span class="pims-card-value">{{ $appointment->visitor->relationship ?? 'Not specified' }}</span>
+                                </div>
+                                <div class="pims-card-field">
+                                    <span class="pims-card-label">Note:</span>
+                                    <span class="pims-card-value">{{ $appointment->note ?? 'No notes' }}</span>
+                                </div>
+                            </div>
+                            <div class="pims-card-footer">
+                                <span class="pims-status-badge 
+                                    {{ $appointment->status == 'pending' ? 'pims-status-pending' : 
+                                    ($appointment->status == 'approved' ? 'pims-status-approved' : 'pims-status-rejected') }}">
+                                    <i class="fas fa-{{ $appointment->status == 'pending' ? 'clock' : ($appointment->status == 'approved' ? 'check' : 'times') }}"></i>
+                                    {{ ucfirst($appointment->status) }}
                                 </span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Visitor:</span>
-                                <span class="card-value">{{ $appointment->visitor->first_name }} {{ $appointment->visitor->last_name }}</span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Date:</span>
-                                <span class="card-value">{{ date('M d, Y', strtotime($appointment->requested_date)) }}</span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Time:</span>
-                                <span class="card-value">{{ date('h:i A', strtotime($appointment->requested_time)) }}</span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Relationship:</span>
-                                <span class="card-value">{{ $appointment->visitor->relationship ?? 'Not specified' }}</span>
-                            </div>
-                            <div class="card-field">
-                                <span class="card-label">Note:</span>
-                                <span class="card-value">{{ $appointment->note ?? 'No notes' }}</span>
+                                <button class="pims-btn pims-btn-small {{ $appointment->status == 'pending' ? 'pims-btn-primary' : 'pims-btn-secondary' }}"
+                                        onclick="pimsOpenStatusModal('{{ $appointment->id }}', 'visitor', '{{ $appointment->status }}')">
+                                    <i class="fas fa-{{ $appointment->status == 'pending' ? 'edit' : 'eye' }}"></i>
+                                    {{ $appointment->status == 'pending' ? 'Update' : 'View' }}
+                                </button>
                             </div>
                         </div>
-                        <div class="card-footer">
-                            <span class="pims-status-badge 
-                                {{ $appointment->status == 'pending' ? 'pims-status-pending' : 
-                                ($appointment->status == 'approved' ? 'pims-status-approved' : 'pims-status-rejected') }}">
-                                <i class="fas fa-{{ $appointment->status == 'pending' ? 'clock' : ($appointment->status == 'approved' ? 'check' : 'times') }}"></i>
-                                {{ ucfirst($appointment->status) }}
-                            </span>
-                            <button class="pims-btn pims-btn-small {{ $appointment->status == 'pending' ? 'pims-btn-primary' : 'pims-btn-secondary' }}"
-                                    onclick="openStatusModal('{{ $appointment->id }}', 'visitor', '{{ $appointment->status }}')">
-                                <i class="fas fa-{{ $appointment->status == 'pending' ? 'edit' : 'eye' }}"></i>
-                                {{ $appointment->status == 'pending' ? 'Update' : 'View' }}
-                            </button>
-                        </div>
+                        @endforeach
                     </div>
-                    @endforeach
+                    @else
+                    <div class="pims-alert pims-alert-info">
+                        <i class="fas fa-info-circle"></i> No visitor appointments found.
+                    </div>
+                    @endif
                 </div>
-                @else
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> No visitor appointments found.
-                </div>
-                @endif
             </div>
-        </div>
+        </main>
     </div>
 
     <!-- Status Update Modal -->
-    <div id="statusModal" class="pims-modal">
-        <div class="pims-modal-content">
+    <div id="pimsStatusModal" class="pims-modal">
+        <div class="pims-modal-container">
             <div class="pims-modal-header">
                 <h3 class="pims-modal-title">Update Appointment Status</h3>
-                <button class="pims-modal-close" onclick="closeModal('statusModal')">&times;</button>
+                <button class="pims-modal-close" onclick="pimsCloseModal('pimsStatusModal')">&times;</button>
             </div>
-            <form id="statusForm" method="POST" action="{{ route('updateAppointmentStatus') }}">
+            <form id="pimsStatusForm" method="POST" action="{{ route('updateAppointmentStatus') }}">
                 @csrf
-                <input type="hidden" id="appointment_id" name="appointment_id">
-                <input type="hidden" id="appointment_type" name="appointment_type">
+                <input type="hidden" id="pimsAppointmentId" name="appointment_id">
+                <input type="hidden" id="pimsAppointmentType" name="appointment_type">
                 
                 <div class="pims-form-group">
-                    <label class="pims-form-label" for="status">Status</label>
-                    <select class="pims-form-control" id="status" name="status" required>
+                    <label class="pims-form-label" for="pimsStatus">Status</label>
+                    <select class="pims-form-control" id="pimsStatus" name="status" required>
                         <option value="pending">Pending</option>
                         <option value="approved">Approved</option>
                         <option value="rejected">Rejected</option>
@@ -645,12 +712,12 @@ textarea.pims-form-control {
                 </div>
                 
                 <div class="pims-form-group">
-                    <label class="pims-form-label" for="notes">Notes (Optional)</label>
-                    <textarea class="pims-form-control" id="notes" name="notes" rows="4" placeholder="Add any additional notes or reasons for the status change"></textarea>
+                    <label class="pims-form-label" for="pimsNotes">Notes (Optional)</label>
+                    <textarea class="pims-form-control" id="pimsNotes" name="notes" rows="4" placeholder="Add any additional notes or reasons for the status change"></textarea>
                 </div>
                 
-                <div class="d-flex justify-content-between mt-4">
-                    <button type="button" class="pims-btn pims-btn-secondary" onclick="closeModal('statusModal')">
+                <div class="pims-modal-footer">
+                    <button type="button" class="pims-btn pims-btn-secondary" onclick="pimsCloseModal('pimsStatusModal')">
                         <i class="fas fa-times"></i> Cancel
                     </button>
                     <button type="submit" class="pims-btn pims-btn-primary">
@@ -661,52 +728,54 @@ textarea.pims-form-control {
         </div>
     </div>
 
-     <!-- Prisoner Verification Modal -->
-     <div id="prisonerModal" class="pims-modal">
-        <div class="pims-modal-content">
+    <!-- Prisoner Verification Modal -->
+    <div id="pimsPrisonerModal" class="pims-modal">
+        <div class="pims-modal-container">
             <div class="pims-modal-header">
                 <h3 class="pims-modal-title">Verify Prisoner Details</h3>
-                <button class="pims-modal-close" onclick="closeModal('prisonerModal')">×</button>
+                <button class="pims-modal-close" onclick="pimsCloseModal('pimsPrisonerModal')">×</button>
             </div>
-            <div class="pims-form-group">
-                <label class="pims-form-label">First Name</label>
-                <input type="text" class="pims-form-control" id="verifyFirstName" readonly>
-            </div>
-            <div class="pims-form-group">
-                <label class="pims-form-label">Middle Name</label>
-                <input type="text" class="pims-form-control" id="verifyMiddleName" readonly>
-            </div>
-            <div class="pims-form-group">
-                <label class="pims-form-label">Last Name</label>
-                <input type="text" class="pims-form-control" id="verifyLastName" readonly>
-            </div>
-            <div id="verificationResult" class="alert" style="display: none;"></div>
-            <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="pims-btn pims-btn-secondary" onclick="closeModal('prisonerModal')">
-                    <i class="fas fa-times"></i> Close
-                </button>
-                <button class="pims-btn pims-btn-primary" onclick="verifyPrisoner()">
-                    <i class="fas fa-check-circle"></i> Verify
-                </button>
-            </div>
-            <!-- View Prisoner Button (initially hidden) -->
-            <div id="viewPrisonerBtn" class="mt-3 text-center" style="display: none;">
-                <button class="pims-btn pims-btn-success w-100" id="viewPrisonerLink">
-                    <i class="fas fa-eye"></i> View Prisoner Details
-                </button>
+            <div class="pims-modal-body">
+                <div class="pims-form-group">
+                    <label class="pims-form-label">First Name</label>
+                    <input type="text" class="pims-form-control" id="pimsVerifyFirstName" readonly>
+                </div>
+                <div class="pims-form-group">
+                    <label class="pims-form-label">Middle Name</label>
+                    <input type="text" class="pims-form-control" id="pimsVerifyMiddleName" readonly>
+                </div>
+                <div class="pims-form-group">
+                    <label class="pims-form-label">Last Name</label>
+                    <input type="text" class="pims-form-control" id="pimsVerifyLastName" readonly>
+                </div>
+                <div id="pimsVerificationResult" class="pims-alert" style="display: none;"></div>
+                <div class="pims-modal-footer">
+                    <button type="button" class="pims-btn pims-btn-secondary" onclick="pimsCloseModal('pimsPrisonerModal')">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                    <button class="pims-btn pims-btn-primary" onclick="pimsVerifyPrisoner()">
+                        <i class="fas fa-check-circle"></i> Verify
+                    </button>
+                </div>
+                <!-- View Prisoner Button (initially hidden) -->
+                <div id="pimsViewPrisonerBtn" class="pims-text-center pims-mt-3" style="display: none;">
+                    <button class="pims-btn pims-btn-success pims-w-100" id="pimsViewPrisonerLink">
+                        <i class="fas fa-eye"></i> View Prisoner Details
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Bootstrap Inmate Details Modal -->
-    <div class="modal fade" id="inmateModal" tabindex="-1" aria-labelledby="inmateModalLabel" aria-hidden="true">
+    <div class="modal fade" id="pimsInmateModal" tabindex="-1" aria-labelledby="pimsInmateModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="inmateModalLabel">Inmate Details</h5>
+                    <h5 class="modal-title" id="pimsInmateModalLabel">Inmate Details</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="inmateDetails">
+                <div class="modal-body" id="pimsInmateDetails">
                     <!-- JSON data will be populated here -->
                 </div>
             </div>
@@ -717,249 +786,249 @@ textarea.pims-form-control {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Configurable base URL for API requests (adjust as needed)
-        const BASE_URL = ''; // e.g., '/api' or 'https://yourdomain.com/api'
+        const PIMS_BASE_URL = ''; // e.g., '/api' or 'https://yourdomain.com/api'
 
         document.addEventListener('DOMContentLoaded', function () {
             // Tab Management with LocalStorage Persistence
-            const savedTab = localStorage.getItem('activeAppointmentTab');
-            if (savedTab && document.getElementById(savedTab)) {
-                openSavedTab(savedTab);
+            const pimsSavedTab = localStorage.getItem('pimsActiveAppointmentTab');
+            if (pimsSavedTab && document.getElementById(pimsSavedTab)) {
+                pimsOpenSavedTab(pimsSavedTab);
             } else {
-                const firstTab = document.querySelector('.pims-tablink');
-                if (firstTab) firstTab.click();
+                const pimsFirstTab = document.querySelector('.pims-tablink');
+                if (pimsFirstTab) pimsFirstTab.click();
             }
 
             document.querySelectorAll('.pims-tablink').forEach(tab => {
                 tab.addEventListener('click', function () {
-                    const tabId = this.getAttribute('data-tab') || 
-                                 this.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-                    if (tabId) localStorage.setItem('activeAppointmentTab', tabId);
+                    const pimsTabId = this.getAttribute('data-tab') || 
+                                     this.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                    if (pimsTabId) localStorage.setItem('pimsActiveAppointmentTab', pimsTabId);
                 });
             });
 
             // View Prisoner Button Event Listener
-            const viewPrisonerBtn = document.getElementById('viewPrisonerLink');
-            if (viewPrisonerBtn) {
-                viewPrisonerBtn.addEventListener('click', async function () {
-                    const prisonerId = document.getElementById('viewPrisonerBtn').dataset.id;
-                    console.log('View Prisoner clicked, ID:', prisonerId); // Debug
-                    if (!prisonerId) {
+            const pimsViewPrisonerBtn = document.getElementById('pimsViewPrisonerLink');
+            if (pimsViewPrisonerBtn) {
+                pimsViewPrisonerBtn.addEventListener('click', async function () {
+                    const pimsPrisonerId = document.getElementById('pimsViewPrisonerBtn').dataset.id;
+                    console.log('View Prisoner clicked, ID:', pimsPrisonerId); // Debug
+                    if (!pimsPrisonerId) {
                         alert('No prisoner ID found. Please verify the prisoner again.');
                         return;
                     }
 
                     try {
                         // Construct the endpoint URL (adjust '/inmate/' if needed)
-                        const endpoint = `${BASE_URL}/prisoners/${prisonerId}`;
-                        console.log('Fetching from:', endpoint); // Debug
-                        const res = await fetch(endpoint);
-                        if (!res.ok) {
-                            if (res.status === 404) {
-                                throw new Error(`Inmate with ID ${prisonerId} not found`);
+                        const pimsEndpoint = `${PIMS_BASE_URL}/prisoners/${pimsPrisonerId}`;
+                        console.log('Fetching from:', pimsEndpoint); // Debug
+                        const pimsRes = await fetch(pimsEndpoint);
+                        if (!pimsRes.ok) {
+                            if (pimsRes.status === 404) {
+                                throw new Error(`Inmate with ID ${pimsPrisonerId} not found`);
                             }
-                            throw new Error(`HTTP error! Status: ${res.status}`);
+                            throw new Error(`HTTP error! Status: ${pimsRes.status}`);
                         }
-                        const data = await res.json();
-                        console.log('Fetched inmate data:', data); // Debug
+                        const pimsData = await pimsRes.json();
+                        console.log('Fetched inmate data:', pimsData); // Debug
 
                         // Validate required fields
-                        if (!data.first_name || !data.last_name) {
+                        if (!pimsData.first_name || !pimsData.last_name) {
                             throw new Error('Incomplete inmate data received');
                         }
 
-                        const details = `
-                            <img src="/storage/${data.inmate_image || 'default.jpg'}" alt="Inmate Image" class="img-thumbnail mb-3" width="150">
-                            <p><strong>Name:</strong> ${data.first_name} ${data.middle_name || ''} ${data.last_name}</p>
-                            <p><strong>DOB:</strong> ${data.dob || 'N/A'}</p>
-                            <p><strong>Gender:</strong> ${data.gender || 'N/A'}</p>
-                            <p><strong>Address:</strong> ${(data.address || 'N/A').replace(/\r\n/g, '<br>')}</p>
-                            <p><strong>Marital Status:</strong> ${data.marital_status || 'N/A'}</p>
-                            <p><strong>Crime:</strong> ${data.crime_committed || 'N/A'}</p>
-                            <p><strong>Status:</strong> ${data.status || 'N/A'}</p>
-                            <p><strong>Time Served:</strong> ${data.time_serve_start || 'N/A'} - ${data.time_serve_end || 'N/A'}</p>
+                        const pimsDetails = `
+                            <img src="/storage/${pimsData.inmate_image || 'default.jpg'}" alt="Inmate Image" class="img-thumbnail mb-3" width="150">
+                            <p><strong>Name:</strong> ${pimsData.first_name} ${pimsData.middle_name || ''} ${pimsData.last_name}</p>
+                            <p><strong>DOB:</strong> ${pimsData.dob || 'N/A'}</p>
+                            <p><strong>Gender:</strong> ${pimsData.gender || 'N/A'}</p>
+                            <p><strong>Address:</strong> ${(pimsData.address || 'N/A').replace(/\r\n/g, '<br>')}</p>
+                            <p><strong>Marital Status:</strong> ${pimsData.marital_status || 'N/A'}</p>
+                            <p><strong>Crime:</strong> ${pimsData.crime_committed || 'N/A'}</p>
+                            <p><strong>Status:</strong> ${pimsData.status || 'N/A'}</p>
+                            <p><strong>Time Served:</strong> ${pimsData.time_serve_start || 'N/A'} - ${pimsData.time_serve_end || 'N/A'}</p>
                             <hr>
-                            <p><strong>Emergency Contact:</strong> ${data.emergency_contact_name || 'N/A'} (${data.emergency_contact_relation || 'N/A'}) - ${data.emergency_contact_number || 'N/A'}</p>
-                            <p><strong>Prison Name:</strong> ${data.prison_name || 'N/A'}</p>
-                            <p><strong>Created:</strong> ${data.created_at || 'N/A'}</p>
-                            <p><strong>Updated:</strong> ${data.updated_at || 'N/A'}</p>
+                            <p><strong>Emergency Contact:</strong> ${pimsData.emergency_contact_name || 'N/A'} (${pimsData.emergency_contact_relation || 'N/A'}) - ${pimsData.emergency_contact_number || 'N/A'}</p>
+                            <p><strong>Prison Name:</strong> ${pimsData.prison_name || 'N/A'}</p>
+                            <p><strong>Created:</strong> ${pimsData.created_at || 'N/A'}</p>
+                            <p><strong>Updated:</strong> ${pimsData.updated_at || 'N/A'}</p>
                         `;
-                        document.getElementById('inmateDetails').innerHTML = details;
+                        document.getElementById('pimsInmateDetails').innerHTML = pimsDetails;
 
                         // Close verification modal and show inmate modal
-                        closeModal('prisonerModal');
-                        const modal = new bootstrap.Modal(document.getElementById('inmateModal'), {
+                        pimsCloseModal('pimsPrisonerModal');
+                        const pimsModal = new bootstrap.Modal(document.getElementById('pimsInmateModal'), {
                             backdrop: 'static',
                             keyboard: true
                         });
-                        modal.show();
+                        pimsModal.show();
                     } catch (error) {
                         console.error('Error fetching inmate data:', error);
                         alert(`Failed to load inmate data: ${error.message}`);
                     }
                 });
             } else {
-                console.error('viewPrisonerLink element not found');
+                console.error('pimsViewPrisonerLink element not found');
             }
         });
 
-        function openSavedTab(tabId) {
+        function pimsOpenSavedTab(pimsTabId) {
             document.querySelectorAll('.pims-report-content').forEach(content => {
                 content.style.display = 'none';
             });
             document.querySelectorAll('.pims-tablink').forEach(tab => {
                 tab.classList.remove('active');
             });
-            const tabContent = document.getElementById(tabId);
-            if (tabContent) tabContent.style.display = 'block';
-            const tabButton = document.querySelector(`.pims-tablink[data-tab="${tabId}"], .pims-tablink[onclick*="${tabId}"]`);
-            if (tabButton) tabButton.classList.add('active');
+            const pimsTabContent = document.getElementById(pimsTabId);
+            if (pimsTabContent) pimsTabContent.style.display = 'block';
+            const pimsTabButton = document.querySelector(`.pims-tablink[data-tab="${pimsTabId}"], .pims-tablink[onclick*="${pimsTabId}"]`);
+            if (pimsTabButton) pimsTabButton.classList.add('active');
         }
 
-        function openReportTab(evt, reportName) {
+        function pimsOpenReportTab(pimsEvt, pimsReportName) {
             document.querySelectorAll('.pims-report-content').forEach(el => {
                 el.style.display = 'none';
             });
             document.querySelectorAll('.pims-tablink').forEach(el => {
                 el.classList.remove('active');
             });
-            const tabContent = document.getElementById(reportName);
-            if (tabContent) {
-                tabContent.style.display = 'block';
-                tabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const pimsTabContent = document.getElementById(pimsReportName);
+            if (pimsTabContent) {
+                pimsTabContent.style.display = 'block';
+                pimsTabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }
-            if (evt?.currentTarget) evt.currentTarget.classList.add('active');
-            localStorage.setItem('activeAppointmentTab', reportName);
+            if (pimsEvt?.currentTarget) pimsEvt.currentTarget.classList.add('active');
+            localStorage.setItem('pimsActiveAppointmentTab', pimsReportName);
         }
 
-        function openStatusModal(appointmentId, appointmentType, currentStatus) {
-            document.getElementById('appointment_id').value = appointmentId;
-            document.getElementById('appointment_type').value = appointmentType;
-            document.getElementById('status').value = currentStatus.toLowerCase();
-            document.getElementById('notes').value = '';
-            showModal('statusModal');
+        function pimsOpenStatusModal(pimsAppointmentId, pimsAppointmentType, pimsCurrentStatus) {
+            document.getElementById('pimsAppointmentId').value = pimsAppointmentId;
+            document.getElementById('pimsAppointmentType').value = pimsAppointmentType;
+            document.getElementById('pimsStatus').value = pimsCurrentStatus.toLowerCase();
+            document.getElementById('pimsNotes').value = '';
+            pimsShowModal('pimsStatusModal');
         }
 
-        function openPrisonerModal(firstName, middleName, lastName) {
-            document.getElementById('verifyFirstName').value = firstName || '';
-            document.getElementById('verifyMiddleName').value = middleName || '';
-            document.getElementById('verifyLastName').value = lastName || '';
-            document.getElementById('verificationResult').style.display = 'none';
-            document.getElementById('viewPrisonerBtn').style.display = 'none';
-            showModal('prisonerModal');
+        function pimsOpenPrisonerModal(pimsFirstName, pimsMiddleName, pimsLastName) {
+            document.getElementById('pimsVerifyFirstName').value = pimsFirstName || '';
+            document.getElementById('pimsVerifyMiddleName').value = pimsMiddleName || '';
+            document.getElementById('pimsVerifyLastName').value = pimsLastName || '';
+            document.getElementById('pimsVerificationResult').style.display = 'none';
+            document.getElementById('pimsViewPrisonerBtn').style.display = 'none';
+            pimsShowModal('pimsPrisonerModal');
         }
 
-        function showModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.style.display = 'block';
+        function pimsShowModal(pimsModalId) {
+            const pimsModal = document.getElementById(pimsModalId);
+            if (pimsModal) {
+                pimsModal.classList.add('active');
                 document.body.style.overflow = 'hidden';
             }
         }
 
-        function closeModal(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.style.display = 'none';
+        function pimsCloseModal(pimsModalId) {
+            const pimsModal = document.getElementById(pimsModalId);
+            if (pimsModal) {
+                pimsModal.classList.remove('active');
                 document.body.style.overflow = '';
             }
         }
 
-        window.onclick = function (event) {
-            if (event.target.classList.contains('pims-modal')) {
-                closeModal(event.target.id);
+        window.onclick = function (pimsEvent) {
+            if (pimsEvent.target.classList.contains('pims-modal')) {
+                pimsCloseModal(pimsEvent.target.id);
             }
         };
 
-        document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape') {
-                const openModal = document.querySelector('.pims-modal[style="display: block;"]');
-                if (openModal) closeModal(openModal.id);
+        document.addEventListener('keydown', function (pimsEvent) {
+            if (pimsEvent.key === 'Escape') {
+                const pimsOpenModal = document.querySelector('.pims-modal.active');
+                if (pimsOpenModal) pimsCloseModal(pimsOpenModal.id);
             }
         });
 
-        async function verifyPrisoner() {
-            const firstName = document.getElementById('verifyFirstName').value.trim();
-            const middleName = document.getElementById('verifyMiddleName').value.trim();
-            const lastName = document.getElementById('verifyLastName').value.trim();
+        async function pimsVerifyPrisoner() {
+            const pimsFirstName = document.getElementById('pimsVerifyFirstName').value.trim();
+            const pimsMiddleName = document.getElementById('pimsVerifyMiddleName').value.trim();
+            const pimsLastName = document.getElementById('pimsVerifyLastName').value.trim();
 
-            if (!firstName || !lastName) {
-                showVerificationResult('Please provide at least first and last name', false);
+            if (!pimsFirstName || !pimsLastName) {
+                pimsShowVerificationResult('Please provide at least first and last name', false);
                 return;
             }
 
             try {
-                const response = await fetch('/verify-prisoner', {
+                const pimsResponse = await fetch('/verify-prisoner', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
                     },
                     body: JSON.stringify({
-                        first_name: firstName,
-                        middle_name: middleName,
-                        last_name: lastName
+                        first_name: pimsFirstName,
+                        middle_name: pimsMiddleName,
+                        last_name: pimsLastName
                     })
                 });
 
-                const data = await response.json();
-                console.log('Verification response:', data); // Debug
+                const pimsData = await pimsResponse.json();
+                console.log('Verification response:', pimsData); // Debug
 
-                if (data.success && data.prisoner_id) {
-                    showVerificationResult(data.message || 'Prisoner verified successfully', true);
-                    const viewBtn = document.getElementById('viewPrisonerBtn');
-                    viewBtn.dataset.id = data.prisoner_id;
-                    viewBtn.style.display = 'block';
-                    console.log('View button shown with ID:', data.prisoner_id); // Debug
+                if (pimsData.success && pimsData.prisoner_id) {
+                    pimsShowVerificationResult(pimsData.message || 'Prisoner verified successfully', true);
+                    const pimsViewBtn = document.getElementById('pimsViewPrisonerBtn');
+                    pimsViewBtn.dataset.id = pimsData.prisoner_id;
+                    pimsViewBtn.style.display = 'block';
+                    console.log('View button shown with ID:', pimsData.prisoner_id); // Debug
                 } else {
-                    showVerificationResult(data.message || 'Verification failed', false);
+                    pimsShowVerificationResult(pimsData.message || 'Verification failed', false);
                 }
-            } catch (error) {
-                console.error('Verification error:', error);
-                showVerificationResult('Error verifying prisoner: ' + error.message, false);
+            } catch (pimsError) {
+                console.error('Verification error:', pimsError);
+                pimsShowVerificationResult('Error verifying prisoner: ' + pimsError.message, false);
             }
         }
 
-        function showVerificationResult(message, isSuccess) {
-            const resultDiv = document.getElementById('verificationResult');
-            resultDiv.textContent = message;
-            resultDiv.className = `alert ${isSuccess ? 'alert-success' : 'alert-danger'}`;
-            resultDiv.style.display = 'block';
-            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        function pimsShowVerificationResult(pimsMessage, pimsIsSuccess) {
+            const pimsResultDiv = document.getElementById('pimsVerificationResult');
+            pimsResultDiv.textContent = pimsMessage;
+            pimsResultDiv.className = `pims-alert ${pimsIsSuccess ? 'pims-alert-success' : 'pims-alert-danger'}`;
+            pimsResultDiv.style.display = 'block';
+            pimsResultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        document.getElementById('statusForm')?.addEventListener('submit', async function (e) {
-            e.preventDefault();
-            const form = e.target;
-            const formData = new FormData(form);
-            const submitBtn = form.querySelector('button[type="submit"]');
-            const originalBtnText = submitBtn.innerHTML;
+        document.getElementById('pimsStatusForm')?.addEventListener('submit', async function (pimsE) {
+            pimsE.preventDefault();
+            const pimsForm = pimsE.target;
+            const pimsFormData = new FormData(pimsForm);
+            const pimsSubmitBtn = pimsForm.querySelector('button[type="submit"]');
+            const pimsOriginalBtnText = pimsSubmitBtn.innerHTML;
 
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            pimsSubmitBtn.disabled = true;
+            pimsSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
             try {
-                const response = await fetch(form.action, {
+                const pimsResponse = await fetch(pimsForm.action, {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                         'Accept': 'application/json'
                     },
-                    body: formData
+                    body: pimsFormData
                 });
 
-                const data = await response.json();
-                if (data.success) {
+                const pimsData = await pimsResponse.json();
+                if (pimsData.success) {
                     alert('Status updated successfully!');
-                    closeModal('statusModal');
+                    pimsCloseModal('pimsStatusModal');
                     window.location.reload();
                 } else {
-                    alert(data.message || 'Failed to update status');
+                    alert(pimsData.message || 'Failed to update status');
                 }
-            } catch (error) {
-                alert('Error updating status: ' + error.message);
+            } catch (pimsError) {
+                alert('Error updating status: ' + pimsError.message);
             } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
+                pimsSubmitBtn.disabled = false;
+                pimsSubmitBtn.innerHTML = pimsOriginalBtnText;
             }
         });
     </script>
