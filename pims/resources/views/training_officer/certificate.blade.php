@@ -392,8 +392,7 @@
 </head>
 <body>
     <!-- Navigation -->
-    @include('includes.nav')
-    @include('training_officer.menu')
+
     
     <div class="pims-app-container">
         
