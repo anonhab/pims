@@ -55,7 +55,69 @@ class TrainingController extends Controller
 
         return view('training_officer.assignCertifications', compact('prisonerDetails'));
     }
+    public function viewCertificate($id)
+    {
+        $prisonId = session('prison_id');
 
+        if (!$prisonId) {
+            Log::warning('No prison_id in session for viewCertificate');
+            return redirect()->route('home')->with('error', 'Prison ID not set.');
+        }
+
+        try {
+            $certification = CertificationRecord::where('id', $id)
+                ->whereHas('prisoner', function ($query) use ($prisonId) {
+                    $query->where('prison_id', $prisonId);
+                })
+                ->with([
+                    'prisoner.jobAssignments' => function ($query) {
+                        $query->where('status', 'completed')
+                            ->select('id', 'prisoner_id', 'job_title', 'job_description', 'end_date');
+                    },
+                    'prisoner.trainingAssignments' => function ($query) {
+                        $query->where('status', 'completed')
+                            ->select('id', 'prisoner_id', 'training_id', 'end_date');
+                    },
+                    'prisoner.trainingAssignments.trainingProgram' => function ($query) {
+                        $query->select('id', 'title');
+                    },
+                    'issuedBy'
+                ])
+                ->firstOrFail();
+
+            $prisonerName = trim(implode(' ', array_filter([
+                $certification->prisoner->first_name,
+                $certification->prisoner->middle_name,
+                $certification->prisoner->last_name
+            ])));
+
+            $data = [
+                'prisoner_name' => $this->escapeHtml($prisonerName),
+                'certification_type' => $certification->certification_type === 'job_completion' ? 'Job Completion' : 'Training Program Completion',
+                'certification_details' => $this->escapeHtml($certification->certification_details ?? 'No additional details provided.'),
+                'issued_by' => $this->escapeHtml(trim($certification->issuedBy->first_name . ' ' . $certification->issuedBy->last_name)),
+                'issued_date' => \Carbon\Carbon::parse($certification->issued_date)->format('F d, Y'),
+                'completed_jobs' => $certification->prisoner->jobAssignments->map(function ($job) {
+                    return [
+                        'job_title' => $this->escapeHtml($job->job_title),
+                        'completed_date' => $job->end_date->format('M d, Y'),
+                    ];
+                })->toArray(),
+                'completed_trainings' => $certification->prisoner->trainingAssignments->map(function ($training) {
+                    return [
+                        'training_title' => $this->escapeHtml(optional($training->trainingProgram)->title ?? 'Unknown Training'),
+                        'completed_date' => $training->end_date->format('M d, Y'),
+                    ];
+                })->toArray(),
+                'today' => now()->format('F d, Y'),
+            ];
+
+            return view('training_officer.certificate', $data);
+        } catch (\Exception $e) {
+            Log::error('Error viewing certificate', ['id' => $id, 'error' => $e->getMessage()]);
+            return redirect()->route('training.viewCertifications')->with('error', 'Certificate not found.');
+        }
+    }
     public function getPrisonerDetails(Request $request)
     {
         $prisonerId = $request->input('prisoner_id');
@@ -189,7 +251,47 @@ class TrainingController extends Controller
     }
     public function dashboard()
     {
-        return view('training_officer.dashboard');
+        $prisonId = session('prison_id');
+
+        if (!$prisonId) {
+            Log::warning('No prison_id in session for dashboard');
+            return redirect()->route('home')->with('error', 'Prison ID not set.');
+        }
+
+        try {
+            $totalPrisoners = Prisoner::where('prison_id', $prisonId)->count();
+            $totalCertifications = CertificationRecord::whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })->count();
+            $totalActiveJobs = JobAssignment::whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })->where('status', 'active')->count();
+            $recentCertifications = CertificationRecord::whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })
+                ->with(['prisoner', 'issuedBy'])
+                ->orderBy('issued_date', 'desc')
+                ->take(5)
+                ->get();
+
+            Log::info('Dashboard data fetched', [
+                'prison_id' => $prisonId,
+                'total_prisoners' => $totalPrisoners,
+                'total_certifications' => $totalCertifications,
+                'total_active_jobs' => $totalActiveJobs,
+                'recent_certifications_count' => $recentCertifications->count(),
+            ]);
+
+            return view('training_officer.dashboard', compact(
+                'totalPrisoners',
+                'totalCertifications',
+                'totalActiveJobs',
+                'recentCertifications'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Error fetching dashboard data', ['error' => $e->getMessage(), 'prison_id' => $prisonId]);
+            return redirect()->route('home')->with('error', 'Failed to load dashboard.');
+        }
     }
     // Store the assigned certifications
     public function storeCertifications(Request $request)
@@ -377,6 +479,45 @@ class TrainingController extends Controller
         return view('training_officer.viewJobs', compact('jobs'));
     }
 
+    public function viewCertificationss(Request $request)
+    {
+        $prisonId = session('prison_id');
+
+        if (!$prisonId) {
+            Log::warning('No prison_id in session for viewCertifications');
+            return redirect()->route('home')->with('error', 'Prison ID not set.');
+        }
+
+        $search = $request->query('search');
+        $certifications = collect();
+
+        try {
+            $certifications = CertificationRecord::whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })
+            ->with(['prisoner', 'issuedBy'])
+            ->when($search, function ($query, $search) {
+                $query->whereHas('prisoner', function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                      ->orWhere('middle_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%");
+                })
+                ->orWhere('certification_type', 'like', "%{$search}%")
+                ->orWhereHas('issuedBy', function ($q) use ($search) {
+                    $q->where('first_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%");
+                });
+            })
+            ->get();
+
+            Log::info('Certifications fetched', ['count' => $certifications->count(), 'prison_id' => $prisonId, 'search' => $search]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching certifications', ['error' => $e->getMessage(), 'prison_id' => $prisonId]);
+            return redirect()->route('home')->with('error', 'Failed to load certifications.');
+        }
+
+        return view('training_officer.viewCertifications', compact('certifications'));
+    }
 
     public function updateAssign(Request $request, $id)
     {

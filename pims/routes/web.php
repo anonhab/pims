@@ -237,7 +237,6 @@ Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name
 Route::get('/assigncertifications', [TrainingController::class, 'assignCertifications'])->name('training.assignCertifications');
 Route::get('/assignjobs', [TrainingController::class, 'assignJobs'])->name('training.assignJobs');
 Route::get('/createtrainingprograms', [TrainingController::class, 'createTrainingPrograms'])->name('training.createTrainingPrograms');
-Route::get('/viewcertifications', [TrainingController::class, 'viewCertifications'])->name('training.viewCertifications');
 Route::get('/viewjobs', [TrainingController::class, 'viewJobs'])->name('training.viewJobs');
 Route::get('/viewtrainingprograms', [TrainingController::class, 'viewTrainingPrograms'])->name('training.viewTrainingPrograms');
 Route::get('/assigntrainingprograms', [TrainingController::class, 'assignTrainingPrograms'])->name('training.assignTrainingPrograms');
@@ -261,6 +260,10 @@ Route::post('/training-officer/prisoner-details', [TrainingController::class, 'g
     ->name('training_officer.getPrisonerDetails');
 Route::post('/training-officer/certifications', [TrainingController::class, 'store'])
     ->name('training_officer.storeCertification');
+    Route::get('/viewcertifications', [TrainingController::class, 'viewCertificationss'])
+    ->name('training.viewCertifications');
+    Route::get('/training-officer/certifications/{id}', [TrainingController::class, 'viewCertificate'])
+    ->name('training.viewCertificate');
 Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest')->middleware('role:4'); //visitor role id == 4
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
 Route::post('/change-password', [PasswordController::class, 'update'])->name('password.update');
