@@ -399,6 +399,9 @@
             }
         }
     </style>
+       <!-- Navigation -->
+    @include('includes.nav')
+        @include('training_officer.menu')
 </head>
 <body>
       <div class="pims-app-container">
