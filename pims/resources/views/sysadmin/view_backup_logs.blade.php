@@ -7,174 +7,357 @@
     <title>PIMS - System Admin View Backup/Recovery Logs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        :root {
+            --pims-primary: #2c3e50;
+            --pims-secondary: #34495e;
+            --pims-accent: #3498db;
+            --pims-light: #ecf0f1;
+            --pims-lighter: #f8f9fa;
+            --pims-danger: #e74c3c;
+            --pims-success: #2ecc71;
+            --pims-warning: #f39c12;
+            --pims-border-radius: 8px;
+            --pims-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --pims-transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
-            min-height: 100vh;
-            padding: 20px;
+            background-color: #f5f7fa;
+            color: var(--pims-primary);
+            line-height: 1.6;
         }
+
         .pims-app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .pims-main-content {
+            flex-grow: 1;
+            padding: 2rem;
+            margin-left: 250px;
+            transition: var(--pims-transition);
+        }
+
+        .pims-content-container {
             max-width: 1400px;
             margin: 0 auto;
         }
+
         .pims-content-area {
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            padding: 30px;
-            margin-bottom: 20px;
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-box-shadow);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
         }
-        .pims-report-title {
-            font-size: 28px;
-            font-weight: 600;
-            color: #1a237e;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .pims-actions {
+
+        .pims-page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
+            margin-bottom: 2rem;
         }
-        .pims-search {
+
+        .pims-page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: var(--pims-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pims-page-title i {
+            color: var(--pims-accent);
+        }
+
+        .pims-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-box-shadow);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .pims-card-header {
+            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
+            color: white;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .pims-card-header h5 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .pims-card-body {
+            padding: 1.5rem;
+        }
+
+        .pims-alert {
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: var(--pims-border-radius);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .pims-alert-warning {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: var(--pims-warning);
+            border-left: 4px solid var(--pims-warning);
+        }
+
+        .pims-alert-danger {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--pims-danger);
+            border-left: 4px solid var(--pims-danger);
+        }
+
+        .pims-search-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .pims-search-box {
             position: relative;
             width: 300px;
             max-width: 100%;
         }
+
         .pims-search-icon {
             position: absolute;
-            left: 12px;
+            left: 0.75rem;
             top: 50%;
             transform: translateY(-50%);
-            color: #90a4ae;
-            font-size: 16px;
+            color: var(--pims-secondary);
         }
+
         .pims-search-input {
             width: 100%;
-            padding: 10px 10px 10px 40px;
-            border: 1px solid #d1d9e6;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s, box-shadow 0.3s;
+            padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: var(--pims-border-radius);
+            font-size: 0.9rem;
+            transition: var(--pims-transition);
         }
+
         .pims-search-input:focus {
-            border-color: #3f51b5;
-            box-shadow: 0 0 8px rgba(63, 81, 181, 0.2);
             outline: none;
+            border-color: var(--pims-accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
         }
+
         .pims-action-buttons {
             display: flex;
-            gap: 12px;
+            gap: 0.75rem;
             flex-wrap: wrap;
         }
+
         .pims-btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 8px;
-            transition: background 0.3s;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--pims-border-radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--pims-transition);
+            border: none;
+            font-size: 0.9rem;
+            gap: 0.5rem;
         }
+
         .pims-btn-export {
-            background: #2ecc71;
-            color: #fff;
+            background-color: var(--pims-success);
+            color: white;
         }
+
         .pims-btn-export:hover {
-            background: #27ae60;
+            background-color: #27ae60;
+            transform: translateY(-2px);
         }
+
         .pims-btn-pdf {
-            background: #e74c3c;
-            color: #fff;
+            background-color: var(--pims-danger);
+            color: white;
         }
+
         .pims-btn-pdf:hover {
-            background: #c0392b;
+            background-color: #c0392b;
+            transform: translateY(-2px);
         }
-        .pims-report-table {
+
+        .pims-table-container {
+            overflow-x: auto;
+        }
+
+        .pims-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: #fff;
-            border-radius: 8px;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--pims-border-radius);
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--pims-box-shadow);
         }
-        .pims-report-table th, .pims-report-table td {
-            padding: 12px 14px;
+
+        .pims-table th {
+            background-color: var(--pims-primary);
+            color: white;
+            font-weight: 500;
             text-align: left;
-            border-bottom: 1px solid #e0e7ff;
-            font-size: 13px;
-        }
-        .pims-report-table th {
-            background: #e8eaf6;
-            color: #1a237e;
-            font-weight: 600;
+            padding: 1rem;
             position: sticky;
             top: 0;
             z-index: 10;
         }
-        .pims-report-table tbody tr:hover {
-            background: #f8fafc;
+
+        .pims-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #eee;
+            vertical-align: middle;
         }
+
+        .pims-table tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+
         .pims-status-badge {
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 500;
-            color: #fff;
-            display: inline-block;
+            color: white;
         }
-        .pims-status-completed { background: #2ecc71; }
-        .pims-status-failed { background: #e74c3c; }
-        .pims-status-in_progress { background: #f1c40f; }
-        .pims-pdf-header {
-            margin-bottom: 20px;
-            font-family: 'Poppins', sans-serif;
+
+        .pims-status-completed {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--pims-success);
         }
-        .pims-pdf-header h1 {
-            font-size: 18px;
+
+        .pims-status-failed {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--pims-danger);
+        }
+
+        .pims-status-in_progress {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: var(--pims-warning);
+        }
+
+        .pims-btn-view {
+            background-color: var(--pims-accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+
+        .pims-btn-view:hover {
+            background-color: #2980b9;
+        }
+
+        .pims-text-center {
+            text-align: center;
+        }
+
+        .pims-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .pims-modal.active {
+            display: flex;
+        }
+
+        .pims-modal-container {
+            background-color: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .pims-modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pims-modal-header h5 {
+            font-size: 1.5rem;
             font-weight: 600;
-            color: #1a237e;
-            margin-bottom: 10px;
+            color: var(--pims-primary);
         }
-        .pims-pdf-header p {
-            font-size: 12px;
-            color: #34495e;
-            margin: 5px 0;
+
+        .pims-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            cursor: pointer;
+            color: var(--pims-secondary);
         }
-        .modal-content {
-            border-radius: 10px;
+
+        .pims-modal-body {
+            padding: 1.5rem;
         }
-        .modal-header {
-            background: #e8eaf6;
-            color: #1a237e;
+
+        .pims-modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
         }
+
+        @media (max-width: 992px) {
+            .pims-main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+        }
+
         @media (max-width: 768px) {
-            .pims-actions {
+            .pims-search-container {
                 flex-direction: column;
                 align-items: stretch;
             }
-            .pims-search {
+            
+            .pims-search-box {
                 width: 100%;
             }
-            .pims-report-table {
-                display: block;
-                overflow-x: auto;
+            
+            .pims-action-buttons {
+                width: 100%;
+                justify-content: flex-start;
             }
         }
     </style>
@@ -183,140 +366,191 @@
     @include('includes.nav')
     <div class="pims-app-container">
         @include('sysadmin.menu')
-        <div class="pims-content-area">
-            <h1 class="pims-report-title">
-                <i class="fas fa-database"></i> Prison Management System - View Backup/Recovery Logs
-            </h1>
-            @if (isset($prison))
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5>Prison: {{ $prison->name }}</h5>
+        <main class="pims-main-content">
+            <div class="pims-content-container">
+                <div class="pims-content-area">
+                    <h2 class="pims-page-title">
+                        <i class="fas fa-database"></i> Backup/Recovery Logs
+                    </h2>
+                    
+                    @if (isset($prison))
+                        <div class="pims-card">
+                            <div class="pims-card-header">
+                                <h5>Prison: {{ $prison->name }}</h5>
+                            </div>
+                            <div class="pims-card-body">
+                                <p><strong>Location:</strong> {{ $prison->location }}</p>
+                                <p><strong>Capacity:</strong> {{ $prison->capacity }}</p>
+                                <p><strong>Status:</strong> Operational</p>
+                            </div>
+                        </div>
+                    @else
+                        <div class="pims-alert pims-alert-warning">
+                            <i class="fas fa-exclamation-circle"></i>
+                            No prison assigned to this session.
+                        </div>
+                    @endif
+                    
+                    @if (session('error'))
+                        <div class="pims-alert pims-alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    
+                    <div class="pims-search-container">
+                        <div class="pims-search-box">
+                            <i class="fas fa-search pims-search-icon"></i>
+                            <input type="text" id="pims-search-backups" class="pims-search-input"
+                                   placeholder="Search backups..."
+                                   onkeyup="pimsSearchTable('pims-backups-table', 'pims-search-backups')">
+                        </div>
+                        <div class="pims-action-buttons">
+                            <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pims-backups-table', 'PIMS_Backup_Logs.csv')">
+                                <i class="fas fa-file-csv"></i> Export CSV
+                            </button>
+                            <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pims-backups-table', 'PIMS_Backup_Logs.pdf')">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </button>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <p><strong>Location:</strong> {{ $prison->location }}</p>
-                        <p><strong>Capacity:</strong> {{ $prison->capacity }}</p>
-                        <p><strong>Status:</strong> Operational</p>
+                    
+                    <div class="pims-table-container">
+                        <table class="pims-table" id="pims-backups-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Initiated By</th>
+                                    <th>Prison</th>
+                                    <th>Backup Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pims-backups-body">
+                                @forelse ($backups as $backup)
+                                    <tr>
+                                        <td>{{ $backup['id'] }}</td>
+                                        <td>{{ $backup['initiated_by'] }}</td>
+                                        <td>{{ $backup['prison_name'] }}</td>
+                                        <td>{{ $backup['backup_date'] }}</td>
+                                        <td>
+                                            <span class="pims-status-badge pims-status-{{ str_replace('_', '-', strtolower($backup['backup_status'])) }}">
+                                                <i class="fas fa-${getStatusIcon($backup['backup_status'])}"></i> ${$backup['backup_status']}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button class="pims-btn pims-btn-view" onclick="pimsShowBackupDetails({{ $backup['id'] }})">
+                                                <i class="fas fa-eye"></i> View Details
+                                            </button>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="6" class="pims-text-center">No backup logs found for this prison.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
-                </div>
-            @else
-                <div class="alert alert-warning">
-                    No prison assigned to this session.
-                </div>
-            @endif
-            @if (session('error'))
-                <div class="alert alert-danger">
-                    {{ session('error') }}
-                </div>
-            @endif
-            <div class="pims-actions">
-                <div class="pims-search">
-                    <i class="fas fa-search pims-search-icon"></i>
-                    <input type="text" id="pimsSearchBackups" class="pims-search-input"
-                           placeholder="Search backups..."
-                           onkeyup="pimsSearchTable('pimsBackupsTable', 'pimsSearchBackups')">
-                </div>
-                <div class="pims-action-buttons">
-                    <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsBackupsTable', 'PIMS_Backup_Logs.csv')">
-                        <i class="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsBackupsTable', 'PIMS_Backup_Logs.pdf')">
-                        <i class="fas fa-file-pdf"></i> Export PDF
-                    </button>
                 </div>
             </div>
-            <table class="pims-report-table" id="pimsBackupsTable">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Initiated By</th>
-                        <th>Prison</th>
-                        <th>Backup Date</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="backupsBody">
-                    @forelse ($backups as $backup)
-                        <tr>
-                            <td>{{ $backup['id'] }}</td>
-                            <td>{{ $backup['initiated_by'] }}</td>
-                            <td>{{ $backup['prison_name'] }}</td>
-                            <td>{{ $backup['backup_date'] }}</td>
-                            <td>
-                                <span class="pims-status-badge pims-status-{{ str_replace('_', '-', strtolower($backup['backup_status'])) }}">
-                                    {{ $backup['backup_status'] }}
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-sm btn-primary" onclick="showBackupDetails({{ $backup['id'] }})">
-                                    <i class="fas fa-eye"></i> View Details
-                                </button>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">No backup logs found for this prison.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+        </main>
     </div>
 
     <!-- Modal for Backup Details -->
-    <div class="modal fade" id="backupDetailsModal" tabindex="-1" role="dialog" aria-labelledby="backupDetailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="backupDetailsModalLabel">Backup Details</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="backupDetailsContent">
-                    <!-- Backup details will be populated here -->
-                </div>
-                <div class="modal-footer">
-                    <button class="pims-btn pims-btn-export" onclick="exportBackupCSV()">
-                        <i class="fas fa-file-csv"></i> Export CSV
-                    </button>
-                    <button class="pims-btn pims-btn-pdf" onclick="exportBackupPDF()">
-                        <i class="fas fa-file-pdf"></i> Export PDF
-                    </button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
+    <div class="pims-modal" id="pims-backup-details-modal">
+        <div class="pims-modal-container">
+            <div class="pims-modal-header">
+                <h5><i class="fas fa-database"></i> Backup Details</h5>
+                <button class="pims-modal-close">&times;</button>
+            </div>
+            <div class="pims-modal-body" id="pims-backup-details-content">
+                <!-- Backup details will be populated here -->
+            </div>
+            <div class="pims-modal-footer">
+                <button class="pims-btn pims-btn-export" onclick="pimsExportBackupCSV()">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </button>
+                <button class="pims-btn pims-btn-pdf" onclick="pimsExportBackupPDF()">
+                    <i class="fas fa-file-pdf"></i> Export PDF
+                </button>
+                <button class="pims-btn pims-btn-secondary pims-modal-close-btn">
+                    Close
+                </button>
             </div>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
-        const backupsData = @json($backups);
-        const prisonName = "{{ $prison->name ?? 'Unknown Prison' }}";
-        const currentDate = new Date().toLocaleDateString('en-US', {
+        const pimsBackupsData = @json($backups);
+        const pimsPrisonName = "{{ $prison->name ?? 'Unknown Prison' }}";
+        const pimsCurrentDate = new Date().toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
 
-        function showBackupDetails(backupId) {
-            const backup = backupsData.find(b => b.id === backupId);
+        function getStatusIcon(status) {
+            switch(status.toLowerCase()) {
+                case 'completed': return 'check-circle';
+                case 'failed': return 'times-circle';
+                case 'in_progress': return 'spinner';
+                default: return 'info-circle';
+            }
+        }
+
+        function pimsShowBackupDetails(backupId) {
+            const backup = pimsBackupsData.find(b => b.id === backupId);
             if (!backup) {
                 alert('Backup not found.');
                 return;
             }
 
             let html = `
-                <h5>Backup Log #${backup.id}</h5>
-                <p><strong>Initiated By:</strong> ${backup.initiated_by}</p>
-                <p><strong>Prison:</strong> ${backup.prison_name}</p>
-                <p><strong>Backup Date:</strong> ${backup.backup_date}</p>
-                <p><strong>Status:</strong> ${backup.backup_status}</p>
+                <div class="pims-details-grid">
+                    <div class="pims-detail-item">
+                        <strong>Backup ID</strong>
+                        <span>${backup.id}</span>
+                    </div>
+                    <div class="pims-detail-item">
+                        <strong>Initiated By</strong>
+                        <span>${backup.initiated_by}</span>
+                    </div>
+                    <div class="pims-detail-item">
+                        <strong>Prison</strong>
+                        <span>${backup.prison_name}</span>
+                    </div>
+                    <div class="pims-detail-item">
+                        <strong>Backup Date</strong>
+                        <span>${backup.backup_date}</span>
+                    </div>
+                    <div class="pims-detail-item">
+                        <strong>Status</strong>
+                        <span class="pims-status-badge pims-status-${str_replace('_', '-', strtolower(backup.backup_status))}">
+                            <i class="fas fa-${getStatusIcon(backup.backup_status)}"></i> ${backup.backup_status}
+                        </span>
+                    </div>
+                    ${backup.backup_size ? `
+                    <div class="pims-detail-item">
+                        <strong>Backup Size</strong>
+                        <span>${backup.backup_size}</span>
+                    </div>` : ''}
+                    ${backup.backup_location ? `
+                    <div class="pims-detail-item">
+                        <strong>Backup Location</strong>
+                        <span>${backup.backup_location}</span>
+                    </div>` : ''}
+                    ${backup.backup_notes ? `
+                    <div class="pims-detail-item">
+                        <strong>Notes</strong>
+                        <span>${backup.backup_notes}</span>
+                    </div>` : ''}
+                </div>
             `;
-            document.getElementById('backupDetailsContent').innerHTML = html;
-            $('#backupDetailsModal').modal('show');
+            document.getElementById('pims-backup-details-content').innerHTML = html;
+            document.getElementById('pims-backup-details-modal').classList.add('active');
         }
 
         function pimsSearchTable(tableId, inputId) {
@@ -347,8 +581,8 @@
                 }
                 let csv = [
                     `"Prison Management System Backup Logs"`,
-                    `"Prison,${prisonName}"`,
-                    `"Generated Date,${currentDate}"`,
+                    `"Prison,${pimsPrisonName}"`,
+                    `"Generated Date,${pimsCurrentDate}"`,
                     `""`
                 ];
                 const rows = table.querySelectorAll('tr');
@@ -393,11 +627,11 @@
                 pdfContainer.style.background = '#fff';
                 pdfContainer.style.fontFamily = "'Poppins', sans-serif";
                 const header = document.createElement('div');
-                header.className = 'pims-pdf-header';
                 header.innerHTML = `
-                    <h1>Prison Management System Backup Logs</h1>
-                    <p><strong>Prison:</strong> ${prisonName}</p>
-                    <p><strong>Generated Date:</strong> ${currentDate}</p>
+                    <h2 style="color: var(--pims-primary); margin-bottom: 10px;">Prison Management System Backup Logs</h2>
+                    <p style="color: var(--pims-secondary); margin-bottom: 5px;"><strong>Prison:</strong> ${pimsPrisonName}</p>
+                    <p style="color: var(--pims-secondary);"><strong>Generated Date:</strong> ${pimsCurrentDate}</p>
+                    <hr style="margin: 15px 0; border-color: #eee;">
                 `;
                 pdfContainer.appendChild(header);
                 const tableClone = table.cloneNode(true);
@@ -405,13 +639,13 @@
                 tableClone.style.borderCollapse = 'collapse';
                 tableClone.style.fontSize = '12px';
                 tableClone.querySelectorAll('th, td').forEach(cell => {
-                    cell.style.border = '1px solid #e0e7ff';
+                    cell.style.border = '1px solid #eee';
                     cell.style.padding = '8px';
                 });
                 tableClone.querySelectorAll('th').forEach(th => {
-                    th.style.background = '#e8eaf6';
-                    th.style.color = '#1a237e';
-                    th.style.fontWeight = '600';
+                    th.style.background = 'var(--pims-primary)';
+                    th.style.color = 'white';
+                    th.style.fontWeight = '500';
                 });
                 const actionCells = tableClone.querySelectorAll('td:last-child, th:last-child');
                 actionCells.forEach(cell => cell.remove());
@@ -431,20 +665,20 @@
             }
         }
 
-        function exportBackupCSV() {
+        function pimsExportBackupCSV() {
             try {
-                const modalContent = document.getElementById('backupDetailsContent');
+                const modalContent = document.getElementById('pims-backup-details-content');
                 if (!modalContent) {
                     console.error('Backup details content not found.');
                     alert('Error: Backup details content not found.');
                     return;
                 }
-                const backupInfo = modalContent.querySelectorAll('p');
-                const backupId = modalContent.querySelector('h5').textContent.replace('Backup Log #', '');
-                const initiatedBy = backupInfo[0].textContent.replace('Initiated By: ', '');
-                const prison = backupInfo[1].textContent.replace('Prison: ', '');
-                const backupDate = backupInfo[2].textContent.replace('Backup Date: ', '');
-                const status = backupInfo[3].textContent.replace('Status: ', '');
+                const backupId = modalContent.querySelector('.pims-detail-item span').textContent;
+                const initiatedBy = modalContent.querySelectorAll('.pims-detail-item span')[1].textContent;
+                const prison = modalContent.querySelectorAll('.pims-detail-item span')[2].textContent;
+                const backupDate = modalContent.querySelectorAll('.pims-detail-item span')[3].textContent;
+                const status = modalContent.querySelectorAll('.pims-detail-item span')[4].textContent;
+                
                 let csv = [
                     `"Prison Management System Backup Log"`,
                     `"Backup ID,${backupId}"`,
@@ -467,9 +701,9 @@
             }
         }
 
-        function exportBackupPDF() {
+        function pimsExportBackupPDF() {
             try {
-                const modalContent = document.getElementById('backupDetailsContent');
+                const modalContent = document.getElementById('pims-backup-details-content');
                 if (!modalContent) {
                     console.error('Backup details content not found.');
                     alert('Error: Backup details content not found.');
@@ -482,9 +716,10 @@
                 const contentClone = modalContent.cloneNode(true);
                 contentClone.style.fontSize = '12px';
                 pdfContainer.appendChild(contentClone);
+                const backupId = contentClone.querySelector('.pims-detail-item span').textContent;
                 const opt = {
                     margin: [10, 10, 10, 10],
-                    filename: `PIMS_Backup_${contentClone.querySelector('h5').textContent.replace('Backup Log #', '')}.pdf`,
+                    filename: `PIMS_Backup_${backupId}.pdf`,
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { scale: 2 },
                     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -496,6 +731,22 @@
                 alert('Failed to export backup PDF. Check the console for details.');
             }
         }
+
+        // Close modal functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.pims-modal-close, .pims-modal-close-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.getElementById('pims-backup-details-modal').classList.remove('active');
+                });
+            });
+
+            document.getElementById('pims-backup-details-modal').addEventListener('click', e => {
+                if (e.target === e.currentTarget) {
+                    e.currentTarget.classList.remove('active');
+                }
+            });
+        });
     </script>
+    @include('includes.footer_js')
 </body>
 </html>
