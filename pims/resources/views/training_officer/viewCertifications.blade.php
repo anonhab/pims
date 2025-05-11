@@ -244,7 +244,7 @@
                     <!-- Search and reload controls -->
                     <div class="pims-form-group" style="flex-grow: 1;">
                         <div class="control has-icons-left">
-                            <input class="pims-form-control" id="pims-table-search" type="text" placeholder="Search certifications...">
+                            <input class="pims-form-control" id="pims-table-search" type="text" placeholder="Search by prisoner or issuer name...">
                             <span class="icon is-left">
                                 <i class="fa fa-search"></i>
                             </span>
@@ -262,9 +262,15 @@
                     @if($certifications->isEmpty())
                         <p class="pims-content-text">No certifications found.</p>
                     @else
-                        <div class="pims-grid">
+                        <div class="pims-grid" id="certifications-grid">
                             @foreach($certifications as $certification)
-                            <div class="pims-certification-card">
+                            <div class="pims-certification-card" 
+                                 data-prisoner="{{ trim(implode(' ', array_filter([
+                                    $certification->prisoner->first_name,
+                                    $certification->prisoner->middle_name,
+                                    $certification->prisoner->last_name
+                                 ]))) }}"
+                                 data-issuedby="{{ trim($certification->issuedBy->first_name . ' ' . $certification->issuedBy->last_name) }}">
                                 <div class="pims-card">
                                     <header class="pims-card-header">
                                         <h3 class="pims-card-title">
@@ -324,12 +330,18 @@
             const certificationCards = document.querySelectorAll('.pims-certification-card');
 
             searchInput.addEventListener('input', function() {
-                const filter = searchInput.value.toLowerCase();
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
                 certificationCards.forEach(card => {
-                    const prisoner = card.querySelector('.pims-content-text strong:contains("Prisoner")')?.nextSibling.textContent.toLowerCase() || '';
-                    const type = card.querySelector('.pims-card-title')?.textContent.toLowerCase() || '';
-                    const issuedBy = card.querySelector('.pims-content-text strong:contains("Issued By")')?.nextSibling.textContent.toLowerCase() || '';
-                    card.style.display = prisoner.includes(filter) || type.includes(filter) || issuedBy.includes(filter) ? '' : 'none';
+                    const prisonerName = card.getAttribute('data-prisoner').toLowerCase();
+                    const issuedByName = card.getAttribute('data-issuedby').toLowerCase();
+                    
+                    // Show card if search term matches prisoner name or issued by name
+                    if (prisonerName.includes(searchTerm) || issuedByName.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
                 });
             });
 
