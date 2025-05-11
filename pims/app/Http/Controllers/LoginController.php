@@ -78,7 +78,7 @@ class LoginController extends Controller
                     2 => redirect()->to('/idashboard'),
                     1 => view('sysadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     8 => view('police_officer.dashboard'),
-                    6 => view('training_officer.viewcertifications'),
+                    6 => redirect()->to('/viewcertifications'),
                     9 => view('medical_officer.dashboard'),
                     10 => view('security_officer.dashboard'),
                     11 => view('discipline_officer.dashboard'),
