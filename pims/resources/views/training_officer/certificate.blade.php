@@ -32,13 +32,14 @@
             font-family: 'Poppins', sans-serif;
             background-color: #f5f7fa;
             color: var(--pims-primary);
-            line-height: 1.6;
+            line-height: 1.5;
         }
 
         .pims-app-container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            padding: 20px;
         }
 
         .pims-certificate-actions {
@@ -90,14 +91,16 @@
         .pims-certificate-container {
             width: 100%;
             max-width: 800px;
-            margin: 1rem auto 3rem;
+            margin: 0 auto;
             background: white;
             border-radius: var(--pims-border-radius);
             box-shadow: var(--pims-box-shadow);
-            padding: 2rem;
+            padding: 1.5rem;
             position: relative;
             overflow: hidden;
             border: 1px solid #e0e0e0;
+            height: 1122px; /* A4 height in pixels at 96dpi */
+            box-sizing: border-box;
         }
 
         .pims-certificate-container::before {
@@ -106,24 +109,24 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 10px;
+            height: 8px;
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
         }
 
         .pims-certificate-flags {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
         }
 
         .pims-certificate-flags img {
-            height: 60px;
+            height: 50px;
             object-fit: contain;
         }
 
         .pims-certificate-header {
             text-align: center;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             padding-bottom: 1rem;
             border-bottom: 2px solid var(--pims-light);
             position: relative;
@@ -135,18 +138,18 @@
             bottom: -5px;
             left: 50%;
             transform: translateX(-50%);
-            width: 100px;
+            width: 80px;
             height: 3px;
             background: var(--pims-accent);
         }
 
         .pims-certificate-header img {
-            height: 80px;
-            margin-bottom: 1rem;
+            height: 70px;
+            margin-bottom: 0.5rem;
         }
 
         .pims-certificate-header h1 {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
             color: var(--pims-primary);
             margin-bottom: 0.5rem;
             text-transform: uppercase;
@@ -154,7 +157,7 @@
         }
 
         .pims-certificate-header h2 {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: var(--pims-accent);
             font-weight: 600;
             margin-bottom: 0.5rem;
@@ -162,8 +165,8 @@
 
         .pims-certificate-congratulatory {
             text-align: center;
-            margin: 2rem 0;
-            padding: 1.5rem 0;
+            margin: 1.5rem 0;
+            padding: 1rem 0;
             border-top: 1px dashed var(--pims-light);
             border-bottom: 1px dashed var(--pims-light);
             position: relative;
@@ -174,29 +177,29 @@
             content: "✧";
             color: var(--pims-accent);
             position: absolute;
-            font-size: 1.5rem;
+            font-size: 1.2rem;
         }
 
         .pims-certificate-congratulatory::before {
-            left: 20px;
-            top: 10px;
+            left: 15px;
+            top: 8px;
         }
 
         .pims-certificate-congratulatory::after {
-            right: 20px;
-            bottom: 10px;
+            right: 15px;
+            bottom: 8px;
         }
 
         .pims-certificate-congratulatory p {
-            margin: 0.5rem 0;
-            font-size: 1.1rem;
+            margin: 0.4rem 0;
+            font-size: 1rem;
         }
 
         .pims-certificate-recipient {
-            font-size: 1.75rem !important;
+            font-size: 1.5rem !important;
             font-weight: 600;
             color: var(--pims-primary);
-            margin: 1rem 0 !important;
+            margin: 0.8rem 0 !important;
             text-transform: uppercase;
             letter-spacing: 1px;
             position: relative;
@@ -209,29 +212,29 @@
             content: "";
             position: absolute;
             top: 50%;
-            width: 30px;
+            width: 25px;
             height: 2px;
             background: var(--pims-accent);
         }
 
         .pims-certificate-recipient::before {
-            left: -30px;
+            left: -25px;
         }
 
         .pims-certificate-recipient::after {
-            right: -30px;
+            right: -25px;
         }
 
         .pims-certificate-details {
-            margin: 2rem 0;
+            margin: 1.5rem 0;
         }
 
         .pims-certificate-details h3 {
             color: var(--pims-primary);
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
             border-bottom: 1px solid var(--pims-light);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.4rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -239,7 +242,8 @@
         .pims-certificate-details dl {
             display: grid;
             grid-template-columns: max-content 1fr;
-            gap: 0.75rem 1rem;
+            gap: 0.6rem 0.8rem;
+            font-size: 0.95rem;
         }
 
         .pims-certificate-details dt {
@@ -249,39 +253,40 @@
 
         .pims-certificate-details dd {
             color: var(--pims-primary);
-            padding-left: 1rem;
+            padding-left: 0.8rem;
             border-left: 2px solid var(--pims-light);
         }
 
         .pims-certificate-activities {
-            margin: 2rem 0;
+            margin: 1.5rem 0;
         }
 
         .pims-certificate-activities h3 {
             color: var(--pims-primary);
-            margin-bottom: 1rem;
-            font-size: 1.25rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
             border-bottom: 1px solid var(--pims-light);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.4rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .pims-certificate-activities h4 {
             color: var(--pims-secondary);
-            margin: 1rem 0 0.5rem;
-            font-size: 1.1rem;
+            margin: 0.8rem 0 0.4rem;
+            font-size: 1rem;
             font-weight: 500;
         }
 
         .pims-certificate-activities ul {
             list-style-type: none;
-            margin-left: 1rem;
+            margin-left: 0.8rem;
+            font-size: 0.95rem;
         }
 
         .pims-certificate-activities li {
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
+            margin-bottom: 0.4rem;
+            padding-left: 1.2rem;
             position: relative;
         }
 
@@ -295,35 +300,37 @@
         .pims-certificate-none {
             color: var(--pims-secondary);
             font-style: italic;
-            padding-left: 1.5rem;
+            padding-left: 1.2rem;
+            font-size: 0.95rem;
         }
 
         .pims-certificate-footer {
             text-align: center;
-            margin-top: 2rem;
+            margin-top: 1.5rem;
             padding-top: 1rem;
             border-top: 2px solid var(--pims-light);
             position: relative;
         }
 
         .pims-certificate-footer p {
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
         }
 
         .pims-certificate-signature {
             display: inline-block;
-            padding-top: 3rem;
+            padding-top: 2.5rem;
             font-weight: 600;
             color: var(--pims-primary);
             position: relative;
-            min-width: 250px;
+            min-width: 200px;
+            font-size: 1rem;
         }
 
         .pims-certificate-signature::before {
             content: "";
             position: absolute;
-            top: 1rem;
+            top: 0.8rem;
             left: 0;
             right: 0;
             height: 1px;
@@ -332,17 +339,18 @@
 
         .pims-certificate-seal {
             position: absolute;
-            right: 2rem;
-            bottom: 2rem;
+            right: 1.5rem;
+            bottom: 1.5rem;
             opacity: 0.1;
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
         }
 
         @media print {
             body {
                 background: white;
                 padding: 0;
+                margin: 0;
             }
             .pims-certificate-actions {
                 display: none;
@@ -352,11 +360,11 @@
                 margin: 0;
                 padding: 1rem;
                 border: none;
-                page-break-after: avoid;
-                page-break-inside: avoid;
+                height: auto;
+                min-height: 100vh;
             }
             .pims-app-container {
-                padding-top: 0;
+                padding: 0;
             }
             .pims-certificate-container::before {
                 height: 5px;
@@ -365,20 +373,21 @@
 
         @media (max-width: 768px) {
             .pims-certificate-container {
-                padding: 1.5rem;
-                margin: 1rem;
+                padding: 1rem;
+                margin: 0 auto;
+                height: auto;
             }
             .pims-certificate-header h1 {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             .pims-certificate-header h2 {
-                font-size: 1.25rem;
+                font-size: 1.1rem;
             }
             .pims-certificate-recipient {
-                font-size: 1.5rem !important;
+                font-size: 1.3rem !important;
             }
             .pims-certificate-flags img {
-                height: 50px;
+                height: 40px;
             }
             .pims-certificate-actions {
                 flex-direction: column;
@@ -492,7 +501,7 @@
             function generatePDF(action = 'download') {
                 const element = document.getElementById('certificate-content');
                 const opt = {
-                    margin: 10,
+                    margin: [10, 10, 10, 10], // T, R, B, L
                     filename: 'PIMS_Certificate.pdf',
                     image: { type: 'jpeg', quality: 0.98 },
                     html2canvas: { 
@@ -500,7 +509,9 @@
                         logging: false,
                         useCORS: true,
                         allowTaint: true,
-                        letterRendering: true
+                        letterRendering: true,
+                        width: 794, // A4 width in pixels at 96dpi
+                        height: 1122 // A4 height in pixels at 96dpi
                     },
                     jsPDF: { 
                         unit: 'mm', 
@@ -508,7 +519,7 @@
                         orientation: 'portrait',
                         compress: true
                     },
-                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                    pagebreak: { mode: 'avoid-all' }
                 };
 
                 // Create PDF
