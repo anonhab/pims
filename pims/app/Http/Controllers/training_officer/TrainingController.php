@@ -12,11 +12,12 @@ use App\Models\TrainingAssignment;
 use OwenIt\Auditing\Models\Audit;
 
 use App\Models\JobAssignment;
+use Illuminate\Support\Facades\Log;
 
 class TrainingController extends Controller
 {
     // Show form to assign certifications
-   
+
     /**
      * Escape special characters for HTML.
      *
@@ -376,6 +377,35 @@ class TrainingController extends Controller
         return view('training_officer.viewJobs', compact('jobs'));
     }
 
+
+    public function updateAssign(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'prisoner_id' => 'required|string|max:255',
+            'training_id' => 'required|integer|exists:training_programs,id',
+            'assigned_by' => 'required|string|max:255',
+            'assigned_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:assigned_date',
+            'status' => 'required|in:in_progress,completed,unassigned',
+        ]);
+    
+        Log::info('Validated data for assignment update', [
+            'assignment_id' => $id,
+            'data' => $validated,
+            'user_id' => session('user_id'), // if authentication is used
+        ]);
+    
+        $assignment = TrainingAssignment::findOrFail($id);
+        $assignment->update($validated);
+    
+        Log::info('Assignment updated successfully', [
+            'assignment_id' => $id,
+            'updated_by' => session('user_id'), // optional
+        ]);
+    
+        return redirect()->back()->with('success', 'Assignment updated successfully');
+    }
+    
     // View list of training programs
     public function viewTrainingPrograms()
     {
@@ -386,18 +416,19 @@ class TrainingController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:100',
-            'description' => 'nullable|string',
-            'created_by' => 'nullable|integer',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+        $validated = $request->validate([
+            'job_title' => 'required|string|max:255',
+            'prisoner_id' => 'required|string|max:255',
+            'assigned_by' => 'required|string|max:255',
+            'job_description' => 'required|string',
+            'assigned_date' => 'required|date',
+            'status' => 'required|in:active,completed,terminated',
         ]);
 
-        $trainingProgram = TrainingProgram::findOrFail($id); // Find the training program by id
-        $trainingProgram->update($data); // Update the training program with new data
+        $job = JobAssignment::findOrFail($id);
+        $job->update($validated);
 
-        return redirect()->back()->with('success', 'Training program updated successfully.');
+        return redirect()->back()->with('success', 'Job updated successfully');
     }
     public function destroy($id)
     {

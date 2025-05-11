@@ -337,7 +337,7 @@
                     jobsDiv.innerHTML = '<p class="has-text-centered"><i class="fas fa-spinner fa-pulse"></i> Loading prisoner jobs...</p>';
                     trainingsDiv.innerHTML = '<p class="has-text-centered"><i class="fas fa-spinner fa-pulse"></i> Loading prisoner trainings...</p>';
 
-                    fetch('{{ route('training_officer.getPrisonerDetails') }}', {
+                    fetch('{{route('training_officer.getPrisonerDetails') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

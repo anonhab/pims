@@ -45,6 +45,11 @@ class RequestController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Request has been approved successfully!']);
     }
+    public function show_allforin()
+    {
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+        return view('discipline_officer.view_prisoner', compact('prisoners'));
+    }
     public function transferRequest(Request $request, $id)
     {
         // Log request start

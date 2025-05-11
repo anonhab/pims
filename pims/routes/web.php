@@ -254,8 +254,9 @@ Route::delete('training-programs/{id}', [TrainingController::class, 'destroy'])-
 Route::put('/jobs/update', [TrainingController::class, 'updatejob'])->name('jobs.update');
 Route::delete('/training_officer/{id}', [TrainingController::class, 'destroy'])->name('trainingprogram.destroy');
 Route::get('/tdashboard', [TrainingController::class, 'dashboard'])->name('training.dashboard');
-
- 
+Route::put('/jobs/{id}', [TrainingController::class, 'update'])->name('jobs.update');
+Route::delete('/jobs/{id}', [TrainingController::class, 'destroy'])->name('jobs.destroyjob');
+Route::put('/program-assignments/{id}', [TrainingController::class, 'updateAssign'])->name('program-assignments.update');
 Route::post('/training-officer/prisoner-details', [TrainingController::class, 'getPrisonerDetails'])
     ->name('training_officer.getPrisonerDetails');
 Route::post('/training-officer/certifications', [TrainingController::class, 'store'])
@@ -292,6 +293,7 @@ Route::prefix('security_officer')->group(function () {
 Route::get('/viewprisonerstatus', [SecurityController::class, 'viewprisonerstatus'])->name('security.viewprisonerstatus');
 Route::post('/updateAppointmentStatus', [SecurityController::class, 'updateStatus'])->name('updateAppointmentStatus');
 Route::get('/discipline_officer/requests/evaluate', [RequestController::class, 'showEvaluationForm'])->name('discipline_officer.evaluate_request');
+Route::get('/showprisoners', [RequestController::class, 'show_allforin'])->name('prisoner.showprisoners');
 Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
 Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
 Route::post('/transfer-request/{id}', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
