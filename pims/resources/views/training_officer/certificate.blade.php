@@ -401,7 +401,7 @@
     </style>
 </head>
 <body>
-    <div class="pims-app-container">
+      <div class="pims-app-container">
         <div class="pims-certificate-actions">
             <button class="pims-btn pims-btn-primary" id="download-pdf">
                 <i class="fas fa-download"></i> Download PDF

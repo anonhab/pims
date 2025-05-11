@@ -109,7 +109,7 @@ Route::middleware('role:3')->group(function () {
     Route::get('/dashboard', [cAccountController::class, 'dashboard'])->name('cadmin.dashboard');
     Route::get('/chart-data', [cAccountController::class, 'getChartData']);
     Route::resource('accounts', cAccountController::class);
-    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::post('/accounts', [RoleController::class, 'store'])->name('accounts.store');
     Route::get('/prisonadd', [cAccountController::class, 'prisonadd'])->name('prison.add');
     Route::post('/prisons', [cAccountController::class, 'prisonstore'])->name('prison.store');
     Route::get('/prisonsview', [cAccountController::class, 'prisonview'])->name('prison.view');
@@ -131,7 +131,7 @@ Route::middleware('role:3')->group(function () {
     Route::post('/initiate_backup', [cAccountController::class, 'initiateBackup'])->name('initiate_backup');
     Route::get('/view_backup', [cAccountController::class, 'viewBackupLogs'])->name('view_backup');
 });
- 
+Route::post('/accounts', [cAccountController::class, 'store'])->name('accounts.store');
 
 Route::put('/saccount/update/{id}', [sAccountController::class, 'update'])->name('saccount.update');
 Route::delete('/saccount/delete/{id}', [sAccountController::class, 'destroy'])->name('saccount.destroy');
