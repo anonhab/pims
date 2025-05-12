@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-/* Unique CSS Variables */
+/* CSS Variables */
 :root {
     --pims-primary: #1a2a3a;
     --pims-secondary: #2c3e50;
@@ -21,14 +21,18 @@
     --pims-warning: #f39c12;
     --pims-danger: #e74c3c;
     --pims-security-red: #c0392b;
+    --pims-border-radius: 5px;
+    --pims-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* Reset for PIMS only */
+/* Reset and Base Styles */
 .pims-reset {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
+    background-color: var(--pims-light);
+    color: var(--pims-dark);
 }
 
 /* Security Header Bar */
@@ -62,10 +66,28 @@
     color: var(--pims-text-light);
 }
 
+/* Security Scan Animation */
+.pims-security-scan {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, var(--pims-accent), transparent);
+    box-shadow: 0 0 10px var(--pims-accent);
+    animation: pims-scan 5s linear infinite;
+    z-index: 1001;
+    pointer-events: none;
+}
+
+@keyframes pims-scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+}
+
 /* Main Navigation */
 .pims-nav-container {
     background-color: var(--pims-primary);
-    color: white;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     position: fixed;
     width: 100%;
@@ -80,6 +102,8 @@
     align-items: center;
     padding: 0 20px;
     height: 70px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .pims-navbar-brand {
@@ -91,6 +115,7 @@
 .pims-logo {
     display: flex;
     align-items: center;
+    text-decoration: none;
 }
 
 .pims-logo-icon {
@@ -102,7 +127,7 @@
 .pims-logo-text {
     font-size: 1.5rem;
     font-weight: 600;
-    color: white;
+    color: var(--pims-text);
 }
 
 .pims-logo-text small {
@@ -120,7 +145,7 @@
 }
 
 .pims-system-title strong {
-    color: white;
+    color: var(--pims-text);
     font-weight: 500;
 }
 
@@ -140,7 +165,7 @@
 }
 
 .pims-notification-bell:hover {
-    color: white;
+    color: var(--pims-text);
 }
 
 .pims-notification-badge {
@@ -148,7 +173,7 @@
     top: -5px;
     right: -5px;
     background-color: var(--pims-danger);
-    color: white;
+    color: var(--pims-text);
     border-radius: 50%;
     width: 18px;
     height: 18px;
@@ -183,7 +208,7 @@
 
 .pims-user-name {
     font-weight: 500;
-    color: white;
+    color: var(--pims-text);
     font-size: 0.9rem;
 }
 
@@ -198,8 +223,8 @@
     top: 60px;
     right: 0;
     background-color: var(--pims-secondary);
-    border-radius: 5px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    border-radius: var(--pims-border-radius);
+    box-shadow: var(--pims-card-shadow);
     width: 250px;
     z-index: 1001;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -212,15 +237,8 @@
 }
 
 @keyframes pims-fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .pims-dropdown-header {
@@ -229,6 +247,12 @@
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.pims-dropdown-header img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
 .pims-dropdown-body {
@@ -243,11 +267,12 @@
     gap: 10px;
     transition: all 0.3s;
     font-size: 0.9rem;
+    text-decoration: none;
 }
 
 .pims-dropdown-item:hover {
     background-color: rgba(255, 255, 255, 0.1);
-    color: white;
+    color: var(--pims-text);
     padding-left: 20px;
 }
 
@@ -262,151 +287,7 @@
     margin: 5px 0;
 }
 
-/* Modals */
-.pims-modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    z-index: 2000;
-    justify-content: center;
-    align-items: center;
-}
-
-.pims-modal.pims-active {
-    display: flex;
-    animation: pims-fadeIn 0.3s;
-}
-
-.pims-modal-content {
-    background-color: var(--pims-secondary);
-    border-radius: 5px;
-    width: 90%;
-    max-width: 500px;
-    max-height: 90vh;
-    overflow-y: auto;
-    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.5);
-    border: 1px solid var(--pims-accent);
-    position: relative;
-}
-
-.pims-modal-close {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    background: none;
-    border: none;
-    color: var(--pims-text-light);
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-.pims-modal-close:hover {
-    color: white;
-}
-
-.pims-modal-header {
-    padding: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    position: relative;
-}
-
-.pims-modal-header h2 {
-    color: white;
-    font-size: 1.5rem;
-    text-align: center;
-}
-
-.pims-modal-body {
-    padding: 20px;
-}
-
-/* Profile Modal */
-.pims-profile-modal .pims-profile-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.pims-profile-modal .pims-profile-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 3px solid var(--pims-accent);
-    object-fit: cover;
-}
-
-/* Password Modal */
-.pims-password-modal .pims-field {
-    margin-bottom: 20px;
-}
-
-.pims-password-modal .pims-label {
-    color: white;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.pims-password-modal .pims-input {
-    width: 100%;
-    padding: 12px 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-    color: white;
-    font-size: 1rem;
-}
-
-/* Notification Modal */
-.pims-notification-modal .pims-notification-item {
-    padding: 15px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    transition: all 0.3s;
-}
-
-/* Security Elements */
-.pims-security-scan {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    background: linear-gradient(to right, transparent, var(--pims-accent), transparent);
-    box-shadow: 0 0 10px var(--pims-accent);
-    animation: pims-scan 5s linear infinite;
-    z-index: 1001;
-    pointer-events: none;
-}
-
-@keyframes pims-scan {
-    0% {
-        top: 0;
-    }
-    100% {
-        top: 100%;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .pims-security-info {
-        display: none;
-    }
-
-    .pims-system-title {
-        display: none;
-    }
-
-    .pims-logo-text small {
-        display: none;
-    }
-}
-
-/* Notification System */
+/* Notifications */
 .notification {
     position: fixed;
     top: 20px;
@@ -428,17 +309,21 @@
 
 .notification.success {
     background-color: var(--pims-success);
-    color: white;
+    color: var(--pims-text);
 }
 
 .notification.error {
     background-color: var(--pims-danger);
-    color: white;
+    color: var(--pims-text);
 }
 
 .notification-icon {
     margin-right: 10px;
     font-size: 1.2rem;
+}
+
+.notification-message {
+    flex: 1;
 }
 
 .notification-close {
@@ -455,127 +340,25 @@
     opacity: 1;
 }
 
-/* Base styling for the modal */
+/* Modal Base Styles */
 .pims-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.7);
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
-   
-    transition: opacity 0.3s ease;
+    z-index: 2000;
 }
 
-.pims-active {
+.pims-modal.pims-active {
     display: flex;
-    opacity: 1;
+    animation: pims-fadeIn 0.3s;
 }
 
-/* Modal content */
-.pims-modal-content {
-    background-color: white;
-    border-radius: 8px;
-    max-width: 400px;
-    width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    animation: scaleIn 0.3s ease-out;
-}
-
-/* Header styling */
-.pims-modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid #f2f2f2;
-    padding-bottom: 10px;
-}
-
-.pims-modal-header h2 {
-    font-size: 18px;
-    font-weight: 600;
-    margin: 0;
-    color: var(--pims-dark);
-}
-
-.pims-modal-close {
-    background: none;
-    border: none;
-    font-size: 24px;
-    color: var(--pims-dark);
-    cursor: pointer;
-}
-
-/* Modal Body */
-.pims-modal-body {
-    padding-top: 20px;
-    text-align: center;
-}
-
-.pims-modal-body p {
-    font-size: 16px;
-    color: var(--pims-dark);
-}
-
-/* Buttons */
-.pims-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.pims-button.pims-primary {
-    background-color: var(--pims-success);
-    color: white;
-}
-
-.pims-button.pims-primary:hover {
-    background-color: darkgreen;
-}
-
-.pims-button.pims-error {
-    background-color: var(--pims-danger);
-    color: white;
-}
-
-.pims-button.pims-error:hover {
-    background-color: darkred;
-}
-
-/* Icon styling */
-.pims-modal-header i {
-    font-size: 24px;
-    margin-right: 10px;
-}
-
-/* Animation for scale-in effect */
-@keyframes scaleIn {
-    0% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* Success and error color schemes */
-:root {
-    --pims-success: #28a745;
-    --pims-danger: #dc3545;
-    --pims-dark: #333;
-}
-
-/* Modal background styling */
 .pims-modal-background {
     position: absolute;
     top: 0;
@@ -586,18 +369,59 @@
     z-index: -1;
 }
 
-/* Profile Modal */
-.pims-profile-modal .pims-modal-content {
-    background-color: white;
-    border-radius: 8px;
+.pims-modal-content {
+    background-color: var(--pims-light);
+    border-radius: var(--pims-border-radius);
+    width: 90%;
     max-width: 600px;
-    width: 100%;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    padding: 30px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: var(--pims-card-shadow);
+    border: 1px solid var(--pims-accent);
+    position: relative;
     animation: scaleIn 0.3s ease-out;
 }
 
-/* Profile Header Styling */
+@keyframes scaleIn {
+    0% { transform: scale(0.8); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.pims-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 2px solid #f2f2f2;
+}
+
+.pims-modal-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--pims-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pims-modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--pims-dark);
+    cursor: pointer;
+}
+
+.pims-modal-close:hover {
+    color: var(--pims-accent);
+}
+
+.pims-modal-body {
+    padding: 20px;
+}
+
+/* Profile Modal */
 .pims-profile-header {
     display: flex;
     align-items: center;
@@ -617,25 +441,19 @@
     border: 3px solid #f2f2f2;
 }
 
-/* Profile Info Styling */
-.pims-profile-info {
-    flex-grow: 1;
-}
-
 .pims-profile-info h3 {
-    font-size: 24px;
+    font-size: 1.8rem;
     font-weight: 600;
     margin: 0;
     color: var(--pims-dark);
 }
 
 .pims-profile-info p {
-    font-size: 16px;
+    font-size: 1rem;
     color: #777;
     margin: 5px 0;
 }
 
-/* Profile Details Section Styling */
 .pims-profile-details {
     margin-top: 20px;
 }
@@ -649,34 +467,208 @@
 
 .pims-detail-label {
     font-weight: 600;
-    color: #333;
+    color: var(--pims-dark);
+    width: 40%;
 }
 
 .pims-detail-value {
     color: #777;
+    width: 60%;
 }
 
-/* Modal close button */
-.pims-modal-close {
-    background: none;
-    border: none;
-    font-size: 24px;
+/* Change Password Modal */
+.field {
+    margin-bottom: 20px;
+}
+
+.label {
     color: var(--pims-dark);
-    cursor: pointer;
+    font-weight: 600;
+    margin-bottom: 5px;
+    display: block;
 }
 
-/* Animation for profile modal */
-@keyframes scaleIn {
-    0% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
+.control {
+    position: relative;
 }
-    </style>
+
+.input {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: var(--pims-border-radius);
+    color: var(--pims-dark);
+    font-size: 1rem;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--pims-accent);
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+}
+
+.help.is-danger {
+    color: var(--pims-danger);
+    font-size: 0.85rem;
+}
+
+.button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--pims-border-radius);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button.is-primary {
+    background-color: var(--pims-success);
+    color: var(--pims-text);
+}
+
+.button.is-primary:hover {
+    background-color: #219653;
+}
+
+.button.is-light {
+    background-color: #f4f6f9;
+    color: var(--pims-dark);
+}
+
+.button.is-light:hover {
+    background-color: #e2e8f0;
+}
+
+.has-text-centered {
+    text-align: center;
+}
+
+.button.is-large {
+    padding: 12px 30px;
+    font-size: 1.1rem;
+}
+
+/* Notification Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal.is-active {
+    display: flex;
+}
+
+.modal-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    max-width: 500px;
+    margin: 5% auto;
+}
+
+.box {
+    background-color: var(--pims-light);
+    border-radius: var(--pims-border-radius);
+    padding: 20px;
+    box-shadow: var(--pims-card-shadow);
+}
+
+.notification-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--pims-dark);
+}
+
+.notification-header hr {
+    border: none;
+    border-top: 1px solid #f2f2f2;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-actions {
+    margin-top: 20px;
+}
+
+.button.is-fullwidth {
+    width: 100%;
+}
+
+.button.is-light {
+    background-color: #f4f6f9;
+    color: var(--pims-dark);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .pims-security-info {
+        display: none;
+    }
+
+    .pims-system-title {
+        display: none;
+    }
+
+    .pims-logo-text small {
+        display: none;
+    }
+
+    .pims-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 10px 20px;
+    }
+
+    .pims-nav-menu {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .pims-modal-content {
+        width: 95%;
+        margin: 10px;
+    }
+
+    .pims-profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .pims-profile-avatar-container {
+        margin-right: 0;
+        margin-bottom: 10px;
+    }
+
+    .pims-detail-item {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .pims-detail-label,
+    .pims-detail-value {
+        width: 100%;
+    }
+}    </style>
 </head>
 
 <body class="pims-reset">
