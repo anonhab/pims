@@ -6,6 +6,7 @@
     <title>PIMS - Certificate</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --pims-primary: #2c3e50;
@@ -391,16 +392,20 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-
-    
-    <div class="pims-app-container">
-        
+      <div class="pims-app-container">
+        <div class="pims-certificate-actions">
+            <button class="pims-btn pims-btn-primary" id="download-pdf">
+                <i class="fas fa-download"></i> Download PDF
+            </button>
+            <button class="pims-btn pims-btn-secondary" id="print-certificate">
+                <i class="fas fa-print"></i> Print Certificate
+            </button>
+        </div>
 
         <div class="pims-certificate-container" id="certificate-content">
             <div class="pims-certificate-flags">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/7/71/Flag_of_Ethiopia.svg" alt="Ethiopian Flag">
-                <img src="data:image/jpeg;base64,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" alt="Central Ethiopia Region Flag">
+                <img src="data:image/png;base64,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" alt="Central Ethiopia Region Flag">
             </div>
             
             <div class="pims-certificate-header">
@@ -468,10 +473,8 @@
     </div>
 
     <script>
-        
-
-        // Add watermark effect for better security
         document.addEventListener('DOMContentLoaded', function() {
+            // Add watermark effect for better security
             const certificate = document.getElementById('certificate-content');
             const watermark = document.createElement('div');
             watermark.style.position = 'absolute';
@@ -484,6 +487,59 @@
             watermark.style.zIndex = '100';
             certificate.style.position = 'relative';
             certificate.appendChild(watermark);
+
+            // Generate PDF function (used for both download and print)
+            function generatePDF(action = 'download') {
+                const element = document.getElementById('certificate-content');
+                const opt = {
+                    margin: 10,
+                    filename: 'PIMS_Certificate.pdf',
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { 
+                        scale: 2,
+                        logging: false,
+                        useCORS: true,
+                        allowTaint: true,
+                        letterRendering: true
+                    },
+                    jsPDF: { 
+                        unit: 'mm', 
+                        format: 'a4', 
+                        orientation: 'portrait',
+                        compress: true
+                    },
+                    pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+                };
+
+                // Create PDF
+                html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+                    if (action === 'print') {
+                        // For printing, open in new window and trigger print
+                        const blob = pdf.output('blob');
+                        const url = URL.createObjectURL(blob);
+                        const win = window.open(url, '_blank');
+                        win.onload = function() {
+                            setTimeout(function() {
+                                win.print();
+                                URL.revokeObjectURL(url);
+                            }, 500);
+                        };
+                    } else {
+                        // For download, just save it
+                        html2pdf().set(opt).from(element).save();
+                    }
+                });
+            }
+
+            // Download PDF button
+            document.getElementById('download-pdf').addEventListener('click', function() {
+                generatePDF('download');
+            });
+
+            // Print button - uses the same PDF generation but opens print dialog
+            document.getElementById('print-certificate').addEventListener('click', function() {
+                generatePDF('print');
+            });
         });
     </script>
 </body>
