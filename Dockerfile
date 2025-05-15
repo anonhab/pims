@@ -12,7 +12,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # Copy existing application directory
-COPY . .
+COPY ./pims .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
