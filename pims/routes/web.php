@@ -182,7 +182,7 @@ Route::get('/allocate', [iPrisonerController::class, 'allocate'])->name('room.al
 Route::post('/rooms', [iPrisonerController::class, 'roomstore'])->name('room.store')->middleware('role:2');
 Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:2');
 Route::post('/update-status/{id}', [iPrisonerController::class, 'updateStatus'])->name('update.status')->middleware('role:2');
-
+Route::resource('prisoners', iPrisonerController::class);
 Route::get('/idashboard', action: [iPrisonerController::class, 'idashboard'])->name('inspector.idashboard')->middleware('role:2');
 
 Route::middleware('middleware')->group(function () {
