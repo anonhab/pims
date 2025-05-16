@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use OwenIt\Auditing\Models\Audit;
 class cAccountController extends Controller
 {
@@ -466,5 +467,32 @@ class cAccountController extends Controller
             Log::error('Failed to fetch reports', ['error' => $e->getMessage()]);
             return view('cadmin.view_reports', ['reports' => []])->with('error', 'Failed to load reports.');
         }
+    }
+    public function updateprison(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255|unique:prisons,name,' . $id . ',id',
+            'location' => 'required|string|max:255',
+            'capacity' => 'required|integer|min:1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $prison = Prison::findOrFail($id);
+        $prison->update($request->only(['name', 'location', 'capacity']));
+
+        return response()->json(['message' => 'Prison updated successfully']);
+    }
+
+    public function destroyprison($id)
+    {
+        $prison = Prison::findOrFail($id);
+        if ($prison->rooms()->exists() || $prison->prisoners()->exists()) {
+            return response()->json(['message' => 'Cannot delete prison with associated rooms or prisoners'], 422);
+        }
+        $prison->delete();
+        return response()->json(['message' => 'Prison deleted successfully']);
     }
 }

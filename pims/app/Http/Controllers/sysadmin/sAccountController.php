@@ -12,16 +12,19 @@
   use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
   class sAccountController extends Controller
   {
       public function show_all()
       {
+          $prisons = prison::all();
+          
           $roles = Role::all();
           $accounts = Account::whereNotIn('role_id', [1, 3])
               ->where('prison_id', session('prison_id'))
               ->paginate(9);
-          return view('sysadmin.view_account', compact('accounts', 'roles'));
+          return view('sysadmin.view_account', compact('accounts', 'prisons','roles'));
       }
 
       public function account_add()
@@ -427,5 +430,39 @@ use Illuminate\Support\Facades\Log;
             return view('sysadmin.view_backup_logs', ['backups' => [], 'prison' => null])
                 ->with('error', 'Failed to load backup logs.');
         }
+    }
+    public function updateacc(Request $request, $user_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:accounts,email,' . $user_id . ',user_id',
+            'phone_number' => 'nullable|string|max:20',
+            'dob' => 'nullable|date',
+            'gender' => 'nullable|string|in:Male,Female,Other',
+            'address' => 'nullable|string',
+            'role_id' => 'required|exists:roles,id',
+            'prison_id' => 'nullable|exists:prisons,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $account = Account::findOrFail($user_id);
+        $account->update($request->only([
+            'first_name', 'last_name', 'email', 'phone_number',
+            'dob', 'gender', 'address', 'role_id', 'prison_id'
+        ]));
+
+        return response()->json(['message' => 'Account updated successfully']);
+    }
+
+    public function destroyacc($user_id)
+    {
+        $account = Account::findOrFail($user_id);
+        $account->delete();
+
+        return response()->json(['message' => 'Account deleted successfully']);
     }
   }

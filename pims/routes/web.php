@@ -130,6 +130,8 @@ Route::middleware('role:3')->group(function () {
     Route::get('/view_reports', [cAccountController::class, 'viewReports'])->name('cadmin.view_reports');
     Route::post('/initiate_backup', [cAccountController::class, 'initiateBackup'])->name('initiate_backup');
     Route::get('/view_backup', [cAccountController::class, 'viewBackupLogs'])->name('view_backup');
+    Route::put('/prisons/{id}', [cAccountController::class, 'updateprison'])->name('prison.update');
+Route::delete('/prisons/{id}', [cAccountController::class, 'destroyprison'])->name('prison.destroy');
 });
 Route::post('/accounts', [cAccountController::class, 'store'])->name('accounts.store');
 
@@ -150,7 +152,8 @@ Route::post('/sysadmin/store', [sAccountController::class, 'store'])->name('sysa
 Route::put('/sysadmin/update/{id}', [sAccountController::class, 'update'])->name('sysadmin.update');
 Route::delete('/sysadmin/destroy/{id}', [sAccountController::class, 'destroy'])->name('sysadmin.destroy');
 Route::get('/sysadmin/view_reports', [sAccountController::class, 'viewReports'])->name('sysadmin.view_reports');
-
+Route::put('/saccount/{user_id}', [sAccountController::class, 'updateacc'])->name('saccount.update');
+Route::delete('/saccount/{user_id}', [sAccountController::class, 'destroyacc'])->name('saccount.destroy');
 
 
 Route::get('/saccounts', [sAccountController::class, 'show_all'])->name('saccount.show_all')->middleware('role:1');
