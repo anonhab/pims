@@ -23,7 +23,6 @@ class myLawyerController extends Controller
         return view('lawyer.dashboard', compact('prisoners'));
     }
 
-
     public function rstore(Request $request)
     {
         // Validate request data
@@ -55,32 +54,105 @@ class myLawyerController extends Controller
         $users = Account::where('role_id', 2)->pluck('user_id');
 
 
-// Get prison_id from session
-$prisonId = session('prison_id');
-Log::info('Retrieved prison_id from session', ['prison_id' => $prisonId]); // Log session value
+        // Get prison_id from session
+        $prisonId = session('prison_id');
+        Log::info('Retrieved prison_id from session', ['prison_id' => $prisonId]); // Log session value
 
-// Debugging: Check if prison_id is null
-if (is_null($prisonId)) {
-    Log::error('prison_id is NULL before inserting into notifications!');
-}
+        // Debugging: Check if prison_id is null
+        if (is_null($prisonId)) {
+            Log::error('prison_id is NULL before inserting into notifications!');
+        }
 
-foreach ($users as $userId) {
-    $notification = Notification::create([
-        'account_id' => $userId,
-        'message'    => "New request: " . $request->request_type,
-        'status'     => 'unread',
-        'prison_id'  => $prisonId, // Ensure it's included
-    ]);
+        foreach ($users as $userId) {
+            $notification = Notification::create([
+                'account_id' => $userId,
+                'message'    => "New request: " . $request->request_type,
+                'status'     => 'unread',
+                'prison_id'  => $prisonId, // Ensure it's included
+            ]);
 
-    // Log after insertion
-    Log::info('Notification created', [
-        'notification_id' => $notification->id,
-        'account_id'      => $userId,
-        'message'         => $notification->message,
-        'status'          => $notification->status,
-        'prison_id'       => $notification->prison_id, // This should not be NULL
-    ]);
-}
+            // Log after insertion
+            Log::info('Notification created', [
+                'notification_id' => $notification->id,
+                'account_id'      => $userId,
+                'message'         => $notification->message,
+                'status'          => $notification->status,
+                'prison_id'       => $notification->prison_id, // This should not be NULL
+            ]);
+        }
+
+
+
+        Log::info("Insert Data: ", $requestData);
+
+        $requestRecord = Requests::create($requestData);
+
+        if ($requestRecord) {
+            Log::info("Request successfully inserted with ID: " . $requestRecord->id);
+        } else {
+            Log::error("Request insertion failed.");
+        }
+
+        return redirect()->back()->with('success', 'Request submitted successfully.');
+    }
+
+    public function prstore(Request $request)
+    {
+        // Validate request data
+        $request->validate([
+            'request_type' => 'required|string',
+            'status' => 'required|string|in:pending,approved,rejected',
+
+            'request_details' => 'required|string',
+            'prisoner_id' => 'required|exists:prisoners,id',
+        ]);
+
+        // Check session values
+        $lawyerId = session('lawyer_id');
+        $userId = session('user_id');
+
+        Log::info("Session Data: ", ['lawyer_id' => $lawyerId, 'user_id' => $userId]);
+
+        // Create the request record
+        $requestData = [
+            'lawyer_id' => $lawyerId ?: null,
+            'user_id' => $userId ?: null,
+            'request_type' => $request->request_type,
+            'status' => $request->status,
+            'approved_by' => $request->approved_by ?: null, // Set NULL if empty
+            'request_details' => $request->request_details,
+            'prisoner_id' => $request->prisoner_id,
+        ];
+        // Fetch all users with role_id = 5
+        $users = Account::where('role_id', 2)->pluck('user_id');
+
+
+        // Get prison_id from session
+        $prisonId = session('prison_id');
+        Log::info('Retrieved prison_id from session', ['prison_id' => $prisonId]); // Log session value
+
+        // Debugging: Check if prison_id is null
+        if (is_null($prisonId)) {
+            Log::error('prison_id is NULL before inserting into notifications!');
+        }
+
+        foreach ($users as $userId) {
+            $notification = Notification::create([
+                'account_id' => $userId,
+                'message'    => "New request: " . $request->request_type,
+                'status'     => 'unread',
+                'prison_id'  => $prisonId, // Ensure it's included
+            ]);
+
+            // Log after insertion
+            Log::info('Notification created', [
+                'notification_id' => $notification->id,
+                'account_id'      => $userId,
+                'message'         => $notification->message,
+                'status'          => $notification->status,
+                'prison_id'       => $notification->prison_id, // This should not be NULL
+            ]);
+        }
 
 
 
@@ -172,7 +244,18 @@ foreach ($users as $userId) {
         })->get();
         return view('lawyer.create_request', compact('prisoners'));
     }
+    public function createrequestpolice()
+    {
+        $officer_id = session('user_id'); // Get the logged-in lawyer's ID from session
 
+        // Fetch prisoners assigned to this lawyer
+        $prisoners = Prisoner::whereIn('id', function ($query) use ($officer_id) {
+            $query->select('prisoner_id')
+                ->from('police_prisoner_assignment')
+                ->where('officer_id', $officer_id);
+        })->get();
+        return view('police_officer.create_request', compact('prisoners'));
+    }
     public function viewappointment()
     {
         // Get the logged-in lawyer's ID from the session
@@ -211,5 +294,23 @@ foreach ($users as $userId) {
             ->paginate(10); // Adjust the number of items per page as needed
 
         return view('lawyer.view_requests', compact('requests'));
+    }
+
+    public function viewrequestpolice()
+    {
+        // Retrieve the lawyer_id from the session
+        $officer_id = session('user_id');
+
+        // If the lawyer_id is not found in the session, you can redirect or show an error.
+        if (!$officer_id) {
+            return redirect()->route('login')->with('error', 'Please login as a lawyer');
+        }
+
+        // Retrieve the requests associated with this lawyer_id
+        $requests = Requests::where('user_id', $officer_id)
+            ->with('prisoner') // Assuming Request has a 'prisoner' relationship
+            ->paginate(10); // Adjust the number of items per page as needed
+
+        return view('police_officer.view_requests', compact('requests'));
     }
 }

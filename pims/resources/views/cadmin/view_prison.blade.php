@@ -1,762 +1,749 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    @include('includes.head')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PIMS - Prison Management</title>
-    
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>PIMS - Prison Facilities Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
     <style>
         :root {
-            --pims-primary: #1a2a3a;
-            --pims-secondary: #2c3e50;
-            --pims-accent: #2980b9;
-            --pims-danger: #c0392b;
-            --pims-success: #27ae60;
-            --pims-warning: #d35400;
-            --pims-text-light: #ecf0f1;
-            --pims-text-dark: #2c3e50;
-            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            --pims-border-radius: 6px;
-            --pims-nav-height: 60px;
-            --pims-sidebar-width: 250px;
-            --pims-transition: all 0.3s ease;
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --radius: 8px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --font-size-base: clamp(0.9rem, 2vw, 1rem);
         }
 
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
         body {
-            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: var(--pims-text-dark);
+            font-family: 'Poppins', sans-serif;
+            background: #f5f7fa;
+            color: var(--primary);
+            font-size: var(--font-size-base);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Layout Structure */
-        .pims-app-container {
+        .app-container {
             display: flex;
             min-height: 100vh;
-            padding-top: var(--pims-nav-height);
+            padding-top: 70px;
         }
 
-        .pims-sidebar {
-            width: var(--pims-sidebar-width);
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            position: fixed;
-            top: var(--pims-nav-height);
-            left: 0;
-            bottom: 0;
-            overflow-y: auto;
-            z-index: 900;
-            transition: var(--pims-transition);
-        }
-
-        .pims-content-area {
+        .content-area {
             flex: 1;
-            margin-left: var(--pims-sidebar-width);
-            padding: 1.5rem;
-            transition: var(--pims-transition);
+            padding: clamp(1rem, 3vw, 2rem);
+            margin-left: 250px;
+            transition: var(--transition);
         }
 
-        /* Card Styles */
-        .pims-card {
-            background: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-card-shadow);
-            margin-bottom: 1.5rem;
-            transition: var(--pims-transition);
-            border-left: 4px solid var(--pims-accent);
+        .card {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
         }
 
-        .pims-card-header {
-            padding: 1.25rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1.5rem;
             flex-wrap: wrap;
             gap: 1rem;
         }
 
-        .pims-card-title {
+        .card-title {
+            font-size: clamp(1.5rem, 4vw, 1.75rem);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .search-filter {
+            margin-bottom: 2rem;
+        }
+
+        .search {
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #ddd;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .search input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+        }
+
+        .search i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .prison-card .card {
+            transition: var(--transition);
+        }
+
+        .prison-card:hover .card {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .prison-title {
             font-size: 1.25rem;
             font-weight: 600;
-            color: var(--pims-primary);
+            margin-bottom: 0.25rem;
+        }
+
+        .prison-subtitle {
+            color: var(--secondary);
+            font-size: 0.95rem;
+        }
+
+        .prison-detail {
+            margin-bottom: 0.75rem;
+            font-size: 0.95rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: var(--success);
+            color: #fff;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #eee;
+            padding: 1rem;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .pims-card-body {
-            padding: 1.25rem;
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
         }
 
-        /* Prison Card Styles */
-        .pims-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.25rem;
-            margin-bottom: 1.5rem;
+        .btn-primary:hover {
+            background: #2980b9;
         }
 
-        .pims-prison-card {
-            transition: var(--pims-transition);
+        .btn-secondary {
+            background: var(--secondary);
+            color: #fff;
         }
 
-        .pims-prison-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        .btn-secondary:hover {
+            background: #2c3e50;
         }
 
-        .pims-prison-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--pims-primary);
-            margin-bottom: 0.25rem;
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
         }
 
-        .pims-prison-subtitle {
-            font-size: 0.85rem;
-            color: #7f8c8d;
+        .btn-danger:hover {
+            background: #c0392b;
         }
 
-        .pims-prison-detail {
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .pims-prison-detail strong {
-            color: var(--pims-primary);
-            font-weight: 600;
-        }
-
-        /* Button Styles */
-        .pims-btn {
-            padding: 0.5rem 1rem;
-            border-radius: var(--pims-border-radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--pims-transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            border: none;
-            font-size: 0.9rem;
-        }
-
-        .pims-btn-sm {
+        .btn-sm {
             padding: 0.4rem 0.8rem;
             font-size: 0.85rem;
         }
 
-        .pims-btn-primary {
-            background-color: var(--pims-accent);
-            color: white;
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
         }
 
-        .pims-btn-primary:hover {
-            background-color: var(--pims-primary);
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .pims-btn-danger {
-            background-color: var(--pims-danger);
-            color: white;
-        }
-
-        .pims-btn-danger:hover {
-            background-color: #a5281b;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .pims-btn-secondary {
-            background-color: #f0f2f5;
-            color: var(--pims-text-dark);
-        }
-
-        .pims-btn-secondary:hover {
-            background-color: #e0e3e7;
-            transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Form Styles */
-        .pims-form-group {
-            margin-bottom: 1.25rem;
-        }
-
-        .pims-form-label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--pims-primary);
-        }
-
-        .pims-form-control {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: var(--pims-border-radius);
-            transition: var(--pims-transition);
-        }
-
-        .pims-form-control:focus {
-            border-color: var(--pims-accent);
-            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
-            outline: none;
-        }
-
-        .pims-select {
-            width: 100%;
-            position: relative;
-        }
-
-        .pims-select select {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: var(--pims-border-radius);
-            background-color: white;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%232c3e50' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 12px;
-        }
-
-        /* Modal Styles */
-        .pims-modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .pims-modal.is-active {
+        .pagination-link {
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            color: var(--primary);
+            text-decoration: none;
+            transition: var(--transition);
             display: flex;
             align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pagination-link:hover:not(.is-disabled) {
+            background: var(--light);
+        }
+
+        .pagination-link.is-current {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .pagination-link.is-disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: none;
+            align-items: center;
             justify-content: center;
-            opacity: 1;
+            background: rgba(0,0,0,0.5);
         }
 
-        .pims-modal-card {
-            background: white;
-            border-radius: var(--pims-border-radius);
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
+        .modal.is-active {
             display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
         }
 
-        .pims-modal.is-active .pims-modal-card {
-            transform: translateY(0);
+        .modal-card {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 95%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalFadeIn 0.3s ease;
         }
 
-        .pims-modal-card-head {
-            padding: 1.25rem;
-            background-color: var(--pims-primary);
-            color: white;
-            border-top-left-radius: var(--pims-border-radius);
-            border-top-right-radius: var(--pims-border-radius);
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-card-head {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .pims-modal-card-title {
+        .modal-card-title {
             font-size: 1.25rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
-        .pims-modal-close {
+        .modal-card-title i {
+            color: var(--accent);
+        }
+
+        .modal-close {
             background: none;
             border: none;
-            color: white;
             font-size: 1.5rem;
             cursor: pointer;
-            transition: transform 0.2s ease;
-            line-height: 1;
+            color: var(--secondary);
+            transition: var(--transition);
         }
 
-        .pims-modal-close:hover {
-            transform: rotate(90deg);
+        .modal-close:hover {
+            color: var(--primary);
         }
 
-        .pims-modal-card-body {
+        .modal-card-body {
             padding: 1.5rem;
-            overflow-y: auto;
         }
 
-        .pims-modal-card-foot {
-            padding: 1rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        .modal-card-foot {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #eee;
             display: flex;
-            justify-content: center;
+            justify-content: flex-end;
             gap: 0.75rem;
         }
 
-        /* Pagination */
-        .pims-pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 1.5rem;
-            flex-wrap: wrap;
+        .form-group {
+            margin-bottom: 1.25rem;
         }
 
-        .pims-pagination-link {
-            padding: 0.5rem 0.75rem;
-            border-radius: var(--pims-border-radius);
-            border: 1px solid #ddd;
-            color: var(--pims-primary);
-            font-weight: 600;
-            transition: var(--pims-transition);
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.25rem;
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--secondary);
         }
 
-        .pims-pagination-link:hover {
-            background-color: var(--pims-accent);
-            color: white;
-            border-color: var(--pims-accent);
-            transform: translateY(-2px);
-        }
-
-        .pims-pagination-link.is-current {
-            background-color: var(--pims-primary);
-            color: white;
-            border-color: var(--pims-primary);
-        }
-
-        .pims-pagination-link.is-disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        /* Search and Filter */
-        .pims-search-filter {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-            align-items: center;
-        }
-
-        .pims-search {
-            flex: 1;
-            min-width: 250px;
-            position: relative;
-        }
-
-        .pims-search-input {
+        .form-control {
             width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            padding: 0.75rem 1rem;
             border: 1px solid #ddd;
-            border-radius: var(--pims-border-radius);
-            transition: var(--pims-transition);
-            font-size: 0.9rem;
+            border-radius: var(--radius);
+            font-family: inherit;
+            font-size: var(--font-size-base);
+            transition: var(--transition);
         }
 
-        .pims-search-input:focus {
-            border-color: var(--pims-accent);
-            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+        .form-control:focus {
             outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
         }
 
-        .pims-search-icon {
-            position: absolute;
-            left: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #7f8c8d;
+        .select select {
+            width: 100%;
         }
 
-        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .content-area { margin-left: 0; }
+            .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+        }
+
         @media (max-width: 768px) {
-            .pims-sidebar {
-                transform: translateX(-100%);
-            }
+            .search { max-width: 100%; }
+            .pagination { flex-direction: column; gap: 1rem; }
+        }
 
-            .pims-sidebar.is-active {
-                transform: translateX(0);
-            }
-
-            .pims-content-area {
-                margin-left: 0;
-                padding: 1rem;
-            }
-
-            .pims-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pims-search-filter {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .pims-search {
-                width: 100%;
-            }
+        @media (max-width: 480px) {
+            .card-footer { flex-direction: column; }
+            .card-footer .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
     @include('includes.nav')
-
-    <div class="pims-app-container">
+    <div class="app-container">
         @include('cadmin.menu')
-
-        <div class="pims-content-area">
-            <div class="pims-card">
-                <div class="pims-card-header">
-                    <h2 class="pims-card-title">
-                        <i class="fas fa-building"></i> Prison Facilities Management
+        <div class="content-area">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">
+                        <i class="fas fa-building" aria-hidden="true"></i> Prison Facilities Management
                     </h2>
-                    <div class="pims-card-actions">
-                        <button id="pims-open-modal" class="pims-btn pims-btn-primary">
-                            <i class="fas fa-plus"></i> Add Prison
+                    <div class="card-actions">
+                        <button id="open-add-modal" class="btn btn-primary">
+                            <i class="fas fa-plus" aria-hidden="true"></i> Add Prison
                         </button>
-                        <button id="pims-table-reload" class="pims-btn pims-btn-secondary">
-                            <i class="fas fa-sync-alt"></i> Refresh
+                        <button id="table-reload" class="btn btn-secondary">
+                            <i class="fas fa-sync-alt" aria-hidden="true"></i> Refresh
                         </button>
                     </div>
                 </div>
-                <div class="pims-card-body">
-                    <!-- Search and Filter -->
-                    <div class="pims-search-filter">
-                        <div class="pims-search">
-                            <i class="fas fa-search pims-search-icon"></i>
-                            <input type="text" id="pims-prison-search" class="pims-search-input" 
-                                   placeholder="Search prisons by name or location...">
+                <div class="card-body">
+                    <div class="search-filter">
+                        <div class="search">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <input type="text" id="prison-search" class="form-control" placeholder="Search prisons by name or location..." aria-label="Search prisons">
                         </div>
                     </div>
-
-                    <!-- Prison Cards Grid -->
-                    <div class="pims-grid" id="pims-prison-grid">
+                    <div class="grid" id="prison-grid">
                         @foreach($prisons as $prison)
-                        <div class="pims-prison-card" data-searchable="{{ strtolower($prison->name) }} {{ strtolower($prison->location) }}">
-                            <div class="pims-card">
-                                <div class="pims-card-body">
-                                    <div class="media" style="display: flex; align-items: center; margin-bottom: 1rem;">
-                                        <div class="media-content">
-                                            <p class="pims-prison-title">{{ $prison->name }}</p>
-                                            <p class="pims-prison-subtitle">{{ $prison->location }}</p>
+                            <div class="prison-card" data-searchable="{{ strtolower($prison->name) }} {{ strtolower($prison->location) }}">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                                            <div>
+                                                <p class="prison-title">{{ $prison->name }}</p>
+                                                <p class="prison-subtitle">{{ $prison->location }}</p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="prison-detail"><strong>Capacity:</strong> {{ $prison->capacity }}</p>
+                                            <p class="prison-detail"><strong>Status:</strong> 
+                                                <span class="status-badge">Active</span>
+                                            </p>
                                         </div>
                                     </div>
-                                    <div class="content">
-                                        <p class="pims-prison-detail"><strong>Capacity:</strong> {{ $prison->capacity }}</p>
-                                        <p class="pims-prison-detail"><strong>Status:</strong> 
-                                            <span class="pims-status-badge">Active</span>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="pims-card-footer" style="padding: 1rem; border-top: 1px solid rgba(0, 0, 0, 0.05);">
-                                    <div class="buttons" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                                        <button class="pims-btn pims-btn-primary pims-btn-sm pims-edit-prison"
+                                    <div class="card-footer">
+                                        <button class="btn btn-primary btn-sm edit-prison"
                                                 data-id="{{ $prison->id }}"
                                                 data-name="{{ $prison->name }}"
                                                 data-location="{{ $prison->location }}"
-                                                data-capacity="{{ $prison->capacity }}">
-                                            <i class="fas fa-edit"></i> Edit
+                                                data-capacity="{{ $prison->capacity }}"
+                                                aria-label="Edit prison {{ $prison->name }}">
+                                            <i class="fas fa-edit" aria-hidden="true"></i> Edit
                                         </button>
-                                        <button class="pims-btn pims-btn-danger pims-btn-sm pims-delete-prison"
+                                        <button class="btn btn-danger btn-sm delete-prison"
                                                 data-id="{{ $prison->id }}"
-                                                data-name="{{ $prison->name }}">
-                                            <i class="fas fa-trash"></i> Delete
+                                                data-name="{{ $prison->name }}"
+                                                aria-label="Delete prison {{ $prison->name }}">
+                                            <i class="fas fa-trash" aria-hidden="true"></i> Delete
                                         </button>
                                     </div>
                                 </div>
                             </div>
-                        </div>
                         @endforeach
                     </div>
-
-                    <!-- Pagination -->
-                    <div class="pims-pagination">
-                        <!-- Previous Button -->
+                    <nav class="pagination" aria-label="Pagination">
                         @if($prisons->currentPage() > 1)
-                        <a class="pims-pagination-link" href="{{ $prisons->previousPageUrl() }}">
-                            <i class="fas fa-chevron-left"></i> Previous
-                        </a>
+                            <a class="pagination-link" href="{{ $prisons->previousPageUrl() }}" aria-label="Previous page">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
+                            </a>
                         @else
-                        <a class="pims-pagination-link is-disabled" href="#">
-                            <i class="fas fa-chevron-left"></i> Previous
-                        </a>
+                            <span class="pagination-link is-disabled" aria-disabled="true">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
+                            </span>
                         @endif
-
-                        <!-- Page Numbers -->
                         @foreach($prisons->getUrlRange(1, $prisons->lastPage()) as $page => $url)
-                        <a class="pims-pagination-link {{ $page == $prisons->currentPage() ? 'is-current' : '' }}" href="{{ $url }}">
-                            {{ $page }}
-                        </a>
+                            <a class="pagination-link {{ $page == $prisons->currentPage() ? 'is-current' : '' }}"
+                               href="{{ $url }}"
+                               aria-current="{{ $page == $prisons->currentPage() ? 'page' : 'false' }}"
+                               aria-label="Page {{ $page }}">{{ $page }}</a>
                         @endforeach
-
-                        <!-- Next Button -->
                         @if($prisons->hasMorePages())
-                        <a class="pims-pagination-link" href="{{ $prisons->nextPageUrl() }}">
-                            Next <i class="fas fa-chevron-right"></i>
-                        </a>
+                            <a class="pagination-link" href="{{ $prisons->nextPageUrl() }}" aria-label="Next page">
+                                Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                            </a>
                         @else
-                        <a class="pims-pagination-link is-disabled" href="#">
-                            Next <i class="fas fa-chevron-right"></i>
-                        </a>
+                            <span class="pagination-link is-disabled" aria-disabled="true">
+                                Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                            </span>
                         @endif
-                    </div>
+                    </nav>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Add Prison Modal -->
-    <div class="pims-modal" id="pims-add-prison-modal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-card">
-            <header class="pims-modal-card-head">
-                <p class="pims-modal-card-title">
-                    <i class="fas fa-plus-circle"></i> Add New Prison Facility
+    <div class="modal" id="add-prison-modal" role="dialog" aria-labelledby="add-modal-title" aria-hidden="true">
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title" id="add-modal-title">
+                    <i class="fas fa-plus-circle" aria-hidden="true"></i> Add New Prison Facility
                 </p>
-                <button class="pims-modal-close">&times;</button>
+                <button class="modal-close" aria-label="Close add modal">×</button>
             </header>
             <form action="{{ route('prison.store') }}" method="POST">
                 @csrf
-                <section class="pims-modal-card-body">
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Prison Name</label>
-                        <input type="text" name="name" class="pims-form-control" required placeholder="Enter prison facility name">
+                <section class="modal-card-body">
+                    <div class="form-group">
+                        <label class="form-label" for="add-prison-name">Prison Name</label>
+                        <input type="text" name="name" id="add-prison-name" class="form-control" required placeholder="Enter prison facility name">
                     </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Location</label>
-                        <div class="pims-select">
-                            <select name="location" class="pims-form-control" required>
-                                <option value="">Select Location</option>
-                                <option value="Addis Ababa">Addis Ababa</option>
-                                <option value="Bahir Dar">Bahir Dar</option>
-                                <option value="Gondar">Gondar</option>
-                                <option value="Adama">Adama</option>
-                                <option value="Hawassa">Hawassa</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label" for="add-prison-location">Location</label>
+                        <select name="location" id="add-prison-location" class="form-control" required>
+                            <option value="">Select Location</option>
+                            <option value="Addis Ababa">Addis Ababa</option>
+                            <option value="Bahir Dar">Bahir Dar</option>
+                            <option value="Gondar">Gondar</option>
+                            <option value="Adama">Adama</option>
+                            <option value="Hawassa">Hawassa</option>
+                        </select>
                     </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Capacity</label>
-                        <input type="number" name="capacity" class="pims-form-control" required placeholder="Enter maximum inmate capacity">
+                    <div class="form-group">
+                        <label class="form-label" for="add-prison-capacity">Capacity</label>
+                        <input type="number" name="capacity" id="add-prison-capacity" class="form-control" required placeholder="Enter maximum inmate capacity">
                     </div>
                 </section>
-                <footer class="pims-modal-card-foot">
-                    <button type="button" class="pims-btn pims-btn-secondary pims-close-modal">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button type="submit" class="pims-btn pims-btn-primary">
-                        <i class="fas fa-save"></i> Save Prison
-                    </button>
+                <footer class="modal-card-foot">
+                    <button type="button" class="btn btn-secondary close-modal" aria-label="Cancel add">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Prison</button>
                 </footer>
             </form>
         </div>
     </div>
 
-    <!-- Edit Prison Modal -->
-    <div class="pims-modal" id="pims-edit-prison-modal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-card">
-            <header class="pims-modal-card-head">
-                <p class="pims-modal-card-title">
-                    <i class="fas fa-edit"></i> Edit Prison Facility
+    <div class="modal" id="edit-prison-modal" role="dialog" aria-labelledby="edit-modal-title" aria-hidden="true">
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title" id="edit-modal-title">
+                    <i class="fas fa-edit" aria-hidden="true"></i> Edit Prison Facility
                 </p>
-                <button class="pims-modal-close">&times;</button>
+                <button class="modal-close" aria-label="Close edit modal">×</button>
             </header>
-            <form id="pims-edit-prison-form" method="POST">
+            <form id="edit-prison-form" method="POST">
                 @csrf
-                @method('PUT')
-                <section class="pims-modal-card-body">
-                    <input type="hidden" name="id" id="pims-edit-prison-id">
-                    
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Prison Name</label>
-                        <input type="text" name="name" id="pims-edit-prison-name" class="pims-form-control" required>
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="id" id="edit-prison-id">
+                <section class="modal-card-body">
+                    <div class="form-group">
+                        <label class="form-label" for="edit-prison-name">Prison Name</label>
+                        <input type="text" name="name" id="edit-prison-name" class="form-control" required>
                     </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Location</label>
-                        <div class="pims-select">
-                            <select name="location" id="pims-edit-prison-location" class="pims-form-control" required>
-                                <option value="">Select Location</option>
-                                <option value="Addis Ababa">Addis Ababa</option>
-                                <option value="Bahir Dar">Bahir Dar</option>
-                                <option value="Gondar">Gondar</option>
-                                <option value="Adama">Adama</option>
-                                <option value="Hawassa">Hawassa</option>
-                            </select>
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-prison-location">Location</label>
+                        <select name="location" id="edit-prison-location" class="form-control" required>
+                            <option value="">Select Location</option>
+                            <option value="Addis Ababa">Addis Ababa</option>
+                            <option value="Bahir Dar">Bahir Dar</option>
+                            <option value="Gondar">Gondar</option>
+                            <option value="Adama">Adama</option>
+                            <option value="Hawassa">Hawassa</option>
+                        </select>
                     </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Capacity</label>
-                        <input type="number" name="capacity" id="pims-edit-prison-capacity" class="pims-form-control" required>
+                    <div class="form-group">
+                        <label class="form-label" for="edit-prison-capacity">Capacity</label>
+                        <input type="number" name="capacity" id="edit-prison-capacity" class="form-control" required>
                     </div>
                 </section>
-                <footer class="pims-modal-card-foot">
-                    <button type="button" class="pims-btn pims-btn-secondary pims-close-modal">
-                        <i class="fas fa-times"></i> Cancel
-                    </button>
-                    <button type="submit" class="pims-btn pims-btn-primary">
-                        <i class="fas fa-save"></i> Update Prison
-                    </button>
+                <footer class="modal-card-foot">
+                    <button type="button" class="btn btn-secondary close-modal" aria-label="Cancel edit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Update Prison</button>
                 </footer>
             </form>
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="pims-modal" id="pims-delete-prison-modal">
-        <div class="pims-modal-background"></div>
-        <div class="pims-modal-card" style="max-width: 400px;">
-            <header class="pims-modal-card-head">
-                <p class="pims-modal-card-title">
-                    <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
+    <div class="modal" id="delete-prison-modal" role="dialog" aria-labelledby="delete-modal-title" aria-hidden="true">
+        <div class="modal-card" style="max-width: 400px;">
+            <header class="modal-card-head">
+                <p class="modal-card-title" id="delete-modal-title">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Confirm Deletion
                 </p>
-                <button class="pims-modal-close">&times;</button>
+                <button class="modal-close" aria-label="Close delete modal">×</button>
             </header>
-            <section class="pims-modal-card-body">
+            <section class="modal-card-body">
                 <div style="text-align: center;">
-                    <div style="font-size: 2.5rem; color: var(--pims-danger); margin-bottom: 1rem;">
-                        <i class="fas fa-trash-alt"></i>
+                    <div style="font-size: 2.5rem; color: var(--danger); margin-bottom: 1rem;">
+                        <i class="fas fa-trash-alt" aria-hidden="true"></i>
                     </div>
                     <p style="margin-bottom: 1.5rem;">
-                        Are you sure you want to delete <strong id="pims-delete-prison-name"></strong>?
+                        Are you sure you want to delete <strong id="delete-prison-name"></strong>?
                         This action cannot be undone.
                     </p>
                 </div>
             </section>
-            <footer class="pims-modal-card-foot" style="justify-content: center;">
-                <button class="pims-btn pims-btn-secondary pims-close-modal">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <form id="pims-delete-prison-form" method="POST" style="display: inline;">
+            <footer class="modal-card-foot">
+                <button type="button" class="btn btn-secondary close-modal" aria-label="Cancel delete">Cancel</button>
+                <form id="delete-prison-form" method="POST" style="display: inline;">
                     @csrf
-                    @method('DELETE')
-                    <button type="submit" class="pims-btn pims-btn-danger">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </footer>
         </div>
     </div>
 
     @include('includes.footer_js')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Modal elements
-            const addModal = document.getElementById('pims-add-prison-modal');
-            const editModal = document.getElementById('pims-edit-prison-modal');
-            const deleteModal = document.getElementById('pims-delete-prison-modal');
-            const closeButtons = document.querySelectorAll('.pims-modal-close, .pims-close-modal');
-            
-            // Open Add Modal
-            document.getElementById('pims-open-modal').addEventListener('click', function() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!csrfToken) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'CSRF token missing. Please check application setup.' });
+                return;
+            }
+
+            const debounce = (fn, delay) => {
+                let timeout;
+                return (...args) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => fn(...args), delay);
+                };
+            };
+
+            const addModal = document.getElementById('add-prison-modal');
+            const editModal = document.getElementById('edit-prison-modal');
+            const deleteModal = document.getElementById('delete-prison-modal');
+
+            const closeAllModals = () => {
+                addModal.classList.remove('is-active');
+                editModal.classList.remove('is-active');
+                deleteModal.classList.remove('is-active');
+                addModal.setAttribute('aria-hidden', 'true');
+                editModal.setAttribute('aria-hidden', 'true');
+                deleteModal.setAttribute('aria-hidden', 'true');
+            };
+
+            document.getElementById('open-add-modal').addEventListener('click', () => {
+                closeAllModals();
                 addModal.classList.add('is-active');
+                addModal.setAttribute('aria-hidden', 'false');
+                document.getElementById('add-prison-name').focus();
             });
-            
-            // Open Edit Modal
-            document.querySelectorAll('.pims-edit-prison').forEach(button => {
-                button.addEventListener('click', function() {
-                    const prisonId = this.getAttribute('data-id');
-                    const prisonName = this.getAttribute('data-name');
-                    const prisonLocation = this.getAttribute('data-location');
-                    const prisonCapacity = this.getAttribute('data-capacity');
-                    
-                    document.getElementById('pims-edit-prison-id').value = prisonId;
-                    document.getElementById('pims-edit-prison-name').value = prisonName;
-                    document.getElementById('pims-edit-prison-location').value = prisonLocation;
-                    document.getElementById('pims-edit-prison-capacity').value = prisonCapacity;
-                    
-                    document.getElementById('pims-edit-prison-form').action = `/prisons/${prisonId}`;
+
+            document.querySelectorAll('.edit-prison').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeAllModals();
+                    document.getElementById('edit-prison-id').value = btn.dataset.id;
+                    document.getElementById('edit-prison-name').value = btn.dataset.name;
+                    document.getElementById('edit-prison-location').value = btn.dataset.location;
+                    document.getElementById('edit-prison-capacity').value = btn.dataset.capacity;
+                    document.getElementById('edit-prison-form').action = `/prisons/${btn.dataset.id}`;
                     editModal.classList.add('is-active');
+                    editModal.setAttribute('aria-hidden', 'false');
+                    document.getElementById('edit-prison-name').focus();
                 });
             });
-            
-            // Open Delete Modal
-            document.querySelectorAll('.pims-delete-prison').forEach(button => {
-                button.addEventListener('click', function() {
-                    const prisonId = this.getAttribute('data-id');
-                    const prisonName = this.getAttribute('data-name');
-                    
-                    document.getElementById('pims-delete-prison-name').textContent = prisonName;
-                    document.getElementById('pims-delete-prison-form').action = `/prisons/${prisonId}`;
+
+            document.querySelectorAll('.delete-prison').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeAllModals();
+                    document.getElementById('delete-prison-name').textContent = btn.dataset.name;
+                    document.getElementById('delete-prison-form').action = `/prisons/${btn.dataset.id}`;
                     deleteModal.classList.add('is-active');
+                    deleteModal.setAttribute('aria-hidden', 'false');
                 });
             });
-            
-            // Close Modals
-            closeButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    addModal.classList.remove('is-active');
-                    editModal.classList.remove('is-active');
-                    deleteModal.classList.remove('is-active');
-                });
+
+            document.querySelectorAll('.modal-close, .close-modal').forEach(btn => {
+                btn.addEventListener('click', closeAllModals);
             });
-            
-            // Close modal when clicking outside
-            [addModal, editModal, deleteModal].forEach(modal => {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        modal.classList.remove('is-active');
-                    }
-                });
+
+            window.addEventListener('click', e => {
+                if (e.target.classList.contains('modal')) {
+                    closeAllModals();
+                }
             });
-            
-            // Table Reload
-            document.getElementById('pims-table-reload').addEventListener('click', function() {
+
+            document.getElementById('table-reload').addEventListener('click', () => {
                 window.location.reload();
             });
-            
-            // Search functionality for prison cards
-            document.getElementById('pims-prison-search').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const prisonCards = document.querySelectorAll('#pims-prison-grid .pims-prison-card');
-                
-                prisonCards.forEach(card => {
-                    const searchableText = card.getAttribute('data-searchable');
-                    if (searchableText.includes(searchTerm)) {
-                        card.style.display = '';
+
+            const searchInput = document.getElementById('prison-search');
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(() => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    document.querySelectorAll('#prison-grid .prison-card').forEach(card => {
+                        const searchableText = card.getAttribute('data-searchable');
+                        card.style.display = searchableText.includes(searchTerm) ? '' : 'none';
+                    });
+                }, 300));
+            }
+
+            document.getElementById('edit-prison-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const form = e.target;
+                const prisonId = document.getElementById('edit-prison-id').value;
+                try {
+                    const formData = new FormData(form);
+                    formData.delete('_method');
+                    const data = Object.fromEntries(formData);
+                    data._method = 'PUT';
+                    const response = await fetch(`/prisons/${prisonId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        closeAllModals();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Prison updated successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
                     } else {
-                        card.style.display = 'none';
+                        throw new Error(result.message || 'Failed to update prison');
                     }
-                });
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Update operation not supported. Please ensure backend supports PUT method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                }
+            });
+
+            document.getElementById('delete-prison-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const form = e.target;
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ _method: 'DELETE' })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        closeAllModals();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Prison deleted successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    } else {
+                        throw new Error(result.message || 'Failed to delete prison');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Delete operation not supported. Please ensure backend supports DELETE method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                }
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && (addModal.classList.contains('is-active') || editModal.classList.contains('is-active') || deleteModal.classList.contains('is-active'))) {
+                    closeAllModals();
+                }
             });
         });
     </script>

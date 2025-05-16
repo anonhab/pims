@@ -6,6 +6,7 @@
             <div class="pims-dot"></div>
         </div>
         <div class="pims-preloader-text">Loading<span class="pims-loading-dots">...</span></div>
+        <br/><br/><br/>
         <div class="pims-cancel-text">Click anywhere to cancel</div>
     </div>
 </div>

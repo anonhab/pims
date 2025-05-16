@@ -1,37 +1,75 @@
 @include('components.preloader')
-<div class="column is-2 is-fullheight is-hidden-touch" id="sidebar">
-    <aside class="menu">
-        <ul class="menu-list">
-            <li>
-                <a href="/dashboard">
-                    <span class="icon">
-                        <i class="fa fa-home"></i>
-                    </span> Dashboard
+<div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar3">
+    <!-- Sidebar Toggle Button (visible on mobile) -->
+    <div class="pims-sidebar-toggle" id="pimsSidebarToggle3">
+        <i class="fas fa-bars"></i>
+    </div>
+    
+    <!-- Sidebar Logo/Brand -->
+    <div class="pims-sidebar-brand">
+        <i class="fas fa-user-shield pims-brand-icon"></i>
+        <span class="pims-brand-text">PIMS System</span>
+        <i class="fas fa-times pims-close-sidebar" id="pimsCloseSidebar3"></i>
+    </div>
+
+    <!-- Sidebar Menu -->
+    <aside class="pims-menu">
+        <ul class="pims-menu-list">
+            <!-- Dashboard -->
+            <li class="pims-menu-item">
+                <a href="/sdashboard" class="pims-menu-link">
+                    <span class="pims-menu-icon">
+                        <i class="fas fa-home"></i>
+                    </span>
+                    <span class="pims-menu-text">Dashboard</span>
                 </a>
             </li>
 
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-users"></i>
-                    </span> Visitor Management
+            <!-- Visitor Management -->
+            <li class="pims-menu-item pims-has-submenu">
+                <a href="#" class="pims-menu-link">
+                    <span class="pims-menu-icon">
+                        <i class="fas fa-user"></i>
+                    </span>
+                    <span class="pims-menu-text">Visitor Management</span>
+                    <span class="pims-menu-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </span>
                 </a>
-                <ul class="submenu">
-                    <li><a href="{{ route('security.registerVisitor') }}">Register Visitor</a></li>
-                    <li><a href="{{ route('security_officer.viewvisitors') }}">View Visitors</a></li>
+                <ul class="pims-submenu">
+                    <li class="pims-submenu-item">
+                        <a href="{{ route('security.registerVisitor') }}" class="pims-submenu-link">Register Visitor</a>
+                    </li>
+                    <li class="pims-submenu-item">
+                        <a href="{{ route('security_officer.viewvisitors') }}" class="pims-submenu-link">View Visitors</a>
+                    </li>
                 </ul>
             </li>
 
-            <li>
-                <a href="#">
-                    <span class="icon">
-                        <i class="fa fa-calendar"></i>
-                    </span> Monitor
+            <!-- Monitor -->
+            <li class="pims-menu-item pims-has-submenu">
+                <a href="#" class="pims-menu-link">
+                    <span class="pims-menu-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </span>
+                    <span class="pims-menu-text">Monitor</span>
+                    <span class="pims-menu-arrow">
+                        <i class="fas fa-angle-down"></i>
+                    </span>
                 </a>
-                <ul class="submenu">
-                <li><a href="/viewprisonerstatus">Monitor Prisoner Status</a></li>
+                <ul class="pims-submenu">
+                    <li class="pims-submenu-item">
+                        <a href="/viewprisonerstatus" class="pims-submenu-link">Monitor Prisoner Status</a>
+                    </li>
                 </ul>
             </li>
-        </ul>
+
+        <!-- Collapse Button (Desktop) -->
+        <div class="pims-collapse-btn" id="pimsCollapseBtn3">
+            <i class="fas fa-chevron-left"></i>
+            <span>Collapse Menu</span>
+        </div>
     </aside>
 </div>
+<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
+<script src="{{ asset('js/menu.js') }}"></script>

@@ -6,10 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Job Management</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -40,7 +40,6 @@
             line-height: 1.6;
         }
 
-        /* Layout Structure */
         .pims-app-container {
             display: flex;
             min-height: 100vh;
@@ -54,13 +53,11 @@
             transition: var(--pims-transition);
         }
 
-        /* Card Styles */
         .pims-card {
             background: white;
             border-radius: var(--pims-border-radius);
             box-shadow: var(--pims-card-shadow);
             margin-bottom: 1.5rem;
-            transition: var(--pims-transition);
             border-left: 4px solid var(--pims-accent);
         }
 
@@ -90,7 +87,6 @@
             justify-content: space-between;
         }
 
-        /* Filter Controls */
         .pims-card-filter {
             display: flex;
             flex-wrap: wrap;
@@ -100,7 +96,6 @@
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Grid Layout */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -108,7 +103,6 @@
             margin-top: 1.5rem;
         }
 
-        /* Form Styles */
         .pims-form-group {
             margin-bottom: 1.25rem;
         }
@@ -140,7 +134,6 @@
             resize: vertical;
         }
 
-        /* Button Styles */
         .pims-btn {
             padding: 0.5rem 1rem;
             border-radius: var(--pims-border-radius);
@@ -149,7 +142,6 @@
             transition: var(--pims-transition);
             display: inline-flex;
             align-items: center;
-            justify-content: center;
             gap: 0.5rem;
             border: none;
             font-size: 0.9rem;
@@ -174,7 +166,6 @@
         .pims-btn-danger:hover {
             background-color: #a5281b;
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .pims-btn-secondary {
@@ -185,7 +176,6 @@
         .pims-btn-secondary:hover {
             background-color: #d5dbdb;
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .pims-btn-success {
@@ -196,10 +186,8 @@
         .pims-btn-success:hover {
             background-color: #219653;
             transform: translateY(-2px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Status Badge */
         .pims-status-badge {
             display: inline-block;
             padding: 0.25rem 0.5rem;
@@ -223,7 +211,6 @@
             color: white;
         }
 
-        /* Modal Styles */
         .pims-modal {
             position: fixed;
             top: 0;
@@ -231,21 +218,41 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
             transition: var(--pims-transition);
         }
 
         .pims-modal-active {
+            display: flex;
             opacity: 1;
             visibility: visible;
         }
 
-        .pims-modal-content {
+        .job-edit-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100; /* Higher z-index to avoid overlap */
+            transition: var(--pims-transition);
+        }
+
+        .job-edit-modal-active {
+            display: flex;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .pims-modal-content,
+        .job-edit-modal-content {
             background-color: white;
             border-radius: var(--pims-border-radius);
             width: 90%;
@@ -255,11 +262,13 @@
             transition: var(--pims-transition);
         }
 
-        .pims-modal-active .pims-modal-content {
+        .pims-modal-active .pims-modal-content,
+        .job-edit-modal-active .job-edit-modal-content {
             transform: translateY(0);
         }
 
-        .pims-modal-header {
+        .pims-modal-header,
+        .job-edit-modal-header {
             padding: 1rem 1.5rem;
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             display: flex;
@@ -267,13 +276,15 @@
             align-items: center;
         }
 
-        .pims-modal-title {
+        .pims-modal-title,
+        .job-edit-modal-title {
             font-size: 1.25rem;
             font-weight: 600;
             color: var(--pims-primary);
         }
 
-        .pims-modal-close {
+        .pims-modal-close,
+        .job-edit-modal-close {
             background: none;
             border: none;
             font-size: 1.5rem;
@@ -281,11 +292,13 @@
             color: #7f8c8d;
         }
 
-        .pims-modal-body {
+        .pims-modal-body,
+        .job-edit-modal-body {
             padding: 1.5rem;
         }
 
-        .pims-modal-footer {
+        .pims-modal-footer,
+        .job-edit-modal-footer {
             padding: 1rem 1.5rem;
             border-top: 1px solid rgba(0, 0, 0, 0.1);
             display: flex;
@@ -293,7 +306,17 @@
             gap: 1rem;
         }
 
-        /* Responsive Adjustments */
+        .pims-notification-success {
+            background-color: var(--pims-success);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--pims-border-radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         @media (max-width: 768px) {
             .pims-content-area {
                 margin-left: 0;
@@ -320,14 +343,18 @@
         <div class="pims-content-area">
             <!-- Success Notification -->
             @if(session('success'))
-                <div class="pims-notification pims-notification-success">
+                <div class="pims-notification-success">
                     <i class="fas fa-check-circle"></i> {{ session('success') }}
                 </div>
             @endif
 
+            <!-- Create Job Button -->
+            <button class="pims-btn pims-btn-primary" id="pims-create-record-button" style="margin-bottom: 1rem;">
+                <i class="fas fa-plus-circle"></i> Create New Job
+            </button>
+
             <div class="pims-card">
                 <div class="pims-card-filter">
-                    <!-- Search and other controls -->
                     <div class="pims-form-group" style="flex-grow: 1;">
                         <div class="control has-icons-left">
                             <input class="pims-form-control" id="pims-table-search" type="text" placeholder="Search for jobs...">
@@ -344,77 +371,79 @@
                 </div>
 
                 <div class="pims-card-body">
-                    <!-- Card Layout for Jobs -->
                     <div class="pims-grid">
-                        @foreach($jobs as $job)
-                        <div class="pims-job-card">
-                            <div class="pims-card">
-                                <header class="pims-card-header">
-                                    <h3 class="pims-card-title">
-                                        <i class="fas fa-briefcase"></i> {{ $job->job_title }}
-                                    </h3>
-                                </header>
-                                <div class="pims-card-body">
-                                    <div class="pims-content-text">
-                                        <strong><i class="fas fa-id-card"></i> Prisoner ID:</strong> {{ $job->prisoner_id }}
+                        @forelse($jobs as $job)
+                            <div class="pims-job-card">
+                                <div class="pims-card">
+                                    <header class="pims-card-header">
+                                        <h3 class="pims-card-title">
+                                            <i class="fas fa-briefcase"></i> {{ $job->job_title }}
+                                        </h3>
+                                    </header>
+                                    <div class="pims-card-body">
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-id-card"></i> Prisoner ID:</strong> {{ $job->prisoner_id }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-user-tie"></i> Assigned By:</strong> {{ $job->assigned_by }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-align-left"></i> Description:</strong>
+                                            {{ Str::limit($job->job_description, 100) }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-calendar-day"></i> Assigned Date:</strong> {{ $job->assigned_date }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-calendar-day"></i> End Date:</strong> {{ $job->end_date ?? 'N/A' }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-info-circle"></i> Status:</strong>
+                                            <span class="pims-status-badge pims-status-{{ $job->status }}">
+                                                {{ ucfirst($job->status) }}
+                                            </span>
+                                        </div>
+                                        <div class="pims-meta-text">
+                                            <small><i class="fas fa-clock"></i> Created: {{ $job->created_at->format('Y-m-d H:i') }}</small><br>
+                                            <small><i class="fas fa-sync-alt"></i> Updated: {{ $job->updated_at->format('Y-m-d H:i') }}</small>
+                                        </div>
                                     </div>
-                                    <div class="pims-content-text">
-                                        <strong><i class="fas fa-user-tie"></i> Assigned By:</strong> {{ $job->assigned_by }}
-                                    </div>
-                                    <div class="pims-content-text">
-                                        <strong><i class="fas fa-align-left"></i> Description:</strong> 
-                                        {{ Str::limit($job->job_description, 100) }}
-                                    </div>
-                                    <div class="pims-content-text">
-                                        <strong><i class="fas fa-calendar-day"></i> Assigned Date:</strong> {{ $job->assigned_date }}
-                                    </div>
-                                    <div class="pims-content-text">
-                                        <strong><i class="fas fa-info-circle"></i> Status:</strong>
-                                        <span class="pims-status-badge pims-status-{{ $job->status }}">
-                                            {{ ucfirst($job->status) }}
-                                        </span>
-                                    </div>
-                                    <div class="pims-meta-text">
-                                        <small><i class="fas fa-clock"></i> Created: {{ $job->created_at->format('Y-m-d H:i') }}</small><br>
-                                        <small><i class="fas fa-sync-alt"></i> Updated: {{ $job->updated_at->format('Y-m-d H:i') }}</small>
-                                    </div>
-                                </div>
-                                <footer class="pims-card-footer">
-                                    <button class="pims-btn pims-btn-primary pims-edit-button"
-                                        data-id="{{ $job->id }}"
-                                        data-job-title="{{ $job->job_title }}"
-                                        data-prisoner-id="{{ $job->prisoner_id }}"
-                                        data-assigned-by="{{ $job->assigned_by }}"
-                                        data-job-description="{{ $job->job_description }}"
-                                        data-assigned-date="{{ $job->assigned_date }}"
-                                        data-status="{{ $job->status }}">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </button>
-                                    <form action="{{ route('jobs.destroyjob', $job->id) }}" method="POST" class="pims-delete-form">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="pims-btn pims-btn-danger">
-                                            <i class="fas fa-trash"></i> Delete
+                                    <footer class="pims-card-footer">
+                                        <button class="pims-btn pims-btn-primary job-edit-button"
+                                                data-id="{{ $job->id }}"
+                                                data-job-title="{{ htmlentities($job->job_title) }}"
+                                                data-prisoner-id="{{ $job->prisoner_id }}"
+                                                data-assigned-by="{{ $job->assigned_by }}"
+                                                data-job-description="{{ htmlentities($job->job_description) }}"
+                                                data-assigned-date="{{ $job->assigned_date }}"
+                                                data-status="{{ $job->status }}">
+                                            <i class="fas fa-edit"></i> Edit
                                         </button>
-                                    </form>
-                                </footer>
+                                        <form action="{{ route('jobs.destroyjob', $job->id) }}" method="POST" class="pims-delete-form">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="pims-btn pims-btn-danger">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                    </footer>
+                                </div>
                             </div>
-                        </div>
-                        @endforeach
+                        @empty
+                            <div class="pims-content-text">No jobs found.</div>
+                        @endforelse
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    @include('includes.footer_js')
-
     <!-- Create Job Modal -->
     <div class="pims-modal" id="pims-create-record-modal">
         <div class="pims-modal-content">
             <header class="pims-modal-header">
                 <h3 class="pims-modal-title"><i class="fas fa-plus-circle"></i> Create New Job</h3>
-                <button class="pims-modal-close" id="pims-close-modal-button">&times;</button>
+                <button class="pims-modal-close" id="pims-close-modal-button">×</button>
             </header>
             <section class="pims-modal-body">
                 <form id="pims-create-record-form" action="{{ route('job.assign') }}" method="POST">
@@ -460,47 +489,41 @@
         </div>
     </div>
 
-    <!-- Edit Job Modal -->
-    <div class="pims-modal" id="pims-edit-job-modal">
-        <div class="pims-modal-content">
-            <header class="pims-modal-header">
-                <h3 class="pims-modal-title"><i class="fas fa-edit"></i> Edit Job</h3>
-                <button class="pims-modal-close" id="pims-close-edit-modal-button">&times;</button>
+    <!-- Edit Job Modal (Unique) -->
+    <div class="job-edit-modal" id="job-edit-modal">
+        <div class="job-edit-modal-content">
+            <header class="job-edit-modal-header">
+                <h3 class="job-edit-modal-title"><i class="fas fa-edit"></i> Edit Job</h3>
+                <button class="job-edit-modal-close" id="job-close-edit-modal-button">×</button>
             </header>
-            <section class="pims-modal-body">
-                <form id="pims-edit-job-form" method="POST" action="{{ route('jobs.update') }}">
+            <section class="job-edit-modal-body">
+                <form id="job-edit-form" method="POST" action="">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" name="job_id" id="pims-edit-job-id">
-
+                    <input type="hidden" name="id" id="job-edit-job-id">
                     <div class="pims-form-group">
                         <label class="pims-form-label">Job Title</label>
-                        <input class="pims-form-control" type="text" name="job_title" id="pims-edit-job-title" required>
+                        <input class="pims-form-control" type="text" name="job_title" id="job-edit-job-title" required>
                     </div>
-
                     <div class="pims-form-group">
                         <label class="pims-form-label">Prisoner ID</label>
-                        <input class="pims-form-control" type="text" name="prisoner_id" id="pims-edit-prisoner-id" required>
+                        <input class="pims-form-control" type="text" name="prisoner_id" id="job-edit-prisoner-id" required>
                     </div>
-
                     <div class="pims-form-group">
                         <label class="pims-form-label">Assigned By</label>
-                        <input class="pims-form-control" type="text" name="assigned_by" id="pims-edit-assigned-by" value="{{ session('user_id') }}" readonly>
+                        <input class="pims-form-control" type="text" name="assigned_by" id="job-edit-assigned-by" required>
                     </div>
-
                     <div class="pims-form-group">
                         <label class="pims-form-label">Job Description</label>
-                        <textarea class="pims-form-control pims-form-textarea" name="job_description" id="pims-edit-job-description" required></textarea>
+                        <textarea class="pims-form-control pims-form-textarea" name="job_description" id="job-edit-job-description" required></textarea>
                     </div>
-
                     <div class="pims-form-group">
                         <label class="pims-form-label">Assigned Date</label>
-                        <input class="pims-form-control" type="date" name="assigned_date" id="pims-edit-assigned-date" required>
+                        <input class="pims-form-control" type="date" name="assigned_date" id="job-edit-assigned-date" required>
                     </div>
-
                     <div class="pims-form-group">
                         <label class="pims-form-label">Status</label>
-                        <select class="pims-form-control" name="status" id="pims-edit-status" required>
+                        <select class="pims-form-control" name="status" id="job-edit-status" required>
                             <option value="active">Active</option>
                             <option value="completed">Completed</option>
                             <option value="terminated">Terminated</option>
@@ -508,89 +531,144 @@
                     </div>
                 </form>
             </section>
-            <footer class="pims-modal-footer">
-                <button class="pims-btn pims-btn-secondary" id="pims-cancel-edit-modal-button">
+            <footer class="job-edit-modal-footer">
+                <button class="pims-btn pims-btn-secondary" id="job-cancel-edit-modal-button">
                     <i class="fas fa-times"></i> Cancel
                 </button>
-                <button class="pims-btn pims-btn-success" type="submit" form="pims-edit-job-form">
+                <button class="pims-btn pims-btn-success" type="submit" form="job-edit-form">
                     <i class="fas fa-save"></i> Save Changes
                 </button>
             </footer>
         </div>
     </div>
 
+    @include('includes.footer_js')
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Create Job Modal Handling
-            const pimsCreateRecordButton = document.getElementById('pims-create-record-button');
-            const pimsCloseModalButton = document.getElementById('pims-close-modal-button');
-            const pimsCancelModalButton = document.getElementById('pims-cancel-modal-button');
-            const pimsCreateRecordModal = document.getElementById('pims-create-record-modal');
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM loaded, initializing job management functionality');
 
-            // Open create modal
-            pimsCreateRecordButton.addEventListener('click', () => {
-                pimsCreateRecordModal.classList.add('pims-modal-active');
+        // Create Job Modal Handling (unchanged)
+        const createButton = document.getElementById('pims-create-record-button');
+        const createModal = document.getElementById('pims-create-record-modal');
+        const closeCreateModalButton = document.getElementById('pims-close-modal-button');
+        const cancelCreateModalButton = document.getElementById('pims-cancel-modal-button');
+
+        if (createButton) {
+            createButton.addEventListener('click', () => {
+                createModal.classList.add('pims-modal-active');
+                console.log('Create modal opened');
             });
+        } else {
+            console.error('Create button not found');
+        }
 
-            // Close create modal
-            pimsCloseModalButton.addEventListener('click', () => {
-                pimsCreateRecordModal.classList.remove('pims-modal-active');
+        if (closeCreateModalButton) {
+            closeCreateModalButton.addEventListener('click', () => {
+                createModal.classList.remove('pims-modal-active');
+                console.log('Create modal closed');
             });
+        }
 
-            pimsCancelModalButton.addEventListener('click', () => {
-                pimsCreateRecordModal.classList.remove('pims-modal-active');
+        if (cancelCreateModalButton) {
+            cancelCreateModalButton.addEventListener('click', () => {
+                createModal.classList.remove('pims-modal-active');
+                console.log('Create modal cancelled');
             });
+        }
 
-            // Edit Job Modal Handling
-            const pimsEditButtons = document.querySelectorAll('.pims-edit-button');
-            const pimsEditModal = document.getElementById('pims-edit-job-modal');
-            const pimsCloseEditModalButton = document.getElementById('pims-close-edit-modal-button');
-            const pimsCancelEditModalButton = document.getElementById('pims-cancel-edit-modal-button');
+        // Edit Job Modal Handling (unique)
+        const editButtons = document.querySelectorAll('.job-edit-button');
+        const editModal = document.getElementById('job-edit-modal');
+        const closeEditModalButton = document.getElementById('job-close-edit-modal-button');
+        const cancelEditModalButton = document.getElementById('job-cancel-edit-modal-button');
+        const editForm = document.getElementById('job-edit-form');
 
-            pimsEditButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const jobId = button.dataset.id;
-                    const form = document.getElementById('pims-edit-job-form');
+        if (editButtons.length === 0) {
+            console.warn('No job edit buttons found');
+        }
 
-                    // Set form action with job ID
-                    form.action = `/jobs/${jobId}`;
+        editButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                console.log('Job edit button clicked for job ID:', button.dataset.id);
 
-                    // Populate form fields
-                    document.getElementById('pims-edit-job-title').value = button.dataset.jobTitle;
-                    document.getElementById('pims-edit-prisoner-id').value = button.dataset.prisonerId;
-                    document.getElementById('pims-edit-assigned-by').value = button.dataset.assignedBy;
-                    document.getElementById('pims-edit-job-description').value = button.dataset.jobDescription;
-                    document.getElementById('pims-edit-assigned-date').value = button.dataset.assignedDate;
-                    document.getElementById('pims-edit-status').value = button.dataset.status;
+                // Populate form fields
+                editForm.action = `/jobs/${button.dataset.id}`;
+                document.getElementById('job-edit-job-id').value = button.dataset.id;
+                document.getElementById('job-edit-job-title').value = button.dataset.jobTitle || '';
+                document.getElementById('job-edit-prisoner-id').value = button.dataset.prisonerId || '';
+                document.getElementById('job-edit-assigned-by').value = button.dataset.assignedBy || '';
+                document.getElementById('job-edit-job-description').value = button.dataset.jobDescription || '';
+                document.getElementById('job-edit-assigned-date').value = button.dataset.assignedDate || '';
+                document.getElementById('job-edit-status').value = button.dataset.status || 'active';
 
-                    pimsEditModal.classList.add('pims-modal-active');
-                });
-            });
+                console.log('Job edit form populated, action set to:', editForm.action);
 
-            // Close edit modal
-            pimsCloseEditModalButton.addEventListener('click', () => {
-                pimsEditModal.classList.remove('pims-modal-active');
-            });
-
-            pimsCancelEditModalButton.addEventListener('click', () => {
-                pimsEditModal.classList.remove('pims-modal-active');
-            });
-
-            // Delete Confirmation
-            const pimsDeleteForms = document.querySelectorAll('.pims-delete-form');
-            pimsDeleteForms.forEach(form => {
-                form.addEventListener('submit', (e) => {
-                    if (!confirm('Are you sure you want to delete this job?')) {
-                        e.preventDefault();
-                    }
-                });
-            });
-
-            // Reload button
-            document.getElementById('pims-table-reload').addEventListener('click', () => {
-                window.location.reload();
+                // Show modal
+                editModal.classList.add('job-edit-modal-active');
+                console.log('Job edit modal opened');
             });
         });
+
+        if (closeEditModalButton) {
+            closeEditModalButton.addEventListener('click', () => {
+                editModal.classList.remove('job-edit-modal-active');
+                console.log('Job edit modal closed');
+            });
+        }
+
+        if (cancelEditModalButton) {
+            cancelEditModalButton.addEventListener('click', () => {
+                editModal.classList.remove('job-edit-modal-active');
+                console.log('Job edit modal cancelled');
+            });
+        }
+
+        // Delete Confirmation
+        const deleteForms = document.querySelectorAll('.pims-delete-form');
+        deleteForms.forEach(form => {
+            form.addEventListener('submit', (e) => {
+                if (!confirm('Are you sure you want to delete this job?')) {
+                    e.preventDefault();
+                    console.log('Delete cancelled');
+                } else {
+                    console.log('Delete confirmed');
+                }
+            });
+        });
+
+        // Reload Button
+        const reloadButton = document.getElementById('pims-table-reload');
+        if (reloadButton) {
+            reloadButton.addEventListener('click', () => {
+                window.location.reload();
+                console.log('Page reloaded');
+            });
+        }
+
+        // Search Functionality (fixed to handle null elements)
+        const searchInput = document.getElementById('pims-table-search');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                const jobCards = document.querySelectorAll('.pims-job-card');
+                jobCards.forEach(card => {
+                    const titleElement = card.querySelector('.pims-card-title');
+                    if (titleElement) {
+                        const title = titleElement.textContent.toLowerCase();
+                        card.style.display = title.includes(searchTerm) ? '' : 'none';
+                    } else {
+                        console.warn('No title element found in job card:', card);
+                        card.style.display = 'none';
+                    }
+                });
+                console.log('Search term:', searchTerm);
+            });
+        } else {
+            console.warn('Search input not found');
+        }
+    });
     </script>
 </body>
 </html>

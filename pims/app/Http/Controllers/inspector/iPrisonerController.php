@@ -12,6 +12,7 @@ use App\Models\JobAssignment;
 use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use App\Models\LawyerPrisonerAssignment;
+use App\Models\PolicePrisonerAssignment;
 use App\Models\Lawyer;
 use App\Models\MedicalReport;
 use App\Models\Requests;
@@ -19,6 +20,7 @@ use Carbon\Carbon;
 use App\Models\Room;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class iPrisonerController extends Controller
 {
@@ -27,7 +29,16 @@ class iPrisonerController extends Controller
         return view('inspector.add_prisoner');
     }
 
-    public function idashboard()
+    public function policeofficer()
+    {
+        $officers=Account::all();
+        $prisoners=Prisoner::all();
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+        $lawyer = Lawyer::where('prison', session('prison_id'))->paginate(9);
+        $assignments = PolicePrisonerAssignment::where('prison_id', session('prison_id'))->paginate(9);
+        return view('inspector.assign_policeofficer',compact('officers','prisoners','assignments'));
+    }
+        public function idashboard()
 {
     // Example logic to fetch data — replace these with your actual logic
     $prisonerCount = Prisoner::count();
@@ -121,23 +132,53 @@ class iPrisonerController extends Controller
     }
     public function assignlawyer(Request $request)
     {
-
-
-        LawyerPrisonerAssignment::create([
-            'prisoner_id' => $request->prisoner_id,
-            'lawyer_id' => $request->lawyer_id,
-            'prison_id' => $request->prison_id,
-            'assigned_by' => $request->assigned_by,
-            'assignment_date' => $request->assignment_date,
+        $validator = Validator::make($request->all(), [
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'lawyer_id' => 'required|exists:lawyers,lawyer_id',
+            'assignment_date' => 'required|date',
+            'prison_id' => 'required|exists:prisons,id',
+            'assigned_by' => 'required|exists:accounts,user_id',
         ]);
 
-        return redirect()->back()->with('success', 'Assignment created successfully.');
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $assignment = LawyerPrisonerAssignment::create($request->all());
+        return response()->json(['message' => 'Assignment created successfully']);
+    }
+    public function assignpolice(Request $request)
+    {
+
+
+        $validator = Validator::make($request->all(), [
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'officer_id' => 'required|exists:accounts,user_id',
+            'assignment_date' => 'required|date',
+            'prison_id' => 'required|exists:prisons,id',
+            'assigned_by' => 'required|exists:accounts,user_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $assignment = PolicePrisonerAssignment::create($request->all());
+        return response()->json(['message' => 'Assignment created successfully']);
     }
     public function show_all()
-    {
-        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+{
+    $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+    
+    if (session('role_id') == 8) {
         return view('police_officer.view_Prisoner', compact('prisoners'));
+    } elseif (session('role_id') == 5) {
+        return view('police_commisioner.view_prisoner', compact('prisoners'));
+    } else {
+        abort(403, 'Unauthorized action.');
     }
+}
+
     public function show_allforin()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
@@ -224,6 +265,34 @@ public function roomdestroy($id)
     return back()->with('success', 'Room deleted successfully!');
 }
 
+public function updateassign(Request $request, $assignment_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'lawyer_id' => 'required|exists:lawyers,lawyer_id',
+            'assignment_date' => 'required|date',
+            'prison_id' => 'required|exists:prisons,id',
+            'assigned_by' => 'required|exists:accounts,user_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $assignment = LawyerPrisonerAssignment::findOrFail($assignment_id);
+        $assignment->update($request->only([
+            'prisoner_id', 'lawyer_id', 'assignment_date', 'prison_id', 'assigned_by'
+        ]));
+
+        return response()->json(['message' => 'Assignment updated successfully']);
+    }
+
+    public function destroyassign($assignment_id)
+    {
+        $assignment = LawyerPrisonerAssignment::findOrFail($assignment_id);
+        $assignment->delete();
+        return response()->json(['message' => 'Assignment deleted successfully']);
+    }
     public function show($id)
     {
         $prisoner = Prisoner::where('prison_id', session('prison_id'))
@@ -437,5 +506,33 @@ public function roomdestroy($id)
 
         $lawyer->delete();
         return redirect()->back()->with('success', 'Lawyer deleted successfully!');
+    }
+    public function updateasspolice(Request $request, $assignment_id)
+    {
+        $validator = Validator::make($request->all(), [
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'officer_id' => 'required|exists:accounts,user_id',
+            'assignment_date' => 'required|date',
+            'prison_id' => 'required|exists:prisons,id',
+            'assigned_by' => 'required|exists:accounts,user_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $assignment = PolicePrisonerAssignment::findOrFail($assignment_id);
+        $assignment->update($request->only([
+            'prisoner_id', 'officer_id', 'assignment_date', 'prison_id', 'assigned_by'
+        ]));
+
+        return response()->json(['message' => 'Assignment updated successfully']);
+    }
+
+    public function destroyasspolice($assignment_id)
+    {
+        $assignment = PolicePrisonerAssignment::findOrFail($assignment_id);
+        $assignment->delete();
+        return response()->json(['message' => 'Assignment deleted successfully']);
     }
 }

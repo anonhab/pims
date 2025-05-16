@@ -1,150 +1,355 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    @include('includes.head')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIMS - View Certifications</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --pims-primary: #1a2a3a;
+            --pims-secondary: #2c3e50;
+            --pims-accent: #2980b9;
+            --pims-danger: #c0392b;
+            --pims-success: #27ae60;
+            --pims-warning: #d35400;
+            --pims-text-light: #ecf0f1;
+            --pims-text-dark: #2c3e50;
+            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --pims-border-radius: 6px;
+            --pims-nav-height: 60px;
+            --pims-sidebar-width: 250px;
+            --pims-transition: all 0.3s ease;
+        }
 
-@include('includes.head')
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
+        body {
+            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: var(--pims-text-dark);
+            line-height: 1.6;
+        }
+
+        /* Layout Structure */
+        .pims-app-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: var(--pims-nav-height);
+        }
+
+        .pims-content-area {
+            flex: 1;
+            margin-left: var(--pims-sidebar-width);
+            padding: 1.5rem;
+            transition: var(--pims-transition);
+        }
+
+        /* Card Styles */
+        .pims-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-card-shadow);
+            margin-bottom: 1.5rem;
+            transition: var(--pims-transition);
+            border-left: 4px solid var(--pims-accent);
+        }
+
+        .pims-card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background-color: var(--pims-secondary);
+            color: white;
+            border-top-left-radius: var(--pims-border-radius);
+            border-top-right-radius: var(--pims-border-radius);
+        }
+
+        .pims-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .pims-card-body {
+            padding: 1.25rem;
+        }
+
+        .pims-card-footer {
+            padding: 0.75rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* Filter Controls */
+        .pims-card-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.02);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Grid Layout */
+        .pims-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        /* Form Styles */
+        .pims-form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .pims-form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: var(--pims-border-radius);
+            font-size: 1rem;
+            transition: var(--pims-transition);
+        }
+
+        .pims-form-control:focus {
+            border-color: var(--pims-accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+        }
+
+        /* Button Styles */
+        .pims-btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--pims-border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--pims-transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .pims-btn-primary {
+            background-color: var(--pims-accent);
+            color: white;
+        }
+
+        .pims-btn-primary:hover {
+            background-color: #2472a4;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pims-btn-secondary {
+            background-color: #ecf0f1;
+            color: var(--pims-text-dark);
+        }
+
+        .pims-btn-secondary:hover {
+            background-color: #d5dbdb;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Status Badge */
+        .pims-status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--pims-border-radius);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .pims-status-issued {
+            background-color: var(--pims-success);
+            color: white;
+        }
+
+        .pims-status-revoked {
+            background-color: var(--pims-danger);
+            color: white;
+        }
+
+        /* Notification Styles */
+        .pims-notification {
+            padding: 1rem;
+            border-radius: var(--pims-border-radius);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pims-notification-error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .pims-content-area {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .pims-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pims-card-filter {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
 <body>
-    <!-- START NAV -->
+    <!-- Navigation -->
     @include('includes.nav')
-    <!-- END NAV -->
 
-    <div class="columns" id="app-content">
-       @include('training_officer.menu')
+    <div class="pims-app-container">
+        @include('training_officer.menu')
 
-        <div class="column is-10" id="page-content">
-            <div class="content-header">
-            </div>
+        <div class="pims-content-area">
+            <!-- Success Notification -->
+            @if(session('success'))
+                <div class="pims-notification pims-notification-success">
+                    <i class="fas fa-check-circle"></i> {{ session('success') }}
+                </div>
+            @endif
 
-            <div class="content-body">
-                <div class="card">
-                    <div class="card-filter">
-                        <!-- Search and other controls -->
-                        <div class="field">
-                            <div class="control has-icons-left has-icons-right">
-                                <input class="input" id="table-search" type="text" placeholder="Search for records...">
-                                <span class="icon is-left">
-                                    <i class="fa fa-search"></i>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <div class="select">
-                                <select id="table-length">
-                                    <option value="10">10</option>
-                                    <option value="25">25</option>
-                                    <option value="50">50</option>
-                                    <option value="100">100</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="field has-addons">
-                            <p class="control">
-                                <a class="button" id="create-record-button">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-plus"></i>
-                                    </span>
-                                    <span>Create Record</span>
-                                </a>
-                            </p>
-                            <p class="control">
-                                <a class="button" id="table-reload">
-                                    <span class="icon is-small">
-                                        <i class="fa fa-refresh"></i>
-                                    </span>
-                                    <span>Reload</span>
-                                </a>
-                            </p>
+            <!-- Error Notification -->
+            @if(session('error'))
+                <div class="pims-notification pims-notification-error">
+                    <i class="fas fa-exclamation-circle"></i> {{ session('error') }}
+                </div>
+            @endif
+
+            <div class="pims-card">
+                <div class="pims-card-filter">
+                    <!-- Search and reload controls -->
+                    <div class="pims-form-group" style="flex-grow: 1;">
+                        <div class="control has-icons-left">
+                            <input class="pims-form-control" id="pims-table-search" type="text" placeholder="Search by prisoner or issuer name...">
+                            <span class="icon is-left">
+                                <i class="fa fa-search"></i>
+                            </span>
                         </div>
                     </div>
-                    <div class="card-content">
-                        <!-- Table Section -->
-                        <table class="table is-hoverable is-bordered is-fullwidth" id="datatable">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Prisoner</th>
-                                    <th>Certification Name</th>
-                                    <th>Issued By</th>
-                                    <th>Issued Date</th>
-                                    <th>Expiration Date</th>
-                                    <th>Certification Type</th>
-                                    <th class="has-text-centered">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Rows will be populated here -->
-                            </tbody>
-                        </table>
+                    <div class="pims-form-group">
+                        <button class="pims-btn pims-btn-secondary" id="pims-table-reload">
+                            <i class="fas fa-sync-alt"></i> Reload
+                        </button>
                     </div>
+                </div>
+
+                <div class="pims-card-body">
+                    <!-- Card Layout for Certifications -->
+                    @if($certifications->isEmpty())
+                        <p class="pims-content-text">No certifications found.</p>
+                    @else
+                        <div class="pims-grid" id="certifications-grid">
+                            @foreach($certifications as $certification)
+                            <div class="pims-certification-card" 
+                                 data-prisoner="{{ trim(implode(' ', array_filter([
+                                    $certification->prisoner->first_name,
+                                    $certification->prisoner->middle_name,
+                                    $certification->prisoner->last_name
+                                 ]))) }}"
+                                 data-issuedby="{{ trim($certification->issuedBy->first_name . ' ' . $certification->issuedBy->last_name) }}">
+                                <div class="pims-card">
+                                    <header class="pims-card-header">
+                                        <h3 class="pims-card-title">
+                                            <i class="fas fa-certificate"></i> 
+                                            {{ $certification->certification_type === 'job_completion' ? 'Job Completion' : 'Training Program Completion' }}
+                                        </h3>
+                                    </header>
+                                    <div class="pims-card-body">
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-user"></i> Prisoner:</strong> 
+                                            {{ trim(implode(' ', array_filter([
+                                                $certification->prisoner->first_name,
+                                                $certification->prisoner->middle_name,
+                                                $certification->prisoner->last_name
+                                            ]))) }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-user-tie"></i> Issued By:</strong> 
+                                            {{ trim($certification->issuedBy->first_name . ' ' . $certification->issuedBy->last_name) }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-calendar-day"></i> Issued Date:</strong> 
+                                            {{ $certification->issued_date->format('Y-m-d') }}
+                                        </div>
+                                        <div class="pims-content-text">
+                                            <strong><i class="fas fa-info-circle"></i> Status:</strong>
+                                            <span class="pims-status-badge pims-status-{{ $certification->status }}">
+                                                {{ ucfirst($certification->status) }}
+                                            </span>
+                                        </div>
+                                        <div class="pims-meta-text">
+                                            <small><i class="fas fa-clock"></i> Created: {{ $certification->created_at->format('Y-m-d H:i') }}</small><br>
+                                            <small><i class="fas fa-sync-alt"></i> Updated: {{ $certification->updated_at->format('Y-m-d H:i') }}</small>
+                                        </div>
+                                    </div>
+                                    <footer class="pims-card-footer">
+                                        <a href="{{ route('training.viewCertificate', $certification->id) }}" class="pims-btn pims-btn-primary">
+                                            <i class="fas fa-eye"></i> View Certificate
+                                        </a>
+                                    </footer>
+                                </div>
+                            </div>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
-        @include('includes.footer_js')
+    </div>
 
-        <!-- Modal for Create Record -->
-        <div class="modal" id="create-record-modal">
-            <div class="modal-background"></div>
-            <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">Create New Certification</p>
-                    <button class="delete" aria-label="close" id="close-modal-button"></button>
-                </header>
-                <section class="modal-card-body">
-                    <!-- Form for creating a new certification -->
-                    <form id="create-record-form">
-                        <div class="field">
-                            <label class="label">Prisoner</label>
-                            <div class="control">
-                                <input class="input" type="text" id="prisoner" name="prisoner" placeholder="Enter prisoner name" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Certification Name</label>
-                            <div class="control">
-                                <input class="input" type="text" id="certification-name" name="certification-name" placeholder="Enter certification name" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Issued By</label>
-                            <div class="control">
-                                <input class="input" type="text" id="issued-by" name="issued-by" placeholder="Enter issuer's name" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Issued Date</label>
-                            <div class="control">
-                                <input class="input" type="date" id="issued-date" name="issued-date" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Expiration Date</label>
-                            <div class="control">
-                                <input class="input" type="date" id="expiration-date" name="expiration-date" required>
-                            </div>
-                        </div>
-                        <div class="field">
-                            <label class="label">Certification Type</label>
-                            <div class="control">
-                                <div class="select">
-                                    <select id="certification-type" name="certification-type" required>
-                                        <option value="Medical">Medical</option>
-                                        <option value="Vocational">Vocational</option>
-                                        <option value="Technical">Technical</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                </section>
-                <footer class="modal-card-foot">
-                    <button class="button is-success" id="save-record-button">Save changes</button>
-                    <button class="button" id="cancel-modal-button">Cancel</button>
-                </footer>
-            </div>
-        </div>
+    @include('includes.footer_js')
 
-      
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.getElementById('pims-table-search');
+            const certificationCards = document.querySelectorAll('.pims-certification-card');
+
+            searchInput.addEventListener('input', function() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
+                
+                certificationCards.forEach(card => {
+                    const prisonerName = card.getAttribute('data-prisoner').toLowerCase();
+                    const issuedByName = card.getAttribute('data-issuedby').toLowerCase();
+                    
+                    // Show card if search term matches prisoner name or issued by name
+                    if (prisonerName.includes(searchTerm) || issuedByName.includes(searchTerm)) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+
+            // Reload button
+            document.getElementById('pims-table-reload').addEventListener('click', () => {
+                window.location.reload();
+            });
+        });
+    </script>
 </body>
-
 </html>

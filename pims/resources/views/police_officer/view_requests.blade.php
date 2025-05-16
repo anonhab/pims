@@ -373,7 +373,7 @@
     @include('includes.nav')
 
     <div class="pims-app-container">
-        @include('lawyer.menu')
+        @include('police_officer.menu')
 
         <div class="pims-content-area">
             <div class="pims-content-header">
@@ -423,7 +423,7 @@
                         </div>
                     </div>
                     
-                 
+                    
                 </div>
                 @endforeach
             </div>

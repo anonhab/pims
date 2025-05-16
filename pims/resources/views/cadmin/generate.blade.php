@@ -3,735 +3,876 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PIMS - Security & Incident Reports</title>
-  @include('includes.head')
   <meta name="csrf-token" content="{{ csrf_token() }}">
-  <!-- Font Awesome -->
+  <title>PIMS - Dynamic Report Generator</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --pims-primary: #1a2a3a;
-      --pims-secondary: #2c3e50;
-      --pims-accent: #2980b9;
-      --pims-danger: #c0392b;
-      --pims-success: #27ae60;
-      --pims-warning: #d35400;
-      --pims-text-light: #ecf0f1;
-      --pims-text-dark: #2c3e50;
-      --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      --pims-border-radius: 6px;
-      --pims-nav-height: 60px;
-      --pims-sidebar-width: 250px;
-      --pims-transition: all 0.3s ease;
-    }
-
     * {
-      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      box-sizing: border-box;
     }
-
     body {
-      font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f0f2f5;
-      color: var(--pims-text-dark);
-      line-height: 1.6;
-    }
-
-    /* Layout Structure */
-    .pims-app-container {
-      display: flex;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
       min-height: 100vh;
-      padding-top: var(--pims-nav-height);
+      padding: 20px;
     }
-
-    .pims-sidebar {
-      width: var(--pims-sidebar-width);
-      background: white;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-      position: fixed;
-      top: var(--pims-nav-height);
-      left: 0;
-      bottom: 0;
-      overflow-y: auto;
-      z-index: 900;
-      transition: var(--pims-transition);
-    }
-
-    .pims-content-area {
-      flex: 1;
-      margin-left: var(--pims-sidebar-width);
-      padding: 1.5rem;
-      transition: var(--pims-transition);
-    }
-
-    /* Report Container */
-    .pims-report-container {
-      width: 95%;
+    .pims-app-container {
+      max-width: 1400px;
       margin: 0 auto;
-      background: white;
-      padding: 1.5rem;
-      border-radius: var(--pims-border-radius);
-      box-shadow: var(--pims-card-shadow);
     }
-
+    .pims-content-area {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
     .pims-report-title {
-      text-align: center;
-      color: var(--pims-primary);
-      margin-bottom: 1.5rem;
-      font-size: 1.5rem;
+      font-size: 28px;
       font-weight: 600;
-    }
-
-    /* Tab Styles */
-    .pims-tabs {
+      color: #1a237e;
       display: flex;
-      flex-wrap: wrap;
-      margin-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .pims-tablink {
-      flex: 1;
-      background: var(--pims-secondary);
-      color: white;
-      padding: 0.75rem;
-      cursor: pointer;
-      border: none;
-      text-align: center;
-      transition: var(--pims-transition);
-      font-weight: 600;
-      min-width: 150px;
-    }
-
-    .pims-tablink.active, .pims-tablink:hover {
-      background: var(--pims-accent);
-    }
-
-    .pims-report-content {
-      display: none;
-      animation: fadeIn 0.5s;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Action Bar */
-    .pims-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      justify-content: space-between;
-      margin-bottom: 1.5rem;
       align-items: center;
+      gap: 10px;
+      margin-bottom: 25px;
     }
-
-    .pims-search {
-      flex: 1;
-      min-width: 250px;
-      position: relative;
+    .pims-form {
+      background: #f8fafc;
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-
-    .pims-search-input {
-      width: 100%;
-      padding: 0.75rem 1rem 0.75rem 2.5rem;
-      border: 1px solid #ddd;
-      border-radius: var(--pims-border-radius);
-      transition: var(--pims-transition);
-      font-size: 0.9rem;
+    .pims-form label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #34495e;
+      margin-bottom: 8px;
+      display: block;
     }
-
-    .pims-search-input:focus {
-      border-color: var(--pims-accent);
-      box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.2);
+    .pims-form select, .pims-form input {
+      width: 250px;
+      padding: 10px;
+      border: 1px solid #d1d9e6;
+      border-radius: 6px;
+      font-size: 14px;
+      background: #fff;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .pims-form select:focus, .pims-form input:focus {
+      border-color: #3f51b5;
+      box-shadow: 0 0 8px rgba(63, 81, 181, 0.2);
       outline: none;
     }
-
+    .pims-form select[multiple] {
+      height: 120px;
+    }
+    .pims-form button {
+      padding: 10px 24px;
+      background: #3f51b5;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .pims-form button:hover:not(:disabled) {
+      background: #303f9f;
+    }
+    .pims-form button:disabled {
+      background: #b0bec5;
+      cursor: not-allowed;
+    }
+    .pims-tabs {
+      display: flex;
+      border-bottom: 2px solid #e0e7ff;
+      margin-bottom: 25px;
+      overflow-x: auto;
+    }
+    .pims-tablink {
+      padding: 12px 24px;
+      background: #e8eaf6;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 500;
+      color: #3f51b5;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .pims-tablink:hover, .pims-tablink.active {
+      background: #3f51b5;
+      color: #fff;
+      border-radius: 6px 6px 0 0;
+    }
+    .pims-report-content {
+      display: none;
+    }
+    .pims-report-content.active {
+      display: block;
+    }
+    .pims-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+    .pims-search {
+      position: relative;
+      width: 300px;
+      max-width: 100%;
+    }
     .pims-search-icon {
       position: absolute;
-      left: 1rem;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
-      color: #7f8c8d;
+      color: #90a4ae;
+      font-size: 16px;
     }
-
-    /* Button Styles */
+    .pims-search-input {
+      width: 100%;
+      padding: 10px 10px 10px 40px;
+      border: 1px solid #d1d9e6;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .pims-search-input:focus {
+      border-color: #3f51b5;
+      box-shadow: 0 0 8px rgba(63, 81, 181, 0.2);
+      outline: none;
+    }
+    .pims-action-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
     .pims-btn {
-      padding: 0.75rem 1.25rem;
-      border-radius: var(--pims-border-radius);
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--pims-transition);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
+      padding: 10px 20px;
       border: none;
-      font-size: 0.9rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.3s;
     }
-
     .pims-btn-export {
-      background-color: var(--pims-success);
-      color: white;
+      background: #2ecc71;
+      color: #fff;
     }
-
+    .pims-btn-export:hover {
+      background: #27ae60;
+    }
     .pims-btn-pdf {
-      background-color: var(--pims-danger);
-      color: white;
+      background: #e74c3c;
+      color: #fff;
     }
-
-    .pims-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      opacity: 0.9;
+    .pims-btn-pdf:hover {
+      background: #c0392b;
     }
-
-    /* Table Styles */
     .pims-report-table {
       width: 100%;
-      border-collapse: collapse;
-      background: white;
-      margin-bottom: 1.5rem;
+      border-collapse: separate;
+      border-spacing: 0;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-
-    .pims-report-table thead {
-      background: var(--pims-primary);
-      color: white;
-    }
-
-    .pims-report-table th, 
-    .pims-report-table td {
-      padding: 0.75rem 1rem;
+    .pims-report-table th, .pims-report-table td {
+      padding: 12px 14px;
       text-align: left;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+      border-bottom: 1px solid #e0e7ff;
+      font-size: 13px;
     }
-
-    .pims-report-table tbody tr:nth-child(odd) {
-      background-color: #f9f9f9;
-    }
-
-    .pims-report-table tbody tr:hover {
-      background: rgba(41, 128, 185, 0.05);
-    }
-
-    /* Status Badges */
-    .pims-status-badge {
-      display: inline-block;
-      padding: 0.25rem 0.5rem;
-      border-radius: 1rem;
-      font-size: 0.75rem;
+    .pims-report-table th {
+      background: #e8eaf6;
+      color: #1a237e;
       font-weight: 600;
-      text-transform: uppercase;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
-
-    .pims-status-resolved {
-      background-color: rgba(46, 204, 113, 0.1);
-      color: var(--pims-success);
+    .pims-report-table tbody tr:hover {
+      background: #f8fafc;
     }
-
-    .pims-status-pending {
-      background-color: rgba(241, 196, 15, 0.1);
-      color: var(--pims-warning);
+    .pims-status-badge {
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #fff;
+      display: inline-block;
     }
-
-    .pims-status-banned {
-      background-color: rgba(231, 76, 60, 0.1);
-      color: var(--pims-danger);
+    .pims-status-resolved { background: #2ecc71; }
+    .pims-status-pending { background: #f1c40f; }
+    .pims-status-banned { background: #e74c3c; }
+    .pims-pdf-header {
+      margin-bottom: 20px;
+      font-family: 'Poppins', sans-serif;
     }
-
-    /* Responsive Adjustments */
+    .pims-pdf-header h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a237e;
+      margin-bottom: 10px;
+    }
+    .pims-pdf-header p {
+      font-size: 12px;
+      color: #34495e;
+      margin: 5px 0;
+    }
     @media (max-width: 768px) {
-      .pims-sidebar {
-        transform: translateX(-100%);
-      }
-
-      .pims-sidebar.is-active {
-        transform: translateX(0);
-      }
-
-      .pims-content-area {
-        margin-left: 0;
-        padding: 1rem;
-      }
-
-      .pims-tabs {
+      .pims-form {
         flex-direction: column;
+        align-items: stretch;
       }
-
-      .pims-tablink {
+      .pims-form select, .pims-form input {
         width: 100%;
       }
-
       .pims-actions {
         flex-direction: column;
         align-items: stretch;
       }
-
       .pims-search {
         width: 100%;
+      }
+      .pims-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+      }
+      .pims-report-table {
+        display: block;
+        overflow-x: auto;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  @include('includes.nav')
-
+@include('includes.nav');
   <div class="pims-app-container">
-    @include('cadmin.menu')
-
+    @include('cadmin.menu');
     <div class="pims-content-area">
       <div class="pims-report-container">
         <h1 class="pims-report-title">
-          <i class="fas fa-file-alt"></i> Security & Incident Reports
+          <i class="fas fa-file-alt"></i> Prison Management System - Dynamic Reports
         </h1>
-        
-        <div class="pims-tabs">
-          <button class="pims-tablink active" onclick="pimsOpenReport(event, 'disciplinary')">
-            <i class="fas fa-gavel"></i> Disciplinary Actions
-          </button>
-          <button class="pims-tablink" onclick="pimsOpenReport(event, 'incident')">
-            <i class="fas fa-exclamation-triangle"></i> Incident Reports
-          </button>
-          <button class="pims-tablink" onclick="pimsOpenReport(event, 'visitorLog')">
-            <i class="fas fa-users"></i> Visitor Logs
-          </button>
-          <button class="pims-tablink" onclick="pimsOpenReport(event, 'restrictedVisitors')">
-            <i class="fas fa-ban"></i> Restricted Visitors
+        <div class="pims-form">
+          <div>
+            <label for="prisonSelect">Select Prisons</label>
+            <select id="prisonSelect" multiple>
+            </select>
+          </div>
+          <div>
+            <label for="reportType">Report Type</label>
+            <select id="reportType">
+              <option value="all_accounts">All Accounts</option>
+              <option value="staff">Staff</option>
+              <option value="prisoners">Prisoners</option>
+              <option value="all_prisons">All Prisons</option>
+            </select>
+          </div>
+          <button id="generateReportBtn" onclick="generateReport()">
+            <i class="fas fa-play"></i> Generate Report
           </button>
         </div>
-
-        <!-- Disciplinary Action Report -->
-        <div id="disciplinary" class="pims-report-content" style="display: block;">
+        <div class="pims-tabs">
+          <button class="pims-tablink active" onclick="pimsOpenReport(event, 'allAccounts')">
+            <i class="fas fa-gavel"></i> All Accounts
+          </button>
+          <button class="pims-tablink" onclick="pimsOpenReport(event, 'staffInPrison')">
+            <i class="fas fa-exclamation-triangle"></i> Staff in Prison
+          </button>
+          <button class="pims-tablink" onclick="pimsOpenReport(event, 'prisonersInPrison')">
+            <i class="fas fa-users"></i> Prisoners in Prison
+          </button>
+          <button class="pims-tablink" onclick="pimsOpenReport(event, 'allPrisons')">
+            <i class="fas fa-building"></i> All Prisons
+          </button>
+        </div>
+        <div id="allAccounts" class="pims-report-content active">
           <div class="pims-actions">
             <div class="pims-search">
               <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchDisciplinary" class="pims-search-input" 
-                     placeholder="Search disciplinary actions..." 
-                     onkeyup="pimsSearchTable('pimsDisciplinaryTable', 'pimsSearchDisciplinary')">
+              <input type="text" id="pimsSearchAllAccounts" class="pims-search-input" 
+                     placeholder="Search all accounts..." 
+                     onkeyup="pimsSearchTable('pimsAllAccountsTable', 'pimsSearchAllAccounts')">
             </div>
             <div class="pims-action-buttons">
-              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsDisciplinaryTable', 'PIMS_Disciplinary_Actions.csv')">
+              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsAllAccountsTable', 'PIMS_All_Accounts.csv')">
                 <i class="fas fa-file-csv"></i> Export CSV
               </button>
-              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsDisciplinaryTable', 'PIMS_Disciplinary_Actions.pdf')">
+              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsAllAccountsTable', 'PIMS_All_Accounts.pdf')">
                 <i class="fas fa-file-pdf"></i> Export PDF
               </button>
             </div>
           </div>
-          <table class="pims-report-table" id="pimsDisciplinaryTable">
+          <table class="pims-report-table" id="pimsAllAccountsTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Prison</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="allAccountsBody">
+            </tbody>
+          </table>
+        </div>
+        <div id="staffInPrison" class="pims-report-content">
+          <div class="pims-actions">
+            <div class="pims-search">
+              <i class="fas fa-search pims-search-icon"></i>
+              <input type="text" id="pimsSearchStaff" class="pims-search-input" 
+                     placeholder="Search staff..." 
+                     onkeyup="pimsSearchTable('pimsStaffTable', 'pimsSearchStaff')">
+            </div>
+            <div class="pims-action-buttons">
+              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsStaffTable', 'PIMS_Staff.csv')">
+                <i class="fas fa-file-csv"></i> Export CSV
+              </button>
+              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsStaffTable', 'PIMS_Staff.pdf')">
+                <i class="fas fa-file-pdf"></i> Export PDF
+              </button>
+            </div>
+          </div>
+          <table class="pims-report-table" id="pimsStaffTable">
+            <thead>
+              <tr>
+                <th>Staff ID</th>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Prison</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="staffBody">
+            </tbody>
+          </table>
+        </div>
+        <div id="prisonersInPrison" class="pims-report-content">
+          <div class="pims-actions">
+            <div class="pims-search">
+              <i class="fas fa-search pims-search-icon"></i>
+              <input type="text" id="pimsSearchPrisoners" class="pims-search-input" 
+                     placeholder="Search prisoners..." 
+                     onkeyup="pimsSearchTable('pimsPrisonersTable', 'pimsSearchPrisoners')">
+            </div>
+            <div class="pims-action-buttons">
+              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsPrisonersTable', 'PIMS_Prisoners.csv')">
+                <i class="fas fa-file-csv"></i> Export CSV
+              </button>
+              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsPrisonersTable', 'PIMS_Prisoners.pdf')">
+                <i class="fas fa-file-pdf"></i> Export PDF
+              </button>
+            </div>
+          </div>
+          <table class="pims-report-table" id="pimsPrisonersTable">
             <thead>
               <tr>
                 <th>Prisoner ID</th>
                 <th>Name</th>
-                <th>Violation</th>
-                <th>Date</th>
-                <th>Action Taken</th>
+                <th>Prison</th>
+                <th>Sentence</th>
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>2001</td>
-                <td>John Doe</td>
-                <td>Contraband possession</td>
-                <td>2025-03-01</td>
-                <td>Warning issued</td>
-                <td><span class="pims-status-badge pims-status-resolved">Resolved</span></td>
-              </tr>
-              <tr>
-                <td>2002</td>
-                <td>Jane Smith</td>
-                <td>Assault on another inmate</td>
-                <td>2025-03-05</td>
-                <td>Solitary confinement (7 days)</td>
-                <td><span class="pims-status-badge pims-status-pending">Pending</span></td>
-              </tr>
-              <tr>
-                <td>2003</td>
-                <td>Michael Brown</td>
-                <td>Refusing orders</td>
-                <td>2025-03-10</td>
-                <td>Privileges suspended</td>
-                <td><span class="pims-status-badge pims-status-resolved">Resolved</span></td>
-              </tr>
+            <tbody id="prisonersBody">
             </tbody>
           </table>
         </div>
-
-        <!-- Incident Report -->
-        <div id="incident" class="pims-report-content">
+        <div id="allPrisons" class="pims-report-content">
           <div class="pims-actions">
             <div class="pims-search">
               <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchIncident" class="pims-search-input" 
-                     placeholder="Search incidents..." 
-                     onkeyup="pimsSearchTable('pimsIncidentTable', 'pimsSearchIncident')">
+              <input type="text" id="pimsSearchPrisons" class="pims-search-input" 
+                     placeholder="Search prisons..." 
+                     onkeyup="pimsSearchTable('pimsPrisonsTable', 'pimsSearchPrisons')">
             </div>
             <div class="pims-action-buttons">
-              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsIncidentTable', 'PIMS_Incident_Reports.csv')">
+              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsPrisonsTable', 'PIMS_All_Prisons.csv')">
                 <i class="fas fa-file-csv"></i> Export CSV
               </button>
-              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsIncidentTable', 'PIMS_Incident_Reports.pdf')">
+              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsPrisonsTable', 'PIMS_All_Prisons.pdf')">
                 <i class="fas fa-file-pdf"></i> Export PDF
               </button>
             </div>
           </div>
-          <table class="pims-report-table" id="pimsIncidentTable">
+          <table class="pims-report-table" id="pimsPrisonsTable">
             <thead>
               <tr>
-                <th>Incident ID</th>
-                <th>Description</th>
-                <th>Date</th>
+                <tr>
+                <th>Prison ID</th>
+                <th>Name</th>
                 <th>Location</th>
-                <th>Severity</th>
+                <th>Capacity</th>
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>3001</td>
-                <td>Fight in recreation yard</td>
-                <td>2025-03-02</td>
-                <td>Main Yard</td>
-                <td>Medium</td>
-                <td><span class="pims-status-badge pims-status-resolved">Resolved</span></td>
-              </tr>
-              <tr>
-                <td>3002</td>
-                <td>Contraband found in cell</td>
-                <td>2025-03-06</td>
-                <td>Cell Block B</td>
-                <td>High</td>
-                <td><span class="pims-status-badge pims-status-pending">Under Investigation</span></td>
-              </tr>
-              <tr>
-                <td>3003</td>
-                <td>Attempted escape</td>
-                <td>2025-03-08</td>
-                <td>Perimeter Fence</td>
-                <td>Critical</td>
-                <td><span class="pims-status-badge pims-status-pending">Ongoing</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Visitor Log Report -->
-        <div id="visitorLog" class="pims-report-content">
-          <div class="pims-actions">
-            <div class="pims-search">
-              <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchVisitorLog" class="pims-search-input" 
-                     placeholder="Search visitor logs..." 
-                     onkeyup="pimsSearchTable('pimsVisitorLogTable', 'pimsSearchVisitorLog')">
-            </div>
-            <div class="pims-action-buttons">
-              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsVisitorLogTable', 'PIMS_Visitor_Logs.csv')">
-                <i class="fas fa-file-csv"></i> Export CSV
-              </button>
-              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsVisitorLogTable', 'PIMS_Visitor_Logs.pdf')">
-                <i class="fas fa-file-pdf"></i> Export PDF
-              </button>
-            </div>
-          </div>
-          <table class="pims-report-table" id="pimsVisitorLogTable">
-            <thead>
-              <tr>
-                <th>Visitor ID</th>
-                <th>Name</th>
-                <th>Prisoner Visited</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Relationship</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>4001</td>
-                <td>Mark Johnson</td>
-                <td>John Doe (2001)</td>
-                <td>2025-03-03</td>
-                <td>14:30 - 15:15</td>
-                <td>Friend</td>
-              </tr>
-              <tr>
-                <td>4002</td>
-                <td>Susan Brown</td>
-                <td>Jane Smith (2002)</td>
-                <td>2025-03-04</td>
-                <td>10:00 - 10:45</td>
-                <td>Sister</td>
-              </tr>
-              <tr>
-                <td>4003</td>
-                <td>David Wilson</td>
-                <td>Michael Brown (2003)</td>
-                <td>2025-03-07</td>
-                <td>13:15 - 14:00</td>
-                <td>Attorney</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <!-- Restricted Visitors Report -->
-        <div id="restrictedVisitors" class="pims-report-content">
-          <div class="pims-actions">
-            <div class="pims-search">
-              <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchRestricted" class="pims-search-input" 
-                     placeholder="Search restricted visitors..." 
-                     onkeyup="pimsSearchTable('pimsRestrictedTable', 'pimsSearchRestricted')">
-            </div>
-            <div class="pims-action-buttons">
-              <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsRestrictedTable', 'PIMS_Restricted_Visitors.csv')">
-                <i class="fas fa-file-csv"></i> Export CSV
-              </button>
-              <button class="pims-btn pims-btn-pdf" onclick="pimsExportPDF('pimsRestrictedTable', 'PIMS_Restricted_Visitors.pdf')">
-                <i class="fas fa-file-pdf"></i> Export PDF
-              </button>
-            </div>
-          </div>
-          <table class="pims-report-table" id="pimsRestrictedTable">
-            <thead>
-              <tr>
-                <th>Visitor ID</th>
-                <th>Name</th>
-                <th>Reason</th>
-                <th>Date Banned</th>
-                <th>Ban Duration</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>5001</td>
-                <td>Robert Lee</td>
-                <td>Attempted to pass contraband</td>
-                <td>2025-02-25</td>
-                <td>Permanent</td>
-                <td><span class="pims-status-badge pims-status-banned">Active</span></td>
-              </tr>
-              <tr>
-                <td>5002</td>
-                <td>Emily Davis</td>
-                <td>Security risk identified</td>
-                <td>2025-03-01</td>
-                <td>1 Year</td>
-                <td><span class="pims-status-badge pims-status-banned">Active</span></td>
-              </tr>
-              <tr>
-                <td>5003</td>
-                <td>James Wilson</td>
-                <td>Violent behavior during visit</td>
-                <td>2025-03-09</td>
-                <td>6 Months</td>
-                <td><span class="pims-status-badge pims-status-banned">Active</span></td>
-              </tr>
+            <tbody id="prisonsBody">
             </tbody>
           </table>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- jsPDF Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    // Tab switching function
-    function pimsOpenReport(evt, reportName) {
-      let i, reportContent, tablinks;
-      reportContent = document.getElementsByClassName("pims-report-content");
-      for (i = 0; i < reportContent.length; i++) {
-        reportContent[i].style.display = "none";
-      }
-      tablinks = document.getElementsByClassName("pims-tablink");
-      for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active");
-      }
-      document.getElementById(reportName).style.display = "block";
-      evt.currentTarget.classList.add("active");
-    }
+    const BASE_URL = 'http://127.0.0.1:8000/';
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const CURRENT_USER = "{{ session('user_name') ?? 'Unknown User' }}";
+    let lastReportRequest = 0;
+    const DEBOUNCE_MS = 1000; // 1 second debounce
 
-    // Search function for any table
-    function pimsSearchTable(tableId, inputId) {
-      let input = document.getElementById(inputId).value.toUpperCase();
-      let table = document.getElementById(tableId);
-      let tr = table.getElementsByTagName("tr");
+    // Backup functionality
+    async function initiateBackup() {
+        const btn = document.getElementById('initiateBackupBtn');
+        btn.disabled = true;
 
-      for (let i = 1; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName("td");
-        let found = false;
-        for (let j = 0; j < td.length; j++) {
-          if (td[j]) {
-            let txtValue = td[j].textContent || td[j].innerText;
-            if (txtValue.toUpperCase().indexOf(input) > -1) {
-              found = true;
-              break;
+        let percent = 0;
+        const progressInterval = setInterval(() => {
+            percent += Math.floor(Math.random() * 10) + 5; // simulate random progress
+            if (percent >= 100) {
+                percent = 100;
+                clearInterval(progressInterval);
             }
-          }
-        }
-        tr[i].style.display = found ? "" : "none";
-      }
-    }
-
-    // Export table to CSV
-    function pimsExportCSV(tableId, fileName) {
-      let table = document.getElementById(tableId);
-      let rows = Array.from(table.rows);
-      let csvContent = "data:text/csv;charset=utf-8,";
-
-      // Add headers
-      let headers = Array.from(rows[0].cells).map(cell => cell.innerText);
-      csvContent += headers.join(",") + "\n";
-
-      // Add data rows
-      for (let i = 1; i < rows.length; i++) {
-        if (rows[i].style.display !== "none") {
-          let cols = Array.from(rows[i].cells).map(cell => cell.innerText);
-          csvContent += cols.join(",") + "\n";
-        }
-      }
-
-      let encodedUri = encodeURI(csvContent);
-      let link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
-      link.setAttribute("download", fileName);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // Show success notification
-      pimsShowNotification('CSV exported successfully: ' + fileName, 'success');
-    }
-
-    // Export table to PDF using jsPDF
-    function pimsExportPDF(tableId, fileName) {
-      const { jsPDF } = window.jspdf;
-      let doc = new jsPDF();
-      
-      // Add title
-      let reportTitle = fileName.replace(".pdf", "").replace(/_/g, " ");
-      doc.setFontSize(16);
-      doc.setTextColor(40, 40, 40);
-      doc.text(reportTitle, 14, 15);
-      
-      // Add current date
-      doc.setFontSize(10);
-      doc.setTextColor(100, 100, 100);
-      doc.text("Generated on: " + new Date().toLocaleDateString(), 14, 22);
-      
-      // Add table data
-      doc.setFontSize(10);
-      doc.setTextColor(0, 0, 0);
-      
-      let table = document.getElementById(tableId);
-      let rows = Array.from(table.rows);
-      let startY = 30;
-      let pageHeight = doc.internal.pageSize.height - 20;
-      
-      // Add headers
-      doc.setFont(undefined, 'bold');
-      let headers = Array.from(rows[0].cells).map(cell => cell.innerText);
-      doc.text(headers.join(" | "), 14, startY);
-      startY += 7;
-      doc.setFont(undefined, 'normal');
-      
-      // Add data rows
-      for (let i = 1; i < rows.length; i++) {
-        if (rows[i].style.display !== "none") {
-          if (startY > pageHeight) {
-            doc.addPage();
-            startY = 20;
-          }
-          
-          let cols = Array.from(rows[i].cells).map(cell => cell.innerText);
-          doc.text(cols.join(" | "), 14, startY);
-          startY += 7;
-        }
-      }
-      
-      doc.save(fileName);
-      
-      // Show success notification
-      pimsShowNotification('PDF exported successfully: ' + fileName, 'success');
-    }
-
-    // Show notification function
-    function pimsShowNotification(message, type) {
-      const notification = document.createElement('div');
-      notification.className = `pims-notification pims-notification-${type}`;
-      notification.innerHTML = `
-        <div class="pims-notification-content">
-          <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-          <span>${message}</span>
-        </div>
-      `;
-      
-      document.body.appendChild(notification);
-      
-      // Show notification
-      setTimeout(() => {
-        notification.classList.add('show');
-      }, 10);
-      
-      // Hide after 5 seconds
-      setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-          document.body.removeChild(notification);
+            btn.textContent = `Backing Up... (${CURRENT_USER}) ${percent}%`;
         }, 300);
-      }, 5000);
+
+        try {
+            const response = await fetch(`${BASE_URL}initiate_backup`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': csrfToken
+                }
+            });
+
+            if (!response.ok) {
+                const data = await response.json();
+                throw new Error(data.error || 'Backup failed');
+            }
+
+            const filename = response.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] || 'backup.sql';
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            alert('Backup downloaded: ' + filename);
+        } catch (error) {
+            console.error('Backup error:', error.message);
+            alert('Backup failed: ' + error.message);
+        } finally {
+            clearInterval(progressInterval);
+            btn.disabled = false;
+            btn.textContent = 'Initiate Backup';
+        }
     }
 
-    // Add notification styles dynamically
-    const notificationStyles = document.createElement('style');
-    notificationStyles.innerHTML = `
-      .pims-notification {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: white;
-        padding: 15px 20px;
-        border-radius: var(--pims-border-radius);
-        box-shadow: var(--pims-card-shadow);
-        transform: translateY(100px);
-        opacity: 0;
-        transition: all 0.3s ease;
-        z-index: 10000;
-        max-width: 350px;
-      }
-      .pims-notification.show {
-        transform: translateY(0);
-        opacity: 1;
-      }
-      .pims-notification-success {
-        border-left: 4px solid var(--pims-success);
-      }
-      .pims-notification-error {
-        border-left: 4px solid var(--pims-danger);
-      }
-      .pims-notification-content {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .pims-notification-content i {
-        font-size: 1.2rem;
-      }
-      .pims-notification-success i {
-        color: var(--pims-success);
-      }
-      .pims-notification-error i {
-        color: var(--pims-danger);
-      }
-    `;
-    document.head.appendChild(notificationStyles);
-  </script>
+    // Report functionality
+    function getReportTypeEnum(reportType) {
+      const mapping = {
+        all_accounts: 'daily',
+        staff: 'monthly',
+        prisoners: 'annual',
+        all_prisons: 'incident'
+      };
+      return mapping[reportType] || 'daily';
+    }
 
-  @include('includes.footer_js')
+    function getReportTypeName(reportType) {
+      const names = {
+        all_accounts: 'All Accounts',
+        staff: 'Staff',
+        prisoners: 'Prisoners',
+        all_prisons: 'All Prisons'
+      };
+      return names[reportType] || reportType;
+    }
+
+    function getSelectedPrisonNames() {
+      const prisonSelect = document.getElementById('prisonSelect');
+      const selectedOptions = Array.from(prisonSelect.selectedOptions);
+      return selectedOptions.length > 0
+        ? selectedOptions.map(opt => opt.text).join(', ')
+        : 'All Prisons';
+    }
+
+    async function trackReport(reportType, content) {
+      try {
+        const response = await fetch(`${BASE_URL}reports/store`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          },
+          body: JSON.stringify({
+            report_type: getReportTypeEnum(reportType),
+            content: JSON.stringify(content)
+          })
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`HTTP ${response.status}: ${errorData.error || 'Failed to track report'}`);
+        }
+        console.log('Report tracked successfully:', reportType);
+      } catch (error) {
+        console.error('Error tracking report:', error.message);
+      }
+    }
+
+    async function loadPrisonDropdown() {
+      try {
+        const response = await fetch(`${BASE_URL}prisons`, {
+          headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          }
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`HTTP ${response.status}: ${errorData.error || 'Failed to fetch prisons'}`);
+        }
+        const prisons = await response.json();
+        const prisonSelect = document.getElementById('prisonSelect');
+        prisonSelect.innerHTML = '';
+        prisons.forEach(prison => {
+          prisonSelect.innerHTML += `<option value="${prison.id}">${prison.name}</option>`;
+        });
+      } catch (error) {
+        console.error('Error loading prison dropdown:', error.message);
+        alert(`Failed to load prison list: ${error.message}. Check the console for details.`);
+      }
+    }
+
+    async function generateReport() {
+      const now = Date.now();
+      if (now - lastReportRequest < DEBOUNCE_MS) {
+        console.log('Debounced report generation attempt');
+        return;
+      }
+      lastReportRequest = now;
+
+      const generateBtn = document.getElementById('generateReportBtn');
+      generateBtn.disabled = true;
+      generateBtn.textContent = 'Generating...';
+
+      try {
+        const prisonSelect = document.getElementById('prisonSelect');
+        const reportType = document.getElementById('reportType').value;
+        const prisonIds = Array.from(prisonSelect.selectedOptions).map(option => option.value);
+        const params = new URLSearchParams();
+        if (prisonIds.length > 0) {
+          params.append('prison_ids', prisonIds.join(','));
+        }
+        params.append('report_type', reportType);
+
+        console.log('Generating report:', { reportType, prisonIds });
+
+        const response = await fetch(`${BASE_URL}reports?${params.toString()}`, {
+          headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+          }
+        });
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(`HTTP ${response.status}: ${errorData.error || 'Failed to fetch report data'}`);
+        }
+        const data = await response.json();
+
+        document.getElementById('allAccountsBody').innerHTML = '';
+        document.getElementById('staffBody').innerHTML = '';
+        document.getElementById('prisonersBody').innerHTML = '';
+        document.getElementById('prisonsBody').innerHTML = '';
+
+        const intro = {
+          title: 'Prison Management System Report',
+          report_type: getReportTypeName(reportType),
+          selected_prisons: getSelectedPrisonNames(),
+          generated_date: new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })
+        };
+
+        switch (reportType) {
+          case 'all_accounts':
+            const allAccountsBody = document.getElementById('allAccountsBody');
+            (data.staff || []).forEach(staff => {
+              allAccountsBody.innerHTML += `
+                <tr>
+                  <td>${staff.id}</td>
+                  <td>${staff.name}</td>
+                  <td>${staff.role}</td>
+                  <td>${staff.prison || 'None'}</td>
+                  <td><span class="pims-status-badge pims-status-resolved">${staff.status}</span></td>
+                </tr>
+              `;
+            });
+            (data.prisoners || []).forEach(prisoner => {
+              allAccountsBody.innerHTML += `
+                <tr>
+                  <td>${prisoner.id}</td>
+                  <td>${prisoner.name}</td>
+                  <td>Prisoner</td>
+                  <td>${prisoner.prison || 'None'}</td>
+                  <td><span class="pims-status-badge pims-status-pending">${prisoner.status}</span></td>
+                </tr>
+              `;
+            });
+            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="allAccounts"]') }, 'allAccounts');
+            break;
+          case 'staff':
+            const staffBody = document.getElementById('staffBody');
+            (data || []).forEach(staff => {
+              staffBody.innerHTML += `
+                <tr>
+                  <td>${staff.id}</td>
+                  <td>${staff.name}</td>
+                  <td>${staff.role}</td>
+                  <td>${staff.prison || 'None'}</td>
+                  <td><span class="pims-status-badge pims-status-resolved">${staff.status}</span></td>
+                </tr>
+              `;
+            });
+            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="staffInPrison"]') }, 'staffInPrison');
+            break;
+          case 'prisoners':
+            const prisonersBody = document.getElementById('prisonersBody');
+            (data || []).forEach(prisoner => {
+              prisonersBody.innerHTML += `
+                <tr>
+                  <td>${prisoner.id}</td>
+                  <td>${prisoner.name}</td>
+                  <td>${prisoner.prison || 'None'}</td>
+                  <td>${prisoner.sentence}</td>
+                  <td><span class="pims-status-badge pims-status-pending">${prisoner.status}</span></td>
+                </tr>
+              `;
+            });
+            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="prisonersInPrison"]') }, 'prisonersInPrison');
+            break;
+          case 'all_prisons':
+            const prisonsBody = document.getElementById('prisonsBody');
+            (data || []).forEach(prison => {
+              const statusClass = prison.status === "Operational" ? "pims-status-resolved" : "pims-status-pending";
+              prisonsBody.innerHTML += `
+                <tr>
+                  <td>${prison.id}</td>
+                  <td>${prison.name}</td>
+                  <td>${prison.location}</td>
+                  <td>${prison.capacity}</td>
+                  <td><span class="pims-status-badge ${statusClass}">${prison.status}</span></td>
+                </tr>
+              `;
+            });
+            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="allPrisons"]') }, 'allPrisons');
+            break;
+          default:
+            alert('Invalid report type selected.');
+        }
+      } catch (error) {
+        console.error('Error generating report:', error.message);
+        alert(`Failed to generate report: ${error.message}. Check the console for details.`);
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.textContent = 'Generate Report';
+      }
+    }
+
+    function pimsOpenReport(event, reportName) {
+      document.querySelectorAll('.pims-report-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      document.querySelectorAll('.pims-tablink').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(reportName).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    function pimsSearchTable(tableId, inputId) {
+      const input = document.getElementById(inputId);
+      const filter = input.value.toLowerCase();
+      const table = document.getElementById(tableId);
+      const tr = table.getElementsByTagName('tr');
+      for (let i = 1; i < tr.length; i++) {
+        const td = tr[i].getElementsByTagName('td');
+        let match = false;
+        for (let j = 0; j < td.length; j++) {
+          if (td[j] && td[j].textContent.toLowerCase().indexOf(filter) > -1) {
+            match = true;
+            break;
+          }
+        }
+        tr[i].style.display = match ? '' : 'none';
+      }
+    }
+
+    function pimsExportCSV(tableId, filename) {
+      try {
+        const table = document.getElementById(tableId);
+        if (!table) {
+          console.error('Table not found:', tableId);
+          alert('Error: Table not found for export.');
+          return;
+        }
+        const reportType = document.getElementById('reportType').value;
+        const reportTypeName = getReportTypeName(reportType);
+        const prisonNames = getSelectedPrisonNames();
+        const currentDate = new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        let csv = [
+          `"Prison Management System Report"`,
+          `"Report Type,${reportTypeName}"`,
+          `"Selected Prisons,${prisonNames}"`,
+          `"Generated Date,${currentDate}"`,
+          `""`
+        ];
+        const rows = table.querySelectorAll('tr');
+        const tableData = [];
+        rows.forEach(row => {
+          const cols = row.querySelectorAll('th, td');
+          const rowData = Array.from(cols).map(col => {
+            let text = col.textContent.trim();
+            if (text.includes('"') || text.includes(',')) {
+              text = `"${text.replace(/"/g, '""')}"`;
+            }
+            return text;
+          });
+          csv.push(rowData.join(','));
+          tableData.push(rowData);
+        });
+        const content = {
+          intro: {
+            title: 'Prison Management System Report',
+            report_type: reportTypeName,
+            selected_prisons: prisonNames,
+            generated_date: currentDate
+          },
+          table: tableData
+        };
+        trackReport(reportType, content);
+        const csvContent = csv.join('\n');
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+        console.log('CSV exported successfully:', filename);
+      } catch (error) {
+        console.error('Error exporting CSV:', error.message);
+        alert('Failed to export CSV. Check the console for details.');
+      }
+    }
+
+    function pimsExportPDF(tableId, filename) {
+      try {
+        const table = document.getElementById(tableId);
+        if (!table) {
+          console.error('Table not found:', tableId);
+          alert('Error: Table not found for export.');
+          return;
+        }
+        const reportType = document.getElementById('reportType').value;
+        const reportTypeName = getReportTypeName(reportType);
+        const prisonNames = getSelectedPrisonNames();
+        const currentDate = new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        });
+        const pdfContainer = document.createElement('div');
+        pdfContainer.style.padding = '20px';
+        pdfContainer.style.background = '#fff';
+        pdfContainer.style.fontFamily = "'Poppins', sans-serif";
+        const header = document.createElement('div');
+        header.className = 'pims-pdf-header';
+        header.innerHTML = `
+          <h1>Prison Management System Report</h1>
+          <p><strong>Report Type:</strong> ${reportTypeName}</p>
+          <p><strong>Selected Prisons:</strong> ${prisonNames}</p>
+          <p><strong>Generated Date:</strong> ${currentDate}</p>
+        `;
+        pdfContainer.appendChild(header);
+        const tableClone = table.cloneNode(true);
+        tableClone.style.width = '100%';
+        tableClone.style.borderCollapse = 'collapse';
+        tableClone.style.fontSize = '12px';
+        tableClone.querySelectorAll('th, td').forEach(cell => {
+          cell.style.border = '1px solid #e0e7ff';
+          cell.style.padding = '8px';
+        });
+        tableClone.querySelectorAll('th').forEach(th => {
+          th.style.background = '#e8eaf6';
+          th.style.color = '#1a237e';
+          th.style.fontWeight = '600';
+        });
+        tableClone.querySelectorAll('.pims-status-badge').forEach(badge => {
+          badge.style.padding = '4px 8px';
+          badge.style.borderRadius = '10px';
+          badge.style.color = '#fff';
+        });
+        pdfContainer.appendChild(tableClone);
+        const rows = table.querySelectorAll('tr');
+        const tableData = [];
+        rows.forEach(row => {
+          const cols = row.querySelectorAll('th, td');
+          const rowData = Array.from(cols).map(col => col.textContent.trim());
+          tableData.push(rowData);
+        });
+        const content = {
+          intro: {
+            title: 'Prison Management System Report',
+            report_type: reportTypeName,
+            selected_prisons: prisonNames,
+            generated_date: currentDate
+          },
+          table: tableData
+        };
+        trackReport(reportType, content);
+        const opt = {
+          margin: [10, 10, 10, 10],
+          filename: filename,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        html2pdf().set(opt).from(pdfContainer).save();
+        console.log('PDF exported successfully:', filename);
+      } catch (error) {
+        console.error('Error exporting PDF:', error.message);
+        alert('Failed to export PDF. Check the console for details.');
+      }
+    }
+
+    window.onload = () => {
+      loadPrisonDropdown();
+    };
+</script>
 </body>
 </html>

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Training Programs</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -419,8 +420,49 @@
                 width: 100%;
             }
         }
+        .pims-recent-activities {
+    margin-top: 2rem;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.pims-recent-activities h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #1f2937;
+}
+
+.pims-recent-activities ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.pims-recent-activities li {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background-color: #f9fafb;
+    border-left: 4px solid #3b82f6; /* blue */
+    border-radius: 0.5rem;
+    font-size: 0.95rem;
+    color: #374151;
+    transition: background-color 0.2s ease;
+}
+
+.pims-recent-activities li:hover {
+    background-color: #f3f4f6;
+}
+
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     @include('includes.nav')
@@ -448,8 +490,8 @@
                     <div class="pims-search-filter">
                         <div class="pims-search">
                             <i class="fas fa-search pims-search-icon"></i>
-                            <input type="text" id="pims-program-search" class="pims-search-input" 
-                                   placeholder="Search programs by name or description...">
+                            <input type="text" id="pims-program-search" class="pims-search-input"
+                                placeholder="Search programs by name or description...">
                         </div>
                         <div class="pims-select">
                             <select id="pims-program-length" class="pims-form-control">
@@ -467,37 +509,35 @@
                         <div class="pims-program-card" data-searchable="{{ strtolower($trainingprogram->name) }} {{ strtolower($trainingprogram->description) }}">
                             <div class="pims-card">
                                 <div class="pims-card-body">
-                                    <h3 class="pims-program-title">{{ $trainingprogram->name }}</h3>
-                                    <p class="pims-program-subtitle">Created by {{ $trainingprogram->created_by }} on {{ $trainingprogram->created_at->format('M d, Y') }}</p>
-                                    
+                                    <h3 class="pims-program-title">{{ $trainingprogram->title }}</h3>
+                                    <p class="pims-program-subtitle">
+                                        Created by {{ $trainingprogram->createdBy?->first_name }} {{ $trainingprogram->createdBy?->last_name }}
+                                        on {{ $trainingprogram->created_at->format('M d, Y') }}
+                                    </p>
+
+
                                     <div class="pims-program-details">
                                         <p class="pims-program-detail">
-                                            <strong>Description:</strong> 
+                                            <strong>Description:</strong>
                                             <span>{{ Str::limit($trainingprogram->description, 100) }}</span>
                                         </p>
                                         <p class="pims-program-detail">
-                                            <strong>Duration:</strong> 
-                                            <span class="pims-date-badge">
-                                                {{ \Carbon\Carbon::parse($trainingprogram->start_date)->format('M d, Y') }} 
-                                                <i class="fas fa-arrow-right mx-1"></i> 
-                                                {{ \Carbon\Carbon::parse($trainingprogram->end_date)->format('M d, Y') }}
-                                            </span>
+
                                         </p>
                                     </div>
                                 </div>
                                 <div class="pims-card-footer" style="padding: 1rem; border-top: 1px solid rgba(0, 0, 0, 0.05);">
                                     <div class="buttons" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
                                         <button class="pims-btn pims-btn-primary pims-btn-sm pims-edit-program"
-                                                data-id="{{ $trainingprogram->id }}"
-                                                data-name="{{ $trainingprogram->name }}"
-                                                data-description="{{ $trainingprogram->description }}"
-                                                data-start-date="{{ $trainingprogram->start_date->format('Y-m-d') }}"
-                                                data-end-date="{{ $trainingprogram->end_date->format('Y-m-d') }}">
+                                            data-id="{{ $trainingprogram->id }}"
+                                            data-name="{{ $trainingprogram->name }}"
+                                            data-description="{{ $trainingprogram->description }}"
+
                                             <i class="fas fa-edit"></i> Edit
                                         </button>
                                         <button class="pims-btn pims-btn-danger pims-btn-sm pims-delete-program"
-                                                data-id="{{ $trainingprogram->id }}"
-                                                data-name="{{ $trainingprogram->name }}">
+                                            data-id="{{ $trainingprogram->id }}"
+                                            data-name="{{ $trainingprogram->name }}">
                                             <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </div>
@@ -508,6 +548,21 @@
                     </div>
                 </div>
             </div>
+            <div class="pims-recent-activities">
+                <h2><i class="fas fa-history"></i> Recent Activities</h2>
+                <ul>
+                    @foreach($activities as $activity)
+                    <li>
+                        <strong>{{ $activity->user?->first_name ?? 'System' }}</strong>
+                        {{ $activity->event }}
+                        <em>{{ class_basename($activity->auditable_type) }}</em>
+                        (ID: {{ $activity->auditable_id }})
+                        on {{ $activity->created_at->format('M d, Y H:i') }}
+                    </li>
+                    @endforeach
+                </ul>
+            </div>
+
         </div>
     </div>
 
@@ -526,7 +581,7 @@
                 <section class="pims-modal-card-body">
                     <div class="pims-form-group">
                         <label class="pims-form-label">Program Name</label>
-                        <input type="text" name="name" class="pims-form-control" required placeholder="Enter program name">
+                        <input type="text" name="title" class="pims-form-control" required placeholder="Enter program name">
                     </div>
 
                     <div class="pims-form-group">
@@ -534,15 +589,6 @@
                         <textarea name="description" class="pims-form-control pims-textarea" required placeholder="Enter program description"></textarea>
                     </div>
 
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Start Date</label>
-                        <input type="date" name="start_date" class="pims-form-control" required>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">End Date</label>
-                        <input type="date" name="end_date" class="pims-form-control" required>
-                    </div>
                 </section>
                 <footer class="pims-modal-card-foot">
                     <button type="button" class="pims-btn pims-btn-secondary pims-close-modal">
@@ -571,7 +617,7 @@
                 @method('PUT')
                 <section class="pims-modal-card-body">
                     <input type="hidden" name="id" id="pims-edit-program-id">
-                    
+
                     <div class="pims-form-group">
                         <label class="pims-form-label">Program Name</label>
                         <input type="text" name="name" id="pims-edit-program-name" class="pims-form-control" required>
@@ -582,15 +628,7 @@
                         <textarea name="description" id="pims-edit-program-description" class="pims-form-control pims-textarea" required></textarea>
                     </div>
 
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Start Date</label>
-                        <input type="date" name="start_date" id="pims-edit-program-start-date" class="pims-form-control" required>
-                    </div>
 
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">End Date</label>
-                        <input type="date" name="end_date" id="pims-edit-program-end-date" class="pims-form-control" required>
-                    </div>
                 </section>
                 <footer class="pims-modal-card-foot">
                     <button type="button" class="pims-btn pims-btn-secondary pims-close-modal">
@@ -638,6 +676,7 @@
                 </form>
             </footer>
         </div>
+
     </div>
 
     @include('includes.footer_js')
@@ -648,12 +687,12 @@
             const editModal = document.getElementById('pims-edit-program-modal');
             const deleteModal = document.getElementById('pims-delete-program-modal');
             const closeButtons = document.querySelectorAll('.pims-modal-close, .pims-close-modal');
-            
+
             // Open Create Modal
             document.getElementById('pims-create-program-btn').addEventListener('click', function() {
                 createModal.classList.add('is-active');
             });
-            
+
             // Open Edit Modal
             document.querySelectorAll('.pims-edit-program').forEach(button => {
                 button.addEventListener('click', function() {
@@ -662,30 +701,30 @@
                     const programDescription = this.getAttribute('data-description');
                     const programStartDate = this.getAttribute('data-start-date');
                     const programEndDate = this.getAttribute('data-end-date');
-                    
+
                     document.getElementById('pims-edit-program-id').value = programId;
                     document.getElementById('pims-edit-program-name').value = programName;
                     document.getElementById('pims-edit-program-description').value = programDescription;
                     document.getElementById('pims-edit-program-start-date').value = programStartDate;
                     document.getElementById('pims-edit-program-end-date').value = programEndDate;
-                    
+
                     document.getElementById('pims-edit-program-form').action = `/training_officer/${programId}`;
                     editModal.classList.add('is-active');
                 });
             });
-            
+
             // Open Delete Modal
             document.querySelectorAll('.pims-delete-program').forEach(button => {
                 button.addEventListener('click', function() {
                     const programId = this.getAttribute('data-id');
                     const programName = this.getAttribute('data-name');
-                    
+
                     document.getElementById('pims-delete-program-name').textContent = programName;
                     document.getElementById('pims-delete-program-form').action = `/training_officer/${programId}`;
                     deleteModal.classList.add('is-active');
                 });
             });
-            
+
             // Close Modals
             closeButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -694,7 +733,7 @@
                     deleteModal.classList.remove('is-active');
                 });
             });
-            
+
             // Close modal when clicking outside
             [createModal, editModal, deleteModal].forEach(modal => {
                 modal.addEventListener('click', function(e) {
@@ -703,17 +742,17 @@
                     }
                 });
             });
-            
+
             // Reload Programs
             document.getElementById('pims-reload-programs').addEventListener('click', function() {
                 window.location.reload();
             });
-            
+
             // Search functionality for programs
             document.getElementById('pims-program-search').addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 const programCards = document.querySelectorAll('#pims-programs-grid .pims-program-card');
-                
+
                 programCards.forEach(card => {
                     const searchableText = card.getAttribute('data-searchable');
                     if (searchableText.includes(searchTerm)) {
@@ -733,5 +772,8 @@
             });
         });
     </script>
+
+
 </body>
+
 </html>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>PIMS - Assignments Management</title>
+    <title>PIMS - Police Assignments Management</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -419,7 +419,7 @@
     <div id="pims-page-content">
         <div class="pims-content-header">
             <h1 class="pims-content-title">
-                <i class="fas fa-user-lock" aria-hidden="true"></i> Assignments Management
+                <i class="fas fa-user-lock" aria-hidden="true"></i> Police Assignments Management
             </h1>
         </div>
 
@@ -470,7 +470,7 @@
                                         <strong>Prisoner Name:</strong> {{ optional($assignment->prisoner)->first_name ?? 'Not assigned' }}
                                     </div>
                                     <div class="pims-assignment-detail">
-                                        <strong>Lawyer Name:</strong> {{ optional($assignment->lawyer)->first_name ?? 'Not assigned' }}
+                                        <strong>Officer Name:</strong> {{ optional($assignment->officer)->first_name ?? 'Not assigned' }}
                                     </div>
                                     <div class="pims-assignment-detail">
                                         <strong>Assigned By:</strong> {{ optional($assignment->assignedBy)->first_name ?? 'Unknown' }}
@@ -480,7 +480,7 @@
                                     <button class="pims-footer-btn edit pims-edit-btn"
                                             data-id="{{ $assignment->assignment_id }}"
                                             data-prisoner-id="{{ $assignment->prisoner_id }}"
-                                            data-lawyer-id="{{ $assignment->lawyer_id }}"
+                                            data-officer-id="{{ $assignment->officer_id }}"
                                             data-assignment-date="{{ $assignment->assignment_date  }}"
                                             aria-label="Edit assignment {{ $assignment->assignment_id }}">
                                         <i class="fas fa-edit" aria-hidden="true"></i> Edit
@@ -507,7 +507,7 @@
                 </h2>
                 <button class="pims-modal-close" aria-label="Close create modal">×</button>
             </header>
-            <form id="pims-create-form" action="{{ route('inspector.assignments.store') }}" method="POST">
+            <form id="pims-create-form" action="{{ route('inspector.police.assignments.store') }}" method="POST">
                 @csrf
                 <section class="pims-modal-body">
                     <div class="pims-form-group">
@@ -520,11 +520,11 @@
                         </select>
                     </div>
                     <div class="pims-form-group">
-                        <label class="pims-form-label" for="pims-create-lawyer">Lawyer</label>
-                        <select class="pims-form-select" name="lawyer_id" id="pims-create-lawyer" required>
-                            <option value="">Select Lawyer</option>
-                            @foreach($lawyer as $lawyers)
-                                <option value="{{ $lawyers->lawyer_id }}">{{ $lawyers->first_name }} {{ $lawyers->last_name }}</option>
+                        <label class="pims-form-label" for="pims-create-officer">Officer</label>
+                        <select class="pims-form-select" name="officer_id" id="pims-create-officer" required>
+                            <option value="">Select Officer</option>
+                            @foreach($officers as $officer)
+                                <option value="{{ $officer->user_id }}">{{ $officer->first_name }} {{ $officer->last_name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -567,11 +567,11 @@
                         </select>
                     </div>
                     <div class="pims-form-group">
-                        <label class="pims-form-label" for="pims-edit-lawyer">Lawyer</label>
-                        <select class="pims-form-select" name="lawyer_id" id="pims-edit-lawyer" required>
-                            <option value="">Select Lawyer</option>
-                            @foreach($lawyer as $lawyers)
-                                <option value="{{ $lawyers->lawyer_id }}">{{ $lawyers->first_name }} {{ $lawyers->last_name }}</option>
+                        <label class="pims-form-label" for="pims-edit-officer">Officer</label>
+                        <select class="pims-form-select" name="officer_id" id="pims-edit-officer" required>
+                            <option value="">Select Officer</option>
+                            @foreach($officers as $officer)
+                                <option value="{{ $officer->user_id }}">{{ $officer->first_name }} {{ $officer->last_name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -660,9 +660,9 @@
                     const id = btn.dataset.id;
                     document.getElementById('pims-edit-id').value = id;
                     document.getElementById('pims-edit-prisoner').value = btn.dataset.prisonerId || '';
-                    document.getElementById('pims-edit-lawyer').value = btn.dataset.lawyerId || '';
+                    document.getElementById('pims-edit-officer').value = btn.dataset.officerId || '';
                     document.getElementById('pims-edit-date').value = btn.dataset.assignmentDate || '';
-                    document.getElementById('pims-edit-assignment-form').action = `{{ route('inspector.assignments.update', ':id') }}`.replace(':id', id);
+                    document.getElementById('pims-edit-assignment-form').action = `{{ route('inspector.police.assignments.update', ':id') }}`.replace(':id', id);
                     editModal.classList.add('is-active');
                     editModal.setAttribute('aria-hidden', 'false');
                     document.body.style.overflow = 'hidden';
@@ -674,7 +674,7 @@
                 btn.addEventListener('click', () => {
                     closeAllModals();
                     document.getElementById('pims-delete-id').textContent = btn.dataset.id;
-                    document.getElementById('pims-delete-form').action = `{{ route('inspector.assignments.destroy', ':id') }}`.replace(':id', btn.dataset.id);
+                    document.getElementById('pims-delete-form').action = `{{ route('inspector.police.assignments.destroy', ':id') }}`.replace(':id', btn.dataset.id);
                     deleteModal.classList.add('is-active');
                     deleteModal.setAttribute('aria-hidden', 'false');
                     document.body.style.overflow = 'hidden';

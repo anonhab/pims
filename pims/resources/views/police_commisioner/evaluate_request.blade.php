@@ -352,19 +352,18 @@
     </style>
 </head>
 
-
 <body>
     <!-- Navigation -->
     @include('includes.nav')
 
     <div class="pims-app-container">
-        @include('discipline_officer.menu')
+        @include('police_commisioner.menu')
 
         <div class="pims-content-area">
             <div class="pims-card">
                 <div class="pims-card-header">
                     <h2 class="pims-card-title">
-                        <i class="fas fa-clipboard-list"></i> Pending Requests
+                        <i class="fas fa-clipboard-list"></i> Transferred  Requests
                     </h2>
                 </div>
                 <div class="pims-card-body">
@@ -413,9 +412,6 @@
                                         <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject" disabled>
                                             <i class="fas fa-times"></i> Reject
                                         </button>
-                                        <button class="pims-btn pims-btn-primary pims-btn-action pims-btn-transfer" disabled>
-                                            <i class="fas fa-exchange-alt"></i> Transfer
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -424,8 +420,8 @@
                         <div class="pims-card">
                             <div class="pims-card-body text-center py-4">
                                 <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-accent);"></i>
-                                <h5 class="pims-card-title">No Pending Requests</h5>
-                                <p class="text-muted">There are currently no pending requests to evaluate.</p>
+                                <h5 class="pims-card-title">No Transferred Requests</h5>
+                                <p class="text-muted">There are currently no transferred requests to evaluate.</p>
                             </div>
                         </div>
                     @endif
@@ -515,11 +511,10 @@
                 const card = textarea.closest('.pims-request-card');
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
-                const transferBtn = card.querySelector('.pims-btn-transfer');
                 
                 textarea.addEventListener('input', () => {
                     const evaluation = textarea.value.trim();
-                    approveBtn.disabled = rejectBtn.disabled = transferBtn.disabled = evaluation === '';
+                    approveBtn.disabled = rejectBtn.disabled = evaluation === '';
                 });
             });
             
@@ -625,11 +620,11 @@
                 });
             });
             
-            // Handle request approval/rejection/transfer
+            // Handle request approval/rejection
             document.querySelectorAll('.pims-request-card').forEach(card => {
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
-                const transferBtn = card.querySelector('.pims-btn-transfer');
+                const textarea = card.querySelector('.pims-evaluation-textarea');
                 
                 approveBtn.addEventListener('click', async () => {
                     await pimsHandleRequestAction(card, 'approve');
@@ -637,10 +632,6 @@
                 
                 rejectBtn.addEventListener('click', async () => {
                     await pimsHandleRequestAction(card, 'reject');
-                });
-                
-                transferBtn.addEventListener('click', async () => {
-                    await pimsHandleRequestAction(card, 'transfer');
                 });
             });
             
@@ -654,8 +645,8 @@
                     return;
                 }
                 
-                const actionVerb = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : 'transferred';
-                const btnClass = action === 'approve' ? 'success' : action === 'reject' ? 'danger' : 'primary';
+                const actionVerb = action === 'approve' ? 'approved' : 'rejected';
+                const btnClass = action === 'approve' ? 'success' : 'danger';
                 
                 try {
                     const response = await fetch(`/${action}-request/${requestId}`, {
@@ -682,14 +673,13 @@
                         card.style.opacity = '0.7';
                         card.querySelector('.pims-btn-approve').disabled = true;
                         card.querySelector('.pims-btn-reject').disabled = true;
-                        card.querySelector('.pims-btn-transfer').disabled = true;
                         card.querySelector('.pims-evaluation-textarea').readOnly = true;
                         
                         // Change button to show status
                         const buttonsDiv = card.querySelector('.d-flex');
                         buttonsDiv.innerHTML = `
-                            <span class="pims-status-badge pims-status-${action} p-2">
-                                <i class="fas fa-${action === 'approve' ? 'check' : action === 'reject' ? 'times' : 'exchange-alt'} me-1"></i>
+                            <span class="pims-status-badge pims-status-${action === 'approve' ? 'approved' : 'rejected'} p-2">
+                                <i class="fas fa-${action === 'approve' ? 'check' : 'times'} me-1"></i>
                                 Request ${actionVerb}
                             </span>
                         `;

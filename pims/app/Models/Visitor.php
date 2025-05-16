@@ -28,8 +28,6 @@ class Visitor extends Authenticatable
         'updated_at' => 'datetime',
     ];
 
-    /**
-     * Automatically hash the password before saving.
-     */
+    
     
 }

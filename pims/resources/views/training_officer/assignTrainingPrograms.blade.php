@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Assign Training Program</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -182,13 +183,14 @@
                 margin-left: 0;
                 padding: 1rem;
             }
-            
+
             .pims-form-columns {
                 flex-direction: column;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     @include('includes.nav')
@@ -223,14 +225,14 @@
                                                 <select name="prisoner_id" class="pims-form-control @error('prisoner_id') pims-error @enderror" required>
                                                     <option value="">Select a Prisoner</option>
                                                     @foreach($prisoners as $prisoner)
-                                                        <option value="{{ $prisoner->id }}" {{ old('prisoner_id') == $prisoner->id ? 'selected' : '' }}>
-                                                            {{ $prisoner->first_name }} (ID: {{ $prisoner->id }})
-                                                        </option>
+                                                    <option value="{{ $prisoner->id }}" {{ old('prisoner_id') == $prisoner->id ? 'selected' : '' }}>
+                                                        {{ $prisoner->first_name }} (ID: {{ $prisoner->id }})
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             @error('prisoner_id')
-                                                <p class="pims-error-message">{{ $message }}</p>
+                                            <p class="pims-error-message">{{ $message }}</p>
                                             @enderror
                                         </div>
 
@@ -241,14 +243,14 @@
                                                 <select name="training_id" class="pims-form-control @error('training_id') pims-error @enderror" required>
                                                     <option value="">Select a Program</option>
                                                     @foreach($programs as $program)
-                                                        <option value="{{ $program->id }}" {{ old('training_id') == $program->id ? 'selected' : '' }}>
-                                                            {{ $program->name }}
-                                                        </option>
+                                                    <option value="{{ $program->id }}" {{ old('training_id') == $program->id ? 'selected' : '' }}>
+                                                        {{ $program->title }}
+                                                    </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                             @error('training_id')
-                                                <p class="pims-error-message">{{ $message }}</p>
+                                            <p class="pims-error-message">{{ $message }}</p>
                                             @enderror
                                         </div>
 
@@ -258,12 +260,23 @@
                                         <!-- Assigned Date -->
                                         <div class="pims-form-group">
                                             <label class="pims-form-label">Assigned Date</label>
-                                            <input type="date" name="assigned_date" class="pims-form-control @error('assigned_date') pims-error @enderror" 
-                                                   value="{{ old('assigned_date') }}" required>
+                                            <input type="date" name="assigned_date" class="pims-form-control @error('assigned_date') pims-error @enderror"
+                                                value="{{ old('assigned_date') }}" required>
                                             @error('assigned_date')
-                                                <p class="pims-error-message">{{ $message }}</p>
+                                            <p class="pims-error-message">{{ $message }}</p>
                                             @enderror
                                         </div>
+
+                                        <!-- End Date -->
+                                        <div class="pims-form-group">
+                                            <label class="pims-form-label">End Date</label>
+                                            <input type="date" name="end_date" class="pims-form-control @error('end_date') pims-error @enderror"
+                                                value="{{ old('end_date') }}" required>
+                                            @error('end_date')
+                                            <p class="pims-error-message">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+
 
                                         <!-- Status -->
                                         <div class="pims-form-group">
@@ -275,7 +288,7 @@
                                                 </select>
                                             </div>
                                             @error('status')
-                                                <p class="pims-error-message">{{ $message }}</p>
+                                            <p class="pims-error-message">{{ $message }}</p>
                                             @enderror
                                         </div>
                                     </div>
@@ -297,7 +310,26 @@
             </div>
         </div>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const assignedDateInput = document.querySelector('input[name="assigned_date"]');
+        const endDateInput = document.querySelector('input[name="end_date"]');
+        const form = assignedDateInput.closest('form');
+
+        form.addEventListener('submit', function (e) {
+            const assignedDate = new Date(assignedDateInput.value);
+            const endDate = new Date(endDateInput.value);
+
+            if (assignedDate && endDate && assignedDate >= endDate) {
+                e.preventDefault();
+                alert("Assigned Date must be earlier than End Date.");
+            }
+        });
+    });
+</script>
+
 
     @include('includes.footer_js')
 </body>
+
 </html>

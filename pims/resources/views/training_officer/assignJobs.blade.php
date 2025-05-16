@@ -340,6 +340,10 @@
                                     <label class="pims-form-label">Assignment Date</label>
                                     <input class="pims-form-control" type="date" name="assigned_date" required>
                                 </div>
+                                <div class="pims-form-group">
+                                    <label class="pims-form-label">End Date</label>
+                                    <input class="pims-form-control" type="date" name="end_date" required>
+                                </div>
 
                                 <div class="pims-form-group">
                                     <label class="pims-form-label">Job Description</label>
@@ -418,5 +422,22 @@
             modal.classList.remove('pims-modal-active');
         }
     </script>
+        <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const assignedDateInput = document.querySelector('input[name="assigned_date"]');
+        const endDateInput = document.querySelector('input[name="end_date"]');
+        const form = assignedDateInput.closest('form');
+
+        form.addEventListener('submit', function (e) {
+            const assignedDate = new Date(assignedDateInput.value);
+            const endDate = new Date(endDateInput.value);
+
+            if (assignedDate && endDate && assignedDate >= endDate) {
+                e.preventDefault();
+                alert("Assigned Date must be earlier than End Date.");
+            }
+        });
+    });
+</script>
 </body>
 </html>

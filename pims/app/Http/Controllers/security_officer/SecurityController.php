@@ -12,6 +12,7 @@ use App\Models\Visitor;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class SecurityController extends Controller
 {
@@ -134,18 +135,8 @@ public function updateStatus(Request $request)
 
             // Update status
             $appointment->status = $status;
-            
-            // Add notes if provided
-            if ($notes) {
-                if ($type === 'medical') {
-                    $appointment->doctor_notes = $notes;
-                } elseif ($type === 'lawyer') {
-                    $appointment->legal_notes = $notes;
-                } else {
-                    $appointment->admin_notes = $notes;
-                }
-            }
-
+            $appointment->note = $notes;
+           
             $appointment->save();
 
             
@@ -223,26 +214,7 @@ public function updateStatus(Request $request)
         return view('security_officer.editVisitor', compact('visitor'));
     }
 
-    // Update visitor data
-    public function updateVisitor(Request $request, $id)
-    {
-        $visitor = Visitor::findOrFail($id);
-
-        $validatedData = $request->validate([
-            'first_name' => 'required|string|max:50',
-            'last_name' => 'required|string|max:50',
-            'phone_number' => 'required|string|max:20',
-            'relationship' => 'required|string|max:50',
-            'address' => 'required|string',
-            'identification_number' => 'required|string|max:100|unique:visitors,identification_number,' . $id,
-            'username' => 'required|string|max:255|unique:visitors,username,' . $id . ',id',
-        ]);
-
-        $visitor->update($validatedData);
-
-        return redirect()->route('security_officer.viewvisitors')->with('success', 'Visitor updated successfully.');
-    }
-
+   
     // Delete visitor
     public function deleteVisitor($id)
     {
@@ -275,5 +247,38 @@ public function updateStatus(Request $request)
     public function viewPrisoners()
     {
         return view('security_officer.viewPrisoners', compact('prisoners'));
+    }
+    public function updatevisitor(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
+            'relationship' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'identification_number' => 'required|string|max:50',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $visitor = Visitor::findOrFail($id);
+        $visitor->update($request->only([
+            'first_name', 'last_name', 'phone_number', 'relationship',
+            'address', 'identification_number'
+        ]));
+
+        return response()->json(['message' => 'Visitor updated successfully']);
+    }
+
+    public function destroy($id)
+    {
+        $visitor = Visitor::findOrFail($id);
+        if ($visitor->visits()->exists()) {
+            return response()->json(['message' => 'Cannot delete visitor with associated visits'], 422);
+        }
+        $visitor->delete();
+        return response()->json(['message' => 'Visitor deleted successfully']);
     }
 }

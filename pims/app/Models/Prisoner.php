@@ -26,13 +26,14 @@ class Prisoner extends Model
         'id', 'first_name', 'middle_name', 'last_name', 'dob', 'gender', 'marital_status',
         'crime_committed', 'status', 'time_serve_start', 'time_serve_end', 'address',
         'emergency_contact_name', 'emergency_contact_relation', 'emergency_contact_number',
-        'inmate_image', 'prison_id', 'room_id', 'assigned_inspector'
+        'inmate_image', 'prison_id', 'room_id', 'assigned_inspector','release_date'
     ];
 
     // Type casting for attributes
     protected $casts = [
         'dob' => 'date',
         'time_serve_start' => 'date',
+        'release_date'=>'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -85,13 +86,21 @@ class Prisoner extends Model
  * Relationship with TrainingAssignment
  * A prisoner can have many training assignments.
  */
-public function trainingAssignments()
-{
-    return $this->hasMany(TrainingAssignment::class, 'prisoner_id', 'id');
-}
+
   public function appointments()
     {
         return $this->hasMany(MedicalAppointment::class);
     }
+    public function jobAssignments()
+    {
+        return $this->hasMany(JobAssignment::class);
+    }
+    
+    public function trainingAssignments()
+    {
+        return $this->hasMany(TrainingAssignment::class);
+    }
+    
+
   
 }

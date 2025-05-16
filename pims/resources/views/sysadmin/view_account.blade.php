@@ -1,28 +1,29 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Prison Information Management System - Accounts</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>PIMS - Account Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
     <style>
         :root {
-            --pims-primary: #2c3e50;
-            --pims-secondary: #34495e;
-            --pims-accent: #3498db;
-            --pims-light: #ecf0f1;
-            --pims-lighter: #f8f9fa;
-            --pims-danger: #e74c3c;
-            --pims-success: #2ecc71;
-            --pims-warning: #f39c12;
-            --pims-border-radius: 8px;
-            --pims-box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            --pims-transition: all 0.3s ease;
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --radius: 8px;
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --font-size-base: clamp(0.9rem, 2vw, 1rem);
         }
 
-        * {
+        *, *::before, *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -30,327 +31,306 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f5f7fa;
-            color: var(--pims-primary);
+            background: #f5f7fa;
+            color: var(--primary);
+            font-size: var(--font-size-base);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Main Layout */
-        .pims-app-container {
-            padding-top:70px;
+        .app-container {
             display: flex;
             min-height: 100vh;
+            padding-top: 70px;
         }
 
-        .pims-main-content {
-            flex-grow: 1;
-            padding: 2rem;
+        .main-content {
+            flex: 1;
+            padding: clamp(1rem, 3vw, 2rem);
             margin-left: 250px;
-            transition: var(--pims-transition);
+            transition: var(--transition);
         }
 
-        .pims-content-container {
+        .content-container {
             max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* Header Styles */
-        .pims-page-header {
+        .page-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
-        .pims-page-title {
-            font-size: 1.75rem;
+        .page-title {
+            font-size: clamp(1.5rem, 4vw, 1.75rem);
             font-weight: 600;
-            color: var(--pims-primary);
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
-        .pims-page-title i {
-            color: var(--pims-accent);
+        .page-title i {
+            color: var(--accent);
         }
 
-        .pims-header-actions {
+        .header-actions {
             display: flex;
             gap: 1rem;
         }
 
-        /* Search Styles */
-        .pims-search-filter {
+        .search-filter {
             margin-bottom: 2rem;
         }
 
-        .pims-search-box {
+        .search-box {
             max-width: 400px;
-        }
-
-        .pims-search-control {
             position: relative;
         }
 
-        .pims-search-control input {
+        .search-box input {
             width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.5rem;
             border: 1px solid #ddd;
-            border-radius: var(--pims-border-radius);
-            font-size: 1rem;
-            transition: var(--pims-transition);
+            border-radius: var(--radius);
+            transition: var(--transition);
         }
 
-        .pims-search-control input:focus {
+        .search-box input:focus {
             outline: none;
-            border-color: var(--pims-accent);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
         }
 
-        .pims-search-icon {
+        .search-box i {
             position: absolute;
             left: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--pims-secondary);
+            color: var(--secondary);
         }
 
-        /* Cards Grid */
-        .pims-cards-grid {
+        .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .pims-account-card {
-            background: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-box-shadow);
+        .account-card {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
             overflow: hidden;
-            transition: var(--pims-transition);
         }
 
-        .pims-account-card:hover {
+        .account-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        .pims-card-header {
+        .card-header {
             padding: 1.5rem;
             text-align: center;
-            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
         }
 
-        .pims-user-avatar {
+        .user-avatar {
             width: 80px;
             height: 80px;
             border-radius: 50%;
             margin: 0 auto 1rem;
-            border: 3px solid white;
+            border: 3px solid #fff;
             overflow: hidden;
         }
 
-        .pims-user-avatar img {
+        .user-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
 
-        .pims-user-name {
+        .user-name {
             font-size: 1.25rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
 
-        .pims-user-role {
+        .user-role {
             display: inline-block;
-            background-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255,255,255,0.2);
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.8rem;
         }
 
-        .pims-card-body {
+        .card-body {
             padding: 1.5rem;
         }
 
-        .pims-info-item {
+        .info-item {
             display: flex;
             align-items: center;
             margin-bottom: 0.75rem;
             font-size: 0.95rem;
         }
 
-        .pims-info-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .pims-info-item i {
+        .info-item i {
             width: 24px;
-            color: var(--pims-accent);
+            color: var(--accent);
             margin-right: 0.75rem;
         }
 
-        .pims-card-footer {
+        .card-footer {
             display: flex;
             border-top: 1px solid #eee;
             padding: 1rem;
-        }
-
-        .pims-card-footer .pims-btn {
-            flex: 1;
-            margin: 0 0.25rem;
-        }
-
-        /* Button Styles */
-        .pims-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.5rem 1rem;
-            border-radius: var(--pims-border-radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--pims-transition);
-            border: none;
-            font-size: 0.9rem;
             gap: 0.5rem;
         }
 
-        .pims-btn i {
-            font-size: 0.9em;
+        .btn {
+            flex: 1;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-decoration: none;
         }
 
-        .pims-btn-primary {
-            background-color: var(--pims-accent);
-            color: white;
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
         }
 
-        .pims-btn-primary:hover {
-            background-color: #2980b9;
+        .btn-primary:hover {
+            background: #2980b9;
         }
 
-        .pims-btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--pims-accent);
-            color: var(--pims-accent);
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
         }
 
-        .pims-btn-outline:hover {
-            background-color: rgba(52, 152, 219, 0.1);
+        .btn-outline:hover {
+            background: rgba(52,152,219,0.1);
         }
 
-        .pims-btn-danger {
-            background-color: var(--pims-danger);
-            color: white;
+        .btn-danger {
+            background: var(--danger);
+            color: #fff;
         }
 
-        .pims-btn-danger:hover {
-            background-color: #c0392b;
+        .btn-danger:hover {
+            background: #c0392b;
         }
 
-        .pims-btn-light {
-            background-color: var(--pims-light);
-            color: var(--pims-secondary);
+        .btn-light {
+            background: var(--light);
+            color: var(--secondary);
         }
 
-        .pims-btn-light:hover {
-            background-color: #dfe6e9;
+        .btn-light:hover {
+            background: #dfe6e9;
         }
 
-        /* Empty State */
-        .pims-empty-state {
+        .empty-state {
             grid-column: 1 / -1;
             text-align: center;
             padding: 3rem;
-            background-color: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-box-shadow);
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
         }
 
-        .pims-empty-state i {
+        .empty-state i {
             font-size: 3rem;
-            color: var(--pims-accent);
+            color: var(--accent);
             margin-bottom: 1rem;
         }
 
-        .pims-empty-state h3 {
+        .empty-state h3 {
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
-            color: var(--pims-primary);
         }
 
-        .pims-empty-state p {
-            color: var(--pims-secondary);
+        .empty-state p {
+            color: var(--secondary);
             margin-bottom: 1.5rem;
         }
 
-        /* Pagination */
-        .pims-pagination {
+        .pagination {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
             margin-top: 2rem;
+            flex-wrap: wrap;
         }
 
-        .pims-pagination-link {
+        .pagination-link {
             padding: 0.5rem 1rem;
-            border-radius: var(--pims-border-radius);
-            color: var(--pims-primary);
+            border-radius: var(--radius);
+            color: var(--primary);
             text-decoration: none;
-            transition: var(--pims-transition);
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .pims-pagination-link:hover:not(.disabled) {
-            background-color: var(--pims-light);
+        .pagination-link:hover:not(.disabled) {
+            background: var(--light);
         }
 
-        .pims-pagination-link.active {
-            background-color: var(--pims-accent);
-            color: white;
+        .pagination-link.active {
+            background: var(--accent);
+            color: #fff;
         }
 
-        .pims-pagination-link.disabled {
+        .pagination-link.disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
 
-        .pims-pagination-pages {
+        .pagination-pages {
             display: flex;
             gap: 0.25rem;
         }
 
-        /* Modal Styles */
-        .pims-modal {
+        .modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             z-index: 1000;
             display: none;
             align-items: center;
             justify-content: center;
-            background-color: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0.5);
         }
 
-        .pims-modal.active {
+        .modal.active {
             display: flex;
         }
 
-        .pims-modal-container {
-            background-color: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
+        .modal-container {
+            background: #fff;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             max-width: 500px;
+            width: 95%;
             max-height: 90vh;
             overflow-y: auto;
             animation: modalFadeIn 0.3s ease;
@@ -361,7 +341,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .pims-modal-header {
+        .modal-header {
             padding: 1.5rem;
             border-bottom: 1px solid #eee;
             display: flex;
@@ -369,37 +349,36 @@
             align-items: center;
         }
 
-        .pims-modal-header h3 {
+        .modal-header h3 {
             font-size: 1.25rem;
             font-weight: 600;
-            color: var(--pims-primary);
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
-        .pims-modal-header i {
-            color: var(--pims-accent);
+        .modal-header i {
+            color: var(--accent);
         }
 
-        .pims-modal-close {
+        .modal-close {
             background: none;
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--pims-secondary);
-            transition: var(--pims-transition);
+            color: var(--secondary);
+            transition: var(--transition);
         }
 
-        .pims-modal-close:hover {
-            color: var(--pims-primary);
+        .modal-close:hover {
+            color: var(--primary);
         }
 
-        .pims-modal-body {
+        .modal-body {
             padding: 1.5rem;
         }
 
-        .pims-modal-footer {
+        .modal-footer {
             padding: 1rem 1.5rem;
             border-top: 1px solid #eee;
             display: flex;
@@ -407,421 +386,464 @@
             gap: 0.75rem;
         }
 
-        /* Form Styles */
-        .pims-form-group {
+        .form-group {
             margin-bottom: 1.25rem;
         }
 
-        .pims-form-group label {
+        .form-group label {
             display: block;
             margin-bottom: 0.5rem;
             font-weight: 500;
-            color: var(--pims-secondary);
+            color: var(--secondary);
         }
 
-        .pims-form-control {
+        .form-control {
             width: 100%;
             padding: 0.75rem 1rem;
             border: 1px solid #ddd;
-            border-radius: var(--pims-border-radius);
+            border-radius: var(--radius);
             font-family: inherit;
-            font-size: 1rem;
-            transition: var(--pims-transition);
+            font-size: var(--font-size-base);
+            transition: var(--transition);
         }
 
-        .pims-form-control:focus {
+        .form-control:focus {
             outline: none;
-            border-color: var(--pims-accent);
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
         }
 
-        /* Delete Confirmation Modal */
-        .pims-confirm-modal .pims-modal-container {
+        .confirm-modal .modal-container {
             max-width: 400px;
         }
 
-        .pims-confirm-icon {
+        .confirm-icon {
             text-align: center;
             margin-bottom: 1.5rem;
         }
 
-        .pims-confirm-icon i {
+        .confirm-icon i {
             font-size: 3rem;
-            color: var(--pims-danger);
+            color: var(--danger);
         }
 
-        .pims-confirm-message {
+        .confirm-message {
             text-align: center;
             margin-bottom: 2rem;
         }
 
-        .pims-confirm-message h4 {
+        .confirm-message h4 {
             font-size: 1.25rem;
             margin-bottom: 0.5rem;
-            color: var(--pims-primary);
         }
 
-        .pims-confirm-message p {
-            color: var(--pims-secondary);
-        }
-
-        /* Responsive Styles */
         @media (max-width: 992px) {
-            .pims-main-content {
-                margin-left: 0;
-                padding: 1.5rem;
-            }
-            
-            .pims-cards-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
+            .main-content { margin-left: 0; }
+            .cards-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
         }
 
         @media (max-width: 768px) {
-            .pims-page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
-            }
-            
-            .pims-search-box {
-                max-width: 100%;
-            }
-            
-            .pims-pagination {
-                flex-direction: column;
-                gap: 1rem;
-            }
-            
-            .pims-pagination-pages {
-                order: -1;
-            }
-            
-            .pims-modal-container {
-                width: 95%;
-            }
+            .search-box { max-width: 100%; }
+            .pagination { flex-direction: column; gap: 1rem; }
+            .pagination-pages { order: -1; }
         }
 
         @media (max-width: 480px) {
-            .pims-card-footer {
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .pims-card-footer .pims-btn {
-                width: 100%;
-                margin: 0;
-            }
+            .card-footer { flex-direction: column; }
+            .card-footer .btn { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="pims-app-container">
-        <!-- Navigation -->
+    <div class="app-container">
         @include('includes.nav')
-        
-        <!-- Sidebar -->
         @include('sysadmin.menu')
-        
-        <main class="pims-main-content">
-            <div class="pims-content-container">
-                <!-- Page Header -->
-                <div class="pims-page-header">
-                    <h2 class="pims-page-title">
-                        <i class="fas fa-user-shield"></i> Account Management
+        <main class="main-content">
+            <div class="content-container">
+                <div class="page-header">
+                    <h2 class="page-title">
+                        <i class="fas fa-user-shield" aria-hidden="true"></i> Account Management
                     </h2>
-                    <div class="pims-header-actions">
-                        <a href="{{ route('saccount.add') }}" class="pims-btn pims-btn-primary">
-                            <i class="fas fa-plus"></i> Create New Account
+                    <div class="header-actions">
+                        <a href="{{ route('saccount.add') }}" class="btn btn-primary">
+                            <i class="fas fa-plus" aria-hidden="true"></i> Create New Account
                         </a>
                     </div>
                 </div>
-                
-                <!-- Search and Filters -->
-                <div class="pims-search-filter">
-                    <div class="pims-search-box">
-                        <div class="pims-search-control">
-                            <input type="text" id="pims-table-search" class="pims-form-control" placeholder="Search by name, email, phone...">
-                            <i class="fas fa-search pims-search-icon"></i>
-                        </div>
+
+                <div class="search-filter">
+                    <div class="search-box">
+                        <input type="text" id="search-input" class="form-control" placeholder="Search by name, email, phone..." aria-label="Search accounts">
+                        <i class="fas fa-search" aria-hidden="true"></i>
                     </div>
                 </div>
-                
-                <!-- Accounts Grid -->
-                <div class="pims-cards-grid">
+
+                <div class="cards-grid">
                     @if($accounts->isEmpty())
-                    <div class="pims-empty-state">
-                        <i class="fas fa-user-slash"></i>
-                        <h3>No Accounts Found</h3>
-                        <p>There are currently no accounts in the system</p>
-                        <a href="{{ route('saccount.add') }}" class="pims-btn pims-btn-primary">
-                            <i class="fas fa-plus"></i> Create First Account
-                        </a>
-                    </div>
+                        <div class="empty-state">
+                            <i class="fas fa-user-slash" aria-hidden="true"></i>
+                            <h3>No Accounts Found</h3>
+                            <p>There are currently no accounts in the system</p>
+                            <a href="{{ route('saccount.add') }}" class="btn btn-primary">
+                                <i class="fas fa-plus" aria-hidden="true"></i> Create First Account
+                            </a>
+                        </div>
                     @else
-                    @foreach($accounts as $account)
-                    <div class="pims-account-card">
-                        <div class="pims-card-header">
-                            <div class="pims-user-avatar">
-                                @if($account->user_image)
-                                <img src="{{ asset('storage/' . $account->user_image) }}" alt="User Image">
-                                @else
-                                <img src="{{ asset('default-profile.png') }}" alt="Default Image">
-                                @endif
+                        @foreach($accounts as $account)
+                            <div class="account-card">
+                                <div class="card-header">
+                                    <div class="user-avatar">
+                                        <img src="{{ $account->user_image ? asset('storage/' . $account->user_image) : asset('default-profile.png') }}"
+                                             alt="Profile image for {{ $account->first_name }} {{ $account->last_name }}"
+                                             loading="lazy">
+                                    </div>
+                                    <h3 class="user-name">{{ $account->first_name }} {{ $account->last_name }}</h3>
+                                    <span class="user-role">{{ $account->role ? $account->role->name : 'N/A' }}</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="info-item">
+                                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                                        <span>{{ $account->email }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-phone" aria-hidden="true"></i>
+                                        <span>{{ $account->phone_number ?: 'N/A' }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-building" aria-hidden="true"></i>
+                                        <span>{{ $account->prison ? $account->prison->name : 'N/A' }}</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <i class="fas fa-venus-mars" aria-hidden="true"></i>
+                                        <span>{{ $account->gender }}</span>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-outline edit-btn"
+                                            data-id="{{ $account->user_id }}"
+                                            data-first-name="{{ $account->first_name }}"
+                                            data-last-name="{{ $account->last_name }}"
+                                            data-email="{{ $account->email }}"
+                                            data-phone="{{ $account->phone_number }}"
+                                            data-address="{{ $account->address }}"
+                                            data-role-id="{{ $account->role_id }}"
+                                            data-dob="{{ $account->dob ? $account->dob->format('Y-m-d') : '' }}"
+                                            data-gender="{{ $account->gender }}"
+                                            data-prison-id="{{ $account->prison_id }}"
+                                            aria-label="Edit account for {{ $account->first_name }} {{ $account->last_name }}">
+                                        <i class="fas fa-edit" aria-hidden="true"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger delete-btn"
+                                            data-id="{{ $account->user_id }}"
+                                            data-name="{{ $account->first_name }} {{ $account->last_name }}"
+                                            aria-label="Delete account for {{ $account->first_name }} {{ $account->last_name }}">
+                                        <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                                    </button>
+                                </div>
                             </div>
-                            <h3 class="pims-user-name">{{ $account->first_name }} {{ $account->last_name }}</h3>
-                            <span class="pims-user-role">{{ $account->role ? $account->role->name : 'N/A' }}</span>
-                        </div>
-                        
-                        <div class="pims-card-body">
-                            <div class="pims-info-item">
-                                <i class="fas fa-envelope"></i>
-                                <span>{{ $account->email }}</span>
-                            </div>
-                            <div class="pims-info-item">
-                                <i class="fas fa-phone"></i>
-                                <span>{{ $account->phone_number ?: 'N/A' }}</span>
-                            </div>
-                            <div class="pims-info-item">
-                                <i class="fas fa-building"></i>
-                                <span>{{ $account->prison ? $account->prison->name : 'N/A' }}</span>
-                            </div>
-                            <div class="pims-info-item">
-                                <i class="fas fa-venus-mars"></i>
-                                <span>{{ $account->gender }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="pims-card-footer">
-                            <button class="pims-btn pims-btn-outline pims-edit-btn"
-                                data-id="{{ $account->user_id }}"
-                                data-first-name="{{ $account->first_name }}"
-                                data-last-name="{{ $account->last_name }}"
-                                data-email="{{ $account->email }}"
-                                data-phone="{{ $account->phone_number }}"
-                                data-address="{{ $account->address }}"
-                                data-role-id="{{ $account->role_id }}">
-                                <i class="fas fa-edit"></i> Edit
-                            </button>
-                            
-                            <button class="pims-btn pims-btn-danger pims-delete-btn"
-                                data-id="{{ $account->user_id }}"
-                                data-name="{{ $account->first_name }} {{ $account->last_name }}">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
-                    </div>
-                    @endforeach
-                    @endif
-                </div>
-                
-                <!-- Pagination -->
-                @if($accounts->hasPages())
-                <div class="pims-pagination">
-                    @if($accounts->currentPage() > 1)
-                    <a href="{{ $accounts->previousPageUrl() }}" class="pims-pagination-link">
-                        <i class="fas fa-chevron-left"></i> Previous
-                    </a>
-                    @else
-                    <span class="pims-pagination-link disabled">
-                        <i class="fas fa-chevron-left"></i> Previous
-                    </span>
-                    @endif
-                    
-                    <div class="pims-pagination-pages">
-                        @foreach($accounts->getUrlRange(1, $accounts->lastPage()) as $page => $url)
-                        <a href="{{ $url }}" class="pims-pagination-link {{ $page == $accounts->currentPage() ? 'active' : '' }}">
-                            {{ $page }}
-                        </a>
                         @endforeach
-                    </div>
-                    
-                    @if($accounts->hasMorePages())
-                    <a href="{{ $accounts->nextPageUrl() }}" class="pims-pagination-link">
-                        Next <i class="fas fa-chevron-right"></i>
-                    </a>
-                    @else
-                    <span class="pims-pagination-link disabled">
-                        Next <i class="fas fa-chevron-right"></i>
-                    </span>
                     @endif
                 </div>
+
+                @if($accounts->hasPages())
+                    <nav class="pagination" aria-label="Pagination">
+                        @if($accounts->currentPage() > 1)
+                            <a href="{{ $accounts->previousPageUrl() }}" class="pagination-link" aria-label="Previous page">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
+                            </a>
+                        @else
+                            <span class="pagination-link disabled" aria-disabled="true">
+                                <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
+                            </span>
+                        @endif
+                        <div class="pagination-pages">
+                            @foreach($accounts->getUrlRange(1, $accounts->lastPage()) as $page => $url)
+                                <a href="{{ $url }}"
+                                   class="pagination-link {{ $page == $accounts->currentPage() ? 'active' : '' }}"
+                                   aria-current="{{ $page == $accounts->currentPage() ? 'page' : 'false' }}"
+                                   aria-label="Page {{ $page }}">{{ $page }}</a>
+                            @endforeach
+                        </div>
+                        @if($accounts->hasMorePages())
+                            <a href="{{ $accounts->nextPageUrl() }}" class="pagination-link" aria-label="Next page">
+                                Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                            </a>
+                        @else
+                            <span class="pagination-link disabled" aria-disabled="true">
+                                Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                            </span>
+                        @endif
+                    </nav>
                 @endif
             </div>
         </main>
     </div>
-    
-    <!-- Edit Modal -->
-    <div class="pims-modal" id="pims-edit-modal">
-        <div class="pims-modal-container">
-            <div class="pims-modal-header">
-                <h3><i class="fas fa-user-edit"></i> Edit Account</h3>
-                <button class="pims-modal-close">&times;</button>
+
+    <div class="modal" id="edit-modal" role="dialog" aria-labelledby="edit-modal-title" aria-hidden="true">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="edit-modal-title">
+                    <i class="fas fa-user-edit" aria-hidden="true"></i> Edit Account
+                </h3>
+                <button class="modal-close" aria-label="Close edit modal">×</button>
             </div>
-            
-            <form id="pims-edit-form" method="POST">
+            <form id="edit-form" method="POST">
                 @csrf
-                @method('PUT')
-                <input type="hidden" name="user_id" id="pims-edit-user-id">
-                
-                <div class="pims-modal-body">
-                    <div class="pims-form-group">
-                        <label>First Name</label>
-                        <input type="text" name="first_name" id="pims-edit-first-name" class="pims-form-control" required>
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="user_id" id="edit-user-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="edit-first-name">First Name</label>
+                        <input type="text" name="first_name" id="edit-first-name" class="form-control" required>
                     </div>
-                    
-                    <div class="pims-form-group">
-                        <label>Last Name</label>
-                        <input type="text" name="last_name" id="pims-edit-last-name" class="pims-form-control" required>
+                    <div class="form-group">
+                        <label for="edit-last-name">Last Name</label>
+                        <input type="text" name="last_name" id="edit-last-name" class="form-control" required>
                     </div>
-                    
-                    <div class="pims-form-group">
-                        <label>Email</label>
-                        <input type="email" name="email" id="pims-edit-email" class="pims-form-control" required>
+                    <div class="form-group">
+                        <label for="edit-email">Email</label>
+                        <input type="email" name="email" id="edit-email" class="form-control" required>
                     </div>
-                    
-                    <div class="pims-form-group">
-                        <label>Phone Number</label>
-                        <input type="text" name="phone_number" id="pims-edit-phone" class="pims-form-control">
+                    <div class="form-group">
+                        <label for="edit-phone">Phone Number</label>
+                        <input type="text" name="phone_number" id="edit-phone" class="form-control">
                     </div>
-                    
-                    <div class="pims-form-group">
-                        <label>Address</label>
-                        <textarea name="address" id="pims-edit-address" class="pims-form-control" required></textarea>
+                    <div class="form-group">
+                        <label for="edit-dob">Date of Birth</label>
+                        <input type="date" name="dob" id="edit-dob" class="form-control">
                     </div>
-                    
-                    <div class="pims-form-group">
-                        <label>Role</label>
-                        <select name="role_id" id="pims-edit-role" class="pims-form-control" required>
+                    <div class="form-group">
+                        <label for="edit-gender">Gender</label>
+                        <select name="gender" id="edit-gender" class="form-control" required>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-address">Address</label>
+                        <textarea name="address" id="edit-address" class="form-control"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-role">Role</label>
+                        <select name="role_id" id="edit-role" class="form-control" required>
                             @foreach($roles as $role)
-                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                <option value="{{ $role->id }}">{{ $role->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-prison">Prison</label>
+                        <select name="prison_id" id="edit-prison" class="form-control">
+                            <option value="">None</option>
+                            @foreach($prisons as $prison)
+                                <option value="{{ $prison->id }}">{{ $prison->name }}</option>
                             @endforeach
                         </select>
                     </div>
                 </div>
-                
-                <div class="pims-modal-footer">
-                    <button type="button" class="pims-btn pims-btn-light pims-modal-close-btn">Cancel</button>
-                    <button type="submit" class="pims-btn pims-btn-primary">Save Changes</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light modal-close-btn" aria-label="Cancel edit">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
-    
-    <!-- Delete Confirmation Modal -->
-    <div class="pims-modal pims-confirm-modal" id="pims-delete-modal">
-        <div class="pims-modal-container">
-            <div class="pims-modal-header">
-                <h3><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h3>
-                <button class="pims-modal-close">&times;</button>
+
+    <div class="modal confirm-modal" id="delete-modal" role="dialog" aria-labelledby="delete-modal-title" aria-hidden="true">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="delete-modal-title">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i> Confirm Deletion
+                </h3>
+                <button class="modal-close" aria-label="Close delete modal">×</button>
             </div>
-            
-            <div class="pims-modal-body">
-                <div class="pims-confirm-icon">
-                    <i class="fas fa-trash-alt"></i>
+            <div class="modal-body">
+                <div class="confirm-icon">
+                    <i class="fas fa-trash-alt" aria-hidden="true"></i>
                 </div>
-                <div class="pims-confirm-message">
+                <div class="confirm-message">
                     <h4>Delete Account?</h4>
-                    <p>Are you sure you want to delete <strong id="pims-delete-name"></strong>? This action cannot be undone.</p>
+                    <p>Are you sure you want to delete <strong id="delete-name"></strong>? This action cannot be undone.</p>
                 </div>
             </div>
-            
-            <div class="pims-modal-footer">
-                <button type="button" class="pims-btn pims-btn-light pims-modal-close-btn">Cancel</button>
-                <form id="pims-delete-form" method="POST" style="display: inline;">
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light modal-close-btn" aria-label="Cancel delete">Cancel</button>
+                <form id="delete-form" method="POST" style="display: inline;">
                     @csrf
-                    @method('DELETE')
-                    <button type="submit" class="pims-btn pims-btn-danger">Delete Account</button>
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="btn btn-danger">Delete Account</button>
                 </form>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Search functionality
-            const searchInput = document.getElementById('pims-table-search');
-            if (searchInput) {
-                searchInput.addEventListener('input', function() {
-                    const searchTerm = this.value.toLowerCase();
-                    const cards = document.querySelectorAll('.pims-account-card');
-                    
-                    cards.forEach(card => {
-                        const name = card.querySelector('.pims-user-name').textContent.toLowerCase();
-                        const email = card.querySelector('.pims-info-item:nth-child(1) span').textContent.toLowerCase();
-                        const phone = card.querySelector('.pims-info-item:nth-child(2) span').textContent.toLowerCase();
-                        const prison = card.querySelector('.pims-info-item:nth-child(3) span').textContent.toLowerCase();
-                        
-                        if (name.includes(searchTerm) || email.includes(searchTerm) || phone.includes(searchTerm) || prison.includes(searchTerm)) {
-                            card.style.display = 'block';
-                        } else {
-                            card.style.display = 'none';
-                        }
-                    });
-                });
+        document.addEventListener('DOMContentLoaded', () => {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!csrfToken) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'CSRF token missing. Please check application setup.' });
+                return;
             }
-            
-            // Modal functionality
-            const editModal = document.getElementById('pims-edit-modal');
-            const deleteModal = document.getElementById('pims-delete-modal');
-            const closeButtons = document.querySelectorAll('.pims-modal-close, .pims-modal-close-btn');
-            
-            // Edit button handlers
-            document.querySelectorAll('.pims-edit-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.getElementById('pims-edit-user-id').value = this.dataset.id;
-                    document.getElementById('pims-edit-first-name').value = this.dataset.firstName;
-                    document.getElementById('pims-edit-last-name').value = this.dataset.lastName;
-                    document.getElementById('pims-edit-email').value = this.dataset.email;
-                    document.getElementById('pims-edit-phone').value = this.dataset.phone;
-                    document.getElementById('pims-edit-address').value = this.dataset.address;
-                    document.getElementById('pims-edit-role').value = this.dataset.roleId;
-                    
-                    // Set the form action with the correct route
-                    document.getElementById('pims-edit-form').action = `/saccount/${this.dataset.id}`;
-                    
+
+            const debounce = (fn, delay) => {
+                let timeout;
+                return (...args) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => fn(...args), delay);
+                };
+            };
+
+            const editModal = document.getElementById('edit-modal');
+            const deleteModal = document.getElementById('delete-modal');
+
+            const closeAllModals = () => {
+                editModal.classList.remove('active');
+                deleteModal.classList.remove('active');
+                editModal.setAttribute('aria-hidden', 'true');
+                deleteModal.setAttribute('aria-hidden', 'true');
+            };
+
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(() => {
+                    const searchTerm = searchInput.value.toLowerCase();
+                    document.querySelectorAll('.account-card').forEach(card => {
+                        const name = card.querySelector('.user-name').textContent.toLowerCase();
+                        const email = card.querySelector('.info-item:nth-child(1) span').textContent.toLowerCase();
+                        const phone = card.querySelector('.info-item:nth-child(2) span').textContent.toLowerCase();
+                        const prison = card.querySelector('.info-item:nth-child(3) span').textContent.toLowerCase();
+                        card.style.display = (name.includes(searchTerm) || email.includes(searchTerm) || phone.includes(searchTerm) || prison.includes(searchTerm)) ? 'block' : 'none';
+                    });
+                }, 300));
+            }
+
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeAllModals();
+                    document.getElementById('edit-user-id').value = btn.dataset.id;
+                    document.getElementById('edit-first-name').value = btn.dataset.firstName;
+                    document.getElementById('edit-last-name').value = btn.dataset.lastName;
+                    document.getElementById('edit-email').value = btn.dataset.email;
+                    document.getElementById('edit-phone').value = btn.dataset.phone || '';
+                    document.getElementById('edit-dob').value = btn.dataset.dob || '';
+                    document.getElementById('edit-gender').value = btn.dataset.gender || '';
+                    document.getElementById('edit-address').value = btn.dataset.address || '';
+                    document.getElementById('edit-role').value = btn.dataset.roleId || '';
+                    document.getElementById('edit-prison').value = btn.dataset.prisonId || '';
                     editModal.classList.add('active');
+                    editModal.setAttribute('aria-hidden', 'false');
+                    document.getElementById('edit-first-name').focus();
                 });
             });
-            
-            // Delete button handlers
-            document.querySelectorAll('.pims-delete-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    document.getElementById('pims-delete-name').textContent = this.dataset.name;
-                    // Set the form action with the correct route
-                    document.getElementById('pims-delete-form').action = `/saccount/${this.dataset.id}`;
+
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeAllModals();
+                    document.getElementById('delete-name').textContent = btn.dataset.name;
+                    document.getElementById('delete-form').action = `/saccount/${btn.dataset.id}`;
                     deleteModal.classList.add('active');
+                    deleteModal.setAttribute('aria-hidden', 'false');
                 });
             });
-            
-            // Close modal handlers
-            closeButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    editModal.classList.remove('active');
-                    deleteModal.classList.remove('active');
-                });
+
+            document.querySelectorAll('.modal-close, .modal-close-btn').forEach(btn => {
+                btn.addEventListener('click', closeAllModals);
             });
-            
-            // Close when clicking outside modal
-            window.addEventListener('click', (e) => {
-                if (e.target.classList.contains('pims-modal')) {
-                    editModal.classList.remove('active');
-                    deleteModal.classList.remove('active');
+
+            window.addEventListener('click', e => {
+                if (e.target.classList.contains('modal')) {
+                    closeAllModals();
                 }
             });
-            
-            // Handle form submissions
-            document.getElementById('pims-edit-form')?.addEventListener('submit', function(e) {
-                // Form will submit normally with PUT method
+
+            document.getElementById('edit-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const form = e.target;
+                const userId = document.getElementById('edit-user-id').value;
+                try {
+                    const formData = new FormData(form);
+                    formData.delete('_method');
+                    const data = Object.fromEntries(formData);
+                    data._method = 'PUT';
+                    const response = await fetch(`/saccount/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        closeAllModals();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Account updated successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    } else {
+                        throw new Error(result.message || 'Failed to update account');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Update operation not supported. Please ensure backend supports PUT method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                }
             });
-            
-            document.getElementById('pims-delete-form')?.addEventListener('submit', function(e) {
-                // Form will submit normally with DELETE method
+
+            document.getElementById('delete-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const form = e.target;
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ _method: 'DELETE' })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        closeAllModals();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Account deleted successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    } else {
+                        throw new Error(result.message || 'Failed to delete account');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Delete operation not supported. Please ensure backend supports DELETE method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                }
+            });
+
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape' && (editModal.classList.contains('active') || deleteModal.classList.contains('active'))) {
+                    closeAllModals();
+                }
             });
         });
     </script>
-    
     @include('includes.footer_js')
 </body>
 </html>

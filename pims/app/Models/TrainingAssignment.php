@@ -18,10 +18,11 @@ class TrainingAssignment extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'prisoner_id', 'training_id', 'assigned_by', 'assigned_date', 'status'
+        'id', 'prisoner_id', 'training_id', 'assigned_by', 'assigned_date', 'status','end_date'
     ];
 
     protected $casts = [
+        'end_date' => 'date',
         'assigned_date' => 'date',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',

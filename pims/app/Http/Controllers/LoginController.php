@@ -13,10 +13,13 @@ use App\Models\Visitor;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\ValidationException;
+use OwenIt\Auditing\Models\Audit;
+
 
 
 class LoginController extends Controller
 {
+    use \OwenIt\Auditing\Auditable;
     public function showLoginForm()
     {
         return view('auth.login');
@@ -70,11 +73,12 @@ class LoginController extends Controller
                 Log::info('Login successful:', ['email' => $account->email, 'username' => $account->username]);
     
                 return match ($account->role_id) {
-                    3 => view('cadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
+                    3 => view('cadmin.dashboard', ['activities' => Audit::with('user')->latest()->take(20)->get()]),
+
                     2 => redirect()->to('/idashboard'),
                     1 => view('sysadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
                     8 => view('police_officer.dashboard'),
-                    6 => view('training_officer.dashboard'),
+                    6 => redirect()->to('/viewcertifications'),
                     9 => view('medical_officer.dashboard'),
                     10 => view('security_officer.dashboard'),
                     11 => view('discipline_officer.dashboard'),

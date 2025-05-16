@@ -4,9 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Backup extends Model
+class Backup extends Model implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
     use HasFactory;
 
     protected $table = 'backups';
@@ -17,17 +19,9 @@ class Backup extends Model
 
     protected $keyType = 'string';
 
-    protected $fillable = [
-        'id', 'initiated_by', 'backup_date', 'backup_status'
-    ];
-
-    protected $casts = [
-        'backup_date' => 'datetime',
-    ];
-
-    // Relationship with Account (Initiated By)
-    public function initiatedBy()
+    protected $fillable = ['initiated_by', 'prison_id', 'backup_date', 'backup_status'];
+    public function user()
     {
-        return $this->belongsTo(Account::class, 'initiated_by', 'user_id');
+        return $this->belongsTo(Account::class, 'initiated_by');
     }
 }
