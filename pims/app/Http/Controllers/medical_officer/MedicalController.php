@@ -9,8 +9,7 @@ use App\Models\MedicalReport;
 use App\Models\Prisoner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
-
+use Illuminate\Support\Facades\Validator;
 
 class MedicalController extends Controller
 {
@@ -97,7 +96,21 @@ class MedicalController extends Controller
 }
 
 
+public function update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|in:pending,scheduled,completed',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $appointment = MedicalAppointment::findOrFail($id);
+        $appointment->update(['status' => $request->status]);
+
+        return response()->json(['message' => 'Appointment status updated successfully']);
+    }
     // Show form to create a medical report
     public function createMedicalReport()
     {
