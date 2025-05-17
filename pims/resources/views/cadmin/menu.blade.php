@@ -1,3 +1,5 @@
+<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
+<script src="{{ asset('js/menu.js') }}"></script>
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar">
@@ -137,5 +139,4 @@
         </div>
     </aside>
 </div>
-<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
-<script src="{{ asset('js/menu.js') }}"></script>
+
