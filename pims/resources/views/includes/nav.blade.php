@@ -668,7 +668,82 @@
     .pims-detail-value {
         width: 100%;
     }
-}    </style>
+
+}   
+/* Unique modal base styles */
+.unique-modal {
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(10, 10, 10, 0.86);
+    display: none; /* Use JS to show/hide */
+}
+
+.unique-modal-content {
+    margin: 5% auto;
+    max-width: 600px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 6px;
+}
+
+.unique-box {
+    background: white;
+    border-radius: 6px;
+    padding: 20px;
+}
+
+.unique-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.unique-divider {
+    margin-top: 10px;
+}
+
+.unique-notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.unique-notification-actions {
+    margin-top: 15px;
+}
+
+.unique-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.unique-button.primary {
+    background-color: #3273dc;
+    color: white;
+}
+
+.unique-button.light {
+    background-color: #f5f5f5;
+    color: #363636;
+}
+
+.unique-button.fullwidth {
+    width: 100%;
+}
+
+.unique-button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+ </style>
 </head>
 
 <body class="pims-reset">
@@ -851,28 +926,29 @@
         </div>
     </div>
 
-    <!-- 🔥 Enhanced Notification Modal -->
-    <div id="notification-modal" class="modal">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="box">
-                <div class="notification-header">
-                    <h3 class="title is-5 has-text-centered">Notifications</h3>
-                    <hr class="is-marginless">
-                </div>
-                <div id="notification-list" class="notification-list">
-                    <!-- Notifications will be dynamically inserted here -->
-                </div>
-                <br>
-                <div class="notification-actions">
-                    <button class="button is-primary is-fullwidth" id="mark-all-as-read">Mark All as Read</button>
-                    <div class="buttons is-centered">
-                        <button class="button is-light" id="close-modal">Close</button>
-                    </div>
+   <!-- ✅ Unique Notification Modal -->
+<div id="unique-notification-modal" class="unique-modal">
+    <div class="unique-modal-background"></div>
+    <div class="unique-modal-content">
+        <div class="unique-box">
+            <div class="unique-notification-header">
+                <h3 class="unique-title">Notifications</h3>
+                <hr class="unique-divider">
+            </div>
+            <div id="unique-notification-list" class="unique-notification-list">
+                <!-- Notifications will be dynamically inserted here -->
+            </div>
+            <br>
+            <div class="unique-notification-actions">
+                <button class="unique-button primary fullwidth" id="unique-mark-all-as-read">Mark All as Read</button>
+                <div class="unique-button-group">
+                    <button class="unique-button light" id="unique-close-modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
+</div>
+
 
     <script>
         // Toggle Dropdown Menu
@@ -978,7 +1054,34 @@
         function closePasswordModal() {
             document.getElementById('passwordModal').classList.remove('is-active');
         }
+        
+        
     </script>
+    <script>
+    // Get elements
+    const notificationBell = document.getElementById('pimsNotificationBell');
+    const notificationModal = document.getElementById('unique-notification-modal');
+    const closeModalBtn = document.getElementById('unique-close-modal');
+
+    // Show modal when bell is clicked
+    notificationBell.addEventListener('click', () => {
+        notificationModal.style.display = 'block';
+    });
+
+    // Close modal when "Close" button is clicked
+    closeModalBtn.addEventListener('click', () => {
+        notificationModal.style.display = 'none';
+    });
+
+    // Optional: Close modal when clicking outside the modal content
+    window.addEventListener('click', (event) => {
+        if (event.target === notificationModal) {
+            notificationModal.style.display = 'none';
+        }
+    });
+</script>
+
+    
 </body>
 
 </html>

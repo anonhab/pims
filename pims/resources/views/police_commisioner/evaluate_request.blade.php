@@ -7,13 +7,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Request Evaluation</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -357,141 +357,251 @@
     @include('includes.nav')
 
     <div class="pims-app-container">
-        @include('police_commisioner.menu')
+    @include('police_commisioner.menu')
 
-        <div class="pims-content-area">
-            <div class="pims-card">
-                <div class="pims-card-header">
-                    <h2 class="pims-card-title">
-                        <i class="fas fa-clipboard-list"></i> Transferred  Requests
-                    </h2>
-                </div>
+    <div class="pims-content-area">
+        <div class="pims-card">
+            <div class="pims-card-header">
+                <h2 class="pims-card-title">
+                    <i class="fas fa-clipboard-list"></i> Transferred Requests
+                </h2>
+            </div>
+            <div class="pims-card-body">
+    @if($requests->isNotEmpty())
+        @foreach($requests as $request)
+            <div class="pims-card pims-request-card" data-pims-request-id="{{ $request->id }}">
                 <div class="pims-card-body">
-                    @if($requests->isNotEmpty())
-                        @foreach($requests as $request)
-                            <div class="pims-card pims-request-card" data-pims-request-id="{{ $request->id }}">
-                                <div class="pims-card-body">
-                                    <h5 class="pims-request-title">
-                                        <i class="fas fa-file-alt"></i> Request Information
-                                    </h5>
-                                    
-                                    <div class="pims-detail-item">
-                                        <span class="pims-field-label">Request Type:</span>
-                                        <span class="pims-field-value">{{ $request->request_type }}</span>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item">
-                                        <span class="pims-field-label">Prisoner ID:</span>
-                                        <span class="pims-field-value">{{ $request->prisoner_id }}</span>
-                                        <button class="pims-btn pims-btn-outline-primary pims-btn-sm pims-view-prisoner-details ms-2" 
-                                                data-pims-id="{{ $request->prisoner_id }}">
-                                            <i class="fas fa-eye"></i> View Details
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
-                                        <span class="pims-field-label">Request Details:</span>
-                                        <div class="pims-field-value p-3 bg-light rounded" style="width: 100%;">
-                                            {{ $request->request_details }}
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
-                                        <label class="pims-field-label">Evaluation:</label>
-                                        <textarea class="pims-evaluation-textarea" 
-                                                  placeholder="Enter your evaluation comments here..." 
-                                                  required></textarea>
-                                    </div>
-                                    
-                                    <input type="hidden" class="pims-request-id" value="{{ $request->id }}">
-                                    
-                                    <div class="d-flex justify-content-end gap-2 mt-3">
-                                        <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve" disabled>
-                                            <i class="fas fa-check"></i> Approve
-                                        </button>
-                                        <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject" disabled>
-                                            <i class="fas fa-times"></i> Reject
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <div class="pims-card">
-                            <div class="pims-card-body text-center py-4">
-                                <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-accent);"></i>
-                                <h5 class="pims-card-title">No Transferred Requests</h5>
-                                <p class="text-muted">There are currently no transferred requests to evaluate.</p>
-                            </div>
+                    <h5 class="pims-request-title">
+                        <i class="fas fa-file-alt"></i> Request Information
+                    </h5>
+
+                    <div class="pims-detail-item">
+                        <span class="pims-field-label">Request Type:</span>
+                        <span class="pims-field-value">{{ $request->request_type }}</span>
+                    </div>
+
+                    <div class="pims-detail-item">
+                        <span class="pims-field-label">Prisoner ID:</span>
+                        <span class="pims-field-value">{{ $request->prisoner_id }}</span>
+                        <button class="pims-btn pims-btn-outline-primary pims-btn-sm pims-view-prisoner-details ms-2"
+                            data-pims-id="{{ $request->prisoner_id }}">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+
+                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                        <span class="pims-field-label">Request Details:</span>
+                        <div class="pims-field-value p-3 bg-light rounded" style="width: 100%;">
+                            {{ $request->request_details }}
+                        </div>
+                    </div>
+
+                    {{-- Only show evaluation textarea if NOT a prisoner_transfer --}}
+                    @if($request->request_type !== 'prisoner_transfer')
+                        <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                            <label class="pims-field-label">Evaluation:</label>
+                            <textarea class="pims-evaluation-textarea" 
+                                      placeholder="Enter your evaluation comments here..." 
+                                      required></textarea>
                         </div>
                     @endif
+
+                    <input type="hidden" class="pims-request-id" value="{{ $request->id }}">
+
+                    <div class="d-flex justify-content-end gap-2 mt-3">
+                        @if($request->request_type === 'prisoner_transfer')
+                            <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve-transfer"
+                                data-bs-toggle="modal"
+                                data-bs-target="#approveTransferModal"
+                                data-request-id="{{ $request->id }}"
+                                data-prisoner-id="{{ $request->prisoner_id }}">
+                                <i class="fas fa-check"></i> Approve Transfer
+                            </button>
+                        @else
+                            <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve" disabled>
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                        @endif
+                        <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject" disabled>
+                            <i class="fas fa-times"></i> Reject
+                        </button>
+                    </div>
                 </div>
             </div>
+        @endforeach
+    @else
+        <div class="pims-card">
+            <div class="pims-card-body text-center py-4">
+                <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-accent);"></i>
+                <h5 class="pims-card-title">No Transferred Requests</h5>
+                <p class="text-muted">There are currently no transferred requests to evaluate.</p>
+            </div>
+        </div>
+    @endif
+</div>
+
         </div>
     </div>
-    
-    <!-- Prisoner Details Modal -->
-    <div class="modal fade" id="pims-prisoner-detail-modal" tabindex="-1" aria-labelledby="pims-prisoner-modal-label" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+</div>
+
+<!-- Approve Transfer Modal -->
+<div class="modal fade" id="approveTransferModal" tabindex="-1" aria-labelledby="approveTransferModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="transfer-approval-form" method="POST" action="{{ route('transfer.approve') }}">
+                @csrf
                 <div class="modal-header pims-modal-header">
-                    <h5 class="modal-title pims-modal-title" id="pims-prisoner-modal-label">
-                        <i class="fas fa-user-tag"></i> Prisoner Details
+                    <h5 class="modal-title pims-modal-title" id="approveTransferModalLabel">
+                        <i class="fas fa-exchange-alt"></i> Confirm Prisoner Transfer
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
+
                 <div class="modal-body">
-                    <div class="text-center">
-                        <img id="pims-prisoner-image" src="" alt="Prisoner Image" class="pims-prisoner-image">
+                    <input type="hidden" name="request_id" id="pims-transfer-request-id">
+                    <input type="hidden" name="prisoner_id" id="pims-transfer-prisoner-id">
+
+                    <div class="mb-3">
+                        <label for="pims-transfer-facility" class="form-label pims-field-label">Transfer To Facility:</label>
+                        <select class="form-select pims-transfer-facility-select" id="pims-transfer-facility" name="facility_id" required>
+                            <option value="">Select Facility</option>
+                            @foreach($prisons as $prison)
+                                <option value="{{ $prison->id }}">{{ $prison->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    
+
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This action will immediately transfer the prisoner to the selected facility.
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="pims-btn pims-btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="pims-btn pims-btn-success">
+                        <i class="fas fa-check"></i> Confirm Transfer
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to set request_id and prisoner_id in modal -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const approveButtons = document.querySelectorAll('.pims-btn-approve-transfer');
+
+        approveButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const requestId = this.getAttribute('data-request-id');
+                const prisonerId = this.getAttribute('data-prisoner-id');
+
+                document.getElementById('pims-transfer-request-id').value = requestId;
+                document.getElementById('pims-transfer-prisoner-id').value = prisonerId;
+            });
+        });
+    });
+</script>
+
+
+
+    <!-- Prisoner Details Modal (Extra Large) -->
+    <div class="modal fade" id="pims-prisoner-detail-modal" tabindex="-1" aria-labelledby="pims-prisoner-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header pims-modal-header">
+                    <h5 class="modal-title pims-modal-title" id="pims-prisoner-modal-label">
+                        <i class="fas fa-user-tag me-2"></i> Prisoner & Requester Details
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            <img id="pims-prisoner-image" src="" alt="Prisoner Image" class="img-fluid rounded shadow pims-prisoner-image">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">ID:</span>
+                                        <span id="pims-prisoner-id">-</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Full Name:</span>
+                                        <span id="pims-prisoner-name">-</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Date of Birth:</span>
+                                        <span id="pims-prisoner-dob">-</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Gender:</span>
+                                        <span id="pims-prisoner-gender">-</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Marital Status:</span>
+                                        <span id="pims-prisoner-marital">-</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Crime Committed:</span>
+                                        <span id="pims-prisoner-crime">-</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Status:</span>
+                                        <span id="pims-prisoner-status">-</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Sentence Period:</span>
+                                        <span id="pims-prisoner-sentence">- to -</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Emergency Contact:</span>
+                                        <span id="pims-prisoner-emergency">-</span>
+                                    </div>
+                                    <div class="pims-detail-item">
+                                        <span class="pims-prisoner-detail-label">Facility:</span>
+                                        <span id="pims-prisoner-facility">-</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Optional: Requester Details Section -->
+                    <hr>
+                    <h6 class="pims-section-title"><i class="fas fa-user-circle me-1"></i> Requester Information</h6>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">ID:</span>
-                                <span id="pims-prisoner-id">-</span>
+                                <span class="pims-prisoner-detail-label">Requested By:</span>
+                                <span id="pims-requester-name">-</span>
                             </div>
                             <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Full Name:</span>
-                                <span id="pims-prisoner-name">-</span>
+                                <span class="pims-prisoner-detail-label">Request Type:</span>
+                                <span id="pims-request-type">-</span>
                             </div>
                             <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Date of Birth:</span>
-                                <span id="pims-prisoner-dob">-</span>
-                            </div>
-                            <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Gender:</span>
-                                <span id="pims-prisoner-gender">-</span>
-                            </div>
-                            <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Marital Status:</span>
-                                <span id="pims-prisoner-marital">-</span>
+                                <span class="pims-prisoner-detail-label">Submitted At:</span>
+                                <span id="pims-request-date">-</span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Crime Committed:</span>
-                                <span id="pims-prisoner-crime">-</span>
-                            </div>
-                            <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Status:</span>
-                                <span id="pims-prisoner-status">-</span>
-                            </div>
-                            <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Sentence Period:</span>
-                                <span id="pims-prisoner-sentence">- to -</span>
-                            </div>
-                            <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Emergency Contact:</span>
-                                <span id="pims-prisoner-emergency">-</span>
-                            </div>
-                            <div class="pims-detail-item">
-                                <span class="pims-prisoner-detail-label">Facility:</span>
-                                <span id="pims-prisoner-facility">-</span>
+                                <span class="pims-prisoner-detail-label">Details:</span>
+                                <div id="pims-request-details" class="bg-light p-3 rounded">-</div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="pims-btn pims-btn-secondary" data-bs-dismiss="modal">
                         <i class="fas fa-times"></i> Close
@@ -501,9 +611,25 @@
         </div>
     </div>
 
+
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const transferButtons = document.querySelectorAll('.pims-btn-approve-transfer');
+
+            transferButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const requestId = this.getAttribute('data-request-id');
+                    const prisonerId = this.getAttribute('data-prisoner-id');
+
+                    document.getElementById('modal-request-id').value = requestId;
+                    document.getElementById('modal-prisoner-id').value = prisonerId;
+                });
+            });
+        });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Enable/Disable evaluation buttons based on textarea input
@@ -511,20 +637,20 @@
                 const card = textarea.closest('.pims-request-card');
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
-                
+
                 textarea.addEventListener('input', () => {
                     const evaluation = textarea.value.trim();
                     approveBtn.disabled = rejectBtn.disabled = evaluation === '';
                 });
             });
-            
+
             // Prisoner details modal
             document.querySelectorAll('.pims-view-prisoner-details').forEach(button => {
                 button.addEventListener('click', async function() {
                     const prisonerId = this.getAttribute('data-pims-id');
                     const modalElement = document.getElementById('pims-prisoner-detail-modal');
                     const modal = new bootstrap.Modal(modalElement);
-                    
+
                     // Show loading state
                     const modalBody = modalElement.querySelector('.modal-body');
                     modalBody.innerHTML = `
@@ -535,19 +661,19 @@
                             <p class="mt-3">Loading prisoner details...</p>
                         </div>
                     `;
-                    
+
                     modal.show();
-                    
+
                     try {
                         // Fetch prisoner details
                         const response = await fetch(`/prisoners/${prisonerId}`);
-                        
+
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
-                        
+
                         const data = await response.json();
-                        
+
                         // Update modal with prisoner data
                         modalBody.innerHTML = `
                             <div class="text-center">
@@ -619,35 +745,35 @@
                     }
                 });
             });
-            
+
             // Handle request approval/rejection
             document.querySelectorAll('.pims-request-card').forEach(card => {
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
                 const textarea = card.querySelector('.pims-evaluation-textarea');
-                
+
                 approveBtn.addEventListener('click', async () => {
                     await pimsHandleRequestAction(card, 'approve');
                 });
-                
+
                 rejectBtn.addEventListener('click', async () => {
                     await pimsHandleRequestAction(card, 'reject');
                 });
             });
-            
+
             async function pimsHandleRequestAction(card, action) {
                 const requestId = card.querySelector('.pims-request-id').value;
                 const textarea = card.querySelector('.pims-evaluation-textarea');
                 const evaluation = textarea.value.trim();
-                
+
                 if (!evaluation) {
                     pimsShowToast('error', 'Please provide an evaluation before submitting!');
                     return;
                 }
-                
+
                 const actionVerb = action === 'approve' ? 'approved' : 'rejected';
                 const btnClass = action === 'approve' ? 'success' : 'danger';
-                
+
                 try {
                     const response = await fetch(`/${action}-request/${requestId}`, {
                         method: 'POST',
@@ -656,25 +782,27 @@
                             'X-CSRF-TOKEN': '{{ csrf_token() }}',
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ evaluation: evaluation })
+                        body: JSON.stringify({
+                            evaluation: evaluation
+                        })
                     });
-                    
+
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                    
+
                     const data = await response.json();
-                    
+
                     if (data.success) {
                         // Show success message
                         pimsShowToast('success', `Request ${actionVerb} successfully!`);
-                        
+
                         // Update UI
                         card.style.opacity = '0.7';
                         card.querySelector('.pims-btn-approve').disabled = true;
                         card.querySelector('.pims-btn-reject').disabled = true;
                         card.querySelector('.pims-evaluation-textarea').readOnly = true;
-                        
+
                         // Change button to show status
                         const buttonsDiv = card.querySelector('.d-flex');
                         buttonsDiv.innerHTML = `
@@ -691,11 +819,11 @@
                     pimsShowToast('error', `Failed to ${action} request: ${error.message || 'Unknown error'}`);
                 }
             }
-            
+
             function pimsShowToast(type, message) {
                 const toastContainer = document.createElement('div');
                 toastContainer.className = 'pims-toast-container';
-                
+
                 const toast = document.createElement('div');
                 toast.className = `pims-toast pims-toast-${type}`;
                 toast.innerHTML = `
@@ -707,10 +835,10 @@
                         ${message}
                     </div>
                 `;
-                
+
                 toastContainer.appendChild(toast);
                 document.body.appendChild(toastContainer);
-                
+
                 // Remove toast after 3 seconds
                 setTimeout(() => {
                     toastContainer.remove();
@@ -719,4 +847,5 @@
         });
     </script>
 </body>
+
 </html>

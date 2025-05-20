@@ -99,6 +99,9 @@ Route::post('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])
 Route::post('/releasePrisoner', [CommisinerControler::class, 'releasePrisoner'])->name('release_prisoner');
 Route::get('/prisonershow/{id}', [CommisinerControler::class, 'show']);
 Route::get('/evaluate', [CommisinerControler::class, 'showEvaluationForm'])->name('commisinerControler.evaluate_request');
+Route::post('/transferapprove', [CommisinerControler::class, 'approve'])->name('transfer.approve');
+
+
 
 Route::get('/chart-data', [cAccountController::class, 'getChartData']);
 Route::get('/login', [LoginController::class, 'showLoginForm']);
@@ -314,6 +317,10 @@ Route::get('/showprisoners', [RequestController::class, 'show_allforin'])->name(
 Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
 Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
 Route::post('/transfer-request/{id}', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
+
+Route::post('requests/{request}/transfer', [RequestController::class, 'transfer'])->name('requests.transfer');
+Route::post('requests/{request}/reject', [RequestController::class, 'reject'])->name('requests.reject');
+Route::post('requests/{request}/approve', [RequestController::class, 'approve'])->name('requests.approve');
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
 Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
 Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');
