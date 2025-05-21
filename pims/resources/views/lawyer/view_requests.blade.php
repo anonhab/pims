@@ -423,17 +423,7 @@
                         </div>
                     </div>
                     
-                    <div class="pims-card-footer">
-                        <button class="pims-btn pims-btn-primary pims-btn-sm pims-edit-request"
-                                data-id="{{ $request->id }}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        <button class="pims-btn pims-btn-danger pims-btn-sm pims-delete-request"
-                                data-id="{{ $request->id }}"
-                                data-type="{{ ucwords(str_replace('_', ' ', $request->request_type)) }}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </div>
+                 
                 </div>
                 @endforeach
             </div>

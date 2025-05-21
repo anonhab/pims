@@ -131,7 +131,8 @@ Route::middleware('role:3')->group(function () {
     Route::post('/initiate_backup', [cAccountController::class, 'initiateBackup'])->name('initiate_backup');
     Route::get('/view_backup', [cAccountController::class, 'viewBackupLogs'])->name('view_backup');
     Route::put('/prisons/{id}', [cAccountController::class, 'updateprison'])->name('prison.update');
-Route::delete('/prisons/{id}', [cAccountController::class, 'destroyprison'])->name('prison.destroy');
+    Route::delete('/prisons/{id}', [cAccountController::class, 'destroyprison'])->name('prison.destroy');
+    Route::delete('/caccount/{user_id}', [cAccountController::class, 'destroyacc'])->name('caccount.destroy');
 });
 Route::post('/accounts', [cAccountController::class, 'store'])->name('accounts.store');
 
@@ -173,10 +174,16 @@ Route::post('/lawyerstore', [iPrisonerController::class, 'lstore'])->name('lawye
 Route::put('/lawyers/{id}', [iPrisonerController::class, 'update'])->name('lawyers.update'); // Update lawyer
 Route::delete('/lawyers/{id}', [iPrisonerController::class, 'destroy'])->name('lawyers.destroy');
 Route::get('/policeofficer', [iPrisonerController::class, 'policeofficer'])->name('assign.policeofficer');
-
+Route::prefix('inspector')->name('inspector.')->group(function () {
+    Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
+    Route::put('/assignments/{assignment_id}', [iPrisonerController::class, 'updateassign'])->name('assignments.update');
+Route::delete('/assignments/{assignment_id}', [iPrisonerController::class, 'destroyassign'])->name('assignments.destroy');
+Route::post('/police-assignments', [iPrisonerController::class, 'assignpolice'])->name('police.assignments.store');
+Route::put('/police-assignments/{assignment_id}', [iPrisonerController::class, 'updateasspolice'])->name('police.assignments.update');
+Route::delete('/police-assignments/{assignment_id}', [iPrisonerController::class, 'destroyasspolice'])->name('police.assignments.destroy');
+});
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
-Route::post('/policeassignments', [iPrisonerController::class, 'assignpolice'])->name('assign_officer');
 Route::get('/assignments', [iPrisonerController::class, 'asslawyer'])->name('assignments.view');
 Route::get('/addroom', [iPrisonerController::class, 'addroom'])->name('room.add')->middleware('role:2');
 Route::get('/showroom', [iPrisonerController::class, 'showroom'])->name('room.show')->middleware('role:2');
@@ -185,7 +192,7 @@ Route::get('/allocate', [iPrisonerController::class, 'allocate'])->name('room.al
 Route::post('/rooms', [iPrisonerController::class, 'roomstore'])->name('room.store')->middleware('role:2');
 Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:2');
 Route::post('/update-status/{id}', [iPrisonerController::class, 'updateStatus'])->name('update.status')->middleware('role:2');
-Route::resource('prisoners', iPrisonerController::class);
+Route::post('/prisoners', [iPrisonerController::class, 'store'])->name('prisoners.store');
 Route::get('/idashboard', action: [iPrisonerController::class, 'idashboard'])->name('inspector.idashboard')->middleware('role:2');
 
 Route::middleware('middleware')->group(function () {
@@ -215,14 +222,17 @@ Route::get('/showroom', [iPrisonerController::class, 'showroom'])->name('room.sh
 Route::get('/roomassign', [iPrisonerController::class, 'roomassign'])->name('room.assign')->middleware('role:8');
 Route::get('/allocate', [iPrisonerController::class, 'allocate'])->name('room.allocate')->middleware('role:8');
 Route::post('/rooms', [iPrisonerController::class, 'roomstore'])->name('room.store')->middleware('role:8');
-Route::get('/medicalappointments', [MedicalController::class, 'createMedicalAppointment'])->name('medical.createAppointment');
 Route::get('/medicalreports', [MedicalController::class, 'createMedicalReport'])->name('medical.createReport');
 Route::get('/viewmedicalappointments', [MedicalController::class, 'viewAppointments'])->name('medical.viewAppointments');
 Route::get('/viewmedicalreports', [MedicalController::class, 'viewReports'])->name('medical.viewReports');
 Route::post('/appointments/store', [MedicalController::class, 'mstore'])->name('appointments.store');
 Route::post('/medical-reports/store', [MedicalController::class, 'mrstore'])->name('medical-reports.store');
 
-
+Route::prefix('medical-officer')->name('medical.')->group(function () {
+    Route::get('/appointments/create', [MedicalController::class, 'createMedicalAppointment'])->name('createAppointment');
+    Route::post('/appointments', [MedicalController::class, 'store'])->name('appointments.store');
+    Route::put('/appointments/{id}', [MedicalController::class, 'update'])->name('appointments.update');
+});
 Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom')->middleware('role:8');
 Route::post('/storeRoomAllocation', [PoliceController::class, 'storeRoomAllocation'])->name('police.storeRoomAllocation');
 Route::get('/createRequest', [PoliceController::class, 'createRequest'])->name('police.createRequest');
@@ -263,9 +273,9 @@ Route::post('/training-officer/prisoner-details', [TrainingController::class, 'g
     ->name('training_officer.getPrisonerDetails');
 Route::post('/training-officer/certifications', [TrainingController::class, 'store'])
     ->name('training_officer.storeCertification');
-    Route::get('/viewcertifications', [TrainingController::class, 'viewCertificationss'])
+Route::get('/viewcertifications', [TrainingController::class, 'viewCertificationss'])
     ->name('training.viewCertifications');
-    Route::get('/training-officer/certifications/{id}', [TrainingController::class, 'viewCertificate'])
+Route::get('/training-officer/certifications/{id}', [TrainingController::class, 'viewCertificate'])
     ->name('training.viewCertificate');
 Route::get('/createvisitingrequest', [VisitorController::class, 'createVisitingRequest'])->name('visitor.createVisitingRequest')->middleware('role:4'); //visitor role id == 4
 Route::get('/myvisitingrequests', [VisitorController::class, 'viewVisitingRequests'])->name('visitor.viewVisitingRequests');
@@ -282,7 +292,8 @@ Route::post('/update-appointment-status', [SecurityController::class, 'updateSta
 //security_officer
 Route::prefix('security_officer')->group(function () {
     Route::post('/storeVisitor', [SecurityController::class, 'storeVisitor'])->name('security_officer.storeVisitor');
-
+    Route::post('/visitors/{id}/update', [VisitorController::class, 'update'])->name('updateVisitor');
+    Route::post('/visitors/{id}/delete', [VisitorController::class, 'destroy'])->name('deleteVisitor');
 
     // Visitor Management
 

@@ -495,4 +495,10 @@ class cAccountController extends Controller
         $prison->delete();
         return response()->json(['message' => 'Prison deleted successfully']);
     }
+    public function destroyacc($user_id)
+    {
+        $account = Account::findOrFail($user_id);
+        $account->delete();
+        return response()->json(['message' => 'Account deleted successfully']);
+    }
 }
