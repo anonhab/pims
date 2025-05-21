@@ -1,5 +1,4 @@
 <link href="{{ asset('css/menu.css') }}" rel="stylesheet">
-<script src="{{ asset('js/menu.js') }}"></script>
 @include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar">
     <!-- Sidebar Toggle Button (visible on mobile) -->
@@ -101,3 +100,4 @@
         </div>
     </aside>
 </div>
+<script src="{{ asset('js/menu.js') }}"></script>
