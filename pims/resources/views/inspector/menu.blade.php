@@ -1,10 +1,11 @@
+<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
 @include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar">
     <!-- Sidebar Toggle Button (visible on mobile) -->
     <div class="pims-sidebar-toggle" id="pimsSidebarToggle">
         <i class="fas fa-bars"></i>
     </div>
-    
+
     <!-- Sidebar Logo/Brand -->
     <div class="pims-sidebar-brand">
         <i class="fas fa-user-lock pims-brand-icon"></i>
@@ -24,13 +25,12 @@
                     <span class="pims-menu-text">Dashboard</span>
                 </a>
             </li>
-            
 
             <!-- Prisoner Management -->
             <li class="pims-menu-item pims-has-submenu">
                 <a href="#" class="pims-menu-link">
                     <span class="pims-menu-icon">
-                        <i class="fas fa-user-check"></i>
+                        <i class="fas fa-user"></i>
                     </span>
                     <span class="pims-menu-text">Prisoners</span>
                     <span class="pims-menu-arrow">
@@ -51,7 +51,7 @@
             <li class="pims-menu-item pims-has-submenu">
                 <a href="#" class="pims-menu-link">
                     <span class="pims-menu-icon">
-                        <i class="fas fa-gavel"></i>
+                        <i class="fas fa-user-check"></i>
                     </span>
                     <span class="pims-menu-text">Lawyer Management</span>
                     <span class="pims-menu-arrow">
@@ -78,8 +78,9 @@
                     <span class="pims-menu-text">Assign Police Officer</span>
                 </a>
             </li>
+
         </ul>
-        
+
         <!-- Collapse Button (Desktop) -->
         <div class="pims-collapse-btn" id="pimsCollapseBtn">
             <i class="fas fa-chevron-left"></i>
@@ -87,5 +88,4 @@
         </div>
     </aside>
 </div>
-<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
 <script src="{{ asset('js/menu.js') }}"></script>

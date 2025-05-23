@@ -1,6 +1,4 @@
- 
-
-@include('includes.head')
+ @include('includes.head')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,44 +31,6 @@
             --pims-sidebar-width: 250px;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: var(--pims-text-dark);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-
-        /* Header Styles */
-        .header {
-            color: white;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            top: 0;
-        }
-
-        /* Sidebar Styles */
-        .sidbar {
-            position: fixed;
-            top: var(--pims-nav-height);
-            left: 0;
-            width: var(--pims-sidebar-width);
-            height: calc(100vh - var(--pims-nav-height));
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            overflow-y: auto;
-            z-index: 900;
-            transition: all 0.3s ease;
-        }
-
         /* Main Content Area */
         #pims-page-content {
             margin-left: 0;
@@ -79,6 +39,7 @@
             min-height: calc(100vh - var(--pims-nav-height));
             transition: all 0.3s ease;
             background-color: #f0f2f5;
+            padding-top: 75px;
         }
 
         /* Dashboard Cards */
@@ -357,7 +318,6 @@
  
     @include('sysadmin.menu')
 
-        
             <!-- Main Content -->
             <div id="pims-page-content">
                 <h1 class="pims-section-title">

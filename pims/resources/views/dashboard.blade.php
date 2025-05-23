@@ -4,6 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PIMS Central Ethiopia</title>
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
     <style>
         /* Base Styles */
         body {

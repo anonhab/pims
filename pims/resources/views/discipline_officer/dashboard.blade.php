@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
+<title>Discipline Officer</title>
 <html lang="en">
     <style>/* General Styles */
  

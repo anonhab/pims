@@ -1,8 +1,4 @@
-</li>
-            @php
-    $userId = session('user_id');
-    $isAssigned = \App\Models\PolicePrisonerAssignment::where('officer_id', $userId)->exists();
-@endphp
+<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
 @include('components.preloader')
 <div class="pims-sidebar-container is-hidden-mobile" id="pimsSidebar">
     <!-- Sidebar Toggle Button (visible on mobile) -->
@@ -104,5 +100,4 @@
         </div>
     </aside>
 </div>
-<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
 <script src="{{ asset('js/menu.js') }}"></script>

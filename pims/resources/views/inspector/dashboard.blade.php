@@ -1,464 +1,494 @@
 <!DOCTYPE html>
-<html>
-@include('includes.head')
-
+<html lang="en">
 <head>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
     <title>PIMS - Inspector Dashboard</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Chart.js -->
+
+    <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
-    <!-- Animate.css -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    
+
+    <!-- External Menu CSS -->
+    <link href="{{ asset('css/menu.css') }}" rel="stylesheet">
+
     <style>
         :root {
-            --pims-primary: #1a2a3a;
-            --pims-secondary: #2c3e50;
-            --pims-accent: #2980b9;
-            --pims-danger: #c0392b;
-            --pims-success: #27ae60;
-            --pims-warning: #d35400;
-            --pims-info: #3498db;
-            --pims-text-light: #ecf0f1;
-            --pims-text-dark: #2c3e50;
-            --pims-card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            --pims-primary: #0a192f; /* Navy blue */
+            --pims-secondary: #172a45; /* Darker navy */
+            --pims-accent: #64ffda; /* Teal accent */
+            --pims-danger: #ff5555; /* Vibrant red */
+            --pims-success: #50fa7b; /* Vibrant green */
+            --pims-warning: #ffb86c; /* Soft orange */
+            --pims-info: #8be9fd; /* Light blue */
+            --pims-text-light: #f8f8f2; /* Off white */
+            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
-            --pims-nav-height: 60px;
-            --pims-sidebar-width: 250px;
-            --pims-transition: all 0.3s ease;
+            --pims-nav-height: 70px;
+            --pims-sidebar-width: 280px;
+            --pims-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
-            padding: 0;
         }
 
         body {
-            font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f5f7fa;
             color: var(--pims-text-dark);
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            line-height: 1.6;
         }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
+            color: white;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            top: 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            height: var(--pims-nav-height);
+        }
+
 
         /* Main Content Area */
         #pims-page-content {
-            margin-left: var(--pims-sidebar-width);
-            padding: 1.5rem;
-            padding-top:90px;
+            margin-left: 0;
+            padding: 2rem;
+            padding-left: calc(var(--pims-sidebar-width) + 2rem);
             min-height: calc(100vh - var(--pims-nav-height));
             transition: var(--pims-transition);
+            background-color: #f5f7fa;
+            padding-top: 70px;
         }
 
-        /* Dashboard Grid Layout */
-        .pims-dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-        }
-
-        /* Summary Cards */
-        .pims-summary-card {
-            grid-column: span 3;
+        /* Dashboard Cards */
+        .pims-dashboard-card {
             background: white;
             border-radius: var(--pims-border-radius);
             box-shadow: var(--pims-card-shadow);
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
             transition: var(--pims-transition);
+            height: 100%;
             border-left: 4px solid var(--pims-accent);
-            animation: fadeInUp 0.6s ease;
+            position: relative;
+            overflow: hidden;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
 
-        .pims-summary-card:hover {
+        .pims-dashboard-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .pims-summary-icon {
+        .pims-dashboard-card .pims-card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--pims-accent);
+            background: rgba(100, 255, 218, 0.1);
             width: 60px;
             height: 60px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 1rem;
-            font-size: 1.5rem;
-            color: white;
         }
 
-        .pims-summary-content {
-            flex: 1;
-        }
-
-        .pims-summary-title {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-
-        .pims-summary-value {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: var(--pims-primary);
-            margin-bottom: 0.25rem;
-        }
-
-        .pims-summary-change {
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .pims-summary-change.positive {
-            color: var(--pims-success);
-        }
-
-        .pims-summary-change.negative {
-            color: var(--pims-danger);
-        }
-
-        /* Main Chart Area */
-        .pims-chart-card {
-            grid-column: span 8;
-            background: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-card-shadow);
-            padding: 1.5rem;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .pims-chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .pims-chart-title {
-            font-size: 1.25rem;
+        .pims-dashboard-card h3 {
+            font-size: 1.1rem;
             font-weight: 600;
+            margin-bottom: 0.75rem;
             color: var(--pims-primary);
+            letter-spacing: 0.5px;
         }
 
-        .pims-chart-actions {
+        .pims-dashboard-card p {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--pims-secondary);
+            margin-bottom: 0;
+            letter-spacing: -0.5px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .pims-card-footer {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            margin-top: 1rem;
             display: flex;
-            gap: 0.5rem;
+            align-items: center;
+            gap: 8px;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        .pims-chart-period {
-            padding: 0.5rem 1rem;
+        /* Security Elements */
+        .pims-security-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--pims-primary);
+            color: white;
+            padding: 0.25rem 0.75rem;
             border-radius: 20px;
-            background-color: #f0f2f5;
-            font-size: 0.85rem;
-            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .pims-security-badge.alert {
+            background-color: var(--pims-danger);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 85, 85, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 85, 85, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 85, 85, 0); }
+        }
+
+        /* Stats Box */
+        .pims-stats-box {
+            background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
+            border-radius: var(--pims-border-radius);
+            padding: 2rem;
+            box-shadow: var(--pims-card-shadow);
+            margin-top: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
             transition: var(--pims-transition);
         }
 
-        .pims-chart-period.active {
-            background-color: var(--pims-accent);
-            color: white;
+        .pims-stats-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
         }
 
-        .pims-chart-container {
-            height: 300px;
-            position: relative;
-        }
-
-        /* Side Stats */
-        .pims-stats-card {
-            grid-column: span 4;
-            background: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-card-shadow);
-            padding: 1.5rem;
-            animation: fadeInRight 0.8s ease;
-        }
-
-        .pims-stats-header {
+        .pims-stats-box h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
             margin-bottom: 1.5rem;
-        }
-
-        .pims-stats-title {
-            font-size: 1.25rem;
-            font-weight: 600;
             color: var(--pims-primary);
-        }
-
-        .pims-stats-item {
+            padding-bottom: 0.75rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .pims-stats-item:last-child {
-            border-bottom: none;
-        }
-
-        .pims-stats-label {
-            font-size: 0.9rem;
-            color: #7f8c8d;
-        }
-
-        .pims-stats-value {
-            font-weight: 600;
-            color: var(--pims-primary);
-        }
-
-        .pims-stats-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        /* Recent Activity */
-        .pims-activity-card {
-            grid-column: span 6;
-            background: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-card-shadow);
-            padding: 1.5rem;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .pims-activity-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .pims-activity-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--pims-primary);
-        }
-
-        .pims-activity-list {
-            list-style: none;
-        }
-
-        .pims-activity-item {
-            display: flex;
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
+            gap: 12px;
             position: relative;
-            padding-left: 2rem;
+            border-bottom: 2px solid rgba(100, 255, 218, 0.2);
         }
 
-        .pims-activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .pims-activity-icon {
-            position: absolute;
-            left: 0;
-            top: 1.25rem;
-            width: 24px;
-            height: 24px;
+        .pims-stats-box h2 i {
+            color: var(--pims-accent);
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.15) 0%, rgba(100, 255, 218, 0.05) 100%);
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 0.75rem;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
         }
 
-        .pims-activity-content {
-            flex: 1;
+        .pims-stats-box h2:hover i {
+            transform: scale(1.1);
         }
 
-        .pims-activity-time {
-            font-size: 0.75rem;
-            color: #95a5a6;
-            margin-bottom: 0.25rem;
+        .pims-stats-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at top left, rgba(100, 255, 218, 0.05), transparent 70%);
+            pointer-events: none;
         }
 
-        .pims-activity-text {
-            font-size: 0.9rem;
+        /* Recent Activity List */
+        .pims-stats-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
         }
 
-        .pims-activity-user {
-            font-weight: 600;
-            color: var(--pims-primary);
-        }
-
-        /* Prisoner Distribution */
-        .pims-distribution-card {
-            grid-column: span 6;
-            background: white;
-            border-radius: var(--pims-border-radius);
-            box-shadow: var(--pims-card-shadow);
-            padding: 1.5rem;
-            animation: fadeInUp 0.8s ease;
-        }
-
-        .pims-distribution-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .pims-distribution-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--pims-primary);
-        }
-
-        .pims-distribution-container {
+        .pims-stats-box li {
+            padding: 1.25rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
             display: flex;
-            height: 250px;
-        }
-
-        .pims-distribution-chart {
-            flex: 1;
+            align-items: center;
+            gap: 1rem;
+            transition: background 0.3s ease, transform 0.2s ease;
             position: relative;
+            border-radius: 6px;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
         }
 
-        .pims-distribution-legend {
-            width: 150px;
+        .pims-stats-box li:hover {
+            background: linear-gradient(90deg, rgba(100, 255, 218, 0.05) 0%, rgba(100, 255, 218, 0.02) 100%);
+            transform: translateX(5px);
+        }
+
+        .pims-stats-box li:last-child {
+            border-bottom: none;
+        }
+
+        .pims-stats-box li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 60%;
+            background: var(--pims-accent);
+            border-radius: 0 4px 4px 0;
+            opacity: 0.2;
+            transition: opacity 0.3s ease;
+        }
+
+        .pims-stats-box li:hover::before {
+            opacity: 0.8;
+        }
+
+        .pims-stats-box li span {
+            font-weight: 600;
+            color: var(--pims-primary);
+            font-size: 0.95rem;
+        }
+
+        .pims-stats-box li .pims-activity-time {
+            font-size: 0.85rem;
+            color: #6b7280;
+            font-family: 'Roboto Mono', monospace;
+            background: rgba(0, 0, 0, 0.02);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            margin-left: auto;
+        }
+
+        .pims-stats-box li strong {
+            color: var(--pims-primary);
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        /* System Alert */
+        .pims-system-alert {
+            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: var(--pims-border-radius);
+            margin-bottom: 2rem;
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--pims-danger);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pims-system-alert::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+        }
+
+        .pims-system-alert .alert-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 1;
+        }
+
+        .pims-system-alert .alert-icon {
+            font-size: 1.5rem;
+            color: var(--pims-danger);
+            flex-shrink: 0;
+        }
+
+        .pims-system-alert .alert-close {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            z-index: 1;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
             justify-content: center;
         }
 
-        .pims-legend-item {
+        .pims-system-alert .alert-close:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* Grid Layout */
+        .pims-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Section Title */
+        .pims-section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--pims-primary);
+            position: relative;
+            padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            margin-bottom: 0.75rem;
+            font-family: 'Inter', sans-serif;
         }
 
-        .pims-legend-color {
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-            margin-right: 0.75rem;
+        .pims-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pims-accent) 0%, rgba(100, 255, 218, 0) 100%);
+            border-radius: 2px;
         }
 
-        .pims-legend-label {
-            font-size: 0.85rem;
-            color: var(--pims-text-dark);
+        .pims-section-title i {
+            margin-right: 12px;
+            color: var(--pims-accent);
+            background: rgba(100, 255, 218, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Responsive adjustments */
+        /* Chart Container */
+        .pims-chart-container {
+            position: relative;
+            height: 350px;
+            margin-top: 1.5rem;
+        }
+
+        /* Status Tags */
+        .pims-status-tag {
+            font-size: 0.75rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .pims-status-tag.pending {
+            background-color: rgba(255, 184, 108, 0.1);
+            color: var(--pims-warning);
+        }
+
+        .pims-status-tag.completed {
+            background-color: rgba(80, 250, 123, 0.1);
+            color: var(--pims-success);
+        }
+
+        .pims-status-tag.scheduled {
+            background-color: rgba(139, 233, 253, 0.1);
+            color: var(--pims-info);
+        }
+
+        /* Responsive Adjustments */
         @media (max-width: 1200px) {
-            .pims-summary-card {
-                grid-column: span 6;
-            }
-            
-            .pims-chart-card,
-            .pims-stats-card {
-                grid-column: span 12;
+            .pims-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 992px) {
             #pims-page-content {
-                margin-left: 0;
-                padding: 1rem;
+                padding-left: 2rem;
             }
-            
-            .pims-dashboard-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .pims-summary-card,
-            .pims-chart-card,
-            .pims-stats-card,
-            .pims-activity-card,
-            .pims-distribution-card {
-                grid-column: span 1;
-            }
-            
-            .pims-summary-card {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .pims-summary-icon {
-                margin-right: 0;
-                margin-bottom: 1rem;
-            }
-            
-            .pims-distribution-container {
-                flex-direction: column;
-                height: auto;
-            }
-            
-            .pims-distribution-legend {
-                width: 100%;
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: center;
-                margin-top: 1rem;
-            }
-            
-            .pims-legend-item {
-                margin: 0.5rem;
-            }
-        }
 
-        /* Custom Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+            .pims-sidebar-container {
+                transform: translateX(-100%);
+            }
 
-        @keyframes fadeInUp {
-            from { 
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInRight {
-            from { 
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to { 
-                opacity: 1;
+            .pims-sidebar-container.active {
                 transform: translateX(0);
             }
         }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
+        @media (max-width: 768px) {
+            .pims-grid {
+                grid-template-columns: 1fr;
+            }
 
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
+            .pims-section-title {
+                font-size: 1.5rem;
+            }
 
-        ::-webkit-scrollbar-thumb {
-            background: #c1c1c1;
-            border-radius: 4px;
-        }
+            .pims-dashboard-card p {
+                font-size: 1.75rem;
+            }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: #a8a8a8;
+            .pims-stats-box {
+                padding: 1.5rem;
+            }
+
+            .pims-stats-box h2 {
+                font-size: 1.25rem;
+            }
+
+            .pims-stats-box li {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 1rem;
+            }
+
+            .pims-stats-box li .pims-activity-time {
+                margin-left: 0;
+                margin-top: 0.5rem;
+            }
         }
     </style>
 </head>
-
 <body>
-    <!-- NAV -->
+    <!-- Preloader -->
+    @include('components.preloader')
+
+    <!-- Navigation -->
     @include('includes.nav')
 
     <!-- Sidebar -->
@@ -466,309 +496,232 @@
 
     <!-- Main Content -->
     <div id="pims-page-content">
-        <!-- Welcome Header -->
-        <div class="pims-dashboard-grid">
-            <div class="pims-chart-card" style="grid-column: span 12;">
-                <div class="pims-chart-header">
-                    <h1 class="pims-chart-title">
-                        <i class="fas fa-tachometer-alt"></i> Inspector Dashboard
-                    </h1>
+        <h1 class="pims-section-title">
+            <i class="fas fa-user-lock"></i> Inspector Dashboard
+        </h1>
+
+        <!-- System Alert -->
+        <div class="pims-system-alert">
+            <div class="alert-content">
+                <i class="fas fa-exclamation-triangle alert-icon"></i>
+                <div>
+                    <strong>URGENT:</strong> 3 pending assignments require immediate review
                 </div>
-                <p>Welcome back, Inspector. Here's what's happening in your prison today.</p>
             </div>
+            <button class="alert-close">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
 
-        <!-- Summary Cards -->
-        <div class="pims-dashboard-grid">
-            <div class="pims-summary-card animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
-                <div class="pims-summary-icon" style="background-color: var(--pims-accent);">
-                    <i class="fas fa-user-lock"></i>
-                </div>
-                <div class="pims-summary-content">
-                    <div class="pims-summary-title">Total Prisoners</div>
-                    <div class="pims-summary-value">{{ $prisonerCount }}</div>
-                </div>
-            </div>
-
-            <div class="pims-summary-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-                <div class="pims-summary-icon" style="background-color: var(--pims-success);">
+        <!-- Dashboard Cards -->
+        <div class="pims-grid">
+            <!-- Active Prisoners -->
+            <div class="pims-dashboard-card">
+                <span class="pims-security-badge">ACTIVE</span>
+                <div class="pims-card-icon">
                     <i class="fas fa-user-check"></i>
                 </div>
-                <div class="pims-summary-content">
-                    <div class="pims-summary-title">Released This Month</div>
-                    <div class="pims-summary-value">{{ $releasedThisMonth }}</div>
+                <h3>Active Prisoners</h3>
+                <p>45</p>
+                <div class="pims-card-footer">
+                    <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All profiles verified
                 </div>
             </div>
 
-            <div class="pims-summary-card animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
-                <div class="pims-summary-icon" style="background-color: var(--pims-warning);">
+            <!-- Pending Assignments -->
+            <div class="pims-dashboard-card">
+                <span class="pims-security-badge alert">ALERT</span>
+                <div class="pims-card-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h3>Pending Assignments</h3>
+                <p>3</p>
+                <div class="pims-card-footer">
+                    <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> 1 urgent assignment
+                </div>
+            </div>
+
+            <!-- Lawyer Profiles -->
+            <div class="pims-dashboard-card">
+                <span class="pims-security-badge">VERIFIED</span>
+                <div class="pims-card-icon">
                     <i class="fas fa-gavel"></i>
                 </div>
-                <div class="pims-summary-content">
-                    <div class="pims-summary-title">Active Cases</div>
-                    <div class="pims-summary-value">{{ $activeCases }}</div>
+                <h3>Lawyer Profiles</h3>
+                <p>12</p>
+                <div class="pims-card-footer">
+                    <i class="fas fa-user" style="color: var(--pims-accent);"></i> 2 new profiles added
                 </div>
             </div>
 
-            <div class="pims-summary-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">
-                <div class="pims-summary-icon" style="background-color: var(--pims-danger);">
-                    <i class="fas fa-exclamation-triangle"></i>
+            <!-- Police Officer Assignments -->
+            <div class="pims-dashboard-card">
+                <span class="pims-security-badge">SECURED</span>
+                <div class="pims-card-icon">
+                    <i class="fas fa-shield-alt"></i>
                 </div>
-                <div class="pims-summary-content">
-                    <div class="pims-summary-title">Security Incidents</div>
-                    <div class="pims-summary-value">{{ $securityIncidents }}</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Chart and Stats -->
-        <div class="pims-dashboard-grid">
-            <div class="pims-chart-card">
-                <div class="pims-chart-header">
-                    <h2 class="pims-chart-title">Prison Population Trend</h2>
-                </div>
-                <div class="pims-chart-container">
-                    <canvas id="populationTrendChart"></canvas>
-                </div>
-            </div>
-
-            <div class="pims-stats-card">
-                <div class="pims-stats-header">
-                    <h2 class="pims-stats-title">Quick Statistics</h2>
-                </div>
-                
-                <div class="pims-stats-item">
-                    <span class="pims-stats-label">Average Sentence Length</span>
-                    <span class="pims-stats-value">7.2 years</span>
-                </div>
-                
-                <div class="pims-stats-item">
-                    <span class="pims-stats-label">Prison Capacity</span>
-                    <span class="pims-stats-value">{{ round(($prisonerCount / $prisonCapacity) * 100) }}% full</span>
-                </div>
-                
-                <div class="pims-stats-item">
-                    <span class="pims-stats-label">New Admissions (30 days)</span>
-                    <span class="pims-stats-value">{{ $newAdmissions }}</span>
-                </div>
-                
-                <div class="pims-stats-item">
-                    <span class="pims-stats-label">Medical Cases</span>
-                    <span class="pims-stats-value">{{ $medicalCases }}</span>
-                </div>
-                
-                <div class="pims-stats-item">
-                    <span class="pims-stats-label">Staff Count</span>
-                    <span class="pims-stats-value">{{ $staffCount }}</span>
+                <h3>Police Officer Assignments</h3>
+                <p>8</p>
+                <div class="pims-card-footer">
+                    <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> 2 assignments in progress
                 </div>
             </div>
         </div>
 
-        <!-- Recent Activity and Distribution -->
-        <div class="pims-dashboard-grid">
-            <div class="pims-activity-card">
-                <div class="pims-activity-header">
-                    <h2 class="pims-activity-title">Recent Activity</h2>
-                </div>
-                
-                <ul class="pims-activity-list">
-                    <li class="pims-activity-item">
-                        <div class="pims-activity-icon" style="background-color: var(--pims-success);">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="pims-activity-content">
-                            <div class="pims-activity-time">10 minutes ago</div>
-                            <div class="pims-activity-text">
-                                <span class="pims-activity-user">John Doe</span> was released after completing sentence
-                            </div>
-                        </div>
-                    </li>
-                    
-                    <li class="pims-activity-item">
-                        <div class="pims-activity-icon" style="background-color: var(--pims-accent);">
-                            <i class="fas fa-user-plus"></i>
-                        </div>
-                        <div class="pims-activity-content">
-                            <div class="pims-activity-time">1 hour ago</div>
-                            <div class="pims-activity-text">
-                                New prisoner <span class="pims-activity-user">Michael Brown</span> registered (ID: {{ $latestPrisonerId }})
-                            </div>
-                        </div>
-                    </li>
-                    
-                    <li class="pims-activity-item">
-                        <div class="pims-activity-icon" style="background-color: var(--pims-info);">
-                            <i class="fas fa-gavel"></i>
-                        </div>
-                        <div class="pims-activity-content">
-                            <div class="pims-activity-time">3 hours ago</div>
-                            <div class="pims-activity-text">
-                                Case <span class="pims-activity-user">#CR-2023-0456</span> assigned to lawyer <span class="pims-activity-user">Sarah Johnson</span>
-                            </div>
-                        </div>
-                    </li>
-                    
-                    <li class="pims-activity-item">
-                        <div class="pims-activity-icon" style="background-color: var(--pims-warning);">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="pims-activity-content">
-                            <div class="pims-activity-time">Yesterday</div>
-                            <div class="pims-activity-text">
-                                Security alert in <span class="pims-activity-user">Block B</span> resolved
-                            </div>
-                        </div>
-                    </li>
-                    
-                    <li class="pims-activity-item">
-                        <div class="pims-activity-icon" style="background-color: var(--pims-danger);">
-                            <i class="fas fa-ambulance"></i>
-                        </div>
-                        <div class="pims-activity-content">
-                            <div class="pims-activity-time">Yesterday</div>
-                            <div class="pims-activity-text">
-                                Medical emergency for <span class="pims-activity-user">Prisoner #{{ $medicalEmergencyId }}</span>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+        <!-- Data Visualization -->
+        <div class="pims-stats-box">
+            <h2><i class="fas fa-chart-bar"></i> Assignment Activity Overview</h2>
+            <div class="pims-chart-container">
+                <canvas id="pims-assignment-chart"></canvas>
             </div>
+        </div>
 
-            <div class="pims-distribution-card">
-                <div class="pims-distribution-header">
-                    <h2 class="pims-distribution-title">Crime Distribution</h2>
-                </div>
-                
-                <!--  -->
+        <!-- Recent Activity -->
+        <div class="pims-stats-box">
+            <h2><i class="fas fa-history"></i> Recent Inspector Activities</h2>
+            <ul>
+                <li>
+                    <span>Inspector Smith</span> assigned a <strong>Lawyer</strong> to Prisoner ID: 101
+                    <span class="pims-status-tag completed">Completed</span>
+                    <span class="pims-activity-time">May 21, 2025 09:30</span>
+                </li>
+                <li>
+                    <span>System</span> updated a <strong>Prisoner Profile</strong> for ID: 102
+                    <span class="pims-status-tag completed">Completed</span>
+                    <span class="pims-activity-time">May 20, 2025 16:15</span>
+                </li>
+                <li>
+                    <span>Inspector Jones</span> created a <strong>Police Officer Assignment</strong> for ID: 103
+                    <span class="pims-status-tag pending">Pending</span>
+                    <span class="pims-activity-time">May 20, 2025 11:45</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Additional Chart: Assignment Status Distribution -->
+        <div class="pims-stats-box">
+            <h2><i class="fas fa-chart-pie"></i> Assignment Status Distribution</h2>
+            <div class="pims-chart-container">
+                <canvas id="pims-assignment-status-chart"></canvas>
             </div>
         </div>
     </div>
-
-    @include('includes.footer_js')
-    
     <script>
-        // Population Trend Chart
-        const populationCtx = document.getElementById('populationTrendChart').getContext('2d');
-        const populationChart = new Chart(populationCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [{
-                    label: 'Prison Population',
-                    data: [420, 435, 450, 445, 460, 475, 490, 485, 500, 510, 525, 530],
-                    borderColor: 'rgba(41, 128, 185, 1)',
-                    backgroundColor: 'rgba(41, 128, 185, 0.1)',
-                    borderWidth: 2,
-                    tension: 0.3,
-                    fill: true,
-                    pointBackgroundColor: 'rgba(41, 128, 185, 1)',
-                    pointRadius: 4,
-                    pointHoverRadius: 6
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        mode: 'index',
-                        intersect: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: false,
-                        min: 400,
-                        ticks: {
-                            callback: function(value) {
-                                return value;
-                            }
-                        }
-                    }
-                },
-                interaction: {
-                    mode: 'nearest',
-                    axis: 'x',
-                    intersect: false
-                }
-            }
-        });
-
-        // Crime Distribution Chart
-        const crimeCtx = document.getElementById('crimeDistributionChart').getContext('2d');
-        const crimeChart = new Chart(crimeCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Theft', 'Assault', 'Drug Possession', 'Fraud', 'Murder', 'Other'],
-                datasets: [{
-                    data: [
-                      
-                    ],
-                    backgroundColor: [
-                        'rgba(52, 152, 219, 0.8)',
-                        'rgba(231, 76, 60, 0.8)',
-                        'rgba(46, 204, 113, 0.8)',
-                        'rgba(243, 156, 18, 0.8)',
-                        'rgba(155, 89, 182, 0.8)',
-                        'rgba(26, 188, 156, 0.8)'
-                    ],
-                    borderColor: [
-                        'rgba(52, 152, 219, 1)',
-                        'rgba(231, 76, 60, 1)',
-                        'rgba(46, 204, 113, 1)',
-                        'rgba(243, 156, 18, 1)',
-                        'rgba(155, 89, 182, 1)',
-                        'rgba(26, 188, 156, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.raw || 0;
-                                return `${label}: ${value}%`;
-                            }
-                        }
-                    }
-                },
-                cutout: '70%'
-            }
-        });
-
-        // Period selector functionality
-        document.querySelectorAll('.pims-chart-period').forEach(period => {
-            period.addEventListener('click', function() {
-                document.querySelectorAll('.pims-chart-period').forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-                
-                // In a real app, you would update the chart data here based on the selected period
-            });
-        });
-
-        // Animate cards on scroll
         document.addEventListener('DOMContentLoaded', function() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+            // Assignment Activity Chart (Line)
+            const assignmentChart = new Chart(document.getElementById('pims-assignment-chart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        {
+                            label: 'Lawyer Assignments',
+                            data: [2, 4, 3, 5, 2, 1, 0],
+                            backgroundColor: 'rgba(100, 255, 218, 0.1)',
+                            borderColor: 'rgba(100, 255, 218, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        },
+                        {
+                            label: 'Police Officer Assignments',
+                            data: [1, 3, 4, 2, 3, 0, 1],
+                            backgroundColor: 'rgba(80, 250, 123, 0.1)',
+                            borderColor: 'rgba(80, 250, 123, 1)',
+                            borderWidth: 2,
+                            tension: 0.3,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: 'rgba(26, 42, 58, 0.9)',
+                            titleFont: { weight: 'bold' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
+                            ticks: { stepSize: 2 }
+                        },
+                        x: {
+                            grid: { display: false, drawBorder: false }
+                        }
+                    },
+                    elements: {
+                        point: { radius: 4, hoverRadius: 6 }
                     }
-                });
-            }, { threshold: 0.1 });
+                }
+            });
 
-            document.querySelectorAll('.pims-summary-card, .pims-chart-card, .pims-stats-card, .pims-activity-card, .pims-distribution-card').forEach(card => {
-                observer.observe(card);
+            // Assignment Status Chart (Pie)
+            const assignmentStatusChart = new Chart(document.getElementById('pims-assignment-status-chart').getContext('2d'), {
+                type: 'pie',
+                data: {
+                    labels: ['Pending', 'Completed', 'In Progress', 'Cancelled'],
+                    datasets: [{
+                        data: [3, 10, 4, 1],
+                        backgroundColor: [
+                            'rgba(255, 184, 108, 0.6)',
+                            'rgba(80, 250, 123, 0.6)',
+                            'rgba(139, 233, 253, 0.6)',
+                            'rgba(255, 85, 85, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 184, 108, 1)',
+                            'rgba(80, 250, 123, 1)',
+                            'rgba(139, 233, 253, 1)',
+                            'rgba(255, 85, 85, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 20,
+                                font: { weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(26, 42, 58, 0.9)',
+                            titleFont: { weight: 'bold' }
+                        }
+                    }
+                }
+            });
+
+            // Close alert
+            document.querySelector('.alert-close').addEventListener('click', () => {
+                document.querySelector('.pims-system-alert').style.display = 'none';
+            });
+
+            // Make security badge pulse
+            const alertBadges = document.querySelectorAll('.pims-security-badge.alert');
+            alertBadges.forEach(badge => {
+                setInterval(() => {
+                    badge.style.opacity = badge.style.opacity === '0.8' ? '1' : '0.8';
+                }, 1000);
             });
         });
     </script>
