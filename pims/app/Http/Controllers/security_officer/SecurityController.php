@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\LawyerAppointment;
 use App\Models\MedicalAppointment;
 use App\Models\NewVisitingRequest;
+use App\Models\Notification;
 use App\Models\Prisoner;
 use Illuminate\Http\Request;
 use App\Models\Visitor;
@@ -16,6 +17,19 @@ use Illuminate\Support\Facades\Validator;
 
 class SecurityController extends Controller
 {
+    private function createNotification($recipientId, $recipientRole, $relatedTable, $relatedId, $title, $message)
+    {
+        Notification::create([
+            'recipient_id' => $recipientId,
+            'recipient_role' => $recipientRole,
+            'related_table' => $relatedTable,
+            'related_id' => $relatedId,
+            'title' => $title,
+            'message' => $message,
+            'is_read' => false,
+        ]);
+    }
+
     // Show form to register a visitor
     public function registerVisitor()
     {
@@ -109,52 +123,77 @@ public function verify(Request $request)
     }
 }
 
+
 public function updateStatus(Request $request)
-    {
-        $request->validate([
-            'appointment_id' => 'required',
-            'appointment_type' => 'required|in:medical,lawyer,visitor',
-            'status' => 'required|in:pending,approved,rejected',
-            'notes' => 'nullable|string|max:500'
-        ]);
+{
+    $request->validate([
+        'appointment_id' => 'required',
+        'appointment_type' => 'required|in:medical,lawyer,visitor',
+        'status' => 'required|in:pending,approved,rejected',
+        'notes' => 'nullable|string|max:500'
+    ]);
 
-        try {
-            $appointmentId = $request->input('appointment_id');
-            $type = $request->input('appointment_type');
-            $status = $request->input('status');
-            $notes = $request->input('notes');
+    try {
+        $appointmentId = $request->input('appointment_id');
+        $type = $request->input('appointment_type');
+        $status = $request->input('status');
+        $notes = $request->input('notes');
 
-            $appointment = $this->getAppointmentModel($type, $appointmentId);
+        $appointment = $this->getAppointmentModel($type, $appointmentId);
 
-            if (!$appointment) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Appointment not found'
-                ], 404);
-            }
-
-            // Update status
-            $appointment->status = $status;
-            $appointment->note = $notes;
-           
-            $appointment->save();
-
-            
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Appointment status updated successfully',
-                'appointment' => $appointment
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Appointment status update failed: ' . $e->getMessage());
+        if (!$appointment) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update appointment status'
-            ], 500);
+                'message' => 'Appointment not found'
+            ], 404);
         }
+
+        $appointment->status = $status;
+        $appointment->note = $notes;
+        $appointment->save();
+
+        // Notify visitor only if it's a visitor appointment
+        if ($type === 'visitor' && $appointment->visitor_id && $appointment->prisoner_id) {
+            $visitor = Visitor::find($appointment->visitor_id);
+            $prisoner = Prisoner::find($appointment->prisoner_id);
+
+            if ($visitor && $prisoner) {
+                $this->createNotification(
+                    $visitor->id,
+                    'visitor',
+                    'new_visiting_requests',
+                    $appointment->id,
+                    "Visiting Request {$status}",
+                    "Your visiting request for prisoner {$prisoner->first_name} {$prisoner->last_name} has been {$status}." . ($notes ? " Notes: {$notes}" : "")
+                );
+            }
+        }
+
+        Log::info('Appointment status updated', [
+            'appointment_id' => $appointmentId,
+            'type' => $type,
+            'status' => $status,
+            'updated_by' => session('user_id')
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Appointment status updated successfully',
+            'appointment' => $appointment
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Appointment status update failed', [
+            'error' => $e->getMessage(),
+            'appointment_id' => $request->input('appointment_id')
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to update appointment status'
+        ], 500);
     }
+}
 
     protected function getAppointmentModel($type, $id)
     {

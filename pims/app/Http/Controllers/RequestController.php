@@ -4,113 +4,261 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Log;
 use App\Models\Prisoner;
-
-use Illuminate\Http\Request;
 use App\Models\Request as RequestModel;
+use App\Models\Account;
+use App\Models\Notification;
+use App\Models\Requests;
+use Illuminate\Http\Request;
 
 class RequestController extends Controller
 {
+    // Helper method to create prisoner-related notifications
+    private function createNotification($recipientId, $recipientRole, $relatedTable, $relatedId, $title, $message)
+    {
+        Notification::create([
+            'recipient_id' => $recipientId,
+            'recipient_role' => $recipientRole,
+            'related_table' => $relatedTable,
+            'related_id' => $relatedId,
+            'title' => $title,
+            'message' => $message,
+            'is_read' => false,
+        ]);
+    }
+
     public function approveRequest(Request $request, $id)
     {
-        // Log request start
         Log::info('Approve request called for request ID:', ['request_id' => $id]);
 
-        // Find the request by ID
         $requestData = RequestModel::find($id);
 
-        // Check if request exists
         if (!$requestData) {
             Log::warning('Request not found.', ['request_id' => $id]);
             return response()->json(['success' => false, 'message' => 'Request not found!']);
         }
 
-        // Validate the evaluation input
         $validatedData = $request->validate([
             'evaluation' => 'required|string|max:1000',
         ]);
 
-        // Log the evaluation received
         Log::info('Evaluation received for approval.', ['evaluation' => $validatedData['evaluation']]);
 
-        // Update request status and evaluation
         $requestData->status = 'approved';
-        $requestData->approved_by=session('user_id');
+        $requestData->approved_by = session('user_id');
         $requestData->evaluation = $validatedData['evaluation'];
-
-        // Save the request with the new data
         $requestData->save();
 
-        // Log the successful approval
+        $prisoner = Prisoner::find($requestData->prisoner_id);
+        $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ]))) : 'Unknown';
+
+        // Notify prisoner
+        if ($prisoner) {
+            $this->createNotification(
+                $prisoner->id,
+                'prisoner',
+                'requests',
+                $requestData->id,
+                'Request Approved',
+                "Your request has been approved. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        // Notify discipline officer
+        $officerId = session('user_id');
+        if ($officerId) {
+            $this->createNotification(
+                $officerId,
+                'officer',
+                'requests',
+                $requestData->id,
+                'Request Approved',
+                "You approved a request for {$prisonerName}. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'requests',
+                $requestData->id,
+                'Request Approved',
+                "A request for {$prisonerName} has been approved. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
         Log::info('Request approved successfully.', ['request_id' => $id]);
 
         return response()->json(['success' => true, 'message' => 'Request has been approved successfully!']);
     }
+
+    public function transferRequest(Request $request, $id)
+    {
+        Log::info('Transfer request called for request ID:', ['request_id' => $id]);
+
+        $requestData = RequestModel::find($id);
+
+        if (!$requestData) {
+            Log::warning('Request not found.', ['request_id' => $id]);
+            return response()->json(['success' => false, 'message' => 'Request not found!']);
+        }
+
+        $validatedData = $request->validate([
+            'evaluation' => 'required|string|max:1000',
+        ]);
+
+        Log::info('Evaluation received for transfer.', ['evaluation' => $validatedData['evaluation']]);
+
+        $requestData->status = 'transferred';
+        $requestData->prison_id = session('prison_id');
+        $requestData->evaluation = $validatedData['evaluation'];
+        $requestData->save();
+
+        $prisoner = Prisoner::find($requestData->prisoner_id);
+        $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ]))) : 'Unknown';
+
+        // Notify prisoner
+        if ($prisoner) {
+            $this->createNotification(
+                $prisoner->id,
+                'prisoner',
+                'requests',
+                $requestData->id,
+                'Request Transferred',
+                "Your request has been transferred. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        // Notify discipline officer
+        $officerId = session('user_id');
+        if ($officerId) {
+            $this->createNotification(
+                $officerId,
+                'officer',
+                'requests',
+                $requestData->id,
+                'Request Transferred',
+                "You transferred a request for {$prisonerName}. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'requests',
+                $requestData->id,
+                'Request Transferred',
+                "A request for {$prisonerName} has been transferred. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        Log::info('Request transferred successfully.', ['request_id' => $id]);
+
+        return response()->json(['success' => true, 'message' => 'Request has been transferred successfully!']);
+    }
+
+    public function rejectRequest(Request $request, $id)
+    {
+        Log::info('Reject request called for request ID:', ['request_id' => $id]);
+
+        $requestData = RequestModel::find($id);
+
+        if (!$requestData) {
+            Log::warning('Request not found.', ['request_id' => $id]);
+            return response()->json(['success' => false, 'message' => 'Request not found!']);
+        }
+
+        $validatedData = $request->validate([
+            'evaluation' => 'required|string|max:1000',
+        ]);
+
+        Log::info('Evaluation received for rejection.', ['evaluation' => $validatedData['evaluation']]);
+
+        $requestData->status = 'rejected';
+        $requestData->evaluation = $validatedData['evaluation'];
+        $requestData->save();
+
+        $prisoner = Prisoner::find($requestData->prisoner_id);
+        $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ]))) : 'Unknown';
+
+        // Notify prisoner
+        if ($prisoner) {
+            $this->createNotification(
+                $prisoner->id,
+                'prisoner',
+                'requests',
+                $requestData->id,
+                'Request Rejected',
+                "Your request has been rejected. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        // Notify discipline officer
+        $officerId = session('user_id');
+        if ($officerId) {
+            $this->createNotification(
+                $officerId,
+                'officer',
+                'requests',
+                $requestData->id,
+                'Request Rejected',
+                "You rejected a request for {$prisonerName}. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'requests',
+                $requestData->id,
+                'Request Rejected',
+                "A request for {$prisonerName} has been rejected. Evaluation: {$validatedData['evaluation']}"
+            );
+        }
+
+        Log::info('Request rejected successfully.', ['request_id' => $id]);
+
+        return response()->json(['success' => true, 'message' => 'Request has been rejected successfully!']);
+    }
+
     public function show_allforin()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
         return view('discipline_officer.view_prisoner', compact('prisoners'));
     }
-    public function transferRequest(Request $request, $id)
-    {
-        // Log request start
-        Log::info('Transfer request called for request ID:', ['request_id' => $id]);
 
-        // Find the request by ID
-        $requestData = RequestModel::find($id);
-
-        // Check if request exists
-        if (!$requestData) {
-            Log::warning('Request not found.', ['request_id' => $id]);
-            return response()->json(['success' => false, 'message' => 'Request not found!']);
-        }
-
-        // Validate the evaluation input
-        $validatedData = $request->validate([
-            'evaluation' => 'required|string|max:1000',
-        ]);
-
-        // Log the evaluation received
-        Log::info('Evaluation received for transfer.', ['evaluation' => $validatedData['evaluation']]);
-
-        // Update request status and evaluation
-        $requestData->status = 'transferred';
-        $requestData->prison_id = session('prison_id');
-        $requestData->evaluation = $validatedData['evaluation'];
-
-        // Save the request with the new data
-        $requestData->save();
-
-        // Log the successful transfer
-        Log::info('Request transferred successfully.', ['request_id' => $id]);
-
-        return response()->json(['success' => true, 'message' => 'Request has been transferred successfully!']);
-    }
     public function showEvaluationForm()
     {
-        $requests = RequestModel::where('status', 'pending')->get(); // Adjust query as needed
-    
+        $requests = Requests::where('status', 'pending')
+            ->whereHas('prisoner', function ($query) {
+                $query->where('prison_id', session('prison_id'));
+            })
+            ->with('prisoner')
+            ->get();
+
         return view('discipline_officer.evaluate_request', compact('requests'));
     }
 
-    public function rejectRequest(Request $request, $id)
-    {
-        $requestData = RequestModel::find($id);
-
-        if (!$requestData) {
-            return response()->json(['success' => false, 'message' => 'Request not found!']);
-        }
-
-        if (empty($request->evaluation)) {
-            return response()->json(['success' => false, 'message' => 'Evaluation is required!']);
-        }
-
-        $requestData->status = 'rejected';
-
-        $requestData->evaluation = $request->evaluation;
-        $requestData->save();
-
-        return response()->json(['success' => true, 'message' => 'Request has been rejected successfully!']);
-    }
     public function show($id)
     {
         $prisoner = Prisoner::findOrFail($id);
@@ -135,5 +283,80 @@ class RequestController extends Controller
             'prison_id' => $prisoner->prison_id,
             'room_id' => $prisoner->room_id
         ]);
+    }
+
+    // View prisoner-related notifications
+    public function viewNotifications(Request $request)
+    {
+        $userId = session('user_id');
+        if (!$userId) {
+            Log::warning('User not logged in for viewing notifications');
+            return redirect()->route('login')->with('error', 'You need to be logged in to view notifications.');
+        }
+
+        $user = Account::where('user_id', $userId)->first();
+        if (!$user) {
+            Log::warning('User account not found', ['user_id' => $userId]);
+            return redirect()->route('login')->with('error', 'User account not found.');
+        }
+
+        $role = $user->role_id == 1 ? 'admin' :
+                ($user->role_id == 3 ? 'officer' : 'prisoner');
+
+        $notifications = Notification::where('recipient_id', $userId)
+            ->where('recipient_role', $role)
+            ->where('related_table', 'requests')
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        if ($request->ajax()) {
+            return response()->json($notifications);
+        }
+
+        return view('discipline_officer.notifications', compact('notifications'));
+    }
+
+    // Mark a notification as read
+    public function markAsRead(Request $request, $notification_id)
+    {
+        $userId = session('user_id');
+        if (!$userId) {
+            Log::warning('User not logged in for marking notification as read');
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $notification = Notification::where('recipient_id', $userId)
+            ->where('related_table', 'requests')
+            ->findOrFail($notification_id);
+        $notification->is_read = true;
+        $notification->save();
+
+        return response()->json(['message' => 'Notification marked as read']);
+    }
+
+    // Mark all notifications as read
+    public function markAllAsRead(Request $request)
+    {
+        $userId = session('user_id');
+        if (!$userId) {
+            Log::warning('User not logged in for marking all notifications as read');
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        $user = Account::where('user_id', $userId)->first();
+        if (!$user) {
+            Log::warning('User account not found', ['user_id' => $userId]);
+            return response()->json(['error' => 'User account not found'], 404);
+        }
+
+        $role = $user->role_id == 1 ? 'admin' :
+                ($user->role_id == 3 ? 'officer' : 'prisoner');
+
+        Notification::where('recipient_id', $userId)
+            ->where('recipient_role', $role)
+            ->where('related_table', 'requests')
+            ->update(['is_read' => true]);
+
+        return response()->json(['message' => 'All notifications marked as read']);
     }
 }

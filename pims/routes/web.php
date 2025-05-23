@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\cadmin\cAccountController;
 use App\Http\Controllers\cadmin\RoleController;
@@ -61,18 +62,6 @@ Route::get('/sdashboard', function () {
         'totalVisitors'
 
     ));
-});
-Route::get('/notifications', function () {
-    $userId = session('user_id');
-    $prisonId = session('prison_id'); // Assuming prison_id is stored in session
-
-    $notifications = Notification::where('account_id', $userId)
-        ->where('prison_id', $prisonId) // Filtering by prison_id
-        ->where('status', 'unread')
-        ->orderBy('created_at', 'desc')
-        ->get();
-
-    return response()->json($notifications);
 });
 
 Route::post('/notifications/read/{id}', function ($id) {
@@ -353,3 +342,15 @@ Route::get('/prisoners/{prisonerId}/appointments', function ($prisonerId) {
 Route::get('/', function () {
     return view('home'); // home.blade.php is in the views folder
 })->name('home');
+
+Route::get('/notifications', [NotificationController::class, 'fetch'])->name('notifications.fetch');
+Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+
+Route::get('/test-session', function () {
+    return response()->json([
+        'session_data' => session()->all(),
+        'session_id' => session()->getId()
+    ]);
+});
+Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.markAllRead');

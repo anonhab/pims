@@ -581,4 +581,6 @@
                     }
                 });
             </script>
+
+    @include('includes.footer_js')
 </html>

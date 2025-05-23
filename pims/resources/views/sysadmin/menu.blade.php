@@ -98,3 +98,5 @@
         </div>
     </aside>
 </div>
+<link href="{{ asset('css/menu.css') }}" rel="stylesheet">
+<script src="{{ asset('js/menu.js') }}"></script>

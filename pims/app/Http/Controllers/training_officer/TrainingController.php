@@ -4,29 +4,82 @@ namespace App\Http\Controllers\training_officer;
 
 use App\Http\Controllers\Controller;
 use App\Models\CertificationRecord;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
 use App\Models\TrainingProgram;
 use App\Models\Prisoner;
 use App\Models\TrainingAssignment;
-use OwenIt\Auditing\Models\Audit;
-
 use App\Models\JobAssignment;
+use App\Models\Account;
+use App\Models\Notification;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
+use OwenIt\Auditing\Models\Audit;
 use Illuminate\Support\Facades\Log;
 
 class TrainingController extends Controller
 {
-    // Show form to assign certifications
+    // Helper method to create prisoner-related notifications
+    private function createNotification($recipientId, $recipientRole, $relatedTable, $relatedId, $title, $message)
+    {
+        Notification::create([
+            'recipient_id' => $recipientId,
+            'recipient_role' => $recipientRole,
+            'related_table' => $relatedTable,
+            'related_id' => $relatedId,
+            'title' => $title,
+            'message' => $message,
+            'is_read' => false,
+        ]);
+    }
 
-    /**
-     * Escape special characters for HTML.
-     *
-     * @param string|null $string
-     * @return string
-     */
+    // Escape special characters for HTML
     protected function escapeHtml($string)
     {
         return htmlspecialchars($string ?? '', ENT_QUOTES, 'UTF-8');
+    }
+
+    public function dashboard()
+    {
+        $prisonId = session('prison_id');
+
+        if (!$prisonId) {
+            Log::warning('No prison_id in session for dashboard');
+            return redirect()->route('home')->with('error', 'Prison ID not set.');
+        }
+
+        try {
+            $totalPrisoners = Prisoner::where('prison_id', $prisonId)->count();
+            $totalCertifications = CertificationRecord::whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })->count();
+            $totalActiveJobs = JobAssignment::whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })->where('status', 'active')->count();
+            $recentCertifications = CertificationRecord::whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })
+                ->with(['prisoner', 'issuedBy'])
+                ->orderBy('issued_date', 'desc')
+                ->take(5)
+                ->get();
+
+            Log::info('Dashboard data fetched', [
+                'prison_id' => $prisonId,
+                'total_prisoners' => $totalPrisoners,
+                'total_certifications' => $totalCertifications,
+                'total_active_jobs' => $totalActiveJobs,
+                'recent_certifications_count' => $recentCertifications->count(),
+            ]);
+
+            return view('training_officer.dashboard', compact(
+                'totalPrisoners',
+                'totalCertifications',
+                'totalActiveJobs',
+                'recentCertifications'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Error fetching dashboard data', ['error' => $e->getMessage(), 'prison_id' => $prisonId]);
+            return redirect()->route('home')->with('error', 'Failed to load dashboard.');
+        }
     }
 
     public function assignCertifications()
@@ -55,6 +108,195 @@ class TrainingController extends Controller
 
         return view('training_officer.assignCertifications', compact('prisonerDetails'));
     }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'certification_type' => 'required|in:job_completion,training_program_completion',
+            'certification_details' => 'nullable|string|max:65535',
+            'issued_by' => 'required|exists:accounts,user_id',
+            'issued_date' => 'required|date',
+        ]);
+
+        $prisonId = session('prison_id');
+
+        $prisoner = Prisoner::where('id', $validated['prisoner_id'])
+            ->where('prison_id', $prisonId)
+            ->with([
+                'jobAssignments' => function ($query) {
+                    $query->where('status', 'completed')
+                        ->select('id', 'prisoner_id', 'job_title', 'job_description', 'end_date');
+                },
+                'trainingAssignments' => function ($query) {
+                    $query->where('status', 'completed')
+                        ->select('id', 'prisoner_id', 'training_id', 'end_date');
+                },
+                'trainingAssignments.trainingProgram' => function ($query) {
+                    $query->select('id', 'title');
+                }
+            ])
+            ->select('id', 'first_name', 'middle_name', 'last_name')
+            ->firstOrFail();
+
+        $certification = CertificationRecord::create([
+            'prisoner_id' => $validated['prisoner_id'],
+            'issued_by' => $validated['issued_by'],
+            'certification_type' => $validated['certification_type'],
+            'certification_details' => $validated['certification_details'],
+            'issued_date' => $validated['issued_date'],
+            'status' => 'issued',
+        ]);
+
+        $prisonerName = trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ])));
+
+        // Notify prisoner
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            'certification_records',
+            $certification->id,
+            'Certification Issued',
+            "You have been issued a {$validated['certification_type']} certification."
+        );
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'certification_records',
+                $certification->id,
+                'Certification Assigned',
+                "You assigned a {$validated['certification_type']} certification to {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'certification_records',
+                $certification->id,
+                'New Certification Issued',
+                "A {$validated['certification_type']} certification has been issued to {$prisonerName}."
+            );
+        }
+
+        Log::info('Certification assigned successfully', [
+            'certification_id' => $certification->id,
+            'prisoner_id' => $validated['prisoner_id'],
+            'certification_type' => $validated['certification_type']
+        ]);
+
+        $data = [
+            'prisoner_name' => $this->escapeHtml($prisonerName),
+            'certification_type' => $validated['certification_type'] === 'job_completion' ? 'Job Completion' : 'Training Program Completion',
+            'certification_details' => $this->escapeHtml($validated['certification_details'] ?? 'No additional details provided.'),
+            'issued_by' => $this->escapeHtml(trim(session('first_name') . ' ' . session('last_name'))),
+            'issued_date' => \Carbon\Carbon::parse($certification->issued_date)->format('F d, Y'),
+            'completed_jobs' => $prisoner->jobAssignments->map(function ($job) {
+                return [
+                    'job_title' => $this->escapeHtml($job->job_title),
+                    'completed_date' => $job->end_date->format('M d, Y'),
+                ];
+            })->toArray(),
+            'completed_trainings' => $prisoner->trainingAssignments->map(function ($training) {
+                return [
+                    'training_title' => $this->escapeHtml(optional($training->trainingProgram)->title ?? 'Unknown Training'),
+                    'completed_date' => $training->end_date->format('M d, Y'),
+                ];
+            })->toArray(),
+            'today' => now()->format('F d, Y'),
+        ];
+
+        return view('training_officer.certificate', $data);
+    }
+
+    public function storeCertifications(Request $request)
+    {
+        $validated = $request->validate([
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'certification_type' => 'required|in:job_completion,training_program_completion',
+            'certification_details' => 'nullable|string|max:65535',
+            'issued_by' => 'required|exists:accounts,user_id',
+            'issued_date' => 'required|date',
+        ]);
+
+        $prisonId = session('prison_id');
+
+        $prisoner = Prisoner::where('id', $validated['prisoner_id'])
+            ->where('prison_id', $prisonId)
+            ->select('id', 'first_name', 'middle_name', 'last_name')
+            ->firstOrFail();
+
+        $certification = CertificationRecord::create([
+            'prisoner_id' => $validated['prisoner_id'],
+            'issued_by' => $validated['issued_by'],
+            'certification_type' => $validated['certification_type'],
+            'certification_details' => $validated['certification_details'],
+            'issued_date' => $validated['issued_date'],
+            'status' => 'issued',
+        ]);
+
+        $prisonerName = trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ])));
+
+        // Notify prisoner
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            'certification_records',
+            $certification->id,
+            'Certification Issued',
+            "You have been issued a {$validated['certification_type']} certification."
+        );
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'certification_records',
+                $certification->id,
+                'Certification Assigned',
+                "You assigned a {$validated['certification_type']} certification to {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'certification_records',
+                $certification->id,
+                'New Certification Issued',
+                "A {$validated['certification_type']} certification has been issued to {$prisonerName}."
+            );
+        }
+
+        Log::info('Certification assigned successfully via storeCertifications', [
+            'certification_id' => $certification->id,
+            'prisoner_id' => $validated['prisoner_id'],
+            'certification_type' => $validated['certification_type']
+        ]);
+
+        return redirect()->route('training_officer.viewCertifications')->with('success', 'Certifications assigned successfully');
+    }
+
     public function viewCertificate($id)
     {
         $prisonId = session('prison_id');
@@ -115,9 +357,10 @@ class TrainingController extends Controller
             return view('training_officer.certificate', $data);
         } catch (\Exception $e) {
             Log::error('Error viewing certificate', ['id' => $id, 'error' => $e->getMessage()]);
-            return redirect()->route('training.viewCertifications')->with('error', 'Certificate not found.');
+            return redirect()->route('training_officer.viewCertifications')->with('error', 'Certificate not found.');
         }
     }
+
     public function getPrisonerDetails(Request $request)
     {
         $prisonerId = $request->input('prisoner_id');
@@ -174,146 +417,14 @@ class TrainingController extends Controller
         return response()->json($details);
     }
 
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'prisoner_id' => 'required|exists:prisoners,id',
-            'certification_type' => 'required|in:job_completion,training_program_completion',
-            'certification_details' => 'nullable|string|max:65535',
-            'issued_by' => 'required|exists:accounts,user_id',
-            'issued_date' => 'required|date',
-        ]);
-
-        $prisonId = session('prison_id');
-
-        $prisoner = Prisoner::where('id', $validated['prisoner_id'])
-            ->where('prison_id', $prisonId)
-            ->with([
-                'jobAssignments' => function ($query) {
-                    $query->where('status', 'completed')
-                        ->select('id', 'prisoner_id', 'job_title', 'job_description', 'end_date');
-                },
-                'trainingAssignments' => function ($query) {
-                    $query->where('status', 'completed')
-                        ->select('id', 'prisoner_id', 'training_id', 'end_date');
-                },
-                'trainingAssignments.trainingProgram' => function ($query) {
-                    $query->select('id', 'title');
-                }
-            ])
-            ->select('id', 'first_name', 'middle_name', 'last_name')
-            ->firstOrFail();
-
-        $certification = CertificationRecord::create([
-            'prisoner_id' => $validated['prisoner_id'],
-            'issued_by' => $validated['issued_by'],
-            'certification_type' => $validated['certification_type'],
-            'certification_details' => $validated['certification_details'],
-            'issued_date' => $validated['issued_date'],
-            'status' => 'issued',
-        ]);
-
-        $prisonerName = trim(implode(' ', array_filter([
-            $prisoner->first_name,
-            $prisoner->middle_name,
-            $prisoner->last_name
-        ])));
-
-        $data = [
-            'prisoner_name' => $this->escapeHtml($prisonerName),
-            'certification_type' => $validated['certification_type'] === 'job_completion' ? 'Job Completion' : 'Training Program Completion',
-            'certification_details' => $this->escapeHtml($validated['certification_details'] ?? 'No additional details provided.'),
-            'issued_by' => $this->escapeHtml(trim(session('first_name') . ' ' . session('last_name'))),
-            'issued_date' => \Carbon\Carbon::parse($certification->issued_date)->format('F d, Y'),
-            'completed_jobs' => $prisoner->jobAssignments->map(function ($job) {
-                return [
-                    'job_title' => $this->escapeHtml($job->job_title),
-                    'completed_date' => $job->end_date->format('M d, Y'),
-                ];
-            })->toArray(),
-            'completed_trainings' => $prisoner->trainingAssignments->map(function ($training) {
-                return [
-                    'training_title' => $this->escapeHtml(optional($training->trainingProgram)->title ?? 'Unknown Training'),
-                    'completed_date' => $training->end_date->format('M d, Y'),
-                ];
-            })->toArray(),
-            'today' => now()->format('F d, Y'),
-        ];
-
-        // Render HTML certificate view
-        return view('training_officer.certificate', $data);
-
-        // Optional: Generate PDF from HTML
-        /*
-        $pdf = Pdf::loadView('training_officer.certificate', $data);
-        return $pdf->download('certificate_' . $prisoner->id . '_' . now()->format('Ymd') . '.pdf');
-        */
-    }
-    public function dashboard()
-    {
-        $prisonId = session('prison_id');
-
-        if (!$prisonId) {
-            Log::warning('No prison_id in session for dashboard');
-            return redirect()->route('home')->with('error', 'Prison ID not set.');
-        }
-
-        try {
-            $totalPrisoners = Prisoner::where('prison_id', $prisonId)->count();
-            $totalCertifications = CertificationRecord::whereHas('prisoner', function ($query) use ($prisonId) {
-                $query->where('prison_id', $prisonId);
-            })->count();
-            $totalActiveJobs = JobAssignment::whereHas('prisoner', function ($query) use ($prisonId) {
-                $query->where('prison_id', $prisonId);
-            })->where('status', 'active')->count();
-            $recentCertifications = CertificationRecord::whereHas('prisoner', function ($query) use ($prisonId) {
-                $query->where('prison_id', $prisonId);
-            })
-                ->with(['prisoner', 'issuedBy'])
-                ->orderBy('issued_date', 'desc')
-                ->take(5)
-                ->get();
-
-            Log::info('Dashboard data fetched', [
-                'prison_id' => $prisonId,
-                'total_prisoners' => $totalPrisoners,
-                'total_certifications' => $totalCertifications,
-                'total_active_jobs' => $totalActiveJobs,
-                'recent_certifications_count' => $recentCertifications->count(),
-            ]);
-
-            return view('training_officer.dashboard', compact(
-                'totalPrisoners',
-                'totalCertifications',
-                'totalActiveJobs',
-                'recentCertifications'
-            ));
-        } catch (\Exception $e) {
-            Log::error('Error fetching dashboard data', ['error' => $e->getMessage(), 'prison_id' => $prisonId]);
-            return redirect()->route('home')->with('error', 'Failed to load dashboard.');
-        }
-    }
-    // Store the assigned certifications
-    public function storeCertifications(Request $request)
-    {
-        // Logic to save certifications to the database
-        // Example: Certification::create($request->all());
-
-        return redirect()->route('training_officer.viewCertifications')->with('success', 'Certifications assigned successfully');
-    }
-
-    // Show form to assign jobs
     public function assignJobs()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->get();
-
         return view('training_officer.assignJobs', compact('prisoners'));
     }
 
-
     public function assignJob(Request $request)
     {
-        // Validate the incoming data
         $validated = $request->validate([
             'prisoner_id' => 'required|exists:prisoners,id',
             'job_title' => 'required|string|max:100',
@@ -323,8 +434,7 @@ class TrainingController extends Controller
             'job_description' => 'nullable|string',
         ]);
 
-        // Create the job assignment record
-        JobAssignment::create([
+        $jobAssignment = JobAssignment::create([
             'prisoner_id' => $validated['prisoner_id'],
             'assigned_by' => session('user_id'),
             'job_title' => $validated['job_title'],
@@ -334,89 +444,173 @@ class TrainingController extends Controller
             'job_description' => $validated['job_description'] ?? null,
         ]);
 
-        // Redirect back with success message
+        $prisoner = Prisoner::find($validated['prisoner_id']);
+        $prisonerName = trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ])));
+
+        // Notify prisoner
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            'job_assignments',
+            $jobAssignment->id,
+            'Job Assigned',
+            "You have been assigned the job: {$validated['job_title']}."
+        );
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'job_assignments',
+                $jobAssignment->id,
+                'Job Assigned',
+                "You assigned the job {$validated['job_title']} to {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'job_assignments',
+                $jobAssignment->id,
+                'New Job Assigned',
+                "The job {$validated['job_title']} has been assigned to {$prisonerName}."
+            );
+        }
+
+        Log::info('Job assigned successfully', [
+            'job_id' => $jobAssignment->id,
+            'prisoner_id' => $validated['prisoner_id'],
+            'job_title' => $validated['job_title']
+        ]);
+
         return redirect()->back()->with('success', 'Job assigned successfully.');
     }
 
-    // Store the assigned jobs
     public function storeJobs(Request $request)
     {
-        // Logic to save jobs to the database
-        // Example: Job::create($request->all());
+        $validated = $request->validate([
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'job_title' => 'required|string|max:100',
+            'assigned_date' => 'required|date',
+            'end_date' => 'required|date',
+            'status' => 'required|in:active,completed,terminated',
+            'job_description' => 'nullable|string',
+        ]);
+
+        $jobAssignment = JobAssignment::create([
+            'prisoner_id' => $validated['prisoner_id'],
+            'assigned_by' => session('user_id'),
+            'job_title' => $validated['job_title'],
+            'assigned_date' => $validated['assigned_date'],
+            'end_date' => $validated['end_date'],
+            'status' => $validated['status'],
+            'job_description' => $validated['job_description'] ?? null,
+        ]);
+
+        $prisoner = Prisoner::find($validated['prisoner_id']);
+        $prisonerName = trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ])));
+
+        // Notify prisoner
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            'job_assignments',
+            $jobAssignment->id,
+            'Job Assigned',
+            "You have been assigned the job: {$validated['job_title']}."
+        );
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'job_assignments',
+                $jobAssignment->id,
+                'Job Assigned',
+                "You assigned the job {$validated['job_title']} to {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'job_assignments',
+                $jobAssignment->id,
+                'New Job Assigned',
+                "The job {$validated['job_title']} has been assigned to {$prisonerName}."
+            );
+        }
+
+        Log::info('Job assigned successfully via storeJobs', [
+            'job_id' => $jobAssignment->id,
+            'prisoner_id' => $validated['prisoner_id'],
+            'job_title' => $validated['job_title']
+        ]);
 
         return redirect()->route('training_officer.viewJobs')->with('success', 'Jobs assigned successfully');
     }
 
-    // Show form to create training programs
     public function createTrainingPrograms()
     {
         return view('training_officer.createTrainingPrograms');
     }
-
-    public function assignTrainingPrograms()
-    {
-        // Retrieve prisoners who are not yet assigned to any training program
-        $prisoners = Prisoner::where('prison_id', session('prison_id'))
-            ->whereDoesntHave('trainingAssignments') // Assumes the prisoner model has a trainingAssignments relationship
-            ->get();
-        $programs = TrainingProgram::where('prison_id', session('prison_id'))->get();
-        // Fetch training assignments with the related training program
-        $assignments = TrainingAssignment::with('trainingProgram')->get();
-
-        return view('training_officer.assignTrainingPrograms', compact('prisoners', 'programs', 'assignments'));
-    }
-    public function viewAssignedPrograms()
-    {
-        // Fetch the training assignments where prison_id matches session's prison_id
-        $assignments = TrainingAssignment::whereHas('prisoner', function ($query) {
-            $query->where('prison_id', session('prison_id'));
-        })->get();
-
-        return view('training_officer.viewAssignedPrograms', compact('assignments'));
-    }
-
-    // Assuming you're using AssignedTraining model
-    public function unassignTrainingProgram($id)
-    {
-        // Find the assignment by ID
-        $assignment = TrainingAssignment::findOrFail($id);
-
-        // Clear the prisoner_id or training_id, or you could change the status to 'unassigned'
-        $assignment->update([
-            'prisoner_id' => null,
-            'training_id' => null,
-            'status' => null, // or any status you prefer
-        ]);
-
-        // Redirect with success message
-        return redirect()->back()->with('success', 'Training program unassigned successfully.');
-    }
-
 
     public function storeTrainingProgram(Request $request)
     {
         $data = $request->validate([
             'title' => 'required|string|max:100',
             'description' => 'nullable|string',
-
         ]);
 
-        // Add prison_id from session
         $data['prison_id'] = session('prison_id');
         $data['created_by'] = session('user_id');
 
-        // Disable auditing for this operation
         $trainingProgram = TrainingProgram::withoutAuditing(function () use ($data) {
             return TrainingProgram::create($data);
         });
 
+        Log::info('Training program created successfully', [
+            'program_id' => $trainingProgram->id,
+            'title' => $data['title']
+        ]);
+
         return redirect()->back()->with('success', 'Training program created successfully.');
     }
 
+    public function assignTrainingPrograms()
+    {
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))
+            ->whereDoesntHave('trainingAssignments')
+            ->get();
+        $programs = TrainingProgram::where('prison_id', session('prison_id'))->get();
+        $assignments = TrainingAssignment::with('trainingProgram')->whereHas('prisoner', function ($query) {
+            $query->where('prison_id', session('prison_id'));
+        })->get();
+
+        return view('training_officer.assignTrainingPrograms', compact('prisoners', 'programs', 'assignments'));
+    }
 
     public function assignTrainingProgram(Request $request)
     {
-        // Validate the request data
         $data = $request->validate([
             'prisoner_id' => 'required|exists:prisoners,id',
             'training_id' => 'required|exists:training_programs,id',
@@ -425,17 +619,131 @@ class TrainingController extends Controller
             'status' => 'required|in:in_progress,completed',
         ]);
 
-        // Add prison_id from session (assuming it's stored in the session)
         $data['assigned_by'] = session('user_id');
 
-        // Create the training assignment
-        TrainingAssignment::create($data);
+        $trainingAssignment = TrainingAssignment::create($data);
 
-        // Redirect back with a success message
+        $prisoner = Prisoner::find($data['prisoner_id']);
+        $trainingProgram = TrainingProgram::find($data['training_id']);
+        $prisonerName = trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ])));
+
+        // Notify prisoner
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            'training_assignments',
+            $trainingAssignment->id,
+            'Training Program Assigned',
+            "You have been assigned to the training program: {$trainingProgram->title}."
+        );
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'training_assignments',
+                $trainingAssignment->id,
+                'Training Program Assigned',
+                "You assigned the training program {$trainingProgram->title} to {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'training_assignments',
+                $trainingAssignment->id,
+                'New Training Program Assigned',
+                "The training program {$trainingProgram->title} has been assigned to {$prisonerName}."
+            );
+        }
+
+        Log::info('Training program assigned successfully', [
+            'assignment_id' => $trainingAssignment->id,
+            'prisoner_id' => $data['prisoner_id'],
+            'training_id' => $data['training_id']
+        ]);
+
         return redirect()->back()->with('success', 'Training program assigned successfully.');
     }
 
+    public function viewAssignedPrograms()
+    {
+        $assignments = TrainingAssignment::whereHas('prisoner', function ($query) {
+            $query->where('prison_id', session('prison_id'));
+        })->with(['prisoner', 'trainingProgram'])->get();
 
+        return view('training_officer.viewAssignedPrograms', compact('assignments'));
+    }
+
+    public function unassignTrainingProgram($id)
+    {
+        $assignment = TrainingAssignment::findOrFail($id);
+        $prisoner = Prisoner::find($assignment->prisoner_id);
+        $trainingProgram = TrainingProgram::find($assignment->training_id);
+        $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ]))) : 'Unknown';
+
+        $assignment->update([
+            'prisoner_id' => null,
+            'training_id' => null,
+            'status' => null,
+        ]);
+
+        // Notify prisoner
+        if ($prisoner) {
+            $this->createNotification(
+                $prisoner->id,
+                'prisoner',
+                'training_assignments',
+                $id,
+                'Training Program Unassigned',
+                "You have been unassigned from the training program: {$trainingProgram->title}."
+            );
+        }
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'training_assignments',
+                $id,
+                'Training Program Unassigned',
+                "You unassigned {$prisonerName} from the training program {$trainingProgram->title}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'training_assignments',
+                $id,
+                'Training Program Unassigned',
+                "{$prisonerName} has been unassigned from the training program {$trainingProgram->title}."
+            );
+        }
+
+        Log::info('Training program unassigned successfully', ['assignment_id' => $id]);
+
+        return redirect()->back()->with('success', 'Training program unassigned successfully.');
+    }
 
     public function updatejob(Request $request)
     {
@@ -458,25 +766,198 @@ class TrainingController extends Controller
             'status' => $validated['status'],
         ]);
 
+        $prisoner = Prisoner::find($validated['prisoner_id']);
+        $prisonerName = trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ])));
+
+        // Notify prisoner
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            'job_assignments',
+            $job->id,
+            'Job Updated',
+            "Your job assignment ({$validated['job_title']}) has been updated."
+        );
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'job_assignments',
+                $job->id,
+                'Job Updated',
+                "You updated the job {$validated['job_title']} for {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'job_assignments',
+                $job->id,
+                'Job Updated',
+                "The job {$validated['job_title']} for {$prisonerName} has been updated."
+            );
+        }
+
+        Log::info('Job updated successfully', [
+            'job_id' => $job->id,
+            'prisoner_id' => $validated['prisoner_id'],
+            'job_title' => $validated['job_title']
+        ]);
+
         return redirect()->back()->with('success', 'Job updated successfully.');
     }
 
-    // View list of certifications
-    public function viewCertifications()
+    public function update(Request $request, $id)
     {
-        // Fetch the certifications from the database
-        // Example: $certifications = Certification::all();
+        $validated = $request->validate([
+            'job_title' => 'required|string|max:255',
+            'prisoner_id' => 'required|string|max:255',
+            'assigned_by' => 'required|string|max:255',
+            'job_description' => 'required|string',
+            'assigned_date' => 'required|date',
+            'status' => 'required|in:active,completed,terminated',
+        ]);
 
-        return view('training_officer.viewCertifications');
+        $job = JobAssignment::findOrFail($id);
+        $prisoner = Prisoner::find($validated['prisoner_id']);
+        $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ]))) : 'Unknown';
+
+        $job->update($validated);
+
+        // Notify prisoner
+        if ($prisoner) {
+            $this->createNotification(
+                $prisoner->id,
+                'prisoner',
+                'job_assignments',
+                $job->id,
+                'Job Updated',
+                "Your job assignment ({$validated['job_title']}) has been updated."
+            );
+        }
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'job_assignments',
+                $job->id,
+                'Job Updated',
+                "You updated the job {$validated['job_title']} for {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'job_assignments',
+                $job->id,
+                'Job Updated',
+                "The job {$validated['job_title']} for {$prisonerName} has been updated."
+            );
+        }
+
+        Log::info('Job updated successfully via update', [
+            'job_id' => $job->id,
+            'prisoner_id' => $validated['prisoner_id'],
+            'job_title' => $validated['job_title']
+        ]);
+
+        return redirect()->back()->with('success', 'Job updated successfully');
     }
 
-    // View list of jobs
-    public function viewJobs()
+    public function updateAssign(Request $request, $id)
     {
-        // Fetch the jobs from the database
-        $jobs = JobAssignment::paginate(9);
+        $validated = $request->validate([
+            'prisoner_id' => 'required|string|max:255',
+            'training_id' => 'required|integer|exists:training_programs,id',
+            'assigned_by' => 'required|string|max:255',
+            'assigned_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:assigned_date',
+            'status' => 'required|in:in_progress,completed,unassigned',
+        ]);
 
-        return view('training_officer.viewJobs', compact('jobs'));
+        $assignment = TrainingAssignment::findOrFail($id);
+        $prisoner = Prisoner::find($validated['prisoner_id']);
+        $trainingProgram = TrainingProgram::find($validated['training_id']);
+        $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ]))) : 'Unknown';
+
+        $assignment->update($validated);
+
+        // Notify prisoner
+        if ($prisoner) {
+            $this->createNotification(
+                $prisoner->id,
+                'prisoner',
+                'training_assignments',
+                $assignment->id,
+                'Training Assignment Updated',
+                "Your assignment to the training program {$trainingProgram->title} has been updated."
+            );
+        }
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'training_assignments',
+                $assignment->id,
+                'Training Assignment Updated',
+                "You updated the training assignment for {$prisonerName} to {$trainingProgram->title}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'training_assignments',
+                $assignment->id,
+                'Training Assignment Updated',
+                "The training assignment for {$prisonerName} to {$trainingProgram->title} has been updated."
+            );
+        }
+
+        Log::info('Training assignment updated successfully', [
+            'assignment_id' => $id,
+            'prisoner_id' => $validated['prisoner_id'],
+            'training_id' => $validated['training_id']
+        ]);
+
+        return redirect()->back()->with('success', 'Assignment updated successfully');
+    }
+
+    public function viewCertifications()
+    {
+        return view('training_officer.viewCertifications');
     }
 
     public function viewCertificationss(Request $request)
@@ -519,69 +1000,180 @@ class TrainingController extends Controller
         return view('training_officer.viewCertifications', compact('certifications'));
     }
 
-    public function updateAssign(Request $request, $id)
+    public function viewJobs()
     {
-        $validated = $request->validate([
-            'prisoner_id' => 'required|string|max:255',
-            'training_id' => 'required|integer|exists:training_programs,id',
-            'assigned_by' => 'required|string|max:255',
-            'assigned_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:assigned_date',
-            'status' => 'required|in:in_progress,completed,unassigned',
-        ]);
-    
-        Log::info('Validated data for assignment update', [
-            'assignment_id' => $id,
-            'data' => $validated,
-            'user_id' => session('user_id'), // if authentication is used
-        ]);
-    
-        $assignment = TrainingAssignment::findOrFail($id);
-        $assignment->update($validated);
-    
-        Log::info('Assignment updated successfully', [
-            'assignment_id' => $id,
-            'updated_by' => session('user_id'), // optional
-        ]);
-    
-        return redirect()->back()->with('success', 'Assignment updated successfully');
+        $jobs = JobAssignment::whereHas('prisoner', function ($query) {
+            $query->where('prison_id', session('prison_id'));
+        })->paginate(9);
+
+        return view('training_officer.viewJobs', compact('jobs'));
     }
-    
-    // View list of training programs
+
     public function viewTrainingPrograms()
     {
-        $trainingprograms = TrainingProgram::paginate(9);
+        $trainingprograms = TrainingProgram::where('prison_id', session('prison_id'))->paginate(9);
         $activities = Audit::with('user')->latest()->take(20)->get();
 
         return view('training_officer.viewTrainingPrograms', compact('trainingprograms', 'activities'));
     }
-    public function update(Request $request, $id)
-    {
-        $validated = $request->validate([
-            'job_title' => 'required|string|max:255',
-            'prisoner_id' => 'required|string|max:255',
-            'assigned_by' => 'required|string|max:255',
-            'job_description' => 'required|string',
-            'assigned_date' => 'required|date',
-            'status' => 'required|in:active,completed,terminated',
-        ]);
 
-        $job = JobAssignment::findOrFail($id);
-        $job->update($validated);
-
-        return redirect()->back()->with('success', 'Job updated successfully');
-    }
     public function destroy($id)
     {
         $program = TrainingProgram::findOrFail($id);
+        $assignments = TrainingAssignment::where('training_id', $id)->get();
+
+        foreach ($assignments as $assignment) {
+            $prisoner = Prisoner::find($assignment->prisoner_id);
+            $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+                $prisoner->first_name,
+                $prisoner->middle_name,
+                $prisoner->last_name
+            ]))) : 'Unknown';
+
+            // Notify prisoner
+            if ($prisoner) {
+                $this->createNotification(
+                    $prisoner->id,
+                    'prisoner',
+                    'training_assignments',
+                    $assignment->id,
+                    'Training Program Deleted',
+                    "The training program {$program->title} you were assigned to has been deleted."
+                );
+            }
+        }
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'training_programs',
+                $id,
+                'Training Program Deleted',
+                "You deleted the training program {$program->title}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'training_programs',
+                $id,
+                'Training Program Deleted',
+                "The training program {$program->title} has been deleted."
+            );
+        }
+
         $program->delete();
+
+        Log::info('Training program deleted successfully', ['program_id' => $id]);
 
         return redirect()->back()->with('success', 'Training program deleted successfully.');
     }
 
-    public function destroyjob(JobAssignment $job) // Type-hint the Job model
+    public function destroyjob(JobAssignment $job)
     {
+        $prisoner = Prisoner::find($job->prisoner_id);
+        $prisonerName = $prisoner ? trim(implode(' ', array_filter([
+            $prisoner->first_name,
+            $prisoner->middle_name,
+            $prisoner->last_name
+        ]))) : 'Unknown';
+
+        // Notify prisoner
+        if ($prisoner) {
+            $this->createNotification(
+                $prisoner->id,
+                'prisoner',
+                'job_assignments',
+                $job->id,
+                'Job Deleted',
+                "Your job assignment ({$job->job_title}) has been deleted."
+            );
+        }
+
+        // Notify training officer
+        $trainingOfficerId = session('user_id');
+        if ($trainingOfficerId) {
+            $this->createNotification(
+                $trainingOfficerId,
+                'officer',
+                'job_assignments',
+                $job->id,
+                'Job Deleted',
+                "You deleted the job {$job->job_title} for {$prisonerName}."
+            );
+        }
+
+        // Notify admin
+        $admin = Account::where('role_id', 1)->first();
+        if ($admin) {
+            $this->createNotification(
+                $admin->user_id,
+                'admin',
+                'job_assignments',
+                $job->id,
+                'Job Deleted',
+                "The job {$job->job_title} for {$prisonerName} has been deleted."
+            );
+        }
+
         $job->delete();
+
+        Log::info('Job deleted successfully', ['job_id' => $job->id]);
+
         return redirect()->back()->with('success', 'Job deleted successfully');
+    }
+
+    // View prisoner-related notifications
+    public function viewNotifications(Request $request)
+    {
+        $user = $request->user();
+        $role = $user->role_id == 1 ? 'admin' :
+                ($user->role_id == 3 ? 'officer' : 'prisoner');
+
+        $notifications = Notification::where('recipient_id', $user->user_id)
+            ->where('recipient_role', $role)
+            ->whereIn('related_table', ['certification_records', 'job_assignments', 'training_assignments', 'training_programs'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        if ($request->ajax()) {
+            return response()->json($notifications);
+        }
+
+        return view('training_officer.notifications', compact('notifications'));
+    }
+
+    // Mark a notification as read
+    public function markAsRead(Request $request, $notification_id)
+    {
+        $notification = Notification::where('recipient_id', $request->user()->user_id)
+            ->whereIn('related_table', ['certification_records', 'job_assignments', 'training_assignments', 'training_programs'])
+            ->findOrFail($notification_id);
+        $notification->is_read = true;
+        $notification->save();
+
+        return response()->json(['message' => 'Notification marked as read']);
+    }
+
+    // Mark all notifications as read
+    public function markAllAsRead(Request $request)
+    {
+        $user = $request->user();
+        $role = $user->role_id == 1 ? 'admin' :
+                ($user->role_id == 3 ? 'officer' : 'prisoner');
+
+        Notification::where('recipient_id', $user->user_id)
+            ->where('recipient_role', $role)
+            ->whereIn('related_table', ['certification_records', 'job_assignments', 'training_assignments', 'training_programs'])
+            ->update(['is_read' => true]);
+
+        return response()->json(['message' => 'All notifications marked as read']);
     }
 }

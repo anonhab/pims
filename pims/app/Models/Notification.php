@@ -9,26 +9,27 @@ class Notification extends Model
 {
     use HasFactory;
 
-    protected $table = 'notifications';
-
+    protected $table = 'Notifications';
     protected $primaryKey = 'id';
 
-    public $incrementing = false;
-
-    protected $keyType = 'string';
-
     protected $fillable = [
-        'id', 'account_id', 'message', 'status','prison_id'
+        'recipient_id',
+        'recipient_role',
+        'related_table',
+        'related_id',
+        'title',
+        'message',
+        'is_read',
     ];
 
     protected $casts = [
+        'is_read' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
-    // Relationship with Account
-    public function account()
+    public function scopeForUser($query, $userId)
     {
-        return $this->belongsTo(Account::class, 'account_id', 'user_id');
+        return $query->where('recipient_id', $userId);
     }
 }
