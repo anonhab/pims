@@ -2,20 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS Central Ethiopia</title>
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* Global Styles */
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #3498db;
-            --accent-color: #e74c3c;
-            --light-color: #ecf0f1;
-            --dark-color: #2c3e50;
-            --text-color: #333;
+            --primary-color: #ff5555;
+            --secondary-color: #2c3e50;
+            --accent-color: #34495e;
+            --light-color: #f5f6fa;
+            --dark-color: #1a252f;
+            --text-color: #2c3e50;
             --text-light: #7f8c8d;
         }
 
@@ -26,82 +27,79 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Roboto', sans-serif;
             line-height: 1.6;
             color: var(--text-color);
-            background-color: #f9f9f9;
+            background-color: var(--light-color);
+            overflow-x: hidden;
         }
 
         .container {
             width: 90%;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 15px;
+            padding: 0 20px;
         }
 
         h1, h2, h3, h4 {
             color: var(--dark-color);
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
         }
 
         p {
             color: var(--text-light);
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
         }
 
         .btn {
             display: inline-block;
-            background: var(--secondary-color);
+            background: var(--primary-color);
             color: white;
-            padding: 12px 25px;
+            padding: 14px 30px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 6px;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: all 0.4s ease;
             border: none;
             cursor: pointer;
         }
 
         .btn:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-accent {
-            background: var(--accent-color);
-        }
-
-        .btn-accent:hover {
-            background: #c0392b;
+            background: #e04343;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 85, 85, 0.3);
         }
 
         .btn-outline {
             background: transparent;
-            border: 2px solid var(--secondary-color);
-            color: var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
         }
 
         .btn-outline:hover {
-            background: var(--secondary-color);
+            background: var(--primary-color);
             color: white;
         }
 
         .section {
-            padding: 80px 0;
+            padding: 100px 0;
+            position: relative;
         }
 
         .section-title {
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
             position: relative;
         }
 
         .section-title h2 {
-            font-size: 2.5rem;
-            display: inline-block;
+            font-size: 3rem;
+            font-weight: 900;
             position: relative;
-            padding-bottom: 15px;
+            padding-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .section-title h2::after {
@@ -110,19 +108,20 @@
             bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: var(--secondary-color);
+            width: 100px;
+            height: 4px;
+            background: var(--primary-color);
         }
 
         /* Header Styles */
         header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--dark-color);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            transition: background 0.3s ease;
         }
 
         .header-container {
@@ -138,20 +137,22 @@
         }
 
         .logo img {
-            height: 40px;
-            margin-right: 10px;
+            height: 50px;
+            margin-right: 15px;
         }
 
         .logo-text h1 {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: var(--primary-color);
             margin-bottom: 0;
+            font-weight: 900;
         }
 
         .logo-text span {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: var(--text-light);
             display: block;
+            font-weight: 300;
         }
 
         nav ul {
@@ -160,30 +161,31 @@
         }
 
         nav ul li {
-            margin-left: 30px;
+            margin-left: 40px;
         }
 
         nav ul li a {
-            color: var(--dark-color);
+            color: var(--light-color);
             text-decoration: none;
             font-weight: 500;
+            font-size: 1.1rem;
             transition: color 0.3s ease;
             position: relative;
         }
 
         nav ul li a:hover {
-            color: var(--secondary-color);
+            color: var(--primary-color);
         }
 
         nav ul li a::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -6px;
             left: 0;
             width: 0;
-            height: 2px;
-            background: var(--secondary-color);
-            transition: width 0.3s ease;
+            height: 3px;
+            background: var(--primary-color);
+            transition: width 0.4s ease;
         }
 
         nav ul li a:hover::after {
@@ -194,42 +196,137 @@
             display: none;
             background: none;
             border: none;
-            font-size: 1.5rem;
-            color: var(--dark-color);
+            font-size: 1.8rem;
+            color: var(--light-color);
             cursor: pointer;
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(135deg, rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.8)), url('https://static.euronews.com/articles/stories/06/19/90/88/1200x675_cmsv2_8b08e5b6-7918-576b-8bf5-f889c58c4e01-6199088.jpg') no-repeat center center/cover;
+            background: linear-gradient(135deg, rgba(26, 37, 47, 0.95), rgba(255, 85, 85, 0.7)), url('https://images.unsplash.com/photo-1518733057094-95b53143d2a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center/cover;
             color: white;
             height: 100vh;
             display: flex;
             align-items: center;
             text-align: left;
-            padding-top: 80px;
+            padding-top: 100px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(255, 85, 85, 0.1), transparent);
+            animation: pulse 10s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.5; }
         }
 
         .hero-content {
-            max-width: 600px;
+            max-width: 700px;
+            z-index: 2;
         }
 
         .hero h1 {
-            font-size: 3rem;
+            font-size: 4rem;
             color: white;
             margin-bottom: 1.5rem;
-            line-height: 1.2;
+            font-weight: 900;
+            text-transform: uppercase;
+            line-height: 1.1;
+            animation: fadeInUp 1s ease-out;
         }
 
         .hero p {
             color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1.2s ease-out;
         }
 
         .hero-btns {
             display: flex;
-            gap: 15px;
+            gap: 20px;
+            animation: fadeInUp 1.4s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Gallery Section */
+        .gallery {
+            background: var(--dark-color);
+            color: white;
+            padding: 100px 0;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            height: 300px;
+            cursor: pointer;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .gallery-item span {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            font-weight: 500;
+            font-size: 1.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover span {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Features Section */
@@ -239,40 +336,49 @@
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 30px;
         }
 
         .feature-card {
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s ease;
             text-align: center;
+            border: 1px solid rgba(255, 85, 85, 0.1);
         }
 
         .feature-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 30px rgba(255, 85, 85, 0.2);
+            border-color: var(--primary-color);
         }
 
         .feature-icon {
-            width: 70px;
-            height: 70px;
+            width: 80px;
+            height: 80px;
             background: var(--light-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 20px;
-            color: var(--secondary-color);
-            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-size: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: var(--primary-color);
+            color: white;
         }
 
         .feature-card h3 {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             margin-bottom: 15px;
+            font-weight: 700;
         }
 
         /* About Section */
@@ -283,7 +389,7 @@
         .about-content {
             display: flex;
             align-items: center;
-            gap: 50px;
+            gap: 60px;
         }
 
         .about-text {
@@ -292,9 +398,14 @@
 
         .about-image {
             flex: 1;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: transform 0.5s ease;
+        }
+
+        .about-image:hover {
+            transform: scale(1.05);
         }
 
         .about-image img {
@@ -305,26 +416,27 @@
 
         /* Stats Section */
         .stats {
-            background: var(--primary-color);
+            background: var(--secondary-color);
             color: white;
             text-align: center;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 40px;
         }
 
         .stat-item h3 {
-            font-size: 3rem;
-            color: white;
+            font-size: 3.5rem;
+            color: var(--primary-color);
             margin-bottom: 10px;
+            font-weight: 900;
         }
 
         .stat-item p {
             color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
+            font-size: 1.2rem;
         }
 
         /* Contact Section */
@@ -332,71 +444,66 @@
             background: white;
         }
 
-        .contact-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
         .contact-info {
-            margin-bottom: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
         }
 
         .contact-info h3 {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 700;
         }
 
         .contact-info-item {
             display: flex;
-            align-items: flex-start;
-            margin-bottom: 20px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 20px;
         }
 
         .contact-info-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--light-color);
+            width: 50px;
+            height: 50px;
+            background: var(--primary-color);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 15px;
-            color: var(--secondary-color);
+            color: white;
+            font-size: 1.4rem;
         }
 
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 12px 15px;
-            margin-bottom: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-family: 'Poppins', sans-serif;
+        .contact-info-item div {
+            text-align: left;
         }
 
-        .contact-form textarea {
-            height: 150px;
-            resize: vertical;
+        .contact-info-item h4 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
         }
 
         /* Footer */
         footer {
             background: var(--dark-color);
             color: white;
-            padding: 50px 0 20px;
+            padding: 60px 0 20px;
         }
 
         .footer-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-bottom: 50px;
         }
 
         .footer-col h3 {
-            color: white;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
         .footer-col p {
@@ -404,7 +511,7 @@
         }
 
         .footer-links li {
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             list-style: none;
         }
 
@@ -415,141 +522,146 @@
         }
 
         .footer-links a:hover {
-            color: white;
+            color: var(--primary-color);
         }
 
         .social-links {
             display: flex;
-            gap: 15px;
+            gap: 20px;
         }
 
         .social-links a {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.1);
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 85, 85, 0.2);
             border-radius: 50%;
             color: white;
             transition: all 0.3s ease;
         }
 
         .social-links a:hover {
-            background: var(--secondary-color);
-            transform: translateY(-3px);
+            background: var(--primary-color);
+            transform: scale(1.1);
         }
 
         .footer-bottom {
             text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.9rem;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
         }
 
-        /* Enhanced Visitor Registration Modal */
+        /* Visitor Registration Modal */
         #visitorRegisterModal .modal-dialog {
-            max-width: 700px;
+            max-width: 800px;
         }
 
         #visitorRegisterModal .modal-content {
-            border-radius: 10px;
+            border-radius: 12px;
             border: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
             overflow: hidden;
         }
 
         #visitorRegisterModal .modal-header {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: white;
             border-bottom: none;
-            padding: 20px 30px;
+            padding: 25px 35px;
         }
 
         #visitorRegisterModal .modal-title {
-            font-weight: 600;
-            font-size: 1.5rem;
+            font-weight: 700;
+            font-size: 1.8rem;
         }
 
         #visitorRegisterModal .btn-close {
             filter: invert(1);
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
         #visitorRegisterModal .modal-body {
-            padding: 30px;
+            padding: 40px;
+            background: white;
         }
 
         #visitorRegisterModal .form-label {
-            font-weight: 500;
+            font-weight: 600;
             color: var(--dark-color);
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
 
         #visitorRegisterModal .form-control {
-            padding: 12px 15px;
+            padding: 14px 18px;
             border: 1px solid #e0e0e0;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: all 0.3s;
         }
 
         #visitorRegisterModal .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.3rem rgba(255, 85, 85, 0.25);
         }
 
         #visitorRegisterModal .modal-footer {
             border-top: none;
-            padding: 20px 30px;
-            background: #f8f9fa;
+            padding: 25px 35px;
+            background: var(--light-color);
         }
 
         #visitorRegisterModal .btn-register {
-            background: linear-gradient(135deg, #3498db, #2c3e50);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             border: none;
-            padding: 12px 25px;
-            font-weight: 500;
-            transition: all 0.3s;
+            padding: 14px 30px;
+            font-weight: 600;
+            transition: all 0.4s;
             width: 100%;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         #visitorRegisterModal .btn-register:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 85, 85, 0.3);
         }
 
         #visitorRegisterModal .btn-cancel {
-            background: #f8f9fa;
+            background: var(--light-color);
             border: 1px solid #e0e0e0;
             color: var(--text-color);
-            padding: 12px 25px;
-            font-weight: 500;
+            padding: 14px 30px;
+            font-weight: 600;
             transition: all 0.3s;
             width: 100%;
-            border-radius: 6px;
+            border-radius: 8px;
         }
 
         #visitorRegisterModal .btn-cancel:hover {
             background: #e9ecef;
         }
 
-        /* Form Grid Layout */
         .form-row {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            gap: 25px;
         }
 
         /* Responsive Design */
         @media (max-width: 992px) {
             .about-content {
                 flex-direction: column;
+                gap: 40px;
             }
 
             .about-image {
                 order: -1;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             }
         }
 
@@ -564,10 +676,10 @@
                 left: -100%;
                 width: 100%;
                 height: calc(100vh - 80px);
-                background: white;
-                transition: left 0.3s ease;
-                padding: 30px;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+                background: var(--dark-color);
+                transition: left 0.4s ease;
+                padding: 40px;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             }
 
             nav.active {
@@ -579,7 +691,11 @@
             }
 
             nav ul li {
-                margin: 15px 0;
+                margin: 20px 0;
+            }
+
+            nav ul li a {
+                font-size: 1.2rem;
             }
 
             .mobile-menu-btn {
@@ -587,19 +703,24 @@
             }
 
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 3rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
             }
 
             .hero-btns {
                 flex-direction: column;
+                gap: 15px;
             }
 
             .section {
-                padding: 60px 0;
+                padding: 80px 0;
             }
 
             .section-title h2 {
-                font-size: 2rem;
+                font-size: 2.5rem;
             }
 
             .form-row {
@@ -607,13 +728,17 @@
             }
 
             #visitorRegisterModal .modal-dialog {
-                margin: 1rem auto;
+                margin: 1.5rem auto;
+            }
+
+            .gallery-item {
+                height: 250px;
             }
         }
 
         @media (max-width: 576px) {
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
 
             .hero p {
@@ -621,11 +746,15 @@
             }
 
             .section-title h2 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
 
             #visitorRegisterModal .modal-body {
-                padding: 20px;
+                padding: 25px;
+            }
+
+            .gallery-item {
+                height: 200px;
             }
         }
     </style>
@@ -649,17 +778,18 @@
             <nav id="mainNav">
                 <ul>
                     <li><a href="#home">Home</a></li>
+                    <li><a href="#gallery">Gallery</a></li>
                     <li><a href="#features">Features</a></li>
                     <li><a href="#about">About</a></li>
                     <li><a href="#contact">Contact</a></li>
                     <li><a href="#" class="btn btn-outline" data-bs-toggle="modal" data-bs-target="#visitorRegisterModal">Register as Visitor</a></li>
-                    <li><a href="/login" class="btn btn-accent">Login</a></li>
+                    <li><a href="/login" class="btn">Login</a></li>
                 </ul>
             </nav>
         </div>
     </header>
 
-    <!-- Enhanced Visitor Registration Modal -->
+    <!-- Visitor Registration Modal -->
     <div class="modal fade" id="visitorRegisterModal" tabindex="-1" aria-labelledby="visitorRegisterModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -750,11 +880,38 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-                <h1>Modern Prison Management for Central Ethiopia</h1>
-                <p>Streamlining correctional facility operations with our comprehensive Prison Information Management System. Secure, efficient, and designed for the unique needs of Central Ethiopia's prison system.</p>
+                <h1>Secure Prison Management for Central Ethiopia</h1>
+                <p>Empowering correctional facilities with a robust, secure, and efficient Prison Information Management System tailored for Central Ethiopia’s justice system.</p>
                 <div class="hero-btns">
-                    <a href="#features" class="btn">Explore Features</a>
-                    <a href="#contact" class="btn btn-accent">Contact Us</a>
+                    <a href="#gallery" class="btn">Explore Gallery</a>
+                    <a href="#features" class="btn btn-outline">View Features</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="section gallery" id="gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Facilities</h2>
+            </div>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1596040023674-66dacb66b82f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Prison Facility">
+                    <span>High-Security Wing</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1596040032469-5b6a1e039a58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Control Room">
+                    <span>Control Room</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1518733057094-95b53143d2a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Visitor Area">
+                    <span>Visitor Area</span>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://images.unsplash.com/photo-1581093196270-1a1d1b6b9540?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Rehabilitation Center">
+                    <span>Rehabilitation Center</span>
                 </div>
             </div>
         </div>
@@ -766,54 +923,48 @@
             <div class="section-title">
                 <h2>System Features</h2>
             </div>
-
             <div class="features-grid">
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-user-lock"></i>
                     </div>
                     <h3>Inmate Management</h3>
-                    <p>Comprehensive tracking of inmate records, including personal details, offenses, and incarceration history.</p>
+                    <p>Securely manage inmate records, including personal details, offenses, and incarceration history with real-time updates.</p>
                 </div>
-
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-clipboard-check"></i>
                     </div>
                     <h3>Case Tracking</h3>
-                    <p>Monitor legal cases, court dates, and judgments for each inmate with automated reminders.</p>
+                    <p>Track legal cases, court dates, and judgments with automated notifications for seamless administration.</p>
                 </div>
-
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <h3>Visitor Management</h3>
-                    <p>Efficient scheduling and tracking of inmate visits with proper security protocols.</p>
+                    <p>Streamline visitor scheduling and security checks with integrated verification protocols.</p>
                 </div>
-
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-heartbeat"></i>
                     </div>
                     <h3>Medical Records</h3>
-                    <p>Maintain complete health records and schedule medical appointments for inmates.</p>
+                    <p>Maintain comprehensive health records and schedule medical appointments securely.</p>
                 </div>
-
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
                     <h3>Reporting & Analytics</h3>
-                    <p>Generate detailed reports and gain insights into prison operations and population trends.</p>
+                    <p>Access detailed reports and analytics to monitor prison operations and trends.</p>
                 </div>
-
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <h3>Security Management</h3>
-                    <p>Monitor security incidents, staff assignments, and facility access control.</p>
+                    <p>Monitor incidents, staff assignments, and access controls with advanced security features.</p>
                 </div>
             </div>
         </div>
@@ -825,20 +976,15 @@
             <div class="section-title">
                 <h2>About PIMS</h2>
             </div>
-
             <div class="about-content">
                 <div class="about-text">
-                    <p>The Prison Information Management System (PIMS) is a state-of-the-art solution designed specifically for the correctional facilities in Central Ethiopia. Our system addresses the unique challenges faced by prison administrators in managing inmate populations, security protocols, and rehabilitation programs.</p>
-
-                    <p>Developed in collaboration with correctional experts, PIMS provides a secure, centralized platform that enhances operational efficiency while maintaining the highest standards of data security and privacy compliance.</p>
-
-                    <p>Our mission is to modernize prison management through technology, improving outcomes for both staff and inmates while ensuring public safety across the Central Ethiopia region.</p>
-
-                    <a href="#" class="btn">Learn More</a>
+                    <p>The Prison Information Management System (PIMS) is a cutting-edge platform designed for Central Ethiopia’s correctional facilities, ensuring secure and efficient management of prison operations.</p>
+                    <p>Developed with input from regional justice experts, PIMS integrates advanced technology to address the unique challenges of inmate management, security, and rehabilitation while adhering to strict data privacy standards.</p>
+                    <p>Our mission is to transform correctional administration, enhancing public safety and operational efficiency across Central Ethiopia’s prison system.</p>
+                    <a href="#contact" class="btn">Contact Us</a>
                 </div>
-
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1581093196270-1a1d1b6b9540?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Prison Management System">
+                    <img src="https://images.unsplash.com/photo-1596040032469-5b6a1e039a58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Prison Management System">
                 </div>
             </div>
         </div>
@@ -849,22 +995,19 @@
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <h3>25+</h3>
-                    <p>Prisons Connected</p>
+                    <h3>30+</h3>
+                    <p>Released Prisoners</p>
                 </div>
-
                 <div class="stat-item">
-                    <h3>10,000+</h3>
+                    <h3>15,000+</h3>
                     <p>Records Managed</p>
                 </div>
-
                 <div class="stat-item">
-                    <h3>99.9%</h3>
+                    <h3>99.99%</h3>
                     <p>System Uptime</p>
                 </div>
-
                 <div class="stat-item">
-                    <h3>50+</h3>
+                    <h3>75+</h3>
                     <p>Trained Staff</p>
                 </div>
             </div>
@@ -877,52 +1020,35 @@
             <div class="section-title">
                 <h2>Contact Us</h2>
             </div>
-
-            <div class="contact-container">
-                <div class="contact-info">
-                    <h3>Get in Touch</h3>
-                    <p>Have questions about our Prison Information Management System? Contact our team for more information.</p>
-
-                    <div class="contact-info-item">
-                        <div class="contact-info-icon">
-                            <i class="fas fa-map-marker-alt"></i>
-                        </div>
-                        <div>
-                            <h4>Location</h4>
-                            <p>Central Ethiopia Regional Administration, Wolkite, Ethiopia</p>
-                        </div>
+            <div class="contact-info">
+                <h3>Get in Touch</h3>
+                <p>Contact our team for inquiries about the Prison Information Management System.</p>
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
                     </div>
-
-                    <div class="contact-info-item">
-                        <div class="contact-info-icon">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div>
-                            <h4>Email</h4>
-                            <p>info@pims-ethiopia.gov.et</p>
-                        </div>
-                    </div>
-
-                    <div class="contact-info-item">
-                        <div class="contact-info-icon">
-                            <i class="fas fa-phone-alt"></i>
-                        </div>
-                        <div>
-                            <h4>Phone</h4>
-                            <p>+251 11 123 4567</p>
-                        </div>
+                    <div>
+                        <h4>Location</h4>
+                        <p>Central Ethiopia Regional Administration, Wolkite, Ethiopia</p>
                     </div>
                 </div>
-
-                <div class="contact-form">
-                    <h3>Send Us a Message</h3>
-                    <form>
-                        <input type="text" placeholder="Your Name" required>
-                        <input type="email" placeholder="Your Email" required>
-                        <input type="text" placeholder="Subject">
-                        <textarea placeholder="Your Message" required></textarea>
-                        <button type="submit" class="btn">Send Message</button>
-                    </form>
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h4>Email</h4>
+                        <p>info@pims-ethiopia.gov.et</p>
+                    </div>
+                </div>
+                <div class="contact-info-item">
+                    <div class="contact-info-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <div>
+                        <h4>Phone</h4>
+                        <p>+251 11 123 4567</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -935,24 +1061,23 @@
                 <div class="footer-col">
                     <div class="logo">
                         <div class="logo-text">
-                            <h1 style="color: white;">PIMS</h1>
+                            <h1 style="color: var(--primary-color);">PIMS</h1>
                             <span style="color: rgba(255, 255, 255, 0.7);">Prison Information Management System</span>
                         </div>
                     </div>
-                    <p>Modernizing correctional facility management across Central Ethiopia through innovative technology solutions.</p>
+                    <p>Modernizing correctional facility management with secure, innovative technology solutions for Central Ethiopia.</p>
                 </div>
-
                 <div class="footer-col">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
                         <li><a href="#home">Home</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
                         <li><a href="#features">Features</a></li>
                         <li><a href="#about">About</a></li>
                         <li><a href="#contact">Contact</a></li>
                         <li><a href="/login">Login</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-col">
                     <h3>Services</h3>
                     <ul class="footer-links">
@@ -963,7 +1088,6 @@
                         <li><a href="#">System Training</a></li>
                     </ul>
                 </div>
-
                 <div class="footer-col">
                     <h3>Connect With Us</h3>
                     <div class="social-links">
@@ -974,15 +1098,13 @@
                     </div>
                 </div>
             </div>
-
             <div class="footer-bottom">
-                <p>&copy; 2023 Prison Information Management System - Central Ethiopia. All Rights Reserved.</p>
+                <p>© 2025 Prison Information Management System - Central Ethiopia. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         // Mobile Menu Toggle
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -1021,8 +1143,10 @@
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
             if (window.scrollY > 50) {
-                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+                header.style.background = 'rgba(26, 37, 47, 0.95)';
+                header.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
             } else {
+                header.style.background = 'var(--dark-color)';
                 header.style.boxShadow = 'none';
             }
         });
@@ -1047,7 +1171,24 @@
                 }
             });
         }
+
+        // Gallery animation on scroll
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.2 });
+
+        galleryItems.forEach(item => {
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(50px)';
+            item.style.transition = 'all 0.6s ease';
+            observer.observe(item);
+        });
     </script>
 </body>
-
 </html>
