@@ -35,7 +35,7 @@
         #pims-page-content {
             margin-left: 0;
             padding: 1.5rem;
-            padding-left: 300px;
+            padding-left:75px;
             min-height: calc(100vh - var(--pims-nav-height));
             transition: all 0.3s ease;
             background-color: #f0f2f5;

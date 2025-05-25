@@ -97,4 +97,4 @@
         </div>
     </aside>
 </div>
-
+<script src="{{ asset('js/menu.js') }}"></script>
