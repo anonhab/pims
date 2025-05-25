@@ -1,214 +1,290 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @include('includes.head')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PIMS - Medical Appointment Records</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
-            --accent: #3498db;
-            --light: #ecf0f1;
-            --danger: #e74c3c;
-            --success: #2ecc71;
-            --warning: #f1c40f;
-            --radius: 8px;
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
-            --font-size-base: clamp(0.9rem, 2vw, 1rem);
+            --pims-primary: #0a192f; /* Navy blue */
+            --pims-secondary: #172a45; /* Darker navy */
+            --pims-accent:rgb(255, 174, 0); /* Teal accent */
+            --pims-danger: #ff5555; /* Vibrant red */
+            --pims-success:rgb(250, 168, 80); /* Vibrant green */
+            --pims-warning: #ffb86c; /* Soft orange */
+            --pims-info: #8be9fd; /* Light blue */
+            --pims-text-light: #f8f8f2; /* Off white */
+            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --pims-border-radius: 8px;
+            --pims-nav-height: 70px;
+            --pims-sidebar-width: 280px;
+            --pims-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        *, *::before, *::after {
+        * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background: #f5f7fa;
-            color: var(--primary);
-            font-size: var(--font-size-base);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        #pims-app-content {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: var(--pims-text-dark);
+            margin: 0;
+            padding: 0;
             min-height: 100vh;
+            line-height: 1.6;
         }
 
+        /* Main Content Area */
         #pims-page-content {
-            padding: clamp(1rem, 3vw, 2rem);
+            margin-left: 0;
+            padding: 2rem;
+            padding-left: calc(var(--pims-sidebar-width) + 2rem);
+            min-height: calc(100vh - var(--pims-nav-height));
+            transition: var(--pims-transition);
+            background-color: #f5f7fa;
+            padding-top: 70px;
         }
 
-        .pims-card {
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .pims-card-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .pims-card-header-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .pims-card-content {
-            padding: 1.5rem;
-        }
-
-        .pims-filter-controls {
-            margin-bottom: 1.5rem;
-        }
-
-        .pims-search-input .input {
-            width: 100%;
-            padding: 0.75rem 1rem 0.75rem 2.5rem;
-            border: 1px solid #ddd;
-            border-radius: var(--radius);
-            font-family: inherit;
-            font-size: var(--font-size-base);
-            transition: var(--transition);
-        }
-
-        .pims-search-input .input:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
-        }
-
-        .control.has-icons-left {
+        /* Dashboard Cards */
+        .pims-dashboard-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-card-shadow);
+            transition: var(--pims-transition);
+            height: 100%;
+            border-left: 4px solid var(--pims-accent);
             position: relative;
+            overflow: hidden;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
 
-        .pims-icon.is-left {
-            position: absolute;
-            left: 0.75rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--secondary);
-        }
-
-        .buttons.is-right {
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .pims-button {
-            padding: 0.5rem 1rem;
-            border-radius: var(--radius);
-            font-weight: 500;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-            font-size: 0.9rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .pims-button-success {
-            background: var(--success);
-            color: #fff;
-        }
-
-        .pims-button-success:hover {
-            background: #27ae60;
-        }
-
-        .pims-page {
-            display: none;
-        }
-
-        .pims-page.active {
-            display: grid;
-        }
-
-        .appointment-card {
-            transition: var(--transition);
-        }
-
-        .appointment-card:hover {
+        .pims-dashboard-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .pims-card-footer {
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: flex-end;
+        /* Stats Box */
+        .pims-stats-box {
+            background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
+            border-radius: var(--pims-border-radius);
+            padding: 2rem;
+            box-shadow: var(--pims-card-shadow);
+            margin-top: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            overflow: hidden;
+            transition: var(--pims-transition);
         }
 
-        .pims-card-footer-item {
-            padding: 0.75rem 1rem;
-            text-decoration: none;
+        .pims-stats-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .pims-stats-box h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--pims-primary);
+            padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 12px;
+            position: relative;
+            border-bottom: 2px solid rgba(100, 255, 218, 0.2);
         }
 
+        .pims-stats-box h2 i {
+            color: var(--pims-accent);
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.15) 0%, rgba(100, 255, 218, 0.05) 100%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        /* Section Title */
+        .pims-section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--pims-primary);
+            position: relative;
+            padding-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .pims-section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pims-accent) 0%, rgba(100, 255, 218, 0) 100%);
+            border-radius: 2px;
+        }
+
+        .pims-section-title i {
+            margin-right: 12px;
+            color: var(--pims-accent);
+            background: rgba(100, 255, 218, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Status Tags */
         .pims-status-tag {
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: auto;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
         }
 
         .pims-status-pending {
-            background: var(--warning);
-            color: #fff;
+            background-color: rgba(255, 184, 108, 0.1);
+            color: var(--pims-warning);
         }
 
         .pims-status-scheduled {
-            background: var(--accent);
-            color: #fff;
+            background-color: rgba(100, 255, 218, 0.1);
+            color: var(--pims-accent);
         }
 
         .pims-status-completed {
-            background: var(--success);
-            color: #fff;
+            background-color: rgba(80, 250, 123, 0.1);
+            color: var(--pims-success);
         }
 
+        /* Button Styles */
+        .pims-btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--pims-border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--pims-transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .pims-btn-primary {
+            background-color: var(--pims-accent);
+            color: var(--pims-primary);
+            font-weight: 700;
+        }
+
+        .pims-btn-primary:hover {
+            background-color:rgb(255, 161, 46);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(100, 255, 218, 0.3);
+        }
+
+        .pims-btn-success {
+            background-color: var(--pims-success);
+            color: var(--pims-primary);
+            font-weight: 700;
+        }
+
+        .pims-btn-success:hover {
+            background-color: #40e06b;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(80, 250, 123, 0.3);
+        }
+
+        /* Search Box */
+        .pims-search-box {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .pims-search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--pims-border-radius);
+            font-size: 0.9rem;
+            transition: var(--pims-transition);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .pims-search-box input:focus {
+            outline: none;
+            border-color: var(--pims-accent);
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+        }
+
+        .pims-search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--pims-accent);
+        }
+
+        /* Grid Layout */
+        .pims-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Pagination */
         .pims-pagination {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 0.5rem;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
         }
 
         .pims-page-btn {
             padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
-            border-radius: var(--radius);
-            background: #fff;
+            border-radius: var(--pims-border-radius);
+            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            transition: var(--pims-transition);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background: white;
         }
 
         .pims-page-btn:hover {
-            background: var(--light);
+            background-color: rgba(100, 255, 218, 0.1);
         }
 
         .pims-page-btn.active {
-            background: var(--accent);
-            color: #fff;
-            border-color: var(--accent);
+            background-color: var(--pims-accent);
+            color: var(--pims-primary);
+            border-color: var(--pims-accent);
         }
 
         .pims-page-btn:disabled {
@@ -216,10 +292,7 @@
             cursor: not-allowed;
         }
 
-        .pims-page-ellipsis {
-            padding: 0.5rem;
-        }
-
+        /* Modal Styles */
         .pims-modal {
             position: fixed;
             inset: 0;
@@ -227,7 +300,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .pims-modal.is-active {
@@ -235,24 +308,24 @@
         }
 
         .pims-modal-card {
-            background: #fff;
-            border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: white;
+            border-radius: var(--pims-border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             max-width: 500px;
             width: 95%;
             max-height: 90vh;
             overflow-y: auto;
-            animation: modalFadeIn 0.3s ease;
+            animation: pims-modalFadeIn 0.3s ease;
         }
 
-        @keyframes modalFadeIn {
+        @keyframes pims-modalFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .pims-modal-header {
             padding: 1.5rem;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -260,14 +333,15 @@
 
         .pims-modal-title {
             font-size: 1.25rem;
-            font-weight: 600;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            color: var(--pims-primary);
         }
 
         .pims-modal-title i {
-            color: var(--accent);
+            color: var(--pims-accent);
         }
 
         .pims-modal-close {
@@ -275,12 +349,12 @@
             border: none;
             font-size: 1.5rem;
             cursor: pointer;
-            color: var(--secondary);
-            transition: var(--transition);
+            color: var(--pims-secondary);
+            transition: var(--pims-transition);
         }
 
         .pims-modal-close:hover {
-            color: var(--primary);
+            color: var(--pims-primary);
         }
 
         .pims-modal-body {
@@ -289,12 +363,13 @@
 
         .pims-modal-footer {
             padding: 1rem 1.5rem;
-            border-top: 1px solid #eee;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             justify-content: flex-end;
             gap: 0.75rem;
         }
 
+        /* Form Styles */
         .pims-form-group {
             margin-bottom: 1.25rem;
         }
@@ -302,101 +377,133 @@
         .pims-form-label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: 500;
-            color: var(--secondary);
+            font-weight: 600;
+            color: var(--pims-secondary);
         }
 
         .pims-form-select {
             width: 100%;
             padding: 0.75rem;
-            border: 1px solid #ddd;
-            border-radius: var(--radius);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--pims-border-radius);
             font-family: inherit;
-            font-size: var(--font-size-base);
-            transition: var(--transition);
+            font-size: 0.9rem;
+            transition: var(--pims-transition);
         }
 
         .pims-form-select:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+            border-color: var(--pims-accent);
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
+            .pims-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
         }
 
         @media (max-width: 992px) {
-            #pims-page-content { padding: 1rem; }
-            .columns { margin: 0; }
-            .column.is-10 { width: 100%; }
+            #pims-page-content {
+                padding-left: 2rem;
+            }
         }
 
         @media (max-width: 768px) {
-            .pims-filter-controls .columns { flex-direction: column; }
-            .buttons.is-right { justify-content: center; }
-            .pims-search-input { max-width: 100%; }
+            .pims-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pims-section-title {
+                font-size: 1.5rem;
+            }
+
+            .pims-stats-box {
+                padding: 1.5rem;
+            }
+
+            .pims-stats-box h2 {
+                font-size: 1.25rem;
+            }
         }
 
         @media (max-width: 480px) {
-            .pims-modal-footer { flex-direction: column; }
-            .pims-modal-footer .pims-button { width: 100%; }
+            .pims-modal-footer {
+                flex-direction: column;
+            }
+            .pims-modal-footer .pims-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Preloader -->
+    @include('components.preloader')
+
+    <!-- Navigation -->
     @include('includes.nav')
-    <div class="columns" id="pims-app-content">
-        @include('medical_officer.menu')
-        <div class="column is-10" id="pims-page-content">
-            <section class="section">
-                <div class="container">
-                    <div class="pims-card">
-                        <header class="pims-card-header">
-                            <p class="pims-card-header-title">
-                                <span class="pims-icon mr-2"><i class="fas fa-notes-medical" aria-hidden="true"></i></span>
-                                Appointment Records
-                            </p>
-                        </header>
-                        <div class="pims-card-content">
-                            <div class="pims-filter-controls">
-                                <div class="columns is-variable is-1">
-                                    <div class="column is-9-tablet is-10-desktop">
-                                        <div class="pims-search-input field">
-                                            <div class="control has-icons-left">
-                                                <input class="input" id="pims-appointment-search" type="text" placeholder="Search by prisoner name, record ID or created by..." aria-label="Search appointments">
-                                                <span class="pims-icon is-left">
-                                                    <i class="fas fa-search" aria-hidden="true"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="column is-3-tablet is-2-desktop has-text-right">
-                                        <div class="buttons is-right">
-                                            <a href="{{ route('medical.createAppointment') }}" class="pims-button pims-button-success" aria-label="Schedule new appointment">
-                                                <span class="pims-icon is-small"><i class="fa fa-plus" aria-hidden="true"></i></span>
-                                                <span>Schedule Appointment</span>
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="pims-appointments-container">
-                                <!-- Pages will be generated by JavaScript -->
-                            </div>
-                            <div class="pims-pagination">
-                                <button class="pims-page-btn" id="pims-prev-btn" disabled aria-label="Previous page">Previous</button>
-                                <div id="pims-page-numbers"></div>
-                                <button class="pims-page-btn" id="pims-next-btn" aria-label="Next page">Next</button>
-                            </div>
-                        </div>
+
+    <!-- Sidebar -->
+    @include('medical_officer.menu')
+
+    <!-- Main Content -->
+    <div id="pims-page-content">
+        <h1 class="pims-section-title">
+            <i class="fas fa-notes-medical"></i> Appointment Records
+        </h1>
+
+        <!-- Notifications -->
+        @if(session('success'))
+            <div class="pims-notification pims-notification-success">
+                <i class="fas fa-check-circle"></i>
+                <div>{{ session('success') }}</div>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="pims-notification pims-notification-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>{{ session('error') }}</div>
+            </div>
+        @endif
+
+        <div class="pims-stats-box">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h2><i class="fas fa-calendar-check"></i> Appointment Records</h2>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="pims-search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="pims-appointment-search" placeholder="Search by prisoner name, record ID or created by...">
                     </div>
+                    <a href="{{ route('medical.createAppointment') }}" class="pims-btn pims-btn-success" aria-label="Schedule new appointment">
+                        <i class="fas fa-plus"></i> Schedule Appointment
+                    </a>
                 </div>
-            </section>
+            </div>
+            
+            <div id="pims-appointments-container">
+                <!-- Appointments will be loaded here by JavaScript -->
+            </div>
+
+            <div class="pims-pagination">
+                <button class="pims-page-btn" id="pims-prev-btn" disabled aria-label="Previous page">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div id="pims-page-numbers"></div>
+                <button class="pims-page-btn" id="pims-next-btn" aria-label="Next page">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
         </div>
     </div>
 
-    <div id="pims-edit-modal" class="pims-modal" role="dialog" aria-labelledby="edit-modal-title" aria-hidden="true">
+    <!-- Edit Appointment Modal -->
+    <div id="pims-edit-modal" class="pims-modal" role="dialog" aria-labelledby="pims-edit-modal-title" aria-hidden="true">
         <div class="pims-modal-card">
             <header class="pims-modal-header">
-                <h2 class="pims-modal-title" id="edit-modal-title">
-                    <i class="fas fa-edit" aria-hidden="true"></i> Update Appointment Status
+                <h2 class="pims-modal-title" id="pims-edit-modal-title">
+                    <i class="fas fa-edit"></i> Update Appointment Status
                 </h2>
                 <button class="pims-modal-close" aria-label="Close edit modal">×</button>
             </header>
@@ -414,9 +521,9 @@
                     </div>
                 </section>
                 <footer class="pims-modal-footer">
-                    <button type="button" class="pims-button pims-button-light pims-close-modal" aria-label="Cancel edit">Cancel</button>
-                    <button type="submit" class="pims-button pims-button-success">
-                        <i class="fas fa-save" aria-hidden="true"></i> Update Status
+                    <button type="button" class="pims-btn pims-close-modal" aria-label="Cancel edit">Cancel</button>
+                    <button type="submit" class="pims-btn pims-btn-success">
+                        <i class="fas fa-save"></i> Update Status
                     </button>
                 </footer>
             </form>
@@ -424,7 +531,7 @@
     </div>
 
     @include('includes.footer_js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
@@ -481,8 +588,9 @@
 
                 if (filteredAppointments.length === 0) {
                     container.innerHTML = `
-                        <div class="notification is-warning is-light has-text-centered" style="grid-column: 1/-1;">
-                            No appointments found matching your search criteria.
+                        <div class="pims-notification pims-notification-warning" style="grid-column: 1/-1; text-align: center;">
+                            <i class="fas fa-exclamation-circle"></i>
+                            <div>No appointments found matching your search criteria.</div>
                         </div>
                     `;
                     return;
@@ -505,42 +613,32 @@
                                           (appointment.status === 'completed' ? 'pims-status-completed' : 'pims-status-scheduled');
 
                         const card = document.createElement('div');
-                        card.className = 'pims-card appointment-card';
+                        card.className = 'pims-dashboard-card pims-appointment-card';
                         card.dataset.prisoner = appointment.prisonerLower;
                         card.dataset.record = appointment.id;
                         card.dataset.createdby = appointment.createdByLower;
 
                         card.innerHTML = `
-                            <header class="pims-card-header">
-                                <p class="pims-card-header-title">
-                                    <span class="pims-icon mr-2"><i class="fas fa-calendar-check" aria-hidden="true"></i></span>
-                                    Record #${appointment.id}
-                                    <span class="pims-status-tag ${statusClass}">
-                                        ${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
-                                    </span>
-                                </p>
-                            </header>
-                            <div class="pims-card-content">
-                                <div class="content">
-                                    <p><strong>Prisoner:</strong> ${appointment.prisoner || 'N/A'}</p>
-                                    <p><strong>Doctor:</strong> ${appointment.doctor}</p>
-                                    <p><strong>Date:</strong> ${appointment.date}</p>
-                                    <p><strong>Diagnosis:</strong> ${appointment.diagnosis || 'N/A'}</p>
-                                    <p><strong>Treatment:</strong> ${appointment.treatment || 'N/A'}</p>
-                                    <p><strong>Created By:</strong> ${appointment.createdBy || 'N/A'}</p>
-                                    <p><small class="has-text-grey">Created: ${appointment.createdAt}</small></p>
-                                    <p><small class="has-text-grey">Updated: ${appointment.updatedAt}</small></p>
-                                </div>
+                            <div class="pims-card-icon">
+                                <i class="fas fa-calendar-check"></i>
                             </div>
-                            <footer class="pims-card-footer">
-                                <button class="pims-card-footer-item has-text-warning pims-edit-btn"
+                            <h3>Record #${appointment.id}</h3>
+                            <p>${appointment.prisoner || 'N/A'}</p>
+                            <div class="pims-card-footer">
+                                <span><strong>Doctor:</strong> ${appointment.doctor}</span>
+                                <span><strong>Date:</strong> ${appointment.date}</span>
+                                <span class="pims-status-tag ${statusClass}">
+                                    ${appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
+                                </span>
+                            </div>
+                            <div style="margin-top: 1rem;">
+                                <button class="pims-btn pims-btn-primary pims-edit-btn"
                                         data-id="${appointment.id}"
                                         data-status="${appointment.status}"
                                         aria-label="Edit appointment ${appointment.id}">
-                                    <span class="pims-icon"><i class="fas fa-edit" aria-hidden="true"></i></span>
-                                    <span>Edit</span>
+                                    <i class="fas fa-edit"></i> Edit Status
                                 </button>
-                            </footer>
+                            </div>
                         `;
 
                         pageDiv.appendChild(card);
