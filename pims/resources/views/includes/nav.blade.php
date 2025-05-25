@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -189,8 +190,15 @@
         }
 
         @keyframes pims-fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .pims-dropdown-header {
@@ -280,8 +288,15 @@
         }
 
         @keyframes scaleIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+            0% {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
         .pims-modal-header {
@@ -445,162 +460,169 @@
             padding: 12px 30px;
             font-size: 1.1rem;
         }
+
         /* === Notification Modal Styles === */
 
-.unique-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    transition: opacity 0.3s ease;
-}
+        .unique-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
 
-.unique-modal[aria-hidden="false"] {
-    display: flex;
-}
+        .unique-modal[aria-hidden="false"] {
+            display: flex;
+        }
 
-.unique-modal-background {
-    position: absolute;
-    inset: 0;
-    cursor: pointer;
-}
+        .unique-modal-background {
+            position: absolute;
+            inset: 0;
+            cursor: pointer;
+        }
 
-.unique-modal-content {
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    padding: 1.5rem;
-    max-width: 500px;
-    width: 90%;
-    z-index: 1;
-    animation: fadeIn 0.3s ease-out;
-}
+        .unique-modal-content {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 1.5rem;
+            max-width: 500px;
+            width: 90%;
+            z-index: 1;
+            animation: fadeIn 0.3s ease-out;
+        }
 
-.unique-box {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
+        .unique-box {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
 
-/* Header */
-.unique-notification-header {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
+        /* Header */
+        .unique-notification-header {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-.unique-title {
-    font-size: 1.25rem;
-    font-weight: bold;
-    color: #333;
-    margin: 0;
-}
+        .unique-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #333;
+            margin: 0;
+        }
 
-.unique-divider {
-    border: none;
-    border-top: 1px solid #ddd;
-}
+        .unique-divider {
+            border: none;
+            border-top: 1px solid #ddd;
+        }
 
-/* Notification List */
-.unique-notification-list {
-    max-height: 300px;
-    overflow-y: auto;
-    padding: 0.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-}
+        /* Notification List */
+        .unique-notification-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
 
-.unique-notification-item {
-    background: #f9f9f9;
-    border-radius: 6px;
-    padding: 0.75rem;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    transition: background 0.2s;
-}
+        .unique-notification-item {
+            background: #f9f9f9;
+            border-radius: 6px;
+            padding: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: background 0.2s;
+        }
 
-.unique-notification-item.unread {
-    background: #e6f0ff;
-    font-weight: 500;
-}
+        .unique-notification-item.unread {
+            background: #e6f0ff;
+            font-weight: 500;
+        }
 
-.unique-notification-item.read {
-    color: #666;
-}
+        .unique-notification-item.read {
+            color: #666;
+        }
 
-/* Actions */
-.unique-notification-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
+        /* Actions */
+        .unique-notification-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
-.unique-button-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-}
+        .unique-button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
 
-/* Buttons */
-.unique-button {
-    padding: 0.6rem 1rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: background 0.2s;
-}
+        /* Buttons */
+        .unique-button {
+            padding: 0.6rem 1rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
 
-.unique-button.primary {
-    background-color: #007bff;
-    color: #fff;
-}
+        .unique-button.primary {
+            background-color: #007bff;
+            color: #fff;
+        }
 
-.unique-button.primary:disabled {
-    background-color: #99caff;
-    cursor: not-allowed;
-}
+        .unique-button.primary:disabled {
+            background-color: #99caff;
+            cursor: not-allowed;
+        }
 
-.unique-button.light {
-    background-color: #f0f0f0;
-    color: #333;
-}
+        .unique-button.light {
+            background-color: #f0f0f0;
+            color: #333;
+        }
 
-.unique-button:hover {
-    filter: brightness(0.95);
-}
+        .unique-button:hover {
+            filter: brightness(0.95);
+        }
 
-.fullwidth {
-    width: 100%;
-}
+        .fullwidth {
+            width: 100%;
+        }
 
-/* Error message */
-.unique-error-message {
-    color: #d9534f;
-    font-size: 0.9rem;
-    margin-bottom: 0.5rem;
-}
+        /* Error message */
+        .unique-error-message {
+            color: #d9534f;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
 
-/* Animations */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
 
-/* Responsive */
-@media (max-width: 500px) {
-    .unique-modal-content {
-        width: 95%;
-        padding: 1rem;
-    }
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-
+        /* Responsive */
+        @media (max-width: 500px) {
+            .unique-modal-content {
+                width: 95%;
+                padding: 1rem;
+            }
+        }
     </style>
 </head>
+
 <body class="pims-reset">
     <!-- Main Navigation -->
     <div class="pims-nav-container">
@@ -616,9 +638,9 @@
                     </a>
                 </div>
                 @if(session('prison_id'))
-                    <div class="pims-system-title">
-                        <strong>{{ session('rolename') }}</strong> | {{ session('prison') }}
-                    </div>
+                <div class="pims-system-title">
+                    <strong>{{ session('rolename') }}</strong> | {{ session('prison') }}
+                </div>
                 @endif
             </div>
 
@@ -663,32 +685,32 @@
                 <div class="pims-profile-header">
                     <div class="pims-profile-avatar-container">
                         @if(session('user_image'))
-                            <img src="{{ asset('storage/' . session('user_image')) }}" alt="User avatar" class="pims-profile-avatar">
+                        <img src="{{ asset('storage/' . session('user_image')) }}" alt="User avatar" class="pims-profile-avatar">
                         @endif
                     </div>
                     <div class="pims-profile-info">
                         @if(session('first_name') || session('last_name'))
-                            <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
+                        <h3>{{ session('first_name') }} {{ session('last_name') }}</h3>
                         @endif
                         @if(session('rolename') || session('prison'))
-                            <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
+                        <p>{{ session('rolename') }} @ {{ session('prison') }}</p>
                         @endif
                     </div>
                 </div>
                 <div class="pims-profile-details">
                     @foreach (['username', 'first_name', 'last_name', 'email', 'phone', 'gender', 'address', 'rolename', 'prison', 'law_firm', 'license_number', 'cases_handled', 'date_of_birth', 'contact_info'] as $key)
-                        @if(session($key))
-                            <div class="pims-detail-item">
-                                <div class="pims-detail-label">{{ ucwords(str_replace('_', ' ', $key)) }}:</div>
-                                <div class="pims-detail-value">{{ session($key) }}</div>
-                            </div>
-                        @endif
+                    @if(session($key))
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">{{ ucwords(str_replace('_', ' ', $key)) }}:</div>
+                        <div class="pims-detail-value">{{ session($key) }}</div>
+                    </div>
+                    @endif
                     @endforeach
                     @if(session('user_id') || session('lawyer_id'))
-                        <div class="pims-detail-item">
-                            <div class="pims-detail-label">User ID:</div>
-                            <div class="pims-detail-value">{{ session('user_id') ?: session('lawyer_id') }}</div>
-                        </div>
+                    <div class="pims-detail-item">
+                        <div class="pims-detail-label">User ID:</div>
+                        <div class="pims-detail-value">{{ session('user_id') ?: session('lawyer_id') }}</div>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -712,7 +734,7 @@
                             <input type="password" class="input" name="current_password" placeholder="Enter current password" required>
                         </div>
                         @error('current_password')
-                            <p class="help is-danger">{{ $message }}</p>
+                        <p class="help is-danger">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="field">
@@ -721,7 +743,7 @@
                             <input type="password" class="input" name="new_password" placeholder="Enter new password" required>
                         </div>
                         @error('new_password')
-                            <p class="help is-danger">{{ $message }}</p>
+                        <p class="help is-danger">{{ $message }}</p>
                         @enderror
                     </div>
                     <div class="field">
@@ -762,105 +784,126 @@
 
     <!-- JavaScript -->
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // DOM Elements
-        const notificationModal = document.getElementById('unique-notification-modal');
-        const notificationList = document.getElementById('unique-notification-list');
-        const errorMessage = document.getElementById('unique-notification-error');
-        const markAllButton = document.getElementById('unique-mark-all-as-read');
-        const closeNotificationButton = document.getElementById('unique-close-modal');
-        const notificationBackground = notificationModal?.querySelector('.unique-modal-background');
-        const openNotificationButton = document.getElementById('open-notifications');
-        const notificationBadge = document.getElementById('notification-badge');
+        document.addEventListener('DOMContentLoaded', () => {
+            // DOM Elements
+            const notificationModal = document.getElementById('unique-notification-modal');
+            const notificationList = document.getElementById('unique-notification-list');
+            const errorMessage = document.getElementById('unique-notification-error');
+            const markAllButton = document.getElementById('unique-mark-all-as-read');
+            const closeNotificationButton = document.getElementById('unique-close-modal');
+            const notificationBackground = notificationModal?.querySelector('.unique-modal-background');
+            const openNotificationButton = document.getElementById('open-notifications');
+            const notificationBadge = document.getElementById('notification-badge');
 
-        const profileModal = document.getElementById('pimsProfileModal');
-        const profileBackground = profileModal?.querySelector('.pims-modal-background');
-        const closeProfileButton = profileModal?.querySelector('.pims-modal-close');
+            const profileModal = document.getElementById('pimsProfileModal');
+            const profileBackground = profileModal?.querySelector('.pims-modal-background');
+            const closeProfileButton = profileModal?.querySelector('.pims-modal-close');
 
-        const passwordModal = document.getElementById('pimsPasswordModal');
-        const passwordBackground = passwordModal?.querySelector('.pims-modal-background');
-        const closePasswordButton = passwordModal?.querySelector('.pims-modal-close');
+            const passwordModal = document.getElementById('pimsPasswordModal');
+            const passwordBackground = passwordModal?.querySelector('.pims-modal-background');
+            const closePasswordButton = passwordModal?.querySelector('.pims-modal-close');
 
-        const userProfile = document.getElementById('pimsUserProfile');
-        const dropdownMenu = document.getElementById('pimsDropdownMenu');
-        const viewProfileButton = document.getElementById('pimsViewProfile');
-        const changePasswordButton = document.getElementById('pimsChangePassword');
+            const userProfile = document.getElementById('pimsUserProfile');
+            const dropdownMenu = document.getElementById('pimsDropdownMenu');
+            const viewProfileButton = document.getElementById('pimsViewProfile');
+            const changePasswordButton = document.getElementById('pimsChangePassword');
 
-        // Validate Elements
-        if (!notificationModal || !notificationList || !markAllButton || !closeNotificationButton || !notificationBackground || !openNotificationButton || !notificationBadge || !errorMessage) {
-            console.error('Missing notification elements:', { notificationModal, notificationList, markAllButton, closeNotificationButton, notificationBackground, openNotificationButton, notificationBadge, errorMessage });
-            return;
-        }
-        if (!profileModal || !profileBackground || !closeProfileButton || !passwordModal || !passwordBackground || !closePasswordButton) {
-            console.error('Missing modal elements:', { profileModal, profileBackground, closeProfileButton, passwordModal, passwordBackground, closePasswordButton });
-            return;
-        }
-        if (!userProfile || !dropdownMenu || !viewProfileButton || !changePasswordButton) {
-            console.error('Missing dropdown elements:', { userProfile, dropdownMenu, viewProfileButton, changePasswordButton });
-            return;
-        }
-
-        // Notification State
-        let isFetching = false;
-        let hasUnread = false;
-        let pollInterval = null;
-
-        // Show Error Message
-        function showError(message) {
-            errorMessage.textContent = message;
-            errorMessage.style.display = 'block';
-            setTimeout(() => {
-                errorMessage.style.display = 'none';
-                errorMessage.textContent = '';
-            }, 5000);
-        }
-
-        // Fetch Notifications
-        async function fetchNotifications() {
-            if (isFetching || !notificationList) {
-                console.warn('Fetch skipped: already fetching or list missing');
+            // Validate Elements
+            if (!notificationModal || !notificationList || !markAllButton || !closeNotificationButton || !notificationBackground || !openNotificationButton || !notificationBadge || !errorMessage) {
+                console.error('Missing notification elements:', {
+                    notificationModal,
+                    notificationList,
+                    markAllButton,
+                    closeNotificationButton,
+                    notificationBackground,
+                    openNotificationButton,
+                    notificationBadge,
+                    errorMessage
+                });
                 return;
             }
-            isFetching = true;
-
-            try {
-                const response = await fetch('notifications', {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-                    }
+            if (!profileModal || !profileBackground || !closeProfileButton || !passwordModal || !passwordBackground || !closePasswordButton) {
+                console.error('Missing modal elements:', {
+                    profileModal,
+                    profileBackground,
+                    closeProfileButton,
+                    passwordModal,
+                    passwordBackground,
+                    closePasswordButton
                 });
+                return;
+            }
+            if (!userProfile || !dropdownMenu || !viewProfileButton || !changePasswordButton) {
+                console.error('Missing dropdown elements:', {
+                    userProfile,
+                    dropdownMenu,
+                    viewProfileButton,
+                    changePasswordButton
+                });
+                return;
+            }
 
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                }
+            // Notification State
+            let isFetching = false;
+            let hasUnread = false;
+            let pollInterval = null;
 
-                const notifications = await response.json();
-                notificationList.innerHTML = '';
-                hasUnread = false;
+            // Show Error Message
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                    errorMessage.textContent = '';
+                }, 5000);
+            }
 
-                if (notifications.error) {
-                    notificationList.innerHTML = `<p class="unique-empty">${notifications.error}</p>`;
-                    markAllButton.disabled = true;
-                    notificationBadge.style.display = 'none';
-                    showError(notifications.error);
+            // Fetch Notifications
+            async function fetchNotifications() {
+                if (isFetching || !notificationList) {
+                    console.warn('Fetch skipped: already fetching or list missing');
                     return;
                 }
+                isFetching = true;
 
-                if (notifications.length === 0) {
-                    notificationList.innerHTML = '<p class="unique-empty">No notifications.</p>';
-                    markAllButton.disabled = true;
-                    notificationBadge.style.display = 'none';
-                    return;
-                }
+                try {
+                    const response = await fetch('notifications', {
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
+                        credentials: 'same-origin' // 🔥 This enables session cookies to be sent
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
 
-                let unreadCount = 0;
-                notifications.forEach(notification => {
-                    const div = document.createElement('div');
-                    div.className = `unique-notification-item ${notification.is_read ? 'read' : 'unread'}`;
-                    div.setAttribute('role', 'listitem');
-                    div.innerHTML = `
+                    const notifications = await response.json();
+                    notificationList.innerHTML = '';
+                    hasUnread = false;
+
+                    if (notifications.error) {
+                        notificationList.innerHTML = `<p class="unique-empty">${notifications.error}</p>`;
+                        markAllButton.disabled = true;
+                        notificationBadge.style.display = 'none';
+                        showError(notifications.error);
+                        return;
+                    }
+
+                    if (notifications.length === 0) {
+                        notificationList.innerHTML = '<p class="unique-empty">No notifications.</p>';
+                        markAllButton.disabled = true;
+                        notificationBadge.style.display = 'none';
+                        return;
+                    }
+
+                    let unreadCount = 0;
+                    notifications.forEach(notification => {
+                        const div = document.createElement('div');
+                        div.className = `unique-notification-item ${notification.is_read ? 'read' : 'unread'}`;
+                        div.setAttribute('role', 'listitem');
+                        div.innerHTML = `
                         <h4>${notification.title || 'Notification'}</h4>
                         <p>${notification.message}</p>
                         <small>${new Date(notification.created_at).toLocaleString('en-US', {
@@ -868,227 +911,230 @@
                             timeStyle: 'short'
                         })}</small>
                     `;
-                    notificationList.appendChild(div);
-                    if (!notification.is_read) {
-                        hasUnread = true;
-                        unreadCount++;
-                    }
-                });
+                        notificationList.appendChild(div);
+                        if (!notification.is_read) {
+                            hasUnread = true;
+                            unreadCount++;
+                        }
+                    });
 
-                markAllButton.disabled = !hasUnread;
-                notificationBadge.textContent = unreadCount;
-                notificationBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
-            } catch (error) {
-                console.error('Fetch notifications error:', error.message);
-                notificationList.innerHTML = `<p class="unique-empty">Failed to load notifications: ${error.message}</p>`;
+                    markAllButton.disabled = !hasUnread;
+                    notificationBadge.textContent = unreadCount;
+                    notificationBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+                } catch (error) {
+                    console.error('Fetch notifications error:', error.message);
+                    notificationList.innerHTML = `<p class="unique-empty">Failed to load notifications: ${error.message}</p>`;
+                    markAllButton.disabled = true;
+                    notificationBadge.style.display = 'none';
+                    showError('Failed to load notifications');
+                } finally {
+                    isFetching = false;
+                }
+            }
+
+            // Mark All as Read
+            async function markAllAsRead() {
+                console.log('Mark All as Read clicked');
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+                if (!csrfToken) {
+                    console.error('CSRF token missing');
+                    showError('Session error, please refresh the page');
+                    return;
+                }
+
+                try {
+                    markAllButton.disabled = true; // Disable button during request
+                    console.log('Sending mark-all-read request with CSRF token:', csrfToken);
+                    const response = await fetch('notifications/mark-all-read', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': csrfToken
+                        }
+                    });
+
+                    console.log('Response status:', response.status);
+                    const result = await response.json();
+                    console.log('Response data:', result);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${result.error || response.statusText}`);
+                    }
+
+                    if (result.success) {
+                        console.log('Notifications marked as read, updated count:', result.updated);
+                        await fetchNotifications(); // Refresh notifications
+                    } else {
+                        throw new Error(result.error || 'Unknown error');
+                    }
+                } catch (error) {
+                    console.error('Mark all as read error:', error.message);
+                    showError(error.message || 'Failed to mark notifications as read');
+                    markAllButton.disabled = !hasUnread; // Re-enable if there are still unread
+                }
+            }
+
+            // Modal Control
+            function openModal(modal, focusElement) {
+                modal.setAttribute('aria-hidden', 'false');
+                modal.removeAttribute('inert');
+                trapFocus(modal);
+                focusElement?.focus();
+            }
+
+            function closeModal(modal, focusElement) {
+                const focusTarget = focusElement || document.querySelector('body > button, body > a') || document.body;
+                focusTarget.focus();
+                modal.setAttribute('aria-hidden', 'true');
+                modal.setAttribute('inert', '');
+            }
+
+            // Focus Trap
+            function trapFocus(modal) {
+                const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+                if (focusableElements.length === 0) return;
+
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                const handleKeydown = (event) => {
+                    if (event.key !== 'Tab') return;
+                    if (event.shiftKey && document.activeElement === firstElement) {
+                        event.preventDefault();
+                        lastElement.focus();
+                    } else if (!event.shiftKey && document.activeElement === lastElement) {
+                        event.preventDefault();
+                        firstElement.focus();
+                    }
+                };
+
+                modal.addEventListener('keydown', handleKeydown);
+                modal.addEventListener('close', () => modal.removeEventListener('keydown', handleKeydown), {
+                    once: true
+                });
+            }
+
+            // Notification Modal Handlers
+            function openNotificationModal() {
+                openModal(notificationModal, closeNotificationButton);
+                fetchNotifications();
+                startPolling();
+            }
+
+            function closeNotificationModal() {
+                closeModal(notificationModal, openNotificationButton);
+                stopPolling();
                 markAllButton.disabled = true;
-                notificationBadge.style.display = 'none';
-                showError('Failed to load notifications');
-            } finally {
-                isFetching = false;
-            }
-        }
-
-        // Mark All as Read
-        async function markAllAsRead() {
-            console.log('Mark All as Read clicked');
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-            if (!csrfToken) {
-                console.error('CSRF token missing');
-                showError('Session error, please refresh the page');
-                return;
+                errorMessage.style.display = 'none';
             }
 
-            try {
-                markAllButton.disabled = true; // Disable button during request
-                console.log('Sending mark-all-read request with CSRF token:', csrfToken);
-                const response = await fetch('notifications/mark-all-read', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': csrfToken
+            // Polling Control
+            function startPolling() {
+                if (pollInterval) return;
+                pollInterval = setInterval(() => {
+                    if (notificationModal.getAttribute('aria-hidden') === 'false' && !isFetching) {
+                        fetchNotifications();
                     }
-                });
-
-                console.log('Response status:', response.status);
-                const result = await response.json();
-                console.log('Response data:', result);
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${result.error || response.statusText}`);
-                }
-
-                if (result.success) {
-                    console.log('Notifications marked as read, updated count:', result.updated);
-                    await fetchNotifications(); // Refresh notifications
-                } else {
-                    throw new Error(result.error || 'Unknown error');
-                }
-            } catch (error) {
-                console.error('Mark all as read error:', error.message);
-                showError(error.message || 'Failed to mark notifications as read');
-                markAllButton.disabled = !hasUnread; // Re-enable if there are still unread
+                }, 5000);
+                fetchNotifications();
             }
-        }
 
-        // Modal Control
-        function openModal(modal, focusElement) {
-            modal.setAttribute('aria-hidden', 'false');
-            modal.removeAttribute('inert');
-            trapFocus(modal);
-            focusElement?.focus();
-        }
-
-        function closeModal(modal, focusElement) {
-            const focusTarget = focusElement || document.querySelector('body > button, body > a') || document.body;
-            focusTarget.focus();
-            modal.setAttribute('aria-hidden', 'true');
-            modal.setAttribute('inert', '');
-        }
-
-        // Focus Trap
-        function trapFocus(modal) {
-            const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-            if (focusableElements.length === 0) return;
-
-            const firstElement = focusableElements[0];
-            const lastElement = focusableElements[focusableElements.length - 1];
-
-            const handleKeydown = (event) => {
-                if (event.key !== 'Tab') return;
-                if (event.shiftKey && document.activeElement === firstElement) {
-                    event.preventDefault();
-                    lastElement.focus();
-                } else if (!event.shiftKey && document.activeElement === lastElement) {
-                    event.preventDefault();
-                    firstElement.focus();
+            function stopPolling() {
+                if (pollInterval) {
+                    clearInterval(pollInterval);
+                    pollInterval = null;
                 }
+            }
+
+            // Modal Close Function
+            window.pimsCloseModal = function(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) closeModal(modal);
             };
 
-            modal.addEventListener('keydown', handleKeydown);
-            modal.addEventListener('close', () => modal.removeEventListener('keydown', handleKeydown), { once: true });
-        }
+            // Dropdown Handling
+            function toggleDropdown() {
+                const isExpanded = userProfile.getAttribute('aria-expanded') === 'true';
+                userProfile.setAttribute('aria-expanded', !isExpanded);
+                dropdownMenu.setAttribute('aria-hidden', isExpanded);
+            }
 
-        // Notification Modal Handlers
-        function openNotificationModal() {
-            openModal(notificationModal, closeNotificationButton);
-            fetchNotifications();
-            startPolling();
-        }
+            function closeDropdown() {
+                userProfile.setAttribute('aria-expanded', 'false');
+                dropdownMenu.setAttribute('aria-hidden', 'true');
+            }
 
-        function closeNotificationModal() {
-            closeModal(notificationModal, openNotificationButton);
-            stopPolling();
-            markAllButton.disabled = true;
-            errorMessage.style.display = 'none';
-        }
-
-        // Polling Control
-        function startPolling() {
-            if (pollInterval) return;
-            pollInterval = setInterval(() => {
-                if (notificationModal.getAttribute('aria-hidden') === 'false' && !isFetching) {
-                    fetchNotifications();
+            // Event Listeners
+            openNotificationButton.addEventListener('click', openNotificationModal);
+            closeNotificationButton.addEventListener('click', closeNotificationModal);
+            notificationBackground.addEventListener('click', closeNotificationModal);
+            notificationBackground.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    closeNotificationModal();
                 }
-            }, 5000);
+            });
+            markAllButton.addEventListener('click', markAllAsRead);
+
+            closeProfileButton.addEventListener('click', () => closeModal(profileModal));
+            profileBackground.addEventListener('click', () => closeModal(profileModal));
+            profileBackground.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    closeModal(profileModal);
+                }
+            });
+
+            closePasswordButton.addEventListener('click', () => closeModal(passwordModal));
+            passwordBackground.addEventListener('click', () => closeModal(passwordModal));
+            passwordBackground.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    closeModal(passwordModal);
+                }
+            });
+
+            viewProfileButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                openModal(profileModal, closeProfileButton);
+                closeDropdown();
+            });
+
+            changePasswordButton.addEventListener('click', (event) => {
+                event.preventDefault();
+                openModal(passwordModal, passwordModal.querySelector('input[name="current_password"]'));
+                closeDropdown();
+            });
+
+            userProfile.addEventListener('click', toggleDropdown);
+            userProfile.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    toggleDropdown();
+                }
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!userProfile.contains(event.target)) {
+                    closeDropdown();
+                }
+            });
+
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    closeDropdown();
+                    closeModal(notificationModal);
+                    closeModal(profileModal);
+                    closeModal(passwordModal);
+                }
+            });
+
+            // Initialize
             fetchNotifications();
-        }
-
-        function stopPolling() {
-            if (pollInterval) {
-                clearInterval(pollInterval);
-                pollInterval = null;
-            }
-        }
-
-        // Modal Close Function
-        window.pimsCloseModal = function(modalId) {
-            const modal = document.getElementById(modalId);
-            if (modal) closeModal(modal);
-        };
-
-        // Dropdown Handling
-        function toggleDropdown() {
-            const isExpanded = userProfile.getAttribute('aria-expanded') === 'true';
-            userProfile.setAttribute('aria-expanded', !isExpanded);
-            dropdownMenu.setAttribute('aria-hidden', isExpanded);
-        }
-
-        function closeDropdown() {
-            userProfile.setAttribute('aria-expanded', 'false');
-            dropdownMenu.setAttribute('aria-hidden', 'true');
-        }
-
-        // Event Listeners
-        openNotificationButton.addEventListener('click', openNotificationModal);
-        closeNotificationButton.addEventListener('click', closeNotificationModal);
-        notificationBackground.addEventListener('click', closeNotificationModal);
-        notificationBackground.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                closeNotificationModal();
-            }
         });
-        markAllButton.addEventListener('click', markAllAsRead);
-
-        closeProfileButton.addEventListener('click', () => closeModal(profileModal));
-        profileBackground.addEventListener('click', () => closeModal(profileModal));
-        profileBackground.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                closeModal(profileModal);
-            }
-        });
-
-        closePasswordButton.addEventListener('click', () => closeModal(passwordModal));
-        passwordBackground.addEventListener('click', () => closeModal(passwordModal));
-        passwordBackground.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                closeModal(passwordModal);
-            }
-        });
-
-        viewProfileButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            openModal(profileModal, closeProfileButton);
-            closeDropdown();
-        });
-
-        changePasswordButton.addEventListener('click', (event) => {
-            event.preventDefault();
-            openModal(passwordModal, passwordModal.querySelector('input[name="current_password"]'));
-            closeDropdown();
-        });
-
-        userProfile.addEventListener('click', toggleDropdown);
-        userProfile.addEventListener('keydown', (event) => {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                toggleDropdown();
-            }
-        });
-
-        document.addEventListener('click', (event) => {
-            if (!userProfile.contains(event.target)) {
-                closeDropdown();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape') {
-                closeDropdown();
-                closeModal(notificationModal);
-                closeModal(profileModal);
-                closeModal(passwordModal);
-            }
-        });
-
-        // Initialize
-        fetchNotifications();
-    });
     </script>
 </body>
+
 </html>

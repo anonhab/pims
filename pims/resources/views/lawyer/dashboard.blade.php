@@ -508,7 +508,7 @@
     @include('includes.nav')
 
     <!-- Sidebar -->
-    @include('cadmin.menu')
+    @include('lawyer.menu')
 
     <!-- Main Content -->
     <div id="pims-page-content">
@@ -744,5 +744,6 @@
             });
         });
     </script>
+   
 </body>
 </html>

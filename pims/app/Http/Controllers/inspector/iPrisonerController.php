@@ -15,6 +15,7 @@ use App\Models\LawyerPrisonerAssignment;
 use App\Models\PolicePrisonerAssignment;
 use App\Models\Lawyer;
 use App\Models\MedicalReport;
+use App\Models\Notification;
 use App\Models\Requests;
 use Carbon\Carbon;
 use App\Models\Room;
@@ -24,6 +25,21 @@ use Illuminate\Support\Facades\Validator;
 
 class iPrisonerController extends Controller
 {
+    private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
+{
+    Notification::create([
+        'recipient_id' => $recipientId,
+        'recipient_role' => $recipientRole,
+        'role_id' => $roleId,
+        'related_table' => $relatedTable,
+        'related_id' => $relatedId,
+        'title' => $title,
+        'message' => $message,
+        'is_read' => false,
+        'prison_id' => $prisonId,
+    ]);
+}
+
     public function index()
     {
         return view('inspector.add_prisoner');
@@ -118,54 +134,98 @@ class iPrisonerController extends Controller
     }
 
     public function allocateRoom(Request $request)
-    {
-        $prisoner = Prisoner::where('prison_id', session('prison_id'))
-            ->find($request->id);
+{
+    $prisoner = Prisoner::where('prison_id', session('prison_id'))
+        ->find($request->id);
 
-        if ($prisoner) {
-            $prisoner->room_id = $request->room_id;
-            $prisoner->save();
-            return back()->with('success', 'Room allocated successfully!');
-        }
+    if ($prisoner) {
+        $prisoner->room_id = $request->room_id;
+        $prisoner->save();
 
-        return back()->with('error', 'Prisoner not found!');
+        // Notify the prisoner
+        $this->createNotification(
+            $prisoner->id,          // recipientId (prisoner)
+            'prisoner',             // recipientRole
+            null,                      // roleId for prisoner
+            'prisoners',            // relatedTable
+            $prisoner->id,          // relatedId
+            'Room Allocation',      // title
+            "prisoner {$prisoner->first_name} {$prisoner->last_name} have been allocated to a new room {$prisoner->room_id}.",  // message
+            $prisoner->prison_id   // prisonId
+        );
+
+        return back()->with('success', 'Room allocated successfully!');
     }
+
+    return back()->with('error', 'Prisoner not found!');
+}
+
     public function assignlawyer(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'prisoner_id' => 'required|exists:prisoners,id',
-            'lawyer_id' => 'required|exists:lawyers,lawyer_id',
-            'assignment_date' => 'required|date',
-            'prison_id' => 'required|exists:prisons,id',
-            'assigned_by' => 'required|exists:accounts,user_id',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'prisoner_id' => 'required|exists:prisoners,id',
+        'lawyer_id' => 'required|exists:lawyers,lawyer_id',
+        'assignment_date' => 'required|date',
+        'prison_id' => 'required|exists:prisons,id',
+        'assigned_by' => 'required|exists:accounts,user_id',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
-        }
-
-        $assignment = LawyerPrisonerAssignment::create($request->all());
-        return response()->json(['message' => 'Assignment created successfully']);
+    if ($validator->fails()) {
+        return response()->json(['message' => $validator->errors()->first()], 422);
     }
-    public function assignpolice(Request $request)
-    {
 
+    $assignment = LawyerPrisonerAssignment::create($request->all());
 
-        $validator = Validator::make($request->all(), [
-            'prisoner_id' => 'required|exists:prisoners,id',
-            'officer_id' => 'required|exists:accounts,user_id',
-            'assignment_date' => 'required|date',
-            'prison_id' => 'required|exists:prisons,id',
-            'assigned_by' => 'required|exists:accounts,user_id',
-        ]);
+    // Notify prisoner
+    $prisoner = Prisoner::find($request->prisoner_id);
+  
 
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
-        }
+    $this->createNotification(
+        $prisoner->id,
+        'prisoner',
+        null,
+        'lawyer_prisoner_assignments',
+        $assignment->id,
+        'Lawyer Assigned',
+        "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",
+        $request->prison_id
+    );
 
-        $assignment = PolicePrisonerAssignment::create($request->all());
-        return response()->json(['message' => 'Assignment created successfully']);
+    return response()->json(['message' => 'Assignment created successfully']);
+}
+
+public function assignpolice(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'prisoner_id' => 'required|exists:prisoners,id',
+        'officer_id' => 'required|exists:accounts,user_id',
+        'assignment_date' => 'required|date',
+        'prison_id' => 'required|exists:prisons,id',
+        'assigned_by' => 'required|exists:accounts,user_id',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json(['message' => $validator->errors()->first()], 422);
     }
+
+    $assignment = PolicePrisonerAssignment::create($request->all());
+
+    // Notify prisoner
+    $prisoner = Prisoner::find($request->prisoner_id);
+
+    $this->createNotification(
+        $prisoner->id,
+        'prisoner',
+        null,
+        'police_prisoner_assignments',
+        $assignment->id,
+        'Police Officer Assigned',
+        "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",
+        $request->prison_id
+    );
+
+    return response()->json(['message' => 'Assignment created successfully']);
+}
     public function show_all()
 {
     $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);

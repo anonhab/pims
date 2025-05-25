@@ -8,23 +8,27 @@ use App\Models\Prisoner;
 use App\Models\Request as ModelsRequest;
 use App\Models\Account;
 use App\Models\Notification;
+use App\Models\Prison;
+use App\Models\Requests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CommisinerControler extends Controller
 {
-    // Helper method to create prisoner-related notifications
-    private function createNotification($recipientId, $recipientRole, $relatedTable, $relatedId, $title, $message)
+    // Updated helper method with roleId and prisonId
+    private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
     {
         Notification::create([
             'recipient_id' => $recipientId,
             'recipient_role' => $recipientRole,
+            'role_id' => $roleId,
             'related_table' => $relatedTable,
             'related_id' => $relatedId,
             'title' => $title,
             'message' => $message,
             'is_read' => false,
+            'prison_id' => $prisonId,
         ]);
     }
 
@@ -47,7 +51,6 @@ class CommisinerControler extends Controller
 
     public function releasePrisoner(Request $request)
     {
-        // Validate request data
         $request->validate([
             'prisoner_id' => 'required|exists:prisoners,id',
             'sentence_completed' => 'required|accepted',
@@ -69,26 +72,32 @@ class CommisinerControler extends Controller
             $prisoner->release_date = now();
             $prisoner->save();
 
+            $prisonId = $prisoner->prison_id;
+
             // Notify prisoner
             $this->createNotification(
                 $prisoner->id,
                 'prisoner',
+                5, // Assuming role_id 5 = prisoner
                 'prisoners',
                 $prisoner->id,
                 'Prisoner Released',
-                "You have been officially released from the prison system."
+                "You have been officially released from the prison system.",
+                $prisonId
             );
 
-            // Notify officer (assuming the commissioner is an officer)
+            // Notify officer (the commissioner)
             $officerId = session('user_id');
             if ($officerId) {
                 $this->createNotification(
                     $officerId,
                     'officer',
+                    3, // Assuming role_id 3 = officer
                     'prisoners',
                     $prisoner->id,
                     'Prisoner Release Processed',
-                    "Prisoner {$prisoner->first_name} {$prisoner->last_name} has been released."
+                    "Prisoner {$prisoner->first_name} {$prisoner->last_name} has been released.",
+                    $prisonId
                 );
             }
 
@@ -98,10 +107,12 @@ class CommisinerControler extends Controller
                 $this->createNotification(
                     $admin->user_id,
                     'admin',
+                    1, // role_id 1 = admin
                     'prisoners',
                     $prisoner->id,
                     'Prisoner Released',
-                    "Prisoner {$prisoner->first_name} {$prisoner->last_name} has been released from the prison system."
+                    "Prisoner {$prisoner->first_name} {$prisoner->last_name} has been released from the prison system.",
+                    $prisonId
                 );
             }
 
@@ -132,10 +143,22 @@ class CommisinerControler extends Controller
     }
 
     public function showEvaluationForm()
+
     {
-        $requests = ModelsRequest::where('status', 'transferred')->get();
-        return view('police_commisioner.evaluate_request', compact('requests'));
+        $prisons =  Prison::all();
+        $prisonId = session('prison_id');
+
+        $requests = Requests::where('status', 'transferred')
+            ->whereHas('prisoner', function ($query) use ($prisonId) {
+                $query->where('prison_id', $prisonId);
+            })
+            ->get();
+
+
+
+        return view('police_commisioner.evaluate_request', compact('requests', 'prisons'));
     }
+
 
     public function releasedprisoners()
     {
@@ -147,12 +170,10 @@ class CommisinerControler extends Controller
 
     public function ExecuteRequests(Request $request)
     {
-        // Check if the request contains status updates
         if ($request->has('request_id') && $request->has('status')) {
             $requestId = $request->input('request_id');
             $newStatus = $request->input('status');
 
-            // Validate inputs
             $validator = Validator::make($request->all(), [
                 'request_id' => 'required|exists:requests,id',
                 'status' => 'required|in:approved,rejected',
@@ -162,58 +183,39 @@ class CommisinerControler extends Controller
                 return back()->withErrors($validator)->withInput();
             }
 
-            $requestRecord = ModelsRequest::find($requestId);
+            $requestRecord = Requests::find($requestId);
             if (!$requestRecord) {
                 Log::error('Request not found', ['request_id' => $requestId]);
                 return back()->with('error', 'Request not found.');
             }
 
-            // Update request status
             $requestRecord->status = $newStatus;
             $requestRecord->approved_by = session('user_id') ?: null;
             $requestRecord->save();
 
-            // Get prisoner and requester details
             $prisoner = Prisoner::find($requestRecord->prisoner_id);
             $requester = $requestRecord->lawyer_id ? Lawyer::find($requestRecord->lawyer_id) : Account::find($requestRecord->user_id);
             $requesterRole = $requestRecord->lawyer_id ? 'lawyer' : 'officer';
+            $requesterRoleId = $requestRecord->lawyer_id ? null : 8; // 4=lawyer, 3=officer
             $requesterName = $requester ? ($requester->name ?? "{$requester->first_name} {$requester->last_name}") : 'Unknown';
+            $prisonId = $prisoner->prison_id ?? session('prison_id');
 
-            // Notify prisoner
-            $this->createNotification(
-                $requestRecord->prisoner_id,
-                'prisoner',
-                'requests',
-                $requestRecord->id,
-                "Request {$newStatus}",
-                "Your {$requestRecord->request_type} request has been {$newStatus}."
-            );
-
-            // Notify requester (lawyer or officer)
+           
+            // Notify requester
             if ($requestRecord->lawyer_id || $requestRecord->user_id) {
                 $this->createNotification(
                     $requestRecord->lawyer_id ?: $requestRecord->user_id,
                     $requesterRole,
+                    $requesterRoleId,
                     'requests',
                     $requestRecord->id,
                     "Request {$newStatus}",
-                    "Your {$requestRecord->request_type} request for prisoner {$prisoner->first_name} {$prisoner->last_name} has been {$newStatus}."
+                    "Your {$requestRecord->request_type} request for prisoner {$prisoner->first_name} {$prisoner->last_name} has been {$newStatus}.",
+                    $prisonId
                 );
             }
 
-            // Notify admin
-            $admin = Account::where('role_id', 1)->first();
-            if ($admin) {
-                $this->createNotification(
-                    $admin->user_id,
-                    'admin',
-                    'requests',
-                    $requestRecord->id,
-                    "Request {$newStatus}",
-                    "A {$requestRecord->request_type} request for prisoner {$prisoner->first_name} {$prisoner->last_name} has been {$newStatus} by {$requesterName}."
-                );
-            }
-
+           
             Log::info('Request status updated', [
                 'request_id' => $requestRecord->id,
                 'status' => $newStatus,
@@ -223,33 +225,30 @@ class CommisinerControler extends Controller
             return back()->with('success', "Request {$newStatus} successfully.");
         }
 
-        // Render view with approved or pending requests
         $approvedRequests = ModelsRequest::whereIn('status', ['approved', 'pending'])->get();
         return view('police_commisioner.process_requests', compact('approvedRequests'));
     }
 
-    // View prisoner-related notifications
     public function viewNotifications(Request $request)
     {
         $user = $request->user();
         $role = $user->role_id == 1 ? 'admin' :
                 ($user->role_id == 3 ? 'officer' :
                 ($user->role_id == 4 ? 'lawyer' : 'prisoner'));
-    
+
         $notifications = Notification::where('recipient_id', $user->user_id)
             ->where('recipient_role', $role)
             ->whereIn('related_table', ['prisoners', 'rooms', 'lawyer_prisoner_assignments', 'police_prisoner_assignments'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-    
+
         if ($request->ajax()) {
             return response()->json($notifications);
         }
-    
+
         return view('inspector.notifications', compact('notifications'));
     }
 
-    // Mark a notification as read
     public function markAsRead(Request $request, $notification_id)
     {
         $notification = Notification::where('recipient_id', $request->user()->user_id)
@@ -260,4 +259,60 @@ class CommisinerControler extends Controller
 
         return response()->json(['message' => 'Notification marked as read']);
     }
+    public function approve(Request $request)
+{
+    // Log incoming request
+    Log::info('Transfer approval request received', $request->all());
+
+    // Log validation
+    Log::info('Validation passed', [
+        'request_id'  => $request->request_id,
+        'prisoner_id' => $request->prisoner_id,
+        'facility_id' => $request->facility_id,
+    ]);
+
+    // Retrieve models
+    $transferRequest = \App\Models\Requests::findOrFail($request->request_id);
+    $prisoner = \App\Models\Prisoner::findOrFail($request->prisoner_id);
+
+    Log::info('Fetched transfer request and prisoner', [
+        'transfer_request' => $transferRequest->toArray(),
+        'prisoner' => $prisoner->toArray(),
+    ]);
+
+    // Update prisoner's current facility
+    $prisoner->prison_id = $request->facility_id;
+    $prisoner->room_id = null;
+    $prisoner->save();
+
+    Log::info('Prisoner updated with new facility', [
+        'prisoner_id' => $prisoner->id,
+        'new_prison_id' => $request->facility_id,
+    ]);
+
+    // Approve transfer request
+    $transferRequest->status = 'approved';
+    $transferRequest->approved_by = session('user_id');
+    $transferRequest->save();
+
+    Log::info('Transfer request marked as approved', [
+        'request_id' => $transferRequest->id,
+        'approved_by' => session('user_id')
+    ]);
+
+    // Notify the prisoner
+    $this->createNotification(
+        $prisoner->id,
+        'prisoner',
+        0,
+        'requests',
+        $transferRequest->id,
+        'Transfer Approved',
+        "Prisoner { $prisoner->first_name} {$prisoner->last_name} transfer request has been approved. You have been moved to a new facility.",
+        session('prison_id')
+    );
+
+    return redirect()->back()->with('success', 'Prisoner transfer approved successfully.');
+}
+
 }

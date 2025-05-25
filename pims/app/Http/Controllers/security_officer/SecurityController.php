@@ -17,18 +17,21 @@ use Illuminate\Support\Facades\Validator;
 
 class SecurityController extends Controller
 {
-    private function createNotification($recipientId, $recipientRole, $relatedTable, $relatedId, $title, $message)
+    private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
     {
         Notification::create([
             'recipient_id' => $recipientId,
             'recipient_role' => $recipientRole,
+            'role_id' => $roleId,
             'related_table' => $relatedTable,
             'related_id' => $relatedId,
             'title' => $title,
             'message' => $message,
             'is_read' => false,
+            'prison_id' => $prisonId,
         ]);
     }
+    
 
     // Show form to register a visitor
     public function registerVisitor()
@@ -126,6 +129,11 @@ public function verify(Request $request)
 
 public function updateStatus(Request $request)
 {
+    Log::info('Update status request received', [
+        'input' => $request->all(),
+        'user_id' => session('user_id'),
+    ]);
+
     $request->validate([
         'appointment_id' => 'required',
         'appointment_type' => 'required|in:medical,lawyer,visitor',
@@ -139,37 +147,55 @@ public function updateStatus(Request $request)
         $status = $request->input('status');
         $notes = $request->input('notes');
 
+        Log::info('Fetching appointment', ['appointment_id' => $appointmentId, 'type' => $type]);
         $appointment = $this->getAppointmentModel($type, $appointmentId);
 
         if (!$appointment) {
+            Log::warning('Appointment not found', ['appointment_id' => $appointmentId, 'type' => $type]);
             return response()->json([
                 'success' => false,
                 'message' => 'Appointment not found'
             ], 404);
         }
 
+        Log::info('Updating appointment status', [
+            'appointment_id' => $appointmentId,
+            'old_status' => $appointment->status,
+            'new_status' => $status,
+            'notes' => $notes
+        ]);
         $appointment->status = $status;
         $appointment->note = $notes;
         $appointment->save();
+        Log::info('Appointment updated successfully', ['appointment_id' => $appointmentId]);
 
-        // Notify visitor only if it's a visitor appointment
-        if ($type === 'visitor' && $appointment->visitor_id && $appointment->prisoner_id) {
-            $visitor = Visitor::find($appointment->visitor_id);
-            $prisoner = Prisoner::find($appointment->prisoner_id);
+        $visitor = Visitor::find($appointment->visitor_id);
+        $prisoner = Prisoner::find($appointment->prisoner_id);
+        $prisonId = session('prison_id');
 
-            if ($visitor && $prisoner) {
-                $this->createNotification(
-                    $visitor->id,
-                    'visitor',
-                    'new_visiting_requests',
-                    $appointment->id,
-                    "Visiting Request {$status}",
-                    "Your visiting request for prisoner {$prisoner->first_name} {$prisoner->last_name} has been {$status}." . ($notes ? " Notes: {$notes}" : "")
-                );
-            }
-        }
+        // Send notification even if visitor or prisoner might be null
+        $this->createNotification(
+            $visitor ? $visitor->id : null,
+            'visitor',
+            null,  // adjust role_id as needed
+            'new_visiting_requests',
+            $appointment->id,
+            "Visiting Request {$status}",
+            "Your visiting request for prisoner " 
+                . ($prisoner ? "{$prisoner->first_name} {$prisoner->last_name}" : "Unknown Prisoner") 
+                . " has been {$status}" 
+                . ($notes ? ". Notes: {$notes}" : ""),
+            $prisonId
+        );
 
-        Log::info('Appointment status updated', [
+        Log::info('Notification sent (or attempted)', [
+            'visitor_id' => $visitor ? $visitor->id : 'null',
+            'prison_id' => $prisonId,
+            'appointment_id' => $appointment->id,
+            'status' => $status,
+        ]);
+
+        Log::info('Appointment status update completed', [
             'appointment_id' => $appointmentId,
             'type' => $type,
             'status' => $status,

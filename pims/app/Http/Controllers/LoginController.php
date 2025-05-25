@@ -162,34 +162,9 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        $request->session()->forget([
-            'username',
-            'lawyer_id',
-            'prison',
-            'prison_id',
-            'first_name',
-            'user_id',
-            'last_name',
-            'role_id',
-            'user_image',
-            'rolename',
-            'email',
-            'gender',
-            'address',
-            'phone',
-        ]);
-        $request->session()->forget([
-            'lawyer_id',
-            'first_name',
-            'last_name',
-            'date_of_birth',
-            'contact_info',
-            'email',
-            'law_firm',
-            'license_number',
-            'cases_handled',
-            'prison',
-        ]);
+       
+        $request->session()->flush(); // Clears all session data
+
         return redirect()->route('login');
     }
 }

@@ -88,6 +88,7 @@ Route::post('/ExecuteRequests', [CommisinerControler::class, 'ExecuteRequests'])
 Route::post('/releasePrisoner', [CommisinerControler::class, 'releasePrisoner'])->name('release_prisoner');
 Route::get('/prisonershow/{id}', [CommisinerControler::class, 'show']);
 Route::get('/evaluate', [CommisinerControler::class, 'showEvaluationForm'])->name('commisinerControler.evaluate_request');
+Route::post('/transferapprove', [CommisinerControler::class, 'approve'])->name('transfer.approve');
 
 Route::get('/chart-data', [cAccountController::class, 'getChartData']);
 Route::get('/login', [LoginController::class, 'showLoginForm']);
@@ -193,7 +194,7 @@ Route::middleware('middleware')->group(function () {
     Route::get('/ldashboard', [myLawyerController::class, 'ldashboard'])->name('mylawyer.ldashboard');
     Route::get('/myprisoners', [myLawyerController::class, 'myprisoners'])->name('mylawyer.myprisoners');
     Route::post('/requests/store', [myLawyerController::class, 'rstore'])->name('requests.store');
-    Route::post('/appointments/store', [myLawyerController::class, 'astore'])->name('lawyer_appointments.store');
+    Route::post('/appstore', [myLawyerController::class, 'astore'])->name('lawyer_appointments.store');
 });
 Route::post('/requestspstore', [myLawyerController::class, 'prstore'])->name('requestsfrompolice.store');
 
@@ -304,6 +305,8 @@ Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'
 Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
 Route::post('/transfer-request/{id}', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
+Route::post('/approve-appointment/{id}', [RequestController::class, 'approve']);
+Route::post('/reject-appointment/{id}', [RequestController::class, 'reject']);
 Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
 Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');
 Route::get('/vdashboard', [VisitorController::class, 'dashboard'])->name('visitor.dashboard');

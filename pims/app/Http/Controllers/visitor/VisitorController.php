@@ -4,7 +4,9 @@ namespace App\Http\Controllers\visitor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VisitingTimeRequestController;
+use App\Models\Account;
 use App\Models\NewVisitingRequest;
+use App\Models\Notification;
 use App\Models\Prison;
 use App\Models\Prisoner;
 use App\Models\VisitingRequest;
@@ -15,6 +17,21 @@ use Illuminate\Support\Facades\Session;
 
 class VisitorController extends Controller
 {
+    private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
+    {
+        Notification::create([
+            'recipient_id' => $recipientId,
+            'recipient_role' => $recipientRole,
+            'role_id' => $roleId,
+            'related_table' => $relatedTable,
+            'related_id' => $relatedId,
+            'title' => $title,
+            'message' => $message,
+            'is_read' => false,
+            'prison_id' => $prisonId,
+        ]);
+    }
+    
     public function createVisitingRequest()
     {
         // Logic to retrieve all the visiting time requests from the database
@@ -124,7 +141,7 @@ class VisitorController extends Controller
         ->where('prisoner_middlename', $request->prisoner_middlename)
         ->where('prisoner_lastname', $request->prisoner_lastname)
         ->where('prison_id', $request->prison_id)
-        ->whereIn('status', ['pending', 'approved']) // Optional: consider only active ones
+        ->whereIn('status', ['pending', 'approved'])
         ->first();
 
     if ($existing) {
@@ -148,8 +165,30 @@ class VisitorController extends Controller
         'visiting_request_id' => $visitingRequest->id,
     ]);
 
+    // Notify all security officers with role_id = 10
+    $securityOfficers = Account::where('role_id', 10)->get();
+
+    $visitor = Visitor::where('id', $visitor_id)->first();
+    
+    $visitorFullName = $visitor ? ($visitor->first_name . ' ' . $visitor->last_name) : 'Unknown visitor';
+    
+    foreach ($securityOfficers as $officer) {
+        $this->createNotification(
+            $officer->id,
+            'officer',
+            10,
+            'visiting_requests',
+            $visitingRequest->id,
+            'New Visiting Request Submitted',
+            "New visiting request by visitor {$visitorFullName} for prisoner {$request->prisoner_firstname} {$request->prisoner_lastname}.",
+            $request->prison_id
+        );
+    }
+    
+
     return back()->with('success', 'Visiting Request Submitted Successfully');
 }
+
 
     
  

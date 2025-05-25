@@ -15,126 +15,139 @@ use Illuminate\Support\Facades\Validator;
 class MedicalController extends Controller
 {
     // Helper method to create prisoner-related notifications
-    private function createNotification($recipientId, $recipientRole, $relatedTable, $relatedId, $title, $message)
-    {
-        Notification::create([
-            'recipient_id' => $recipientId,
-            'recipient_role' => $recipientRole,
-            'related_table' => $relatedTable,
-            'related_id' => $relatedId,
-            'title' => $title,
-            'message' => $message,
-            'is_read' => false,
-        ]);
+   // Create a notification
+private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
+{
+    Notification::create([
+        'recipient_id' => $recipientId,
+        'recipient_role' => $recipientRole,
+        'role_id' => $roleId,
+        'related_table' => $relatedTable,
+        'related_id' => $relatedId,
+        'title' => $title,
+        'message' => $message,
+        'is_read' => false,
+        'prison_id' => $prisonId,
+    ]);
+}
+
+// Show form to create a medical appointment
+public function createMedicalAppointment()
+{
+    $prisonId = session('prison_id');
+    $userId = session('user_id');
+
+    $appointments = MedicalAppointment::with(['prisoner', 'doctor', 'createdBy'])
+                                     ->where('prison_id', $prisonId)
+                                     ->latest()
+                                     ->get();
+
+    $prisoners = Prisoner::where('prison_id', $prisonId)->get();
+    $doctors = Account::where('user_id', $userId)->get();
+
+    return view('medical_officer.createMedicalAppointment', compact('appointments', 'prisoners', 'doctors'));
+}
+
+// Store a medical appointment
+public function mstore(Request $request)
+{
+    $prisonId = session('prison_id');
+    $userId = session('user_id');
+
+    // Log request entry
+    Log::info('Request to create medical appointment received', [
+        'by_user_id' => $userId,
+        'prison_id' => $prisonId,
+        'request_payload' => $request->all()
+    ]);
+
+    // Validation
+    $errors = [];
+    if (empty($request->prisoner_id) || !Prisoner::find($request->prisoner_id)) {
+        $errors[] = 'Invalid prisoner_id.';
+    }
+    if (empty($request->doctor_id) || !Account::where('user_id', $request->doctor_id)->exists()) {
+        $errors[] = 'Invalid doctor_id.';
+    }
+    if (empty($request->appointment_date) || !strtotime($request->appointment_date) || strtotime($request->appointment_date) < strtotime('today')) {
+        $errors[] = 'Invalid appointment_date or it must be today or later.';
+    }
+    if (!in_array($request->status, ['scheduled', 'completed', 'cancelled'])) {
+        $errors[] = 'Invalid status. Allowed values: scheduled, completed, cancelled.';
     }
 
-    // Show form to create a medical appointment
-    public function createMedicalAppointment()
-    {
-        $prisonId = session('prison_id');
-        $userId = session('user_id');
-    
-        $appointments = MedicalAppointment::with(['prisoner', 'doctor', 'createdBy'])
-                                         ->where('prison_id', $prisonId)
-                                         ->latest()
-                                         ->get();
-    
-        $prisoners = Prisoner::where('prison_id', $prisonId)->get();
-        $doctors = Account::where('user_id', $userId)->get();
-    
-        return view('medical_officer.createMedicalAppointment', compact('appointments', 'prisoners', 'doctors'));
+    if (!empty($errors)) {
+        Log::warning('Medical appointment validation failed', [
+            'user_id' => $userId,
+            'errors' => $errors,
+            'input_data' => $request->all()
+        ]);
+        return redirect()->back()->withErrors($errors)->withInput();
     }
 
-    // Store a medical appointment
-    public function mstore(Request $request)
-    {
-        $prisonId = session('prison_id');
+    // Prepare data for insertion
+    $data = $request->all();
+    $data['created_by'] = $userId ?? null;
+    $data['prison_id'] = $prisonId;
 
-        // Log incoming request data
-        Log::info('Creating medical appointment', [
-            'prisoner_id' => $request->prisoner_id,
-            'doctor_id' => $request->doctor_id,
-            'appointment_date' => $request->appointment_date,
-            'diagnosis' => $request->diagnosis,
-            'treatment' => $request->treatment,
-            'status' => $request->status,
-            'user_id' => session('user_id'),
-            'prison_id' => $prisonId,
-        ]);
+    // Create appointment
+    $appointment = MedicalAppointment::create($data);
 
-        // Validate fields
-        $errors = [];
-        if (empty($request->prisoner_id) || !Prisoner::find($request->prisoner_id)) {
-            $errors[] = 'Invalid prisoner_id.';
-        }
-        if (empty($request->doctor_id) || !Account::where('user_id', $request->doctor_id)->exists()) {
-            $errors[] = 'Invalid doctor_id.';
-        }
-        if (empty($request->appointment_date) || !strtotime($request->appointment_date) || strtotime($request->appointment_date) < time()) {
-            $errors[] = 'Invalid appointment_date or it must be today or later.';
-        }
-        if (!in_array($request->status, ['scheduled', 'completed', 'cancelled'])) {
-            $errors[] = 'Invalid status. Allowed values: scheduled, completed, cancelled.';
-        }
+    Log::info('Medical appointment record inserted', [
+        'appointment_id' => $appointment->id,
+        'created_by' => $userId,
+        'data' => $appointment->toArray()
+    ]);
 
-        if (!empty($errors)) {
-            Log::error('Validation failed', ['errors' => $errors]);
-            return redirect()->back()->withErrors($errors)->withInput();
-        }
+    // Get prisoner and doctor info
+    $prisoner = Prisoner::find($request->prisoner_id);
+    $doctor = Account::where('user_id', $request->doctor_id)->first();
 
-        // Prepare data for insertion
-        $data = $request->all();
-        $data['created_by'] = session('user_id') ?? null;
-        $data['prison_id'] = $prisonId;
+    // Notify prisoner
+    $this->createNotification(
+        $request->prisoner_id,
+        'prisoner',
+        null,
+        'medical_appointments',
+        $appointment->id,
+        'New Medical Appointment',
+        "You have a medical appointment scheduled for {$request->appointment_date}.",
+        $prisonId
+    );
+    Log::info('Notification sent to prisoner', [
+        'recipient_id' => $request->prisoner_id,
+        'appointment_id' => $appointment->id,
+        'date' => $request->appointment_date
+    ]);
 
-        // Create the appointment
-        $appointment = MedicalAppointment::create($data);
+    // Notify doctor
+    $this->createNotification(
+        $request->doctor_id,
+        'doctor',
+        $doctor->role_id ?? null,
+        'medical_appointments',
+        $appointment->id,
+        'New Appointment Assigned',
+        "You have been assigned a medical appointment with prisoner {$prisoner->first_name} {$prisoner->last_name} on {$request->appointment_date}.",
+        $prisonId
+    );
+    Log::info('Notification sent to doctor', [
+        'recipient_id' => $request->doctor_id,
+        'role_id' => $doctor->role_id ?? null,
+        'appointment_id' => $appointment->id
+    ]);
 
-        // Get prisoner and doctor details
-        $prisoner = Prisoner::find($request->prisoner_id);
-        $doctor = Account::find($request->doctor_id);
+    // Final success log
+    Log::info('Medical appointment successfully completed', [
+        'status' => 'success',
+        'appointment_id' => $appointment->id,
+        'created_by' => $userId
+    ]);
 
-        // Notify prisoner
-        $this->createNotification(
-            $request->prisoner_id,
-            'prisoner',
-            'medical_appointments',
-            $appointment->id,
-            'New Medical Appointment',
-            "You have a medical appointment scheduled for {$request->appointment_date}."
-        );
+    return redirect()->back()->with('success', 'Appointment created successfully.');
+}
 
-        // Notify doctor
-        $this->createNotification(
-            $request->doctor_id,
-            'doctor',
-            'medical_appointments',
-            $appointment->id,
-            'New Appointment Assigned',
-            "You have been assigned a medical appointment with prisoner {$prisoner->first_name} {$prisoner->last_name} on {$request->appointment_date}."
-        );
 
-        // Notify admin
-        $admin = Account::where('role_id', 1)->first();
-        if ($admin) {
-            $this->createNotification(
-                $admin->user_id,
-                'admin',
-                'medical_appointments',
-                $appointment->id,
-                'New Medical Appointment Created',
-                "A medical appointment for prisoner {$prisoner->first_name} {$prisoner->last_name} has been scheduled."
-            );
-        }
-
-        Log::info('Medical appointment created successfully', [
-            'appointment_id' => $appointment->id,
-            'user_id' => session('user_id'),
-            'appointment_details' => $appointment->toArray(),
-        ]);
-
-        return redirect()->back()->with('success', 'Appointment created successfully.');
-    }
 
     // Update medical appointment status
     public function update(Request $request, $id)
@@ -164,98 +177,81 @@ class MedicalController extends Controller
 
     // Store a medical report
     public function mrstore(Request $request)
-    {
-        // Validate incoming data
-        $validator = Validator::make($request->all(), [
-            'prisoner_id' => 'required|exists:prisoners,id',
-            'appointment_id' => 'nullable|exists:medical_appointments,id',
-            'diagnosis' => 'required|string',
-            'treatment' => 'nullable|string',
-            'medications' => 'nullable|string',
-            'notes' => 'nullable|string',
-            'report_date' => 'required|date',
-            'follow_up' => 'nullable|boolean',
-            'follow_up_date' => 'nullable|date|after_or_equal:report_date',
-        ]);
+{
+    // Validate the incoming request
+    $validated = $request->validate([
+        'prisoner_id'       => 'required|exists:prisoners,id',
+        'appointment_id'    => 'nullable|exists:medical_appointments,id',
+        'diagnosis'         => 'required|string',
+        'treatment'         => 'nullable|string',
+        'medications'       => 'nullable|string',
+        'notes'             => 'nullable|string',
+        'report_date'       => 'required|date',
+        'follow_up'         => 'nullable|boolean',
+        'follow_up_date'    => 'nullable|date|after_or_equal:report_date',
+    ]);
 
-        if ($validator->fails()) {
-            Log::error('Validation failed for medical report', ['errors' => $validator->errors()]);
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+    $doctorId = session('user_id');
+    $doctorAccount = Account::where('user_id', $doctorId)->first();
+    $roleId = $doctorAccount?->role_id ?? null;
 
-        Log::debug('Medical report store request received:', $request->all());
+    $appointment = MedicalAppointment::find($request->appointment_id);
+    $prisoner = Prisoner::find($request->prisoner_id);
 
-        $doctorId = session('user_id');
-        Log::debug('Logged in doctor ID:', ['doctor_id' => $doctorId]);
+    Log::info('Storing medical report', [
+        'doctor_id' => $doctorId,
+        'prisoner_id' => $prisoner->id,
+        'appointment_id' => optional($appointment)->id,
+    ]);
 
-        $appointment = MedicalAppointment::find($request->appointment_id);
-        $prisoner = Prisoner::find($request->prisoner_id);
+    // Create the medical report
+    $report = MedicalReport::create([
+        'prisoner_id'      => $prisoner->id,
+        'appointment_id'   => optional($appointment)->id,
+        'doctor_id'        => $doctorId,
+        'diagnosis'        => $request->diagnosis,
+        'treatment'        => $request->treatment,
+        'medications'      => $request->medications,
+        'notes'            => $request->notes,
+        'report_date'      => $request->report_date,
+        'follow_up'        => $request->has('follow_up'),
+        'follow_up_date'   => $request->follow_up_date,
+    ]);
 
-        Log::debug('Appointment details:', ['appointment' => $appointment]);
-        Log::debug('Prisoner details:', ['prisoner' => $prisoner]);
-
-        // Create the medical report
-        $report = new MedicalReport();
-        $report->prisoner_id = $prisoner->id;
-        $report->appointment_id = $appointment->id ?? null;
-        $report->doctor_id = $doctorId;
-        $report->diagnosis = $request->diagnosis;
-        $report->treatment = $request->treatment;
-        $report->medications = $request->medications;
-        $report->notes = $request->notes;
-        $report->report_date = $request->report_date;
-        $report->follow_up = $request->has('follow_up') ? true : false;
-        $report->follow_up_date = $request->follow_up_date ?: null;
-
-        Log::debug('Creating medical report with data:', $report->toArray());
-
-        $report->save();
-
-        // Update appointment status if exists
-        if ($appointment) {
-            $appointment->status = 'completed';
-            $appointment->save();
-        } else {
-            Log::warning('Appointment not found for ID: ' . $request->appointment_id);
-        }
-
-        // Notify prisoner
-        $this->createNotification(
-            $prisoner->id,
-            'prisoner',
-            'medical_reports',
-            $report->id,
-            'New Medical Report',
-            "A medical report has been generated for you with diagnosis: {$request->diagnosis}."
-        );
-
-        // Notify doctor
-        $this->createNotification(
-            $doctorId,
-            'doctor',
-            'medical_reports',
-            $report->id,
-            'Medical Report Created',
-            "You have created a medical report for prisoner {$prisoner->first_name} {$prisoner->last_name}."
-        );
-
-        // Notify admin
-        $admin = Account::where('role_id', 1)->first();
-        if ($admin) {
-            $this->createNotification(
-                $admin->user_id,
-                'admin',
-                'medical_reports',
-                $report->id,
-                'New Medical Report Generated',
-                "A medical report has been generated for prisoner {$prisoner->first_name} {$prisoner->last_name}."
-            );
-        }
-
-        Log::debug('Medical report saved successfully.');
-
-        return redirect()->back()->with('success', 'Medical report generated successfully.');
+    // Update appointment status if applicable
+    if ($appointment) {
+        $appointment->update(['status' => 'completed']);
+        Log::info('Appointment marked as completed', ['appointment_id' => $appointment->id]);
     }
+
+    // Send notification to prisoner
+    $this->createNotification(
+        $prisoner->id,
+        'prisoner',
+        null,
+        'medical_reports',
+        $report->id,
+        'New Medical Report',
+        "A medical report has been created  with diagnosis: {$request->diagnosis}.",
+        $prisoner->prison_id
+    );
+
+    // Send notification to doctor
+    $this->createNotification(
+        $doctorId,
+        'doctor',
+        $roleId,
+        'medical_reports',
+        $report->id,
+        'Medical Report Created',
+        "You have created a medical report for prisoner {$prisoner->first_name} {$prisoner->last_name}.",
+        $prisoner->prison_id
+    );
+
+    Log::info('Medical report created successfully', ['report_id' => $report->id]);
+
+    return redirect()->back()->with('success', 'Medical report generated successfully.');
+}
 
     // Store the medical report (redundant, keeping for compatibility)
     public function storeMedicalReport(Request $request)
