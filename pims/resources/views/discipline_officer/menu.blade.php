@@ -39,7 +39,7 @@
                 <ul class="pims-submenu">
                     
                     <li class="pims-submenu-item">
-                        <a href="{{ route('prisoner.showprisoners') }}" class="pims-submenu-link">View Prisoner Profile</a>
+                        <a href="{{ route('showprisoners') }}" class="pims-submenu-link">View Prisoner Profile</a>
                     </li>
                 </ul>
             </li>

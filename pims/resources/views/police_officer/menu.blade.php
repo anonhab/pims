@@ -66,7 +66,12 @@
                         <a href="{{ route('room.assign') }}" class="pims-submenu-link">View allocations</a>
                     </li>
                 </ul>
-      
+                @php
+    use App\Models\PolicePrisonerAssignment;
+    $isAssigned = PolicePrisonerAssignment::where('officer_id', session('user_id'))->exists();
+@endphp
+
+
 
             <!-- Conditionally Display Request Menu -->
             @if($isAssigned)

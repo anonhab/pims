@@ -38,7 +38,6 @@ class myLawyerController extends Controller
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->get();
         return view('lawyer.dashboard', compact('prisoners'));
     }
-
     public function rstore(Request $request)
     {
         // Validate request data
@@ -48,19 +47,19 @@ class myLawyerController extends Controller
             'request_details' => 'required|string',
             'prisoner_id' => 'required|exists:prisoners,id',
         ]);
-
+    
         // Check session values
         $lawyerId = session('lawyer_id');
         $userId = session('user_id');
         $prisonId = session('prison_id');
-
+    
         Log::info('Session Data:', ['lawyer_id' => $lawyerId, 'user_id' => $userId, 'prison_id' => $prisonId]);
-
+    
         if (is_null($prisonId)) {
             Log::error('prison_id is NULL before creating request.');
             return redirect()->back()->with('error', 'Prison ID not found in session.');
         }
-
+    
         // Create the request record
         $requestData = [
             'lawyer_id' => $lawyerId ?: null,
@@ -70,31 +69,30 @@ class myLawyerController extends Controller
             'approved_by' => $request->approved_by ?: null,
             'request_details' => $request->request_details,
             'prisoner_id' => $request->prisoner_id,
+            'prison_id' => $prisonId,
         ];
-
+    
         $requestRecord = Requests::create($requestData);
-
+    
         // Get prisoner details
         $prisoner = Prisoner::find($request->prisoner_id);
-      
-
-        // Notify prisoner
-        $prisonId = session('prison_id');
-
-        
-
-        // Notify displin 
+    
+        // Notify discipline officer
         $this->createNotification(
             $lawyerId,
             'lawyer',
-            '11',
+            '11', // You may want to dynamically determine recipient ID and type
             'requests',
             $requestRecord->id,
             'Request Submitted',
-            "a {$request->request_type} request for prisoner {$prisoner->first_name} {$prisoner->last_name}.",
+            "A {$request->request_type} request has been submitted for prisoner {$prisoner->first_name} {$prisoner->last_name}.",
             $prisonId
         );
+    
+        // ✅ Return back with a success message
+        return redirect()->back()->with('success', 'Request submitted successfully.');
     }
+    
 
     public function prstore(Request $request)
     {
@@ -122,6 +120,7 @@ class myLawyerController extends Controller
             'approved_by' => $request->approved_by ?: null,
             'request_details' => $request->request_details,
             'prisoner_id' => $request->prisoner_id,
+            'prison_id' => $prisonId,
         ];
 
         $requestRecord = Requests::create($requestData);

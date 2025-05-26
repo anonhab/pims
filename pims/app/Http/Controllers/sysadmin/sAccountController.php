@@ -7,7 +7,8 @@
   use App\Models\Prison;
   use App\Models\Prisoner;
   use App\Models\Report;
-  use App\Models\Role;
+use App\Models\Requests;
+use App\Models\Role;
   use Carbon\Carbon;
   use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,95 @@ use Illuminate\Support\Facades\Validator;
 
   class sAccountController extends Controller
   {
+    public function dashboard()
+{
+    try {
+        $prisonId = session('prison_id'); // Get prison_id from session
+
+$adminCount = Account::when($prisonId, function ($query) use ($prisonId) {
+    return $query->where('prison_id', $prisonId);
+})->count();
+
+
+        $prisonerCount = Prisoner::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->count();
+
+        $reportCount = Report::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->where('created_at', '>=', now()->subMonth())
+          ->count();
+
+        $backupCount = Backup::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->where('backup_status', 'completed')->count();
+
+        $pendingTransfers = Requests::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->where('status', 'transferred')->count();
+
+        $reportsInProgress = Report::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->where('created_at', '>=', now()->subHours(24))
+          ->count();
+
+        $nextBackup = now()->addHours(6);
+        $nextBackupDiff = now()->diff($nextBackup);
+        $nextBackupFormatted = $nextBackupDiff->h . 'h ' . $nextBackupDiff->i . 'm';
+
+
+        $chartData = $this->getChartData($prisonId);
+
+        return view('sysadmin.dashboard', compact(
+            'adminCount',
+            'prisonerCount',
+            'reportCount',
+            'backupCount',
+            'pendingTransfers',
+            'reportsInProgress',
+            'nextBackupFormatted',
+            'chartData'
+        ));
+    } catch (\Exception $e) {
+        Log::error('Failed to load dashboard data', ['error' => $e->getMessage()]);
+        return redirect()->back()->with('error', 'Failed to load dashboard data');
+    }
+}
+
+public function getChartData($prisonId = null)
+{
+    try {
+      
+        $totalPrisoners = Prisoner::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->count();
+
+        $malePrisoners = Prisoner::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->where('gender', 'male')->count();
+
+        $femalePrisoners = Prisoner::when($prisonId, function($query) use ($prisonId) {
+            return $query->where('prison_id', $prisonId);
+        })->where('gender', 'female')->count();
+
+        return [
+            'labels' => [ 'Total Prisoners', 'Male Prisoners', 'Female Prisoners'],
+            'data' => [
+               
+                $totalPrisoners,
+                $malePrisoners,
+                $femalePrisoners,
+            ],
+        ];
+    } catch (\Exception $e) {
+        Log::error('Failed to fetch chart data', ['error' => $e->getMessage()]);
+        return [
+            'labels' => ['Prisons', 'Total Prisoners', 'Male Prisoners', 'Female Prisoners'],
+            'data' => [0, 0, 0, 0],
+        ];
+    }
+}
+
       public function show_all()
       {
           $prisons = prison::all();

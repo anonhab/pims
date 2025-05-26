@@ -48,7 +48,7 @@ class NotificationController extends Controller
                 if ($prisonerId) {
                     $query->orWhere(function ($q) use ($prisonerId, $prisonId) {
                         $q->where('recipient_id', $prisonerId)
-                          ->where('recipient_role', 'prisoner')
+                          ->where('recipient_role', null)
                           ->where('prison_id', $prisonId);
                     });
                 }
@@ -78,32 +78,60 @@ class NotificationController extends Controller
 
 
 
-    public function markAllAsRead(Request $request)
-    {
-        try {
-            $userId = session('user_id')
-                ?? session('lawyer_id')
-                ?? session('visitor_id');
+public function markAllAsRead(Request $request)
+{
+    try {
+        $userId    = session('user_id');
+        $lawyerId  = session('lawyer_id');
+        $roleId    = session('role_id');
+        $roleName  = session('rolename');
+        $prisonId  = session('prison_id');
 
-            if (!$userId) {
-                Log::warning('No valid user session ID found for mark-all-read', ['session' => $request->session()->all()]);
-                return response()->json(['error' => 'Unauthorized: No user ID found'], 401);
+        Log::info('Marking notifications as read', [
+            'user_id'   => $userId,
+            'lawyer_id' => $lawyerId,
+            'role_id'   => $roleId,
+            'role_name' => $roleName,
+            'prison_id' => $prisonId
+        ]);
+
+        $assigned = null;
+
+        if ($roleName === 'lawyer') {
+            $assigned = \App\Models\LawyerPrisonerAssignment::where('lawyer_id', $lawyerId)->first();
+        } elseif ($roleId == 8) { // Police Officer
+            $assigned = \App\Models\PolicePrisonerAssignment::where('officer_id', $userId)->first();
+        }
+
+        $prisonerId = $assigned?->prisoner_id;
+
+        // Update notifications as read
+        Notification::where(function ($query) use ($prisonerId, $prisonId, $roleId) {
+            // Case 1: Notifications sent to the assigned prisoner
+            if ($prisonerId) {
+                $query->orWhere(function ($q) use ($prisonerId, $prisonId) {
+                    $q->where('recipient_id', $prisonerId)
+                      ->whereNull('recipient_role')
+                      ->where('prison_id', $prisonId);
+                });
             }
 
-            Log::info('Marking all notifications as read', ['user_id' => $userId]);
+            // Case 2: Notifications sent to this role within the same prison
+            $query->orWhere(function ($q) use ($roleId, $prisonId) {
+                $q->where('role_id', $roleId)
+                  ->where('prison_id', $prisonId);
+            });
+        })->update(['is_read' => true]);
 
-            $updated = Notification::forUser($userId)
-                ->where('is_read', false)
-                ->update(['is_read' => true]);
-
-            return response()->json(['success' => true, 'updated' => $updated]);
-        } catch (\Exception $e) {
-            Log::error('Failed to mark notifications as read', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'session_snapshot' => $request->session()->all()
-            ]);
-            return response()->json(['error' => 'Server error while marking notifications as read'], 500);
-        }
+        return response()->json(['message' => 'Notifications marked as read.']);
+    } catch (\Exception $e) {
+        Log::error('Failed to mark notifications as read', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'session_snapshot' => $request->session()->all()
+        ]);
+        return response()->json(['error' => 'Server error while marking notifications as read'], 500);
     }
+}
+
 }

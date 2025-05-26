@@ -548,79 +548,68 @@ body {
              <i class="fas fa-shield-alt"></i> Security Dashboard
          </h1>
 
-         <div class="pims-system-alert">
-             <div class="alert-content">
-                 <i class="fas fa-exclamation-triangle alert-icon"></i>
-                 <div>
-                     <strong>SECURITY ALERT:</strong> 3 unauthorized access attempts detected in the last 24 hours
-                 </div>
-             </div>
-             <button class="alert-close">
-                 <i class="fas fa-times"></i>
-             </button>
-         </div>
 
          <div class="pims-grid">
-             <!-- Account Management -->
-             <div class="pims-dashboard-card">
-                 <span class="pims-security-badge">SECURED</span>
-                 <div class="pims-card-icon">
-                     <i class="fas fa-user-shield"></i>
-                 </div>
-                 <h3>Admin Accounts</h3>
-                 <p>24</p>
-                 <div class="pims-card-footer">
-                     <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All accounts secured
-                 </div>
-             </div>
+    <!-- Account Management -->
+    <div class="pims-dashboard-card">
+        <span class="pims-security-badge">SECURED</span>
+        <div class="pims-card-icon">
+            <i class="fas fa-user-shield"></i>
+        </div>
+        <h3>Admin Accounts</h3>
+        <p>{{ number_format($adminCount) }}</p>
+        <div class="pims-card-footer">
+            <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All accounts secured
+        </div>
+    </div>
 
-             <!-- Prisoner Management -->
-             <div class="pims-dashboard-card">
-                 <span class="pims-security-badge alert">ALERT</span>
-                 <div class="pims-card-icon">
-                     <i class="fas fa-user-lock"></i>
-                 </div>
-                 <h3>Prisoner Count</h3>
-                 <p>1,245</p>
-                 <div class="pims-card-footer">
-                     <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> 5 transfers pending
-                 </div>
-             </div>
+    <!-- Prisoner Management -->
+    <div class="pims-dashboard-card">
+        <span class="pims-security-badge {{ $unauthorizedAttempts > 0 ? 'alert' : '' }}">ALERT</span>
+        <div class="pims-card-icon">
+            <i class="fas fa-user-lock"></i>
+        </div>
+        <h3>Prisoner Count</h3>
+        <p>{{ number_format($prisonerCount) }}</p>
+        <div class="pims-card-footer">
+            <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> {{ $pendingTransfers }} transfers pending
+        </div>
+    </div>
 
-             <!-- Report Generation -->
-             <div class="pims-dashboard-card">
-                 <span class="pims-security-badge">ENCRYPTED</span>
-                 <div class="pims-card-icon">
-                     <i class="fas fa-file-shield"></i>
-                 </div>
-                 <h3>Secure Reports</h3>
-                 <p>187</p>
-                 <div class="pims-card-footer">
-                     <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> 3 reports in progress
-                 </div>
-             </div>
+    <!-- Report Generation -->
+    <div class="pims-dashboard-card">
+        <span class="pims-security-badge">ENCRYPTED</span>
+        <div class="pims-card-icon">
+            <i class="fas fa-file-shield"></i>
+        </div>
+        <h3>Secure Reports</h3>
+        <p>{{ number_format($reportCount) }}</p>
+        <div class="pims-card-footer">
+            <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> {{ $reportsInProgress }} reports in progress
+        </div>
+    </div>
 
-             <!-- Backup & Recovery -->
-             <div class="pims-dashboard-card">
-                 <span class="pims-security-badge">PROTECTED</span>
-                 <div class="pims-card-icon">
-                     <i class="fas fa-database"></i>
-                 </div>
-                 <h3>System Backups</h3>
-                 <p>12</p>
-                 <div class="pims-card-footer">
-                     <i class="fas fa-clock" style="color: var(--pims-accent);"></i> Next backup in 3h 22m
-                 </div>
-             </div>
-         </div>
+    <!-- Backup & Recovery -->
+    <div class="pims-dashboard-card">
+        <span class="pims-security-badge">PROTECTED</span>
+        <div class="pims-card-icon">
+            <i class="fas fa-database"></i>
+        </div>
+        <h3>System Backups</h3>
+        <p>{{ number_format($backupCount) }}</p>
+        <div class="pims-card-footer">
+            <i class="fas fa-clock" style="color: var(--pims-accent);"></i> Next backup in {{ $nextBackupFormatted }}
+        </div>
+    </div>
+</div>
 
          <!-- Data Visualization -->
          <div class="pims-stats-box">
-             <h2><i class="fas fa-chart-line"></i> Security Activity</h2>
-             <div class="pims-chart-container">
-                 <canvas id="pims-stats-chart"></canvas>
-             </div>
-         </div>
+    <h2><i class="fas fa-users"></i> Prisoner Statistics</h2>
+    <div class="pims-chart-container">
+        <canvas id="pims-stats-chart"></canvas>
+    </div>
+</div>
 
          <!-- Recent Activity -->
          <div class="pims-stats-box mt-4">
@@ -645,96 +634,75 @@ body {
 
  </body>
  <script>
-     // Initialize Chart
-     document.addEventListener('DOMContentLoaded', function() {
-         const ctx = document.getElementById('pims-stats-chart').getContext('2d');
-         const chart = new Chart(ctx, {
-             type: 'line',
-             data: {
-                 labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00', '23:59'],
-                 datasets: [{
-                         label: 'Security Events',
-                         data: [2, 5, 8, 12, 7, 4, 3],
-                         backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                         borderColor: 'rgba(231, 76, 60, 1)',
-                         borderWidth: 2,
-                         tension: 0.3,
-                         fill: true
-                     },
-                     {
-                         label: 'Authorized Logins',
-                         data: [15, 30, 45, 60, 45, 30, 15],
-                         backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                         borderColor: 'rgba(46, 204, 113, 1)',
-                         borderWidth: 2,
-                         tension: 0.3,
-                         fill: true
-                     }
-                 ]
-             },
-             options: {
-                 responsive: true,
-                 maintainAspectRatio: false,
-                 plugins: {
-                     legend: {
-                         position: 'top',
-                         labels: {
-                             usePointStyle: true,
-                             padding: 20,
-                             font: {
-                                 weight: '600'
-                             }
-                         }
-                     },
-                     tooltip: {
-                         mode: 'index',
-                         intersect: false,
-                         backgroundColor: 'rgba(26, 42, 58, 0.9)',
-                         titleFont: {
-                             weight: 'bold'
-                         }
-                     }
-                 },
-                 scales: {
-                     y: {
-                         beginAtZero: true,
-                         grid: {
-                             drawBorder: false,
-                             color: 'rgba(0,0,0,0.05)'
-                         },
-                         ticks: {
-                             stepSize: 10
-                         }
-                     },
-                     x: {
-                         grid: {
-                             display: false,
-                             drawBorder: false
-                         }
-                     }
-                 },
-                 elements: {
-                     point: {
-                         radius: 4,
-                         hoverRadius: 6
-                     }
-                 }
-             }
-         });
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('pims-stats-chart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @json($chartData['labels']),
+            datasets: [{
+                label: 'Counts',
+                data: @json($chartData['data']),
+                backgroundColor: [
+                    'rgba(100, 255, 218, 0.6)', // Prisons (teal)
+                    'rgba(46, 204, 113, 0.6)',  // Total Prisoners (green)
+                    'rgba(52, 152, 219, 0.6)',  // Male Prisoners (blue)
+                    'rgba(231, 76, 60, 0.6)'    // Female Prisoners (red)
+                ],
+                borderColor: [
+                    'rgba(100, 255, 218, 1)',
+                    'rgba(46, 204, 113, 1)',
+                    'rgba(52, 152, 219, 1)',
+                    'rgba(231, 76, 60, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20,
+                        font: { weight: '600' }
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    backgroundColor: 'rgba(26, 42, 58, 0.9)',
+                    titleFont: { weight: 'bold' }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
+                    ticks: { stepSize: 10 }
+                },
+                x: {
+                    grid: { display: false, drawBorder: false }
+                }
+            }
+        }
+    });
 
-         // Close alert
-         document.querySelector('.alert-close').addEventListener('click', () => {
-             document.querySelector('.pims-system-alert').style.display = 'none';
-         });
+    // Close alert
+    document.querySelector('.alert-close').addEventListener('click', () => {
+        document.querySelector('.pims-system-alert').style.display = 'none';
+    });
 
-         // Make security badge pulse
-         const alertBadge = document.querySelector('.pims-security-badge.alert');
-         if (alertBadge) {
-             setInterval(() => {
-                 alertBadge.style.opacity = alertBadge.style.opacity === '0.8' ? '1' : '0.8';
-             }, 1000);
-         }
-     });
- </script>
+    // Make security badge pulse
+    const alertBadge = document.querySelector('.pims-security-badge.alert');
+    if (alertBadge) {
+        setInterval(() => {
+            alertBadge.style.opacity = alertBadge.style.opacity === '0.8' ? '1' : '0.8';
+        }, 1000);
+    }
+});
+</script>
 
  </html>

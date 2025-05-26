@@ -35,9 +35,8 @@ use App\Models\Visitor;
 Route::get('/allactor', function () {
     return view('dashboard');
 });
-Route::get('/sdashboard', function () {
-    return view('sysadmin.dashboard');
-});
+
+Route::get('/sysdashboard', [sAccountController::class, 'dashboard'])->name('system.dashboard');
 Route::get('/pdashboard', function () {
     return view('police_officer.dashboard');
 });
@@ -300,7 +299,7 @@ Route::prefix('security_officer')->group(function () {
 Route::get('/viewprisonerstatus', [SecurityController::class, 'viewprisonerstatus'])->name('security.viewprisonerstatus');
 Route::post('/updateAppointmentStatus', [SecurityController::class, 'updateStatus'])->name('updateAppointmentStatus');
 Route::get('/discipline_officer/requests/evaluate', [RequestController::class, 'showEvaluationForm'])->name('discipline_officer.evaluate_request');
-Route::get('/showprisoners', [RequestController::class, 'show_allforin'])->name('prisoner.showprisoners');
+Route::get('/show_prisoners', [RequestController::class, 'show_allforin'])->name('showprisoners');
 Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
 Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
 Route::post('/transfer-request/{id}', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
