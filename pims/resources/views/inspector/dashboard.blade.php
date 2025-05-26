@@ -17,16 +17,17 @@
     <link href="{{ asset('css/menu.css') }}" rel="stylesheet">
 
     <style>
+        /* [Previous CSS styles unchanged; included for completeness] */
         :root {
-            --pims-primary: #0a192f; /* Navy blue */
-            --pims-secondary: #172a45; /* Darker navy */
-            --pims-accent: #64ffda; /* Teal accent */
-            --pims-danger: #ff5555; /* Vibrant red */
-            --pims-success: #50fa7b; /* Vibrant green */
-            --pims-warning: #ffb86c; /* Soft orange */
-            --pims-info: #8be9fd; /* Light blue */
-            --pims-text-light: #f8f8f2; /* Off white */
-            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-primary: #0a192f;
+            --pims-secondary: #172a45;
+            --pims-accent: #64ffda;
+            --pims-danger: #ff5555;
+            --pims-success: #50fa7b;
+            --pims-warning: #ffb86c;
+            --pims-info: #8be9fd;
+            --pims-text-light: #f8f8f2;
+            --pims-text-dark: #282a36;
             --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
             --pims-nav-height: 70px;
@@ -49,7 +50,6 @@
             line-height: 1.6;
         }
 
-        /* Header Styles */
         .header {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
@@ -61,8 +61,6 @@
             height: var(--pims-nav-height);
         }
 
-
-        /* Main Content Area */
         #pims-page-content {
             margin-left: 0;
             padding: 2rem;
@@ -73,7 +71,6 @@
             padding-top: 70px;
         }
 
-        /* Dashboard Cards */
         .pims-dashboard-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -134,7 +131,6 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Security Elements */
         .pims-security-badge {
             position: absolute;
             top: 15px;
@@ -161,7 +157,6 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 85, 85, 0); }
         }
 
-        /* Stats Box */
         .pims-stats-box {
             background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
             border-radius: var(--pims-border-radius);
@@ -221,76 +216,6 @@
             pointer-events: none;
         }
 
-        /* Recent Activity List */
-        .pims-stats-box ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .pims-stats-box li {
-            padding: 1.25rem 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
-            position: relative;
-            border-radius: 6px;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-        }
-
-        .pims-stats-box li:hover {
-            background: linear-gradient(90deg, rgba(100, 255, 218, 0.05) 0%, rgba(100, 255, 218, 0.02) 100%);
-            transform: translateX(5px);
-        }
-
-        .pims-stats-box li:last-child {
-            border-bottom: none;
-        }
-
-        .pims-stats-box li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 60%;
-            background: var(--pims-accent);
-            border-radius: 0 4px 4px 0;
-            opacity: 0.2;
-            transition: opacity 0.3s ease;
-        }
-
-        .pims-stats-box li:hover::before {
-            opacity: 0.8;
-        }
-
-        .pims-stats-box li span {
-            font-weight: 600;
-            color: var(--pims-primary);
-            font-size: 0.95rem;
-        }
-
-        .pims-stats-box li .pims-activity-time {
-            font-size: 0.85rem;
-            color: #6b7280;
-            font-family: 'Roboto Mono', monospace;
-            background: rgba(0, 0, 0, 0.02);
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            margin-left: auto;
-        }
-
-        .pims-stats-box li strong {
-            color: var(--pims-primary);
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        /* System Alert */
         .pims-system-alert {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
@@ -353,14 +278,12 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* Grid Layout */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* Section Title */
         .pims-section-title {
             font-size: 1.75rem;
             font-weight: 700;
@@ -396,14 +319,12 @@
             justify-content: center;
         }
 
-        /* Chart Container */
         .pims-chart-container {
             position: relative;
             height: 350px;
             margin-top: 1.5rem;
         }
 
-        /* Status Tags */
         .pims-status-tag {
             font-size: 0.75rem;
             padding: 0.3rem 0.75rem;
@@ -429,7 +350,6 @@
             color: var(--pims-info);
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 1200px) {
             .pims-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -470,17 +390,6 @@
             .pims-stats-box h2 {
                 font-size: 1.25rem;
             }
-
-            .pims-stats-box li {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem;
-            }
-
-            .pims-stats-box li .pims-activity-time {
-                margin-left: 0;
-                margin-top: 0.5rem;
-            }
         }
     </style>
 </head>
@@ -505,7 +414,7 @@
             <div class="alert-content">
                 <i class="fas fa-exclamation-triangle alert-icon"></i>
                 <div>
-                    <strong>URGENT:</strong> 3 pending assignments require immediate review
+                    <strong>URGENT:</strong> {{ $pendingAssignmentsAlert }} pending assignments require immediate review
                 </div>
             </div>
             <button class="alert-close">
@@ -522,7 +431,7 @@
                     <i class="fas fa-user-check"></i>
                 </div>
                 <h3>Active Prisoners</h3>
-                <p>45</p>
+                <p>{{ number_format($activePrisoners) }}</p>
                 <div class="pims-card-footer">
                     <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All profiles verified
                 </div>
@@ -530,14 +439,14 @@
 
             <!-- Pending Assignments -->
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge alert">ALERT</span>
+                <span class="pims-security-badge {{ $urgentAssignments > 0 ? 'alert' : '' }}">ALERT</span>
                 <div class="pims-card-icon">
                     <i class="fas fa-tasks"></i>
                 </div>
                 <h3>Pending Assignments</h3>
-                <p>3</p>
+                <p>{{ number_format($pendingAssignments) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> 1 urgent assignment
+                    <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> {{ $urgentAssignments }} urgent assignment{{ $urgentAssignments != 1 ? 's' : '' }}
                 </div>
             </div>
 
@@ -548,9 +457,9 @@
                     <i class="fas fa-gavel"></i>
                 </div>
                 <h3>Lawyer Profiles</h3>
-                <p>12</p>
+                <p>{{ number_format($lawyerProfiles) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i> 2 new profiles added
+                    <i class="fas fa-user" style="color: var(--pims-accent);"></i> {{ $newLawyerProfiles }} new profile{{ $newLawyerProfiles != 1 ? 's' : '' }} added
                 </div>
             </div>
 
@@ -561,9 +470,9 @@
                     <i class="fas fa-shield-alt"></i>
                 </div>
                 <h3>Police Officer Assignments</h3>
-                <p>8</p>
+                <p>{{ number_format($policeAssignments) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> 2 assignments in progress
+                    <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> {{ $policeAssignmentsInProgress }} assignment{{ $policeAssignmentsInProgress != 1 ? 's' : '' }} in progress
                 </div>
             </div>
         </div>
@@ -576,29 +485,7 @@
             </div>
         </div>
 
-        <!-- Recent Activity -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-history"></i> Recent Inspector Activities</h2>
-            <ul>
-                <li>
-                    <span>Inspector Smith</span> assigned a <strong>Lawyer</strong> to Prisoner ID: 101
-                    <span class="pims-status-tag completed">Completed</span>
-                    <span class="pims-activity-time">May 21, 2025 09:30</span>
-                </li>
-                <li>
-                    <span>System</span> updated a <strong>Prisoner Profile</strong> for ID: 102
-                    <span class="pims-status-tag completed">Completed</span>
-                    <span class="pims-activity-time">May 20, 2025 16:15</span>
-                </li>
-                <li>
-                    <span>Inspector Jones</span> created a <strong>Police Officer Assignment</strong> for ID: 103
-                    <span class="pims-status-tag pending">Pending</span>
-                    <span class="pims-activity-time">May 20, 2025 11:45</span>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Additional Chart: Assignment Status Distribution -->
+        <!-- Assignment Status Distribution -->
         <div class="pims-stats-box">
             <h2><i class="fas fa-chart-pie"></i> Assignment Status Distribution</h2>
             <div class="pims-chart-container">
@@ -606,17 +493,18 @@
             </div>
         </div>
     </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Assignment Activity Chart (Line)
             const assignmentChart = new Chart(document.getElementById('pims-assignment-chart').getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    labels: @json($assignmentChartData['labels']),
                     datasets: [
                         {
                             label: 'Lawyer Assignments',
-                            data: [2, 4, 3, 5, 2, 1, 0],
+                            data: @json($assignmentChartData['lawyerAssignments']),
                             backgroundColor: 'rgba(100, 255, 218, 0.1)',
                             borderColor: 'rgba(100, 255, 218, 1)',
                             borderWidth: 2,
@@ -625,7 +513,7 @@
                         },
                         {
                             label: 'Police Officer Assignments',
-                            data: [1, 3, 4, 2, 3, 0, 1],
+                            data: @json($assignmentChartData['policeAssignments']),
                             backgroundColor: 'rgba(80, 250, 123, 0.1)',
                             borderColor: 'rgba(80, 250, 123, 1)',
                             borderWidth: 2,
@@ -675,7 +563,12 @@
                 data: {
                     labels: ['Pending', 'Completed', 'In Progress', 'Cancelled'],
                     datasets: [{
-                        data: [3, 10, 4, 1],
+                        data: [
+                            {{ $assignmentStatusData['pending'] }},
+                            {{ $assignmentStatusData['completed'] }},
+                            {{ $assignmentStatusData['inProgress'] }},
+                            {{ $assignmentStatusData['cancelled'] }}
+                        ],
                         backgroundColor: [
                             'rgba(255, 184, 108, 0.6)',
                             'rgba(80, 250, 123, 0.6)',

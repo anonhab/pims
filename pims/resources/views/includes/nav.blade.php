@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="route-notifications" content="{{ route('notifications.fetch') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PIMS | {{ session('prison') }}</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -138,7 +139,7 @@
     width: 20px;
     height: 20px;
     font-size: 0.7rem;
-    display: flex;
+    display: none; /* Initially hidden */
     align-items: center;
     justify-content: center;
     font-weight: bold;
@@ -302,7 +303,6 @@
     background-color: rgba(0, 0, 0, 0.4);
     cursor: pointer;
 }
-
 
 .pims-modal-content {
     background-color: var(--pims-light);
@@ -491,7 +491,6 @@
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
 }
 
-
 .button.is-primary:hover {
     background-color: #219653;
     transform: translateY(-2px);
@@ -528,16 +527,15 @@
     transition: opacity 0.3s ease;
 }
 
+.unique-modal[aria-hidden="false"] {
+    display: flex;
+}
 
-        .unique-modal[aria-hidden="false"] {
-            display: flex;
-        }
-
-        .unique-modal-background {
-            position: absolute;
-            inset: 0;
-            cursor: pointer;
-        }
+.unique-modal-background {
+    position: absolute;
+    inset: 0;
+    cursor: pointer;
+}
 
 .unique-modal-content {
     background: #fff;
@@ -600,10 +598,9 @@
     border-left: 3px solid var(--pims-accent);
 }
 
-
-        .unique-notification-item.read {
-            color: #666;
-        }
+.unique-notification-item.read {
+    color: #666;
+}
 
 .unique-notification-item h4 {
     margin: 0 0 5px 0;
@@ -661,11 +658,9 @@
     background-color: #d0d0d0;
 }
 
-
-        .fullwidth {
-            width: 100%;
-        }
-
+.fullwidth {
+    width: 100%;
+}
 
 .unique-error-message {
     color: var(--pims-danger);
@@ -697,6 +692,7 @@
     }
 }
 
+
 @media (max-width: 480px) {
     .pims-modal-content {
         width: 95%;
@@ -721,7 +717,29 @@
         width: 100%;
         text-align: left;
     }
-} </style>
+}
+/* Styling for toast notifications */
+.toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(20px);
+            max-width: 300px;
+            word-wrap: break-word;
+        }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
 </head>
 
 <body class="pims-reset">
@@ -748,7 +766,7 @@
             <div class="pims-nav-menu">
                 <button class="pims-notification-bell" id="open-notifications" aria-label="Open notifications">
                     <i class="fas fa-bell"></i>
-                    <span class="pims-notification-badge" id="notification-badge" style="display: none;">0</span>
+                    <span class="pims-notification-badge" id="notification-badge">0</span>
                 </button>
 
                 <div class="pims-user-profile" id="pimsUserProfile" tabindex="0" aria-haspopup="true" aria-expanded="false">
@@ -882,360 +900,393 @@
             </div>
         </div>
     </div>
-
+   
     <!-- JavaScript -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // DOM Elements
-            const notificationModal = document.getElementById('unique-notification-modal');
-            const notificationList = document.getElementById('unique-notification-list');
-            const errorMessage = document.getElementById('unique-notification-error');
-            const markAllButton = document.getElementById('unique-mark-all-as-read');
-            const closeNotificationButton = document.getElementById('unique-close-modal');
-            const notificationBackground = notificationModal?.querySelector('.unique-modal-background');
-            const openNotificationButton = document.getElementById('open-notifications');
-            const notificationBadge = document.getElementById('notification-badge');
+document.addEventListener('DOMContentLoaded', () => {
+    // Helper to select elements safely
+    const $ = (id) => document.getElementById(id);
 
-            const profileModal = document.getElementById('pimsProfileModal');
-            const profileBackground = profileModal?.querySelector('.pims-modal-background');
-            const closeProfileButton = profileModal?.querySelector('.pims-modal-close');
+    // Elements
+    const elements = {
+        notification: {
+            modal: $('unique-notification-modal'),
+            list: $('unique-notification-list'),
+            error: $('unique-notification-error'),
+            badge: $('notification-badge'),
+            markAll: $('unique-mark-all-as-read'),
+            closeBtn: $('unique-close-modal'),
+            background: $('unique-notification-modal')?.querySelector('.unique-modal-background'),
+            openBtn: $('open-notifications')
+        },
+        profile: {
+            modal: $('pimsProfileModal'),
+            background: $('pimsProfileModal')?.querySelector('.pims-modal-background'),
+            closeBtn: $('pimsProfileModal')?.querySelector('.pims-modal-close')
+        },
+        password: {
+            modal: $('pimsPasswordModal'),
+            background: $('pimsPasswordModal')?.querySelector('.pims-modal-background'),
+            closeBtn: $('pimsPasswordModal')?.querySelector('.pims-modal-close')
+        },
+        userMenu: {
+            user: $('pimsUserProfile'),
+            dropdown: $('pimsDropdownMenu'),
+            viewBtn: $('pimsViewProfile'),
+            passwordBtn: $('pimsChangePassword')
+        }
+    };
 
-            const passwordModal = document.getElementById('pimsPasswordModal');
-            const passwordBackground = passwordModal?.querySelector('.pims-modal-background');
-            const closePasswordButton = passwordModal?.querySelector('.pims-modal-close');
+    // Validate elements
+    for (const [groupName, group] of Object.entries(elements)) {
+        for (const [key, el] of Object.entries(group)) {
+            if (!el) console.warn(`Missing ${groupName} element: ${key}`);
+        }
+    }
 
-            const userProfile = document.getElementById('pimsUserProfile');
-            const dropdownMenu = document.getElementById('pimsDropdownMenu');
-            const viewProfileButton = document.getElementById('pimsViewProfile');
-            const changePasswordButton = document.getElementById('pimsChangePassword');
-
-            // Validate Elements
-            if (!notificationModal || !notificationList || !markAllButton || !closeNotificationButton || !notificationBackground || !openNotificationButton || !notificationBadge || !errorMessage) {
-                console.error('Missing notification elements:', {
-                    notificationModal,
-                    notificationList,
-                    markAllButton,
-                    closeNotificationButton,
-                    notificationBackground,
-                    openNotificationButton,
-                    notificationBadge,
-                    errorMessage
-                });
-                return;
-            }
-            if (!profileModal || !profileBackground || !closeProfileButton || !passwordModal || !passwordBackground || !closePasswordButton) {
-                console.error('Missing modal elements:', {
-                    profileModal,
-                    profileBackground,
-                    closeProfileButton,
-                    passwordModal,
-                    passwordBackground,
-                    closePasswordButton
-                });
-                return;
-            }
-            if (!userProfile || !dropdownMenu || !viewProfileButton || !changePasswordButton) {
-                console.error('Missing dropdown elements:', {
-                    userProfile,
-                    dropdownMenu,
-                    viewProfileButton,
-                    changePasswordButton
-                });
-                return;
-            }
-
-            // Notification State
-            let isFetching = false;
-            let hasUnread = false;
-            let pollInterval = null;
-
-            // Show Error Message
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.style.display = 'block';
-                setTimeout(() => {
-                    errorMessage.style.display = 'none';
-                    errorMessage.textContent = '';
-                }, 5000);
-            }
-
-            // Fetch Notifications
-            async function fetchNotifications() {
-                if (isFetching || !notificationList) {
-                    console.warn('Fetch skipped: already fetching or list missing');
-                    return;
-                }
-                isFetching = true;
-
-                try {
-                    const response = await fetch('notifications', {
-                        headers: {
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
-                        },
-                        credentials: 'same-origin' // 🔥 This enables session cookies to be sent
-                    });
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-                    }
-
-                    const notifications = await response.json();
-                    notificationList.innerHTML = '';
-                    hasUnread = false;
-
-                    if (notifications.error) {
-                        notificationList.innerHTML = `<p class="unique-empty">${notifications.error}</p>`;
-                        markAllButton.disabled = true;
-                        notificationBadge.style.display = 'none';
-                        showError(notifications.error);
-                        return;
-                    }
-
-                    if (notifications.length === 0) {
-                        notificationList.innerHTML = '<p class="unique-empty">No notifications.</p>';
-                        markAllButton.disabled = true;
-                        notificationBadge.style.display = 'none';
-                        return;
-                    }
-
-                    let unreadCount = 0;
-                    notifications.forEach(notification => {
-                        const div = document.createElement('div');
-                        div.className = `unique-notification-item ${notification.is_read ? 'read' : 'unread'}`;
-                        div.setAttribute('role', 'listitem');
-                        div.innerHTML = `
-                        <h4>${notification.title || 'Notification'}</h4>
-                        <p>${notification.message}</p>
-                        <small>${new Date(notification.created_at).toLocaleString('en-US', {
-                            dateStyle: 'medium',
-                            timeStyle: 'short'
-                        })}</small>
-                    `;
-                        notificationList.appendChild(div);
-                        if (!notification.is_read) {
-                            hasUnread = true;
-                            unreadCount++;
-                        }
-                    });
-
-                    markAllButton.disabled = !hasUnread;
-                    notificationBadge.textContent = unreadCount;
-                    notificationBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
-                } catch (error) {
-                    console.error('Fetch notifications error:', error.message);
-                    notificationList.innerHTML = `<p class="unique-empty">Failed to load notifications: ${error.message}</p>`;
-                    markAllButton.disabled = true;
-                    notificationBadge.style.display = 'none';
-                    showError('Failed to load notifications');
-                } finally {
-                    isFetching = false;
-                }
-            }
-
-            // Mark All as Read
-            async function markAllAsRead() {
-                console.log('Mark All as Read clicked');
-                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
-                if (!csrfToken) {
-                    console.error('CSRF token missing');
-                    showError('Session error, please refresh the page');
-                    return;
-                }
-
-                try {
-                    markAllButton.disabled = true; // Disable button during request
-                    console.log('Sending mark-all-read request with CSRF token:', csrfToken);
-                    const response = await fetch('notifications/mark-all-read', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest',
-                            'X-CSRF-TOKEN': csrfToken
-                        }
-                    });
-
-                    console.log('Response status:', response.status);
-                    const result = await response.json();
-                    console.log('Response data:', result);
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}: ${result.error || response.statusText}`);
-                    }
-
-                    if (result.success) {
-                        console.log('Notifications marked as read, updated count:', result.updated);
-                        await fetchNotifications(); // Refresh notifications
-                    } else {
-                        throw new Error(result.error || 'Unknown error');
-                    }
-                } catch (error) {
-                    console.error('Mark all as read error:', error.message);
-                    showError(error.message || 'Failed to mark notifications as read');
-                    markAllButton.disabled = !hasUnread; // Re-enable if there are still unread
-                }
-            }
-
-            // Modal Control
-            function openModal(modal, focusElement) {
-                modal.setAttribute('aria-hidden', 'false');
-                modal.removeAttribute('inert');
-                trapFocus(modal);
-                focusElement?.focus();
-            }
-
-            function closeModal(modal, focusElement) {
-                const focusTarget = focusElement || document.querySelector('body > button, body > a') || document.body;
-                focusTarget.focus();
-                modal.setAttribute('aria-hidden', 'true');
-                modal.setAttribute('inert', '');
-            }
-
-            // Focus Trap
-            function trapFocus(modal) {
-                const focusableElements = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
-                if (focusableElements.length === 0) return;
-
-                const firstElement = focusableElements[0];
-                const lastElement = focusableElements[focusableElements.length - 1];
-
-                const handleKeydown = (event) => {
-                    if (event.key !== 'Tab') return;
-                    if (event.shiftKey && document.activeElement === firstElement) {
-                        event.preventDefault();
-                        lastElement.focus();
-                    } else if (!event.shiftKey && document.activeElement === lastElement) {
-                        event.preventDefault();
-                        firstElement.focus();
-                    }
-                };
-
-                modal.addEventListener('keydown', handleKeydown);
-                modal.addEventListener('close', () => modal.removeEventListener('keydown', handleKeydown), {
-                    once: true
-                });
-            }
-
-            // Notification Modal Handlers
-            function openNotificationModal() {
-                openModal(notificationModal, closeNotificationButton);
-                fetchNotifications();
-                startPolling();
-            }
-
-            function closeNotificationModal() {
-                closeModal(notificationModal, openNotificationButton);
-                stopPolling();
-                markAllButton.disabled = true;
-                errorMessage.style.display = 'none';
-            }
-
-            // Polling Control
-            function startPolling() {
-                if (pollInterval) return;
-                pollInterval = setInterval(() => {
-                    if (notificationModal.getAttribute('aria-hidden') === 'false' && !isFetching) {
-                        fetchNotifications();
-                    }
-                }, 5000);
-                fetchNotifications();
-            }
-
-            function stopPolling() {
-                if (pollInterval) {
-                    clearInterval(pollInterval);
-                    pollInterval = null;
-                }
-            }
-
-            // Modal Close Function
-            window.pimsCloseModal = function(modalId) {
-                const modal = document.getElementById(modalId);
-                if (modal) closeModal(modal);
-            };
-
-            // Dropdown Handling
-            function toggleDropdown() {
-                const isExpanded = userProfile.getAttribute('aria-expanded') === 'true';
-                userProfile.setAttribute('aria-expanded', !isExpanded);
-                dropdownMenu.setAttribute('aria-hidden', isExpanded);
-            }
-
-            function closeDropdown() {
-                userProfile.setAttribute('aria-expanded', 'false');
-                dropdownMenu.setAttribute('aria-hidden', 'true');
-            }
-
-            // Event Listeners
-            openNotificationButton.addEventListener('click', openNotificationModal);
-            closeNotificationButton.addEventListener('click', closeNotificationModal);
-            notificationBackground.addEventListener('click', closeNotificationModal);
-            notificationBackground.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    closeNotificationModal();
-                }
-            });
-            markAllButton.addEventListener('click', markAllAsRead);
-
-            closeProfileButton.addEventListener('click', () => closeModal(profileModal));
-            profileBackground.addEventListener('click', () => closeModal(profileModal));
-            profileBackground.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    closeModal(profileModal);
-                }
-            });
-
-            closePasswordButton.addEventListener('click', () => closeModal(passwordModal));
-            passwordBackground.addEventListener('click', () => closeModal(passwordModal));
-            passwordBackground.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    closeModal(passwordModal);
-                }
-            });
-
-            viewProfileButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                openModal(profileModal, closeProfileButton);
-                closeDropdown();
-            });
-
-            changePasswordButton.addEventListener('click', (event) => {
-                event.preventDefault();
-                openModal(passwordModal, passwordModal.querySelector('input[name="current_password"]'));
-                closeDropdown();
-            });
-
-            userProfile.addEventListener('click', toggleDropdown);
-            userProfile.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault();
-                    toggleDropdown();
-                }
-            });
-
-            document.addEventListener('click', (event) => {
-                if (!userProfile.contains(event.target)) {
-                    closeDropdown();
-                }
-            });
-
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') {
-                    closeDropdown();
-                    closeModal(notificationModal);
-                    closeModal(profileModal);
-                    closeModal(passwordModal);
-                }
-            });
-
-            // Initialize
-            fetchNotifications();
+    // Toast Notification
+    function showToast(message, color = '#333') {
+        const toast = Object.assign(document.createElement('div'), {
+            textContent: message,
+            style: `
+                position: fixed; bottom: 20px; right: 20px; padding: 12px 20px;
+                background: ${color}; color: white; border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 14px;
+                opacity: 0; transition: opacity 0.3s; z-index: 9999;
+            `
         });
-    </script>
-</body>
+        document.body.appendChild(toast);
+        requestAnimationFrame(() => toast.style.opacity = '1');
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
 
+    const showError = (msg) => showToast(msg, '#dc3545');
+    const showSuccess = (msg) => showToast(msg, '#28a745');
+
+    // Modal Functions
+    function openModal(modal, focusEl) {
+        modal.removeAttribute('inert');
+        modal.setAttribute('aria-hidden', 'false');
+        trapFocus(modal);
+        focusEl?.focus();
+    }
+
+    function closeModal(modal, fallback = document.body) {
+        modal.setAttribute('inert', '');
+        modal.setAttribute('aria-hidden', 'true');
+        fallback.focus();
+    }
+
+    function trapFocus(modal) {
+        const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+        const first = focusable[0], last = focusable[focusable.length - 1];
+        const trap = (e) => {
+            if (e.key !== 'Tab') return;
+            if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+            else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+        };
+        modal.addEventListener('keydown', trap);
+        modal.addEventListener('close', () => modal.removeEventListener('keydown', trap), { once: true });
+    }
+
+    // Notification Logic
+    let isFetching = false;
+    let pollInterval = null;
+
+    async function fetchNotifications(showBadge = true) {
+        const routeNotifications = document.querySelector('meta[name="route-notifications"]')?.content;
+        if (!routeNotifications) return showError('Missing notifications route.');
+
+        if (isFetching) return;
+        isFetching = true;
+
+        try {
+            const res = await fetch(routeNotifications, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content
+                },
+                credentials: 'same-origin'
+            });
+
+            const data = await res.json();
+            const list = elements.notification.list;
+            const badge = elements.notification.badge;
+            const markAll = elements.notification.markAll;
+
+            list.innerHTML = '';
+            let unread = 0;
+
+            if (!res.ok || data.error) {
+                list.innerHTML = `<p class="unique-empty">${data.error || 'Failed to load notifications.'}</p>`;
+                badge.style.display = 'none';
+                markAll.disabled = true;
+                showError(data.error || 'Error fetching notifications');
+                return;
+            }
+
+            if (data.length === 0) {
+                list.innerHTML = '<p class="unique-empty">No notifications.</p>';
+                badge.style.display = 'none';
+                markAll.disabled = true;
+                return;
+            }
+
+            for (const note of data) {
+                const item = document.createElement('div');
+                item.className = `unique-notification-item ${note.is_read ? 'read' : 'unread'}`;
+                item.innerHTML = `
+                    <h4>${note.title || 'Notification'}</h4>
+                    <p>${note.message}</p>
+                    <small>${new Date(note.created_at).toLocaleString()}</small>
+                `;
+                list.appendChild(item);
+                if (!note.is_read) unread++;
+            }
+
+            if (showBadge) {
+                badge.textContent = unread;
+                badge.style.display = unread > 0 ? 'inline-block' : 'none';
+            }
+            markAll.disabled = unread === 0;
+
+        } catch (err) {
+            console.error(err);
+            showError('Unable to fetch notifications.');
+        } finally {
+            isFetching = false;
+        }
+    }
+
+    async function markAllAsRead() {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        if (!token) return showError('Missing CSRF token.');
+
+        try {
+            const res = await fetch('/notifications/mark-all-read', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({})
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Error marking as read.');
+
+            await fetchNotifications(true);
+            showSuccess('All notifications marked as read.');
+        } catch (err) {
+            showError(err.message || 'Failed to mark as read.');
+        }
+    }
+
+    function startPolling() {
+        if (pollInterval) clearInterval(pollInterval);
+        pollInterval = setInterval(() => fetchNotifications(true), 1000);
+    }
+
+    function stopPolling() {
+        if (pollInterval) {
+            clearInterval(pollInterval);
+            pollInterval = null;
+        }
+    }
+
+    // Initial notification count load immediately
+    fetchNotifications(true);
+
+    // Event Listeners
+    elements.notification.openBtn?.addEventListener('click', () => {
+        openModal(elements.notification.modal, elements.notification.closeBtn);
+        fetchNotifications(true);
+        startPolling();
+    });
+
+    elements.notification.closeBtn?.addEventListener('click', () => {
+        closeModal(elements.notification.modal, elements.notification.openBtn);
+        stopPolling();
+    });
+
+    elements.notification.background?.addEventListener('click', () => {
+        closeModal(elements.notification.modal, elements.notification.openBtn);
+        stopPolling();
+    });
+
+    elements.notification.markAll?.addEventListener('click', markAllAsRead);
+
+    // Profile Modal Events
+    elements.profile.closeBtn?.addEventListener('click', () => closeModal(elements.profile.modal));
+    elements.profile.background?.addEventListener('click', () => closeModal(elements.profile.modal));
+
+    // Password Modal Events
+    elements.password.closeBtn?.addEventListener('click', () => closeModal(elements.password.modal));
+    elements.password.background?.addEventListener('click', () => closeModal(elements.password.modal));
+
+    // User Dropdown Events
+    elements.userMenu.viewBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(elements.profile.modal, elements.profile.closeBtn);
+    });
+
+    elements.userMenu.passwordBtn?.addEventListener('click', (e) => {
+        e.preventDefault();
+        openModal(elements.password.modal, elements.password.modal.querySelector('input[name="current_password"]'));
+    });
+
+    // Dropdown toggle
+    elements.userMenu.user?.addEventListener('click', () => {
+        const expanded = elements.userMenu.user.getAttribute('aria-expanded') === 'true';
+        elements.userMenu.user.setAttribute('aria-expanded', !expanded);
+        elements.userMenu.dropdown.setAttribute('aria-hidden', expanded);
+    });
+
+    // Expose for global use
+    window.pimsCloseModal = (id) => {
+        const modal = $(id);
+        if (modal) closeModal(modal);
+    };
+    startPolling();
+});
+    </script>
+    
+
+@php
+    $alertTypes = [
+        'success' => '#28a745', // Green
+        'error'   => '#dc3545', // Red
+        'warning' => '#ffc107', // Yellow
+        'info'    => '#17a2b8'  // Blue
+    ];
+@endphp
+
+<!-- Hidden div to pass session data -->
+<div id="sessionData" style="display: none;"
+     data-alerts='@json(collect($alertTypes)->mapWithKeys(function ($color, $type) {
+         return [$type => session($type)];
+     })->filter()->all())'>
+</div>
+
+<!-- Toast Container -->
+<div id="toastContainer" aria-live="polite" aria-atomic="true" role="alert" ></div>
+
+<style>
+    #toastContainer {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        max-width: 380px;
+        pointer-events: none; /* Allow clicks to pass through except on toasts */
+    }
+
+    .toast {
+        padding: 16px 24px;
+        border-radius: 8px;
+        color: #fff;
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        font-size: 15px;
+        min-width: 280px;
+        max-width: 100%;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+        pointer-events: auto; /* Enable clicking on toast */
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        user-select: none;
+    }
+
+    .toast.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .toast button.close-btn {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0;
+        margin-left: 16px;
+        opacity: 0.7;
+        transition: opacity 0.2s ease;
+    }
+
+    .toast button.close-btn:hover {
+        opacity: 1;
+    }
+</style>
+
+<script>
+    function showToast(message, bgColor) {
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.style.backgroundColor = bgColor;
+
+        const messageSpan = document.createElement('span');
+        messageSpan.textContent = message;
+
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-btn';
+        closeBtn.setAttribute('aria-label', 'Close notification');
+        closeBtn.innerHTML = '&times;';
+        closeBtn.onclick = () => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 300);
+        };
+
+        toast.appendChild(messageSpan);
+        toast.appendChild(closeBtn);
+
+        const container = document.getElementById('toastContainer');
+        container.appendChild(toast);
+
+        // Animate toast in
+        requestAnimationFrame(() => toast.classList.add('show'));
+
+        // Auto-dismiss after 4 seconds if not manually closed
+        setTimeout(() => {
+            if (document.body.contains(toast)) {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 4000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const sessionDataElement = document.getElementById('sessionData');
+        if (sessionDataElement) {
+            try {
+                const sessionData = JSON.parse(sessionDataElement.dataset.alerts);
+                const colors = @json($alertTypes);
+                Object.entries(sessionData).forEach(([type, message], index) => {
+                    if (message) {
+                        const bgColor = colors[type] || '#6c757d';
+                        setTimeout(() => showToast(message, bgColor), index * 600);
+                    }
+                });
+            } catch (e) {
+                console.error('Failed to parse toast session data:', e);
+            }
+        }
+    });
+</script>
+
+</body>
 </html>

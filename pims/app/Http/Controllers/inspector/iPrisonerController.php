@@ -26,19 +26,19 @@ use Illuminate\Support\Facades\Validator;
 class iPrisonerController extends Controller
 {
     private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
-{
-    Notification::create([
-        'recipient_id' => $recipientId,
-        'recipient_role' => $recipientRole,
-        'role_id' => $roleId,
-        'related_table' => $relatedTable,
-        'related_id' => $relatedId,
-        'title' => $title,
-        'message' => $message,
-        'is_read' => false,
-        'prison_id' => $prisonId,
-    ]);
-}
+    {
+        Notification::create([
+            'recipient_id' => $recipientId,
+            'recipient_role' => $recipientRole,
+            'role_id' => $roleId,
+            'related_table' => $relatedTable,
+            'related_id' => $relatedId,
+            'title' => $title,
+            'message' => $message,
+            'is_read' => false,
+            'prison_id' => $prisonId,
+        ]);
+    }
 
     public function index()
     {
@@ -47,41 +47,115 @@ class iPrisonerController extends Controller
 
     public function policeofficer()
     {
-        $officers=Account::all();
-        $prisoners=Prisoner::all();
+        $officers = Account::all();
+        $prisoners = Prisoner::all();
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
         $lawyer = Lawyer::where('prison', session('prison_id'))->paginate(9);
         $assignments = PolicePrisonerAssignment::where('prison_id', session('prison_id'))->paginate(9);
-        return view('inspector.assign_policeofficer',compact('officers','prisoners','assignments'));
+        return view('inspector.assign_policeofficer', compact('officers', 'prisoners', 'assignments'));
     }
-        public function idashboard()
+    public function idashboard()
 {
-    // Example logic to fetch data — replace these with your actual logic
-    $prisonerCount = Prisoner::count();
-    $releasedThisMonth = Prisoner::whereMonth('status', now()->month)->count();
-    $activeCases = 33;
-    $securityIncidents = 88;
-    $prisonCapacity = Prison::first()->capacity ?? 1; // avoid division by zero
-    $newAdmissions = Prisoner::where('created_at', '>=', now()->subDays(30))->count();
-    $medicalCases = MedicalReport::count();
-    $staffCount = Account::count();
-    $latestPrisonerId = Prisoner::latest()->first()->id ?? 'N/A';
-    $medicalEmergencyId = 88;
-    $crimeDistribution = []; // Prepare data for your chart
+    try {
+        $prisonId = session('prison_id');
 
-    return view('inspector.dashboard', compact(
-        'prisonerCount',
-        'crimeDistribution',
-        'medicalEmergencyId',
-        'latestPrisonerId',
-        'staffCount',
-        'medicalCases',
-        'releasedThisMonth',
-        'activeCases',
-        'newAdmissions',
-        'securityIncidents',
-        'prisonCapacity'
-    ));
+        // Dashboard Cards
+        $activePrisoners = Prisoner::where('prison_id', $prisonId)
+            ->where('status', 'Active')
+            ->count();
+
+        // Pending assignments (lawyer + police, assuming a status column or recent assignments)
+        $pendingLawyerAssignments = LawyerPrisonerAssignment::where('prison_id', $prisonId)
+            ->where('assignment_date', '>=', now()->subDays(7)) // Proxy for pending
+            ->count();
+        $pendingPoliceAssignments = PolicePrisonerAssignment::where('prison_id', $prisonId)
+            ->where('assignment_date', '>=', now()->subDays(7)) // Proxy for pending
+            ->count();
+        $pendingAssignments = $pendingLawyerAssignments + $pendingPoliceAssignments;
+
+        // Urgent assignments (example: assignments due soon or flagged)
+        $urgentAssignments = LawyerPrisonerAssignment::where('prison_id', $prisonId)
+            ->where('assignment_date', '<=', now()->addDays(1))
+            ->count() +
+            PolicePrisonerAssignment::where('prison_id', $prisonId)
+            ->where('assignment_date', '<=', now()->addDays(1))
+            ->count();
+
+        $lawyerProfiles = Lawyer::where('prison', $prisonId)->count();
+
+        $newLawyerProfiles = Lawyer::where('prison', $prisonId)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->count();
+
+        $policeAssignments = PolicePrisonerAssignment::where('prison_id', $prisonId)
+            ->where('assignment_date', '>=', now()->subDays(30)) // Active assignments
+            ->count();
+
+        $policeAssignmentsInProgress = PolicePrisonerAssignment::where('prison_id', $prisonId)
+            ->where('assignment_date', '>=', now()->subDays(7)) // Proxy for in progress
+            ->count();
+
+        // System Alert
+        $pendingAssignmentsAlert = $pendingAssignments;
+
+        // Assignment Activity Chart (Line)
+        $days = collect(range(6, 0))->map(function ($i) {
+            return now()->subDays($i)->format('D');
+        })->toArray();
+
+        $lawyerAssignmentData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
+            return LawyerPrisonerAssignment::where('prison_id', $prisonId)
+                ->whereDate('assignment_date', now()->subDays($i))
+                ->count();
+        })->toArray();
+
+        $policeAssignmentData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
+            return PolicePrisonerAssignment::where('prison_id', $prisonId)
+                ->whereDate('assignment_date', now()->subDays($i))
+                ->count();
+        })->toArray();
+
+        $assignmentChartData = [
+            'labels' => $days,
+            'lawyerAssignments' => $lawyerAssignmentData,
+            'policeAssignments' => $policeAssignmentData,
+        ];
+
+        // Assignment Status Chart (Pie)
+        // Assuming a status column exists in assignments; if not, use proxies
+        $assignmentStatusData = [
+            'pending' => $pendingAssignments,
+            'completed' => LawyerPrisonerAssignment::where('prison_id', $prisonId)
+                ->where('assignment_date', '<', now()->subDays(7))
+                ->count() +
+                PolicePrisonerAssignment::where('prison_id', $prisonId)
+                ->where('assignment_date', '<', now()->subDays(7))
+                ->count(),
+            'inProgress' => LawyerPrisonerAssignment::where('prison_id', $prisonId)
+                ->whereBetween('assignment_date', [now()->subDays(7), now()])
+                ->count() +
+                PolicePrisonerAssignment::where('prison_id', $prisonId)
+                ->whereBetween('assignment_date', [now()->subDays(7), now()])
+                ->count(),
+            'cancelled' => 0, // Placeholder; update if cancellation logic exists
+        ];
+
+        return view('inspector.dashboard', compact(
+            'activePrisoners',
+            'pendingAssignments',
+            'urgentAssignments',
+            'lawyerProfiles',
+            'newLawyerProfiles',
+            'policeAssignments',
+            'policeAssignmentsInProgress',
+            'pendingAssignmentsAlert',
+            'assignmentChartData',
+            'assignmentStatusData'
+        ));
+    } catch (\Exception $e) {
+        Log::error('Failed to load inspector dashboard data', ['error' => $e->getMessage()]);
+        return redirect()->back()->with('error', 'Failed to load dashboard data');
+    }
 }
 
     public function lawyer()
@@ -134,110 +208,110 @@ class iPrisonerController extends Controller
     }
 
     public function allocateRoom(Request $request)
-{
-    $prisoner = Prisoner::where('prison_id', session('prison_id'))
-        ->find($request->id);
+    {
+        $prisoner = Prisoner::where('prison_id', session('prison_id'))
+            ->find($request->id);
 
-    if ($prisoner) {
-        $prisoner->room_id = $request->room_id;
-        $prisoner->save();
+        if ($prisoner) {
+            $prisoner->room_id = $request->room_id;
+            $prisoner->save();
 
-        // Notify the prisoner
-        $this->createNotification(
-            $prisoner->id,          // recipientId (prisoner)
-            'prisoner',             // recipientRole
-            null,                      // roleId for prisoner
-            'prisoners',            // relatedTable
-            $prisoner->id,          // relatedId
-            'Room Allocation',      // title
-            "prisoner {$prisoner->first_name} {$prisoner->last_name} have been allocated to a new room {$prisoner->room_id}.",  // message
-            $prisoner->prison_id   // prisonId
-        );
+            // Notify the prisoner
+            $this->createNotification(
+                $prisoner->id,          // recipientId (prisoner)
+                'prisoner',             // recipientRole
+                null,                      // roleId for prisoner
+                'prisoners',            // relatedTable
+                $prisoner->id,          // relatedId
+                'Room Allocation',      // title
+                "prisoner {$prisoner->first_name} {$prisoner->last_name} have been allocated to a new room {$prisoner->room_id}.",  // message
+                $prisoner->prison_id   // prisonId
+            );
 
-        return back()->with('success', 'Room allocated successfully!');
+            return back()->with('success', 'Room allocated successfully!');
+        }
+
+        return back()->with('error', 'Prisoner not found!');
     }
-
-    return back()->with('error', 'Prisoner not found!');
-}
 
     public function assignlawyer(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'prisoner_id' => 'required|exists:prisoners,id',
-        'lawyer_id' => 'required|exists:lawyers,lawyer_id',
-        'assignment_date' => 'required|date',
-        'prison_id' => 'required|exists:prisons,id',
-        'assigned_by' => 'required|exists:accounts,user_id',
-    ]);
+    {
+        $validator = Validator::make($request->all(), [
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'lawyer_id' => 'required|exists:lawyers,lawyer_id',
+            'assignment_date' => 'required|date',
+            'prison_id' => 'required|exists:prisons,id',
+            'assigned_by' => 'required|exists:accounts,user_id',
+        ]);
 
-    if ($validator->fails()) {
-        return response()->json(['message' => $validator->errors()->first()], 422);
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $assignment = LawyerPrisonerAssignment::create($request->all());
+
+        // Notify prisoner
+        $prisoner = Prisoner::find($request->prisoner_id);
+
+
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            null,
+            'lawyer_prisoner_assignments',
+            $assignment->id,
+            'Lawyer Assigned',
+            "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",
+            $request->prison_id
+        );
+
+        return response()->json(['message' => 'Assignment created successfully']);
     }
 
-    $assignment = LawyerPrisonerAssignment::create($request->all());
+    public function assignpolice(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'prisoner_id' => 'required|exists:prisoners,id',
+            'officer_id' => 'required|exists:accounts,user_id',
+            'assignment_date' => 'required|date',
+            'prison_id' => 'required|exists:prisons,id',
+            'assigned_by' => 'required|exists:accounts,user_id',
+        ]);
 
-    // Notify prisoner
-    $prisoner = Prisoner::find($request->prisoner_id);
-  
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
 
-    $this->createNotification(
-        $prisoner->id,
-        'prisoner',
-        null,
-        'lawyer_prisoner_assignments',
-        $assignment->id,
-        'Lawyer Assigned',
-        "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",
-        $request->prison_id
-    );
+        $assignment = PolicePrisonerAssignment::create($request->all());
 
-    return response()->json(['message' => 'Assignment created successfully']);
-}
+        // Notify prisoner
+        $prisoner = Prisoner::find($request->prisoner_id);
 
-public function assignpolice(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'prisoner_id' => 'required|exists:prisoners,id',
-        'officer_id' => 'required|exists:accounts,user_id',
-        'assignment_date' => 'required|date',
-        'prison_id' => 'required|exists:prisons,id',
-        'assigned_by' => 'required|exists:accounts,user_id',
-    ]);
+        $this->createNotification(
+            $prisoner->id,
+            'prisoner',
+            null,
+            'police_prisoner_assignments',
+            $assignment->id,
+            'Police Officer Assigned',
+            "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",
+            $request->prison_id
+        );
 
-    if ($validator->fails()) {
-        return response()->json(['message' => $validator->errors()->first()], 422);
+        return response()->json(['message' => 'Assignment created successfully']);
     }
-
-    $assignment = PolicePrisonerAssignment::create($request->all());
-
-    // Notify prisoner
-    $prisoner = Prisoner::find($request->prisoner_id);
-
-    $this->createNotification(
-        $prisoner->id,
-        'prisoner',
-        null,
-        'police_prisoner_assignments',
-        $assignment->id,
-        'Police Officer Assigned',
-        "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",
-        $request->prison_id
-    );
-
-    return response()->json(['message' => 'Assignment created successfully']);
-}
     public function show_all()
-{
-    $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
-    
-    if (session('role_id') == 8) {
-        return view('police_officer.view_Prisoner', compact('prisoners'));
-    } elseif (session('role_id') == 5) {
-        return view('police_commisioner.view_prisoner', compact('prisoners'));
-    } else {
-        abort(403, 'Unauthorized action.');
+    {
+        $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
+
+        if (session('role_id') == 8) {
+            return view('police_officer.view_Prisoner', compact('prisoners'));
+        } elseif (session('role_id') == 5) {
+            return view('police_commisioner.view_prisoner', compact('prisoners'));
+        } else {
+            abort(403, 'Unauthorized action.');
+        }
     }
-}
 
     public function show_allforin()
     {
@@ -295,37 +369,37 @@ public function assignpolice(Request $request)
         $room->save();
 
         return back()->with('success', 'Room added successfully!');
-    } 
+    }
     public function roomupdate(Request $request, $id)
-{
-    $room = Room::findOrFail($id);
+    {
+        $room = Room::findOrFail($id);
 
-    $request->validate([
-        'room_number' => 'required|string|max:20|unique:rooms,room_number,' . $room->id,
-        'capacity' => 'nullable|integer',
-        'type' => 'nullable|in:cell,medical,security,training',
-        'status' => 'nullable|string',
-    ]);
+        $request->validate([
+            'room_number' => 'required|string|max:20|unique:rooms,room_number,' . $room->id,
+            'capacity' => 'nullable|integer',
+            'type' => 'nullable|in:cell,medical,security,training',
+            'status' => 'nullable|string',
+        ]);
 
-    $room->room_number = $request->room_number;
-    $room->capacity = $request->capacity;
-    $room->type = $request->type;
-    $room->status = $request->status;
-    $room->prison_id = session('prison_id');
-    $room->save();
+        $room->room_number = $request->room_number;
+        $room->capacity = $request->capacity;
+        $room->type = $request->type;
+        $room->status = $request->status;
+        $room->prison_id = session('prison_id');
+        $room->save();
 
-    return back()->with('success', 'Room updated successfully!');
-}
+        return back()->with('success', 'Room updated successfully!');
+    }
 
-public function roomdestroy($id)
-{
-    $room = Room::findOrFail($id);
-    $room->delete();
+    public function roomdestroy($id)
+    {
+        $room = Room::findOrFail($id);
+        $room->delete();
 
-    return back()->with('success', 'Room deleted successfully!');
-}
+        return back()->with('success', 'Room deleted successfully!');
+    }
 
-public function updateassign(Request $request, $assignment_id)
+    public function updateassign(Request $request, $assignment_id)
     {
         $validator = Validator::make($request->all(), [
             'prisoner_id' => 'required|exists:prisoners,id',
@@ -341,7 +415,11 @@ public function updateassign(Request $request, $assignment_id)
 
         $assignment = LawyerPrisonerAssignment::findOrFail($assignment_id);
         $assignment->update($request->only([
-            'prisoner_id', 'lawyer_id', 'assignment_date', 'prison_id', 'assigned_by'
+            'prisoner_id',
+            'lawyer_id',
+            'assignment_date',
+            'prison_id',
+            'assigned_by'
         ]));
 
         return response()->json(['message' => 'Assignment updated successfully']);
@@ -583,7 +661,11 @@ public function updateassign(Request $request, $assignment_id)
 
         $assignment = PolicePrisonerAssignment::findOrFail($assignment_id);
         $assignment->update($request->only([
-            'prisoner_id', 'officer_id', 'assignment_date', 'prison_id', 'assigned_by'
+            'prisoner_id',
+            'officer_id',
+            'assignment_date',
+            'prison_id',
+            'assigned_by'
         ]));
 
         return response()->json(['message' => 'Assignment updated successfully']);

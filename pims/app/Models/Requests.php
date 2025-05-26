@@ -24,7 +24,8 @@ class Requests extends Model
         'status', 
         'approved_by', 
         'request_details', 
-        'prisoner_id'
+        'prisoner_id',
+        'prison_id'
     ];
 
     /**

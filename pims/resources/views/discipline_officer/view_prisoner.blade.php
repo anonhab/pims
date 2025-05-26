@@ -465,7 +465,7 @@
     @include('includes.nav')
 
     <div class="pims-app-container">
-        @include('police_commisioner.menu')
+        @include('discipline_officer.menu')
 
         <div class="pims-content-area">
             <div class="pims-card">

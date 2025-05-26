@@ -574,7 +574,7 @@
         </div>
     </div>
 
-    @include('includes.footer_js')
+   
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -661,90 +661,8 @@
                 }, 300));
             }
 
-            document.getElementById('edit-prison-form').addEventListener('submit', async e => {
-                e.preventDefault();
-                const form = e.target;
-                const prisonId = document.getElementById('edit-prison-id').value;
-                try {
-                    const formData = new FormData(form);
-                    formData.delete('_method');
-                    const data = Object.fromEntries(formData);
-                    data._method = 'PUT';
-                    const response = await fetch(`/prisons/${prisonId}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    const result = await response.json();
-                    if (response.ok) {
-                        closeAllModals();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Prison updated successfully!',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => window.location.reload());
-                    } else {
-                        throw new Error(result.message || 'Failed to update prison');
-                    }
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.message.includes('405') 
-                            ? 'Update operation not supported. Please ensure backend supports PUT method.'
-                            : error.message || 'Something went wrong!'
-                    });
-                }
-            });
-
-            document.getElementById('delete-prison-form').addEventListener('submit', async e => {
-                e.preventDefault();
-                const form = e.target;
-                try {
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': csrfToken,
-                            'Accept': 'application/json'
-                        },
-                        body: JSON.stringify({ _method: 'DELETE' })
-                    });
-                    const result = await response.json();
-                    if (response.ok) {
-                        closeAllModals();
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Prison deleted successfully!',
-                            timer: 2000,
-                            showConfirmButton: false
-                        }).then(() => window.location.reload());
-                    } else {
-                        throw new Error(result.message || 'Failed to delete prison');
-                    }
-                } catch (error) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: error.message.includes('405') 
-                            ? 'Delete operation not supported. Please ensure backend supports DELETE method.'
-                            : error.message || 'Something went wrong!'
-                    });
-                }
-            });
-
-            document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && (addModal.classList.contains('is-active') || editModal.classList.contains('is-active') || deleteModal.classList.contains('is-active'))) {
-                    closeAllModals();
-                }
-            });
+           
+          
         });
     </script>
 </body>

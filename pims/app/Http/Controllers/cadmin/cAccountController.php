@@ -13,6 +13,7 @@ use App\Models\Role;
 use App\Models\Visitor;
 use App\Models\Report;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
@@ -23,30 +24,91 @@ use OwenIt\Auditing\Models\Audit;
 class cAccountController extends Controller
 {
     // Existing methods from previous response
-    public function getChartData()
-    {
-        $startDate = Carbon::now()->subDays(7);
-        $chartData = [];
-        for ($i = 0; $i < 7; $i++) {
-            $date = $startDate->copy()->addDays($i)->format('Y-m-d');
-            $chartData[] = [
-                'date' => $date,
-                'visitors' => Visitor::whereDate('created_at', $date)->count(),
-                'prisoners' => Prisoner::whereDate('created_at', $date)->count(),
-                'prisons' => Prison::count(),
-                'staffs' => Account::whereDate('created_at', $date)->count(),
-            ];
-        }
-        return response()->json($chartData);
-    }
-
     public function dashboard()
     {
-        $activities = Audit::with('user')->latest()->take(20)->get();
-        return view('cadmin.dashboard', compact('activities'));
+        try {
+            // Fetch counts for dashboard cards
+            $adminCount = Account::where('role_id', 1)->count();
+            $prisonerCount = Prisoner::count();
+
+            $reportCount = Report::where('created_at', '>=', now()->subMonth())
+                ->count();
+
+            $backupCount = Backup::where('backup_status', 'completed')
+                ->count();
+
+            // Fallback for pending transfers (no Transfer model)
+            $pendingTransfers = Requests::where('status', 'transferred')->count(); // Adjust status as needed
+            // If no suitable status exists, use: $pendingTransfers = 0;
+
+            // Fallback for reports in progress (no status column)
+            $reportsInProgress = Report::where('created_at', '>=', now()->subHours(24))
+                ->count(); // Proxy for "in progress"
+
+            // Fallback for next backup (no backup_date column)
+            $nextBackup = now()->addHours(6); // Assume backups every 6 hours
+            $nextBackupDiff = now()->diff($nextBackup);
+            $nextBackupFormatted = $nextBackupDiff->h . 'h ' . $nextBackupDiff->i . 'm';
+
+            // Fetch recent security events (audits)
+            $activities = Audit::with('user')
+                ->whereIn('event', ['created', 'updated', 'deleted', 'login', 'failed_login'])
+                ->latest()
+                ->take(20)
+                ->get();
+
+            // Check for unauthorized access attempts
+            $unauthorizedAttempts = Audit::where('event', 'failed_login')
+                ->where('created_at', '>=', now()->subHours(24))
+                ->count();
+
+            // Fetch data for chart
+            $chartData = $this->getChartData();
+
+            return view('cadmin.dashboard', compact(
+                'adminCount',
+                'prisonerCount',
+                'reportCount',
+                'backupCount',
+                'pendingTransfers',
+                'reportsInProgress',
+                'nextBackupFormatted',
+                'activities',
+                'unauthorizedAttempts',
+                'chartData'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Failed to load dashboard data', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Failed to load dashboard data');
+        }
     }
 
-    public function generate()
+    public function getChartData()
+    {
+        try {
+            $prisonCount = Prison::count();
+            $totalPrisoners = Prisoner::count();
+            $malePrisoners = Prisoner::where('gender', 'male')->count();
+            $femalePrisoners = Prisoner::where('gender', 'female')->count();
+
+            return [
+                'labels' => ['Prisons', 'Total Prisoners', 'Male Prisoners', 'Female Prisoners'],
+                'data' => [
+                    $prisonCount,
+                    $totalPrisoners,
+                    $malePrisoners,
+                    $femalePrisoners,
+                ],
+            ];
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch chart data', ['error' => $e->getMessage()]);
+            return [
+                'labels' => ['Prisons', 'Total Prisoners', 'Male Prisoners', 'Female Prisoners'],
+                'data' => [0, 0, 0, 0],
+            ];
+        }
+    }
+        public function generate()
     {
         return view('cadmin.generate');
     }
@@ -75,16 +137,33 @@ class cAccountController extends Controller
         return view('cadmin.view_accounts', compact('accounts', 'roles'));
     }
 
-    public function prisonstore(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
-            'capacity' => 'required|integer|min:1',
-        ]);
+  
+
+public function prisonstore(Request $request)
+{
+    $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'location' => 'required|string|max:255',
+        'capacity' => 'required|integer|min:1',
+    ]);
+
+    try {
         Prison::create($validated);
         return redirect()->back()->with('success', 'Prison added successfully!');
+    } catch (QueryException $e) {
+        // Check for duplicate entry error (MySQL error code 1062)
+        if ($e->errorInfo[1] == 1062) {
+            return redirect()->back()
+                ->with(['error' => 'A prison with this name already exists.']);
+        }
+
+        // Generic database error message
+        return redirect()->back()
+            ->withInput()
+            ->withErrors(['database' => 'Failed to add prison due to a database error.']);
     }
+}
+
 
     public function show_prisoners()
     {
@@ -471,34 +550,38 @@ class cAccountController extends Controller
     public function updateprison(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:prisons,name,' . $id . ',id',
+            'name' => 'required|string|max:255|unique:prisons,name,' . $id,
             'location' => 'required|string|max:255',
             'capacity' => 'required|integer|min:1',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()->first()], 422);
+            return back()->with('error', $validator->errors()->first());
         }
 
         $prison = Prison::findOrFail($id);
         $prison->update($request->only(['name', 'location', 'capacity']));
 
-        return response()->json(['message' => 'Prison updated successfully']);
+        return back()->with('success', 'Prison updated successfully.');
     }
 
     public function destroyprison($id)
     {
         $prison = Prison::findOrFail($id);
+
         if ($prison->rooms()->exists() || $prison->prisoners()->exists()) {
-            return response()->json(['message' => 'Cannot delete prison with associated rooms or prisoners'], 422);
+            return back()->with('error', 'Cannot delete prison with associated rooms or prisoners.');
         }
+
         $prison->delete();
-        return response()->json(['message' => 'Prison deleted successfully']);
+        return back()->with('success', 'Prison deleted successfully.');
     }
+
     public function destroyacc($user_id)
     {
         $account = Account::findOrFail($user_id);
         $account->delete();
-        return response()->json(['message' => 'Account deleted successfully']);
+
+        return back()->with('success', 'Account deleted successfully.');
     }
 }
