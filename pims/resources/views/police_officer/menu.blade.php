@@ -71,8 +71,6 @@
     $isAssigned = PolicePrisonerAssignment::where('officer_id', session('user_id'))->exists();
 @endphp
 
-
-
             <!-- Conditionally Display Request Menu -->
             @if($isAssigned)
             <li class="pims-menu-item pims-has-submenu">

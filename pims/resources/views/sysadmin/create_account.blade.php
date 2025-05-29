@@ -451,7 +451,7 @@
                                 <select id="gender" name="gender" class="pims-form-control pims-form-select" required>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
+
                                 </select>
                             </div>
                             

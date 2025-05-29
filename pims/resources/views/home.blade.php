@@ -137,7 +137,8 @@
         }
 
         .logo img {
-            height: 50px;
+            height: 100px;
+            width: 150px;
             margin-right: 15px;
         }
 
@@ -765,11 +766,10 @@
     <header>
         <div class="container header-container">
             <div class="logo">
-                <div class="logo-text">
-                    <h1>PIMS</h1>
-                    <span>Prison Information Management System</span>
-                </div>
-            </div>
+    <a href="/">
+        <img src="{{ asset('assets/img/logo.png') }}" alt="PIMS Logo" class="logo-image">
+    </a>
+</div>
 
             <button class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
@@ -788,6 +788,7 @@
             </nav>
         </div>
     </header>
+    </br></br></br>
 
     <!-- Visitor Registration Modal -->
     <div class="modal fade" id="visitorRegisterModal" tabindex="-1" aria-labelledby="visitorRegisterModalLabel" aria-hidden="true">
@@ -836,10 +837,6 @@
                                 </select>
                             </div>
 
-                            <div class="mb-3">
-                                <label for="identification_number" class="form-label">ID Number <span class="text-danger">*</span></label>
-                                <input type="text" name="identification_number" class="form-control" required placeholder="Enter your identification number">
-                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -876,46 +873,37 @@
         </div>
     </div>
 
-    <!-- Hero Section -->
-    <section class="hero" id="home">
-        <div class="container">
-            <div class="hero-content">
-                <h1>Secure Prison Management for Central Ethiopia</h1>
-                <p>Empowering correctional facilities with a robust, secure, and efficient Prison Information Management System tailored for Central Ethiopia’s justice system.</p>
-                <div class="hero-btns">
-                    <a href="#gallery" class="btn">Explore Gallery</a>
-                    <a href="#features" class="btn btn-outline">View Features</a>
-                </div>
-            </div>
+<section class="hero" id="home" style="background: linear-gradient(135deg, rgba(26, 37, 47, 0.95), rgba(255, 85, 85, 0.7)), url('{{ asset('assets/img/Federal_Police_Ethiopia.jpg') }}') no-repeat center center/cover;">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Secure Prison Management for Central Ethiopia</h1>
+            <p>Empowering correctional facilities with a robust, secure, and efficient Prison Information Management System.</p>
+            
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- Gallery Section -->
-    <section class="section gallery" id="gallery">
-        <div class="container">
-            <div class="section-title">
-                <h2>Our Facilities</h2>
-            </div>
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1596040023674-66dacb66b82f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Prison Facility">
-                    <span>High-Security Wing</span>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1596040032469-5b6a1e039a58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Control Room">
-                    <span>Control Room</span>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1518733057094-95b53143d2a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Visitor Area">
-                    <span>Visitor Area</span>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1581093196270-1a1d1b6b9540?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Rehabilitation Center">
-                    <span>Rehabilitation Center</span>
-                </div>
-            </div>
+<section class="section gallery" id="gallery">
+    <div class="container">
+        <div class="section-title">
+            <h2>Our Facilities</h2>
         </div>
-    </section>
+        <div class="gallery-grid">
+    <div class="gallery-item">
+        <img src="{{ asset('assets/img/HighSecurityWing.jpg') }}" alt="High-Security Wing">
+        <span>High-Security Wing</span>
+    </div>
+    <div class="gallery-item">
+        <img src="{{ asset('assets/img/ControlRoom.jfif') }}" alt="Control Room">
+        <span>Control Room</span>
+    </div>
+    <div class="gallery-item">
+        <img src="{{ asset('assets/img/VisitorArea.jfif') }}" alt="Visitor Area">
+        <span>Visitor Area</span>
+    </div>
+</div>
+    </div>
+</section>
 
     <!-- Features Section -->
     <section class="section features" id="features">
@@ -984,7 +972,7 @@
                     <a href="#contact" class="btn">Contact Us</a>
                 </div>
                 <div class="about-image">
-                    <img src="https://images.unsplash.com/photo-1596040032469-5b6a1e039a58?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Prison Management System">
+                    <img src="{{ asset('assets/img/Flag_of_Central_Ethiopia.png') }}"alt="Prison Management System">
                 </div>
             </div>
         </div>
@@ -1029,7 +1017,7 @@
                     </div>
                     <div>
                         <h4>Location</h4>
-                        <p>Central Ethiopia Regional Administration, Wolkite, Ethiopia</p>
+                        <p>Central Ethiopia Regional Administration, Hossana, Ethiopia</p>
                     </div>
                 </div>
                 <div class="contact-info-item">
@@ -1047,7 +1035,7 @@
                     </div>
                     <div>
                         <h4>Phone</h4>
-                        <p>+251 11 123 4567</p>
+                        <p>+251911121322</p>
                     </div>
                 </div>
             </div>
@@ -1060,11 +1048,10 @@
             <div class="footer-container">
                 <div class="footer-col">
                     <div class="logo">
-                        <div class="logo-text">
-                            <h1 style="color: var(--primary-color);">PIMS</h1>
-                            <span style="color: rgba(255, 255, 255, 0.7);">Prison Information Management System</span>
-                        </div>
-                    </div>
+    <a href="/">
+        <img src="{{ asset('assets/img/logo.png') }}" alt="PIMS Logo" class="logo-image" style="height: 200px;">
+    </a>
+</div>
                     <p>Modernizing correctional facility management with secure, innovative technology solutions for Central Ethiopia.</p>
                 </div>
                 <div class="footer-col">
@@ -1078,16 +1065,7 @@
                         <li><a href="/login">Login</a></li>
                     </ul>
                 </div>
-                <div class="footer-col">
-                    <h3>Services</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Inmate Management</a></li>
-                        <li><a href="#">Visitor Tracking</a></li>
-                        <li><a href="#">Case Management</a></li>
-                        <li><a href="#">Reporting Tools</a></li>
-                        <li><a href="#">System Training</a></li>
-                    </ul>
-                </div>
+                
                 <div class="footer-col">
                     <h3>Connect With Us</h3>
                     <div class="social-links">
@@ -1116,29 +1094,35 @@
                 '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
         });
 
-        // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
+       // Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
 
-                if (this.getAttribute('href') === '#') return;
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
 
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+        const target = document.querySelector(targetId);
+        if (target) {
+            // Calculate the position to scroll to
+            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+            const headerHeight = document.querySelector('header').offsetHeight;
+            const offsetPosition = targetPosition - headerHeight;
 
-                    // Close mobile menu if open
-                    if (mainNav.classList.contains('active')) {
-                        mainNav.classList.remove('active');
-                        mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-                    }
-                }
+            // Smooth scroll to the target
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
             });
-        });
 
+            // Close mobile menu if open
+            if (mainNav.classList.contains('active')) {
+                mainNav.classList.remove('active');
+                mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+            }
+        }
+    });
+});
         // Header scroll effect
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');

@@ -423,7 +423,7 @@
     <div class="login-container">
         <div class="login-box">
             <div class="login-header">
-                <img src="assets/img/prison-logo.png" alt="Prison Logo" class="logo">
+                <img src="assets/img/logo.png" alt="Prison Logo" class="logo">
                 <h1>Prison Information Management System</h1>
                 <p>Central Ethiopia Regional Administration</p>
             </div>

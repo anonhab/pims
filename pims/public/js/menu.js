@@ -1,113 +1,121 @@
-document.addEventListener('DOMContentLoaded', function() {
-        // Add click handlers to all menu links
-        document.querySelectorAll('.pims-menu-link, .pims-submenu-link').forEach(link => {
-            link.addEventListener('click', function(e) {
-                // Only show preloader for actual navigation links
-                if (this.getAttribute('href') && this.getAttribute('href') !== '#') {
-                    // Don't prevent default if it's a submenu toggle
-                    if (!this.parentElement.classList.contains('pims-has-submenu') || 
-                        (window.innerWidth <= 1024 || document.getElementById('pimsSidebar').classList.contains('pims-collapsed'))) {
-                        
-                        // Show preloader immediately
-                        PimsPreloader.show();
-                        
-                        // Add a small delay before navigation to ensure preloader shows
-                        e.preventDefault();
-                        const targetUrl = this.getAttribute('href');
-                        
-                        setTimeout(() => {
-                            window.location.href = targetUrl;
-                        }, 50);
-                    }
-                }
-            });
-        });
+document.addEventListener('DOMContentLoaded', () => {
+    const sidebar = document.getElementById('sidebarMain');
+    const collapseBtn = document.getElementById('sidebarCollapse');
+    const preloader = document.getElementById('preloader');
 
-        // Handle AJAX navigation if you're using it
-        if (typeof Livewire !== 'undefined') {
-            Livewire.hook('message.sent', () => {
-                PimsPreloader.show();
-            });
-
-            Livewire.hook('message.processed', () => {
-                setTimeout(PimsPreloader.hide, 500);
-            });
-        }
-    });
-
-
-
-    // Toggle submenus
-    document.querySelectorAll('.pims-has-submenu > .pims-menu-link').forEach(link => {
-        link.addEventListener('click', function(e) {
-            if (window.innerWidth > 1024 || !document.getElementById('pimsSidebar').classList.contains('pims-collapsed')) {
-                e.preventDefault();
-                const parent = this.parentElement;
-                parent.classList.toggle('active');
-                
-                // Close other open submenus at the same level
-                Array.from(parent.parentElement.children).forEach(item => {
-                    if (item !== parent) {
-                        item.classList.remove('active');
-                    }
-                });
-            }
-        });
-    });
-
-    // Mobile sidebar toggle
-    document.getElementById('pimsSidebarToggle').addEventListener('click', function() {
-        document.getElementById('pimsSidebar').classList.toggle('pims-active');
-    });
-
-    // Close sidebar when clicking X
-    document.getElementById('pimsCloseSidebar').addEventListener('click', function(e) {
-        e.stopPropagation();
-        document.getElementById('pimsSidebar').classList.remove('pims-active');
-    });
-
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(e) {
-        const sidebar = document.getElementById('pimsSidebar');
-        const toggleBtn = document.getElementById('pimsSidebarToggle');
+    // Initialize sidebar state
+    function initSidebar() {
+        const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
         
-        if (window.innerWidth <= 1024 && 
-            !sidebar.contains(e.target) && 
-            e.target !== toggleBtn &&
-            !toggleBtn.contains(e.target) &&
-            sidebar.classList.contains('pims-active')) {
-            sidebar.classList.remove('pims-active');
-        }
-    });
-
-    // Toggle collapsed state on desktop
-    document.getElementById('pimsCollapseBtn').addEventListener('click', function() {
-        document.getElementById('pimsSidebar').classList.toggle('pims-collapsed');
-    });
-
-    // Mark active menu item based on current URL
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentUrl = window.location.href;
-        document.querySelectorAll('.pims-menu-link, .pims-submenu-link').forEach(link => {
-            if (link.href === currentUrl) {
-                link.classList.add('active');
-                let parent = link.closest('.pims-has-submenu');
-                while (parent) {
-                    parent.classList.add('active');
-                    parent = parent.parentElement.closest('.pims-has-submenu');
-                }
-            }
-        });
-    });
-
-    // Auto-collapse on smaller screens
-    function checkScreenSize() {
-        if (window.innerWidth <= 1200 && window.innerWidth > 1024) {
-            document.getElementById('pimsSidebar').classList.add('pims-collapsed');
-        } else if (window.innerWidth > 1200) {
-            document.getElementById('pimsSidebar').classList.remove('pims-collapsed');
+        if (isCollapsed) {
+            sidebar.classList.add('sidebar-collapsed');
+            updateCollapseButton(true);
+        } else {
+            sidebar.classList.remove('sidebar-collapsed');
+            updateCollapseButton(false);
         }
     }
 
-    window.addEventListener('resize', checkScreenSize);
-    checkScreenSize();
+    // Update collapse button state
+    function updateCollapseButton(isCollapsed) {
+        if (!collapseBtn) return;
+        
+        const icon = collapseBtn.querySelector('i');
+        const text = collapseBtn.querySelector('span');
+        
+        if (isCollapsed) {
+            icon.classList.replace('fa-chevron-left', 'fa-chevron-right');
+        } else {
+            icon.classList.replace('fa-chevron-right', 'fa-chevron-left');
+        }
+    }
+
+    // Toggle submenus
+    function setupSubmenus() {
+        document.querySelectorAll('.sidebar-has-submenu').forEach(item => {
+            const link = item.querySelector('.sidebar-menu-link');
+            const submenu = item.querySelector('.sidebar-submenu');
+            const arrow = item.querySelector('.sidebar-menu-arrow i');
+            
+            link.addEventListener('click', (e) => {
+                // Only prevent default if sidebar is expanded
+                if (!sidebar.classList.contains('sidebar-collapsed')) {
+                    e.preventDefault();
+                    
+                    // Close all other open submenus
+                    document.querySelectorAll('.sidebar-submenu').forEach(menu => {
+                        if (menu !== submenu) {
+                            menu.classList.remove('sidebar-submenu-open');
+                            const otherArrow = menu.closest('.sidebar-has-submenu').querySelector('.sidebar-menu-arrow i');
+                            if (otherArrow) otherArrow.classList.replace('fa-angle-up', 'fa-angle-down');
+                        }
+                    });
+                    
+                    // Toggle current submenu
+                    submenu.classList.toggle('sidebar-submenu-open');
+                    arrow.classList.toggle('fa-angle-down');
+                    arrow.classList.toggle('fa-angle-up');
+                }
+            });
+        });
+    }
+
+    // Toggle sidebar collapse
+    function setupCollapseButton() {
+        if (!collapseBtn) return;
+        
+        collapseBtn.addEventListener('click', () => {
+            const isCollapsed = !sidebar.classList.contains('sidebar-collapsed');
+            sidebar.classList.toggle('sidebar-collapsed');
+            updateCollapseButton(isCollapsed);
+            localStorage.setItem('sidebarCollapsed', isCollapsed);
+        });
+    }
+
+    // Preloader functions
+    function setupPreloader() {
+        if (!preloader) return;
+        
+        const allLinks = document.querySelectorAll('a[href]:not([href="#"]):not([target="_blank"])');
+        
+        allLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                if (link.hasAttribute('download') || 
+                    (link.hostname && link.hostname !== window.location.hostname)) {
+                    return;
+                }
+                
+                e.preventDefault();
+                showPreloader();
+                
+                setTimeout(() => {
+                    window.location.href = link.href;
+                }, 800);
+            });
+        });
+        
+        window.addEventListener('load', () => {
+            setTimeout(hidePreloader, 500);
+        });
+    }
+
+    function showPreloader() {
+        if (preloader) {
+            preloader.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function hidePreloader() {
+        if (preloader) {
+            preloader.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Initialize everything
+    initSidebar();
+    setupSubmenus();
+    setupCollapseButton();
+    setupPreloader();
+});

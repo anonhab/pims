@@ -637,7 +637,8 @@
                                                 onclick="pimsOpenPrisonerModal(
                                                     '{{ $appointment->prisoner_firstname }}',
                                                     '{{ $appointment->prisoner_middlename }}',
-                                                    '{{ $appointment->prisoner_lastname }}'
+                                                    '{{ $appointment->prisoner_lastname }}',
+                                                    '{{ $appointment->prisoner_id }}'
                                                 )">
                                             <i class="fas fa-search"></i> Verify
                                         </button>
@@ -695,7 +696,7 @@
         <div class="pims-modal-container">
             <div class="pims-modal-header">
                 <h3 class="pims-modal-title">Update Appointment Status</h3>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pimsStatusModal')">&times;</button>
+                <button class="pims-modal-close" onclick="pimsCloseModal('pimsStatusModal')">×</button>
             </div>
             <form id="pimsStatusForm" method="POST" action="{{ route('updateAppointmentStatus') }}">
                 @csrf
@@ -748,6 +749,7 @@
                     <label class="pims-form-label">Last Name</label>
                     <input type="text" class="pims-form-control" id="pimsVerifyLastName" readonly>
                 </div>
+                <input type="hidden" id="pimsVerifyPrisonerId">
                 <div id="pimsVerificationResult" class="pims-alert" style="display: none;"></div>
                 <div class="pims-modal-footer">
                     <button type="button" class="pims-btn pims-btn-secondary" onclick="pimsCloseModal('pimsPrisonerModal')">
@@ -785,252 +787,300 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Configurable base URL for API requests (adjust as needed)
-        const PIMS_BASE_URL = ''; // e.g., '/api' or 'https://yourdomain.com/api'
+    // Configurable base URL for API requests (adjust as needed)
+    const PIMS_BASE_URL = ''; // e.g., '/api' or 'https://yourdomain.com/api'
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // Tab Management with LocalStorage Persistence
-            const pimsSavedTab = localStorage.getItem('pimsActiveAppointmentTab');
-            if (pimsSavedTab && document.getElementById(pimsSavedTab)) {
-                pimsOpenSavedTab(pimsSavedTab);
-            } else {
-                const pimsFirstTab = document.querySelector('.pims-tablink');
-                if (pimsFirstTab) pimsFirstTab.click();
-            }
+    document.addEventListener('DOMContentLoaded', function () {
+        // Tab Management with LocalStorage Persistence
+        const pimsSavedTab = localStorage.getItem('pimsActiveAppointmentTab');
+        if (pimsSavedTab && document.getElementById(pimsSavedTab)) {
+            pimsOpenSavedTab(pimsSavedTab);
+        } else {
+            const pimsFirstTab = document.querySelector('.pims-tablink');
+            if (pimsFirstTab) pimsFirstTab.click();
+        }
 
-            document.querySelectorAll('.pims-tablink').forEach(tab => {
-                tab.addEventListener('click', function () {
-                    const pimsTabId = this.getAttribute('data-tab') || 
-                                     this.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
-                    if (pimsTabId) localStorage.setItem('pimsActiveAppointmentTab', pimsTabId);
-                });
+        document.querySelectorAll('.pims-tablink').forEach(tab => {
+            tab.addEventListener('click', function () {
+                const pimsTabId = this.getAttribute('data-tab') || 
+                                 this.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+                if (pimsTabId) localStorage.setItem('pimsActiveAppointmentTab', pimsTabId);
             });
+        });
 
-            // View Prisoner Button Event Listener
-            const pimsViewPrisonerBtn = document.getElementById('pimsViewPrisonerLink');
-            if (pimsViewPrisonerBtn) {
-                pimsViewPrisonerBtn.addEventListener('click', async function () {
-                    const pimsPrisonerId = document.getElementById('pimsViewPrisonerBtn').dataset.id;
-                    console.log('View Prisoner clicked, ID:', pimsPrisonerId); // Debug
-                    if (!pimsPrisonerId) {
-                        alert('No prisoner ID found. Please verify the prisoner again.');
-                        return;
+        // Initialize Bootstrap modal
+        const inmateModal = new bootstrap.Modal(document.getElementById('pimsInmateModal'));
+
+        // View Prisoner Button Event Listener
+        const pimsViewPrisonerBtn = document.getElementById('pimsViewPrisonerLink');
+        if (pimsViewPrisonerBtn) {
+            pimsViewPrisonerBtn.addEventListener('click', async function () {
+                const pimsPrisonerId = document.getElementById('pimsViewPrisonerBtn').dataset.id;
+                if (!pimsPrisonerId) {
+                    alert('No prisoner ID found. Please verify the prisoner again.');
+                    return;
+                }
+
+                try {
+                    // Show loading state
+                    document.getElementById('pimsInmateDetails').innerHTML = `
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading inmate details...</p>
+                        </div>
+                    `;
+                    
+                    // Construct the endpoint URL (adjust '/inmate/' if needed)
+                    const pimsEndpoint = `${PIMS_BASE_URL}/prisoners/${pimsPrisonerId}`;
+                    const pimsRes = await fetch(pimsEndpoint);
+                    
+                    if (!pimsRes.ok) {
+                        if (pimsRes.status === 404) {
+                            throw new Error(`Inmate with ID ${pimsPrisonerId} not found`);
+                        }
+                        throw new Error(`HTTP error! Status: ${pimsRes.status}`);
+                    }
+                    
+                    const pimsData = await pimsRes.json();
+
+                    // Validate required fields
+                    if (!pimsData.first_name || !pimsData.last_name) {
+                        throw new Error('Incomplete inmate data received');
                     }
 
-                    try {
-                        // Construct the endpoint URL (adjust '/inmate/' if needed)
-                        const pimsEndpoint = `${PIMS_BASE_URL}/prisoners/${pimsPrisonerId}`;
-                        console.log('Fetching from:', pimsEndpoint); // Debug
-                        const pimsRes = await fetch(pimsEndpoint);
-                        if (!pimsRes.ok) {
-                            if (pimsRes.status === 404) {
-                                throw new Error(`Inmate with ID ${pimsPrisonerId} not found`);
-                            }
-                            throw new Error(`HTTP error! Status: ${pimsRes.status}`);
-                        }
-                        const pimsData = await pimsRes.json();
-                        console.log('Fetched inmate data:', pimsData); // Debug
+                    const pimsDetails = `
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <img src="/storage/${pimsData.inmate_image || 'default.jpg'}" alt="Inmate Image" class="img-thumbnail mb-3" width="150">
+                            </div>
+                            <div class="col-md-8">
+                                <p><strong>Name:</strong> ${pimsData.first_name} ${pimsData.middle_name || ''} ${pimsData.last_name}</p>
+                                <p><strong>ID:</strong> ${pimsData.id || 'N/A'}</p>
+                                <p><strong>DOB:</strong> ${pimsData.dob || 'N/A'}</p>
+                                <p><strong>Gender:</strong> ${pimsData.gender || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Address:</strong> ${(pimsData.address || 'N/A').replace(/\r\n/g, '<br>')}</p>
+                                <p><strong>Marital Status:</strong> ${pimsData.marital_status || 'N/A'}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Crime:</strong> ${pimsData.crime_committed || 'N/A'}</p>
+                                <p><strong>Status:</strong> ${pimsData.status || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <p><strong>Emergency Contact:</strong> ${pimsData.emergency_contact_name || 'N/A'} (${pimsData.emergency_contact_relation || 'N/A'}) - ${pimsData.emergency_contact_number || 'N/A'}</p>
+                        <p><strong>Prison Name:</strong> ${pimsData.prison_name || 'N/A'}</p>
+                    `;
+                    
+                    document.getElementById('pimsInmateDetails').innerHTML = pimsDetails;
+                    
+                    // Close verification modal and show inmate modal
+                    pimsCloseModal('pimsPrisonerModal');
+                    inmateModal.show();
+                } catch (error) {
+                    console.error('Error fetching inmate data:', error);
+                    document.getElementById('pimsInmateDetails').innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> Failed to load inmate data: ${error.message}
+                        </div>
+                    `;
+                    inmateModal.show();
+                }
+            });
+        }
 
-                        // Validate required fields
-                        if (!pimsData.first_name || !pimsData.last_name) {
-                            throw new Error('Incomplete inmate data received');
-                        }
+        // Status Form Submission
+        const statusForm = document.getElementById('pimsStatusForm');
+        if (statusForm) {
+            statusForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn.innerHTML;
 
-                        const pimsDetails = `
-                            <img src="/storage/${pimsData.inmate_image || 'default.jpg'}" alt="Inmate Image" class="img-thumbnail mb-3" width="150">
-                            <p><strong>Name:</strong> ${pimsData.first_name} ${pimsData.middle_name || ''} ${pimsData.last_name}</p>
-                            <p><strong>DOB:</strong> ${pimsData.dob || 'N/A'}</p>
-                            <p><strong>Gender:</strong> ${pimsData.gender || 'N/A'}</p>
-                            <p><strong>Address:</strong> ${(pimsData.address || 'N/A').replace(/\r\n/g, '<br>')}</p>
-                            <p><strong>Marital Status:</strong> ${pimsData.marital_status || 'N/A'}</p>
-                            <p><strong>Crime:</strong> ${pimsData.crime_committed || 'N/A'}</p>
-                            <p><strong>Status:</strong> ${pimsData.status || 'N/A'}</p>
-                            <p><strong>Time Served:</strong> ${pimsData.time_serve_start || 'N/A'} - ${pimsData.time_serve_end || 'N/A'}</p>
-                            <hr>
-                            <p><strong>Emergency Contact:</strong> ${pimsData.emergency_contact_name || 'N/A'} (${pimsData.emergency_contact_relation || 'N/A'}) - ${pimsData.emergency_contact_number || 'N/A'}</p>
-                            <p><strong>Prison Name:</strong> ${pimsData.prison_name || 'N/A'}</p>
-                            <p><strong>Created:</strong> ${pimsData.created_at || 'N/A'}</p>
-                            <p><strong>Updated:</strong> ${pimsData.updated_at || 'N/A'}</p>
-                        `;
-                        document.getElementById('pimsInmateDetails').innerHTML = pimsDetails;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
-                        // Close verification modal and show inmate modal
-                        pimsCloseModal('pimsPrisonerModal');
-                        const pimsModal = new bootstrap.Modal(document.getElementById('pimsInmateModal'), {
-                            backdrop: 'static',
-                            keyboard: true
-                        });
-                        pimsModal.show();
-                    } catch (error) {
-                        console.error('Error fetching inmate data:', error);
-                        alert(`Failed to load inmate data: ${error.message}`);
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        },
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (data.success) {
+                        // Show success message
+                        const alertDiv = document.createElement('div');
+                        alertDiv.className = 'pims-alert pims-alert-success';
+                        alertDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${data.message || 'Status updated successfully!'}`;
+                        document.querySelector('.pims-content-container').prepend(alertDiv);
+                        
+                        // Remove the alert after 3 seconds
+                        setTimeout(() => {
+                            alertDiv.remove();
+                        }, 3000);
+                        
+                        // Close modal and refresh the page after a short delay
+                        setTimeout(() => {
+                            pimsCloseModal('pimsStatusModal');
+                            window.location.reload();
+                        }, 500);
+                    } else {
+                        alert(data.message || 'Failed to update status');
                     }
-                });
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error updating status: ' + error.message);
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            });
+        }
+    });
+
+    function pimsOpenSavedTab(pimsTabId) {
+        document.querySelectorAll('.pims-report-content').forEach(content => {
+            content.style.display = 'none';
+        });
+        document.querySelectorAll('.pims-tablink').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const pimsTabContent = document.getElementById(pimsTabId);
+        if (pimsTabContent) pimsTabContent.style.display = 'block';
+        const pimsTabButton = document.querySelector(`.pims-tablink[data-tab="${pimsTabId}"], .pims-tablink[onclick*="${pimsTabId}"]`);
+        if (pimsTabButton) pimsTabButton.classList.add('active');
+    }
+
+    function pimsOpenReportTab(pimsEvt, pimsReportName) {
+        document.querySelectorAll('.pims-report-content').forEach(el => {
+            el.style.display = 'none';
+        });
+        document.querySelectorAll('.pims-tablink').forEach(el => {
+            el.classList.remove('active');
+        });
+        const pimsTabContent = document.getElementById(pimsReportName);
+        if (pimsTabContent) {
+            pimsTabContent.style.display = 'block';
+            pimsTabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        if (pimsEvt?.currentTarget) pimsEvt.currentTarget.classList.add('active');
+        localStorage.setItem('pimsActiveAppointmentTab', pimsReportName);
+    }
+
+    function pimsOpenStatusModal(pimsAppointmentId, pimsAppointmentType, pimsCurrentStatus) {
+        document.getElementById('pimsAppointmentId').value = pimsAppointmentId;
+        document.getElementById('pimsAppointmentType').value = pimsAppointmentType;
+        document.getElementById('pimsStatus').value = pimsCurrentStatus.toLowerCase();
+        document.getElementById('pimsNotes').value = '';
+        pimsShowModal('pimsStatusModal');
+    }
+
+    function pimsOpenPrisonerModal(pimsFirstName, pimsMiddleName, pimsLastName) {
+        document.getElementById('pimsVerifyFirstName').value = pimsFirstName || '';
+        document.getElementById('pimsVerifyMiddleName').value = pimsMiddleName || '';
+        document.getElementById('pimsVerifyLastName').value = pimsLastName || '';
+        document.getElementById('pimsVerificationResult').style.display = 'none';
+        document.getElementById('pimsViewPrisonerBtn').style.display = 'none';
+        pimsShowModal('pimsPrisonerModal');
+    }
+
+    function pimsShowModal(pimsModalId) {
+        const pimsModal = document.getElementById(pimsModalId);
+        if (pimsModal) {
+            pimsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    }
+
+    function pimsCloseModal(pimsModalId) {
+        const pimsModal = document.getElementById(pimsModalId);
+        if (pimsModal) {
+            pimsModal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    }
+
+    window.onclick = function (pimsEvent) {
+        if (pimsEvent.target.classList.contains('pims-modal')) {
+            pimsCloseModal(pimsEvent.target.id);
+        }
+    };
+
+    document.addEventListener('keydown', function (pimsEvent) {
+        if (pimsEvent.key === 'Escape') {
+            const pimsOpenModal = document.querySelector('.pims-modal.active');
+            if (pimsOpenModal) pimsCloseModal(pimsOpenModal.id);
+        }
+    });
+
+    async function pimsVerifyPrisoner() {
+        const pimsFirstName = document.getElementById('pimsVerifyFirstName').value.trim();
+        const pimsMiddleName = document.getElementById('pimsVerifyMiddleName').value.trim();
+        const pimsLastName = document.getElementById('pimsVerifyLastName').value.trim();
+
+        if (!pimsFirstName || !pimsLastName) {
+            pimsShowVerificationResult('Please provide at least first and last name', false);
+            return;
+        }
+
+        const verifyBtn = document.querySelector('#pimsPrisonerModal .pims-btn-primary');
+        const originalBtnText = verifyBtn.innerHTML;
+        
+        try {
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verifying...';
+
+            const pimsResponse = await fetch('/verify-prisoner', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    first_name: pimsFirstName,
+                    middle_name: pimsMiddleName,
+                    last_name: pimsLastName
+                })
+            });
+
+            const pimsData = await pimsResponse.json();
+
+            if (pimsData.success && pimsData.prisoner_id) {
+                pimsShowVerificationResult(pimsData.message || 'Prisoner verified successfully', true);
+                const pimsViewBtn = document.getElementById('pimsViewPrisonerBtn');
+                pimsViewBtn.dataset.id = pimsData.prisoner_id;
+                pimsViewBtn.style.display = 'block';
             } else {
-                console.error('pimsViewPrisonerLink element not found');
+                pimsShowVerificationResult(pimsData.message || 'Verification failed. No matching prisoner found.', false);
             }
-        });
-
-        function pimsOpenSavedTab(pimsTabId) {
-            document.querySelectorAll('.pims-report-content').forEach(content => {
-                content.style.display = 'none';
-            });
-            document.querySelectorAll('.pims-tablink').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            const pimsTabContent = document.getElementById(pimsTabId);
-            if (pimsTabContent) pimsTabContent.style.display = 'block';
-            const pimsTabButton = document.querySelector(`.pims-tablink[data-tab="${pimsTabId}"], .pims-tablink[onclick*="${pimsTabId}"]`);
-            if (pimsTabButton) pimsTabButton.classList.add('active');
+        } catch (pimsError) {
+            console.error('Verification error:', pimsError);
+            pimsShowVerificationResult('Error verifying prisoner: ' + pimsError.message, false);
+        } finally {
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = originalBtnText;
         }
+    }
 
-        function pimsOpenReportTab(pimsEvt, pimsReportName) {
-            document.querySelectorAll('.pims-report-content').forEach(el => {
-                el.style.display = 'none';
-            });
-            document.querySelectorAll('.pims-tablink').forEach(el => {
-                el.classList.remove('active');
-            });
-            const pimsTabContent = document.getElementById(pimsReportName);
-            if (pimsTabContent) {
-                pimsTabContent.style.display = 'block';
-                pimsTabContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            if (pimsEvt?.currentTarget) pimsEvt.currentTarget.classList.add('active');
-            localStorage.setItem('pimsActiveAppointmentTab', pimsReportName);
-        }
-
-        function pimsOpenStatusModal(pimsAppointmentId, pimsAppointmentType, pimsCurrentStatus) {
-            document.getElementById('pimsAppointmentId').value = pimsAppointmentId;
-            document.getElementById('pimsAppointmentType').value = pimsAppointmentType;
-            document.getElementById('pimsStatus').value = pimsCurrentStatus.toLowerCase();
-            document.getElementById('pimsNotes').value = '';
-            pimsShowModal('pimsStatusModal');
-        }
-
-        function pimsOpenPrisonerModal(pimsFirstName, pimsMiddleName, pimsLastName) {
-            document.getElementById('pimsVerifyFirstName').value = pimsFirstName || '';
-            document.getElementById('pimsVerifyMiddleName').value = pimsMiddleName || '';
-            document.getElementById('pimsVerifyLastName').value = pimsLastName || '';
-            document.getElementById('pimsVerificationResult').style.display = 'none';
-            document.getElementById('pimsViewPrisonerBtn').style.display = 'none';
-            pimsShowModal('pimsPrisonerModal');
-        }
-
-        function pimsShowModal(pimsModalId) {
-            const pimsModal = document.getElementById(pimsModalId);
-            if (pimsModal) {
-                pimsModal.classList.add('active');
-                document.body.style.overflow = 'hidden';
-            }
-        }
-
-        function pimsCloseModal(pimsModalId) {
-            const pimsModal = document.getElementById(pimsModalId);
-            if (pimsModal) {
-                pimsModal.classList.remove('active');
-                document.body.style.overflow = '';
-            }
-        }
-
-        window.onclick = function (pimsEvent) {
-            if (pimsEvent.target.classList.contains('pims-modal')) {
-                pimsCloseModal(pimsEvent.target.id);
-            }
-        };
-
-        document.addEventListener('keydown', function (pimsEvent) {
-            if (pimsEvent.key === 'Escape') {
-                const pimsOpenModal = document.querySelector('.pims-modal.active');
-                if (pimsOpenModal) pimsCloseModal(pimsOpenModal.id);
-            }
-        });
-
-        async function pimsVerifyPrisoner() {
-            const pimsFirstName = document.getElementById('pimsVerifyFirstName').value.trim();
-            const pimsMiddleName = document.getElementById('pimsVerifyMiddleName').value.trim();
-            const pimsLastName = document.getElementById('pimsVerifyLastName').value.trim();
-
-            if (!pimsFirstName || !pimsLastName) {
-                pimsShowVerificationResult('Please provide at least first and last name', false);
-                return;
-            }
-
-            try {
-                const pimsResponse = await fetch('/verify-prisoner', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                    },
-                    body: JSON.stringify({
-                        first_name: pimsFirstName,
-                        middle_name: pimsMiddleName,
-                        last_name: pimsLastName
-                    })
-                });
-
-                const pimsData = await pimsResponse.json();
-                console.log('Verification response:', pimsData); // Debug
-
-                if (pimsData.success && pimsData.prisoner_id) {
-                    pimsShowVerificationResult(pimsData.message || 'Prisoner verified successfully', true);
-                    const pimsViewBtn = document.getElementById('pimsViewPrisonerBtn');
-                    pimsViewBtn.dataset.id = pimsData.prisoner_id;
-                    pimsViewBtn.style.display = 'block';
-                    console.log('View button shown with ID:', pimsData.prisoner_id); // Debug
-                } else {
-                    pimsShowVerificationResult(pimsData.message || 'Verification failed', false);
-                }
-            } catch (pimsError) {
-                console.error('Verification error:', pimsError);
-                pimsShowVerificationResult('Error verifying prisoner: ' + pimsError.message, false);
-            }
-        }
-
-        function pimsShowVerificationResult(pimsMessage, pimsIsSuccess) {
-            const pimsResultDiv = document.getElementById('pimsVerificationResult');
-            pimsResultDiv.textContent = pimsMessage;
-            pimsResultDiv.className = `pims-alert ${pimsIsSuccess ? 'pims-alert-success' : 'pims-alert-danger'}`;
-            pimsResultDiv.style.display = 'block';
-            pimsResultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-
-        document.getElementById('pimsStatusForm')?.addEventListener('submit', async function (pimsE) {
-            pimsE.preventDefault();
-            const pimsForm = pimsE.target;
-            const pimsFormData = new FormData(pimsForm);
-            const pimsSubmitBtn = pimsForm.querySelector('button[type="submit"]');
-            const pimsOriginalBtnText = pimsSubmitBtn.innerHTML;
-
-            pimsSubmitBtn.disabled = true;
-            pimsSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-            try {
-                const pimsResponse = await fetch(pimsForm.action, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
-                        'Accept': 'application/json'
-                    },
-                    body: pimsFormData
-                });
-
-                const pimsData = await pimsResponse.json();
-                if (pimsData.success) {
-                    alert('Status updated successfully!');
-                    pimsCloseModal('pimsStatusModal');
-                    window.location.reload();
-                } else {
-                    alert(pimsData.message || 'Failed to update status');
-                }
-            } catch (pimsError) {
-                alert('Error updating status: ' + pimsError.message);
-            } finally {
-                pimsSubmitBtn.disabled = false;
-                pimsSubmitBtn.innerHTML = pimsOriginalBtnText;
-            }
-        });
-    </script>
+    function pimsShowVerificationResult(pimsMessage, pimsIsSuccess) {
+        const pimsResultDiv = document.getElementById('pimsVerificationResult');
+        pimsResultDiv.innerHTML = `<i class="fas ${pimsIsSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${pimsMessage}`;
+        pimsResultDiv.className = `pims-alert ${pimsIsSuccess ? 'pims-alert-success' : 'pims-alert-danger'}`;
+        pimsResultDiv.style.display = 'block';
+        pimsResultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+</script>
 </body>
 </html>

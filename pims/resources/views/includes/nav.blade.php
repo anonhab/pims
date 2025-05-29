@@ -739,6 +739,15 @@
             opacity: 1;
             transform: translateY(0);
         }
+        .pims-logo-image {
+    height: 50px; /* Adjust as needed */
+    width: auto;
+    transition: transform 0.3s ease;
+}
+
+.pims-logo:hover .pims-logo-image {
+    transform: translateX(-3px);
+}
     </style>
 </head>
 
@@ -748,14 +757,10 @@
         <div class="pims-navbar">
             <div class="pims-navbar-brand">
                 <div class="pims-logo">
-                    <i class="fas fa-user-lock pims-logo-icon"></i>
-                    <a href="{{ url('/') }}">
-                        <div class="pims-logo-text">
-                            PIMS
-                            <small>Prison Information Management</small>
-                        </div>
-                    </a>
-                </div>
+    <a href="{{ url('/') }}">
+        <img src="{{ asset('assets/img/logo.png') }}" alt="PIMS Logo" class="pims-logo-image">
+    </a>
+</div>
                 @if(session('prison_id'))
                 <div class="pims-system-title">
                     <strong>{{ session('rolename') }}</strong> | {{ session('prison') }}
