@@ -134,11 +134,11 @@
                 <a href="#">
                     <span class="icon">
                         <i class="fa fa-database"></i>
-                    </span> Backup and Recovery
+                    </span> Backup   
                 </a>
                 <ul class="submenu">
                     <li><a href="/initiate_backup">Initiate Backup</a></li>
-                    <li><a href="/view_backup_recovery_logs">View Backup/Recovery Logs</a></li>
+                    <li><a href="/view_backup_recovery_logs">View Backup Logs</a></li>
                 </ul>
             </li>
 

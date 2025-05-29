@@ -379,14 +379,14 @@
                 <div class="pims-grid">
                     <!-- Account Management -->
                     <div class="pims-dashboard-card">
-                        <span class="pims-security-badge">SECURED</span>
+                        <span class="pims-security-badge"></span>
                         <div class="pims-card-icon">
                             <i class="fas fa-user-shield"></i>
                         </div>
                         <h3>Admin Accounts</h3>
                         <p>24</p>
                         <div class="pims-card-footer">
-                            <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All accounts secured
+                            <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All accounts 
                         </div>
                     </div>
 
@@ -405,7 +405,7 @@
 
                     <!-- Report Generation -->
                     <div class="pims-dashboard-card">
-                        <span class="pims-security-badge">ENCRYPTED</span>
+                        <span class="pims-security-badge"></span>
                         <div class="pims-card-icon">
                             <i class="fas fa-file-shield"></i>
                         </div>
@@ -416,9 +416,9 @@
                         </div>
                     </div>
 
-                    <!-- Backup & Recovery -->
+                    <!-- Backup  -->
                     <div class="pims-dashboard-card">
-                        <span class="pims-security-badge">PROTECTED</span>
+                        <span class="pims-security-badge"></span>
                         <div class="pims-card-icon">
                             <i class="fas fa-database"></i>
                         </div>

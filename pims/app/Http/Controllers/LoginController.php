@@ -73,16 +73,16 @@ class LoginController extends Controller
                 Log::info('Login successful:', ['email' => $account->email, 'username' => $account->username]);
     
                 return match ($account->role_id) {
-                    3 => view('cadmin.dashboard', ['activities' => Audit::with('user')->latest()->take(20)->get()]),
+                    3 => redirect()->to('/dashboard'),
 
                     2 => redirect()->to('/idashboard'),
-                    1 => view('sysadmin.dashboard', ['recentAssignments' => LawyerPrisonerAssignment::all()]),
+                    1 => redirect()->route('system.dashboard'),   
                     8 => view('police_officer.dashboard'),
-                    6 => redirect()->to('/viewcertifications'),
-                    9 => view('medical_officer.dashboard'),
+                    6 => redirect()->to('/tdashboard'),
+                    9 => redirect()->to('/medicaldashboard'),
                     10 => view('security_officer.dashboard'),
-                    11 => view('discipline_officer.dashboard'),
-                    5 => view('police_commisioner.dashboard'),
+                    11 => redirect()->to('ddashboard'),
+                    5 => redirect()->to('cdashboard'),
                     default => redirect()->intended('/dashboard'),
                 };
             } else {
@@ -96,7 +96,7 @@ class LoginController extends Controller
     
             if (Hash::check($credentials['password'], $lawyer->password)) {
                 RateLimiter::clear($key);
-    
+            
                 $request->session()->put([
                     'lawyer_id'      => $lawyer->lawyer_id,
                     'first_name'     => $lawyer->first_name,
@@ -112,12 +112,13 @@ class LoginController extends Controller
                     'prison'         => Prison::find($lawyer->prison)?->name,
                     'rolename'       => 'lawyer',
                 ]);
-    
+            
                 Log::info('Lawyer login successful:', ['email' => $lawyer->email, 'username' => $lawyer->username]);
-                return view('lawyer.dashboard');
+                return redirect()->route('mylawyer.ldashboard');
             } else {
                 Log::warning('Lawyer login failed: Incorrect password', ['email' => $credentials['email']]);
             }
+            
         }
     
         // === VISITOR LOGIN ===
@@ -141,7 +142,7 @@ class LoginController extends Controller
                 ]);
     
                 Log::info('Visitor login successful:', ['email' => $visitor->username]);
-                return view('visitor.dashboard');
+                return redirect()->route('visitor.dashboard');
             } else {
                 Log::warning('Visitor login failed: Incorrect password', ['email' => $credentials['email']]);
             }

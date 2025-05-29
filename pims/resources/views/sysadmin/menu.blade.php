@@ -67,26 +67,7 @@
                 </ul>
             </li>
 
-            <!-- Backup and Recovery -->
-            <li class="pims-menu-item pims-has-submenu">
-                <a href="#" class="pims-menu-link">
-                    <span class="pims-menu-icon">
-                        <i class="fas fa-database"></i>
-                    </span>
-                    <span class="pims-menu-text">Backup and Recovery</span>
-                    <span class="pims-menu-arrow">
-                        <i class="fas fa-angle-down"></i>
-                    </span>
-                </a>
-                <ul class="pims-submenu">
-                    <li class="pims-menu-item">
-                        <a href="#" class="pims-menu-link" id="initiateBackupBtn" onclick="initiateBackup()">Initiate Backup</a>
-                    </li>
-                    <li class="pims-menu-item">
-                        <a href="/view_backup_recovery_logs" class="pims-menu-link">View Backup/Recovery Logs</a>
-                    </li>
-                </ul>
-            </li>
+           
 
         </ul>
         

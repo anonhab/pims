@@ -18,14 +18,14 @@ class MedicalReport extends Model
     protected $keyType = 'string';
 
     protected $fillable = [
-        'id', 'prisoner_id', 'doctor_id', 'diagnosis', 'treatment', 'medications', 'report_date','appointment_id','follow_up_date','notes','follow_up'
+        'id', 'prisoner_id', 'doctor_id', 'diagnosis', 'treatment', 'medications', 'report_date', 'appointment_id', 'follow_up_date', 'notes', 'follow_up','prison_id'
     ];
 
     protected $casts = [
         'report_date' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'follow_up_date'=>'datetime',
+        'follow_up_date' => 'datetime',
     ];
 
     // Relationship with Prisoner
@@ -38,5 +38,11 @@ class MedicalReport extends Model
     public function doctor()
     {
         return $this->belongsTo(Account::class, 'doctor_id', 'user_id');
+    }
+
+    // Relationship with MedicalAppointment
+    public function appointment()
+    {
+        return $this->belongsTo(MedicalAppointment::class, 'appointment_id', 'id');
     }
 }

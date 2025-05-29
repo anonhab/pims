@@ -396,13 +396,14 @@ public function getChartData($prisonId = null)
       {
           try {
               $request->validate([
-                  'report_type' => 'required|in:daily,monthly,annual,incident',
+                  'report_type' => 'required|in:all_accounts,staff,prisoners,all_prisons',
                   'content' => 'required|json',
               ]);
 
               $generatedBy = session('user_id');
               $reportType = $request->report_type;
               $content = $request->content;
+              $prisonId = session('prison_id');
 
               $recentReport = Report::where('generated_by', $generatedBy)
                   ->where('report_type', $reportType)
@@ -422,6 +423,7 @@ public function getChartData($prisonId = null)
                   'generated_by' => $generatedBy,
                   'report_type' => $reportType,
                   'content' => $content,
+                  'prison_id' => $prisonId,
               ]);
 
               Log::info('Report stored successfully', [

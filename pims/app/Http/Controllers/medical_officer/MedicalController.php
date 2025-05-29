@@ -9,6 +9,7 @@ use App\Models\MedicalReport;
 use App\Models\Prisoner;
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -146,7 +147,90 @@ public function mstore(Request $request)
 
     return redirect()->back()->with('success', 'Appointment created successfully.');
 }
+public function dashboard()
+    {
+        $prisonId = session('prison_id');
+        $userId = session('user_id');
 
+        if (!$prisonId) {
+            Log::warning('No prison_id in session for medical dashboard', ['user_id' => $userId]);
+            return redirect()->route('home')->with('error', 'Prison ID not set.');
+        }
+
+      
+            // Dashboard Cards
+          
+            $todaysAppointments = MedicalAppointment::where('prison_id', $prisonId)
+                ->whereDate('appointment_date', now()->startOfDay())
+                ->count();
+
+            
+            // Recent Appointments (Today's)
+            $recentAppointments = MedicalAppointment::where('prison_id', $prisonId)
+                ->whereDate('appointment_date', now()->startOfDay())
+                ->with(['prisoner', 'doctor'])
+                ->orderBy('appointment_date')
+                ->take(5)
+                ->get();
+
+            // Appointment Status Distribution Chart (Pie)
+            $appointmentStatuses = MedicalAppointment::where('prison_id', $prisonId)
+                ->select('status', DB::raw('count(*) as count'))
+                ->groupBy('status')
+                ->pluck('count', 'status')
+                ->toArray();
+
+            $appointmentStatusChartData = [
+                'scheduled' => $appointmentStatuses['scheduled'] ?? 0,
+                'completed' => $appointmentStatuses['completed'] ?? 0,
+                'cancelled' => $appointmentStatuses['cancelled'] ?? 0,
+            ];
+
+            // Medical Report Trends Chart (Line)
+            $days = collect(range(6, 0))->map(function ($i) {
+                return now()->subDays($i)->format('D');
+            })->toArray();
+
+            $reportTrendsData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
+                $date = now()->subDays($i)->startOfDay();
+                return MedicalReport::where('prison_id', $prisonId)
+                    ->whereDate('report_date', $date)
+                    ->count();
+            })->toArray();
+
+            $reportTrendsChartData = [
+                'labels' => $days,
+                'reports' => $reportTrendsData,
+            ];
+
+            Log::info('Medical dashboard data fetched', [
+                'prison_id' => $prisonId,
+                'user_id' => $userId,
+                
+                'todays_appointments' => $todaysAppointments,
+             
+                'recent_appointments_count' => $recentAppointments->count(),
+                'appointment_status_chart_data' => $appointmentStatusChartData,
+                'report_trends_chart_data' => $reportTrendsChartData,
+            ]);
+
+            return view('medical_officer.dashboard', compact(
+              
+                'todaysAppointments',
+           
+                'recentAppointments',
+                'appointmentStatusChartData',
+                'reportTrendsChartData'
+            ));
+       
+            Log::error('Error fetching medical dashboard data', [
+                'error' => $e->getMessage(),
+                'prison_id' => $prisonId,
+                'user_id' => $userId
+            ]);
+            return redirect()->route('home')->with('error', 'Failed to load dashboard.');
+        
+    }
 
 
     // Update medical appointment status

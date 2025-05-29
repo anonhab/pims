@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>PIMS - System Admin View Backup/Recovery Logs</title>
+    <title>PIMS - System Admin View Backup Logs</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -370,7 +370,7 @@
             <div class="pims-content-container">
                 <div class="pims-content-area">
                     <h2 class="pims-page-title">
-                        <i class="fas fa-database"></i> Backup/Recovery Logs
+                        <i class="fas fa-database"></i> Backup Logs
                     </h2>
                     
                     @if (isset($prison))
@@ -481,6 +481,59 @@
             </div>
         </div>
     </div>
+    <script>
+     const PIMS_BASE_URL = 'http://127.0.0.1:8000/';
+        const PIMS_CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const PIMS_CURRENT_USER = "{{ session('user_name') ?? 'Unknown User' }}";
+        let PIMS_lastReportRequest = 0;
+        const PIMS_DEBOUNCE_MS = 1000;
+
+        async function pimsInitiateBackup() {
+            const btn = document.getElementById('pims-initiateBackupBtn');
+            btn.disabled = true;
+            let percent = 0;
+            const progressInterval = setInterval(() => {
+                percent += Math.floor(Math.random() * 10) + 5;
+                if (percent >= 100) {
+                    percent = 100;
+                    clearInterval(progressInterval);
+                }
+                btn.textContent = `Backing Up... (${PIMS_CURRENT_USER}) ${percent}%`;
+            }, 300);
+
+            try {
+                const response = await fetch(`${PIMS_BASE_URL}sinitiate_backup`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': PIMS_CSRF_TOKEN
+                    }
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'Backup failed');
+                }
+
+                const filename = response.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] || 'backup.sql';
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert('Backup downloaded: ' + filename);
+            } catch (error) {
+                console.error('Backup error:', error.message);
+                alert('Backup failed: ' + error.message);
+            } finally {
+                clearInterval(progressInterval);
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-download"></i> Initiate Backup';
+            }
+        }
+
+</script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>

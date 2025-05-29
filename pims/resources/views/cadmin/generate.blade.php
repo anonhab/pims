@@ -490,12 +490,12 @@
     // Report functionality
     function getReportTypeEnum(reportType) {
       const mapping = {
-        all_accounts: 'daily',
-        staff: 'monthly',
-        prisoners: 'annual',
-        all_prisons: 'incident'
+        all_accounts: 'All Accounts',
+        staff: 'Staff',
+        prisoners: 'Prisoners',
+        all_prisons: 'All Prisons'
       };
-      return mapping[reportType] || 'daily';
+      return mapping[reportType] || 'All Prisons';
     }
 
     function getReportTypeName(reportType) {

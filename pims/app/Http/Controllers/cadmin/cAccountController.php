@@ -481,7 +481,7 @@ public function prisonstore(Request $request)
     {
         try {
             $request->validate([
-                'report_type' => 'required|in:daily,monthly,annual,incident',
+                'report_type' => 'required|in:All Accounts,Staff,Prisoners,All Prisons',
                 'content' => 'required|json',
             ]);
 

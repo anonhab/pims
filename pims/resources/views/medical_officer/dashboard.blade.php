@@ -15,15 +15,15 @@
 
     <style>
         :root {
-            --pims-primary: #0a192f; /* Navy blue */
-            --pims-secondary: #172a45; /* Darker navy */
-            --pims-accent: #64ffda; /* Teal accent */
-            --pims-danger: #ff5555; /* Vibrant red */
-            --pims-success: #50fa7b; /* Vibrant green */
-            --pims-warning: #ffb86c; /* Soft orange */
-            --pims-info: #8be9fd; /* Light blue */
-            --pims-text-light: #f8f8f2; /* Off white */
-            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-primary: #0a192f;
+            --pims-secondary: #172a45;
+            --pims-accent: #64ffda;
+            --pims-danger: #ff5555;
+            --pims-success: #50fa7b;
+            --pims-warning: #ffb86c;
+            --pims-info: #8be9fd;
+            --pims-text-light: #f8f8f2;
+            --pims-text-dark: #282a36;
             --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
             --pims-nav-height: 70px;
@@ -31,13 +31,10 @@
             --pims-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-        }
+        * { box-sizing: border-box; margin: 0; }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             background-color: #f5f7fa;
             color: var(--pims-text-dark);
             margin: 0;
@@ -46,20 +43,19 @@
             line-height: 1.6;
         }
 
-        /* Header Styles */
         .header {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
+            padding: 0;
             z-index: 1000;
             display: flex;
             align-items: center;
             top: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
             height: var(--pims-nav-height);
         }
 
-        /* Main Content Area */
-        #pims-page-content {
+        #pims-content {
             margin-left: 0;
             padding: 2rem;
             padding-left: calc(var(--pims-sidebar-width) + 2rem);
@@ -69,7 +65,6 @@
             padding-top: 70px;
         }
 
-        /* Dashboard Cards */
         .pims-dashboard-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -77,8 +72,6 @@
             transition: var(--pims-transition);
             height: 100%;
             border-left: 4px solid var(--pims-accent);
-            position: relative;
-            overflow: hidden;
             padding: 1.5rem;
             background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
             border: 1px solid rgba(0, 0, 0, 0.03);
@@ -116,7 +109,6 @@
             color: var(--pims-secondary);
             margin-bottom: 0;
             letter-spacing: -0.5px;
-            font-family: 'Inter', sans-serif;
         }
 
         .pims-card-footer {
@@ -130,7 +122,6 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Stats Box */
         .pims-stats-box {
             background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
             border-radius: var(--pims-border-radius);
@@ -138,8 +129,6 @@
             box-shadow: var(--pims-card-shadow);
             margin-top: 2rem;
             border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
             transition: var(--pims-transition);
         }
 
@@ -157,7 +146,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            position: relative;
             border-bottom: 2px solid rgba(100, 255, 218, 0.2);
         }
 
@@ -179,7 +167,6 @@
             transform: scale(1.1);
         }
 
-        /* Recent Activity List */
         .pims-stats-box ul {
             list-style: none;
             padding: 0;
@@ -200,7 +187,7 @@
         }
 
         .pims-stats-box li:hover {
-            background: linear-gradient(90deg, rgba(100, 255, 218, 0.05) 0%, rgba(100, 255, 218, 0.02) 100%);
+            background: linear-gradient(90deg, rgba(100, 255, 218, 0.05) 0%, rgba(100, 255, 218, 0.02));
             transform: translateX(5px);
         }
 
@@ -242,14 +229,12 @@
             margin-left: auto;
         }
 
-        /* Grid Layout */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* Section Title */
         .pims-section-title {
             font-size: 1.75rem;
             font-weight: 700;
@@ -259,7 +244,6 @@
             padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            font-family: 'Inter', sans-serif;
         }
 
         .pims-section-title::after {
@@ -285,15 +269,13 @@
             justify-content: center;
         }
 
-        /* Chart Container */
         .pims-chart-container {
             position: relative;
             height: 350px;
             margin-top: 1.5rem;
         }
 
-        /* Status Tags */
-        .pims-status-tag {
+        .pims-status-box {
             font-size: 0.75rem;
             padding: 0.3rem 0.75rem;
             border-radius: 20px;
@@ -303,22 +285,21 @@
             display: inline-block;
         }
 
-        .pims-status-tag.scheduled {
+        .pims-status-box.scheduled {
             background-color: rgba(139, 233, 253, 0.1);
             color: var(--pims-info);
         }
 
-        .pims-status-tag.completed {
+        .pims-status-box.completed {
             background-color: rgba(80, 250, 123, 0.1);
             color: var(--pims-success);
         }
 
-        .pims-status-tag.cancelled {
+        .pims-status-box.cancelled {
             background-color: rgba(255, 85, 85, 0.1);
             color: var(--pims-danger);
         }
 
-        /* Button Styles */
         .pims-btn {
             padding: 0.5rem 1rem;
             border-radius: var(--pims-border-radius);
@@ -345,7 +326,6 @@
             box-shadow: 0 4px 12px rgba(100, 255, 218, 0.3);
         }
 
-        /* Search Box */
         .pims-search-box {
             position: relative;
             flex-grow: 1;
@@ -375,7 +355,6 @@
             color: var(--pims-accent);
         }
 
-        /* Notification Styles */
         .pims-notification {
             padding: 1rem 1.5rem;
             border-radius: var(--pims-border-radius);
@@ -419,106 +398,33 @@
             color: var(--pims-danger);
         }
 
-        /* Urgent Alert */
-        .pims-system-alert {
-            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: var(--pims-border-radius);
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            border-left: 4px solid var(--pims-danger);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pims-system-alert .alert-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 1;
-        }
-
-        .pims-system-alert .alert-icon {
-            font-size: 1.5rem;
-            color: var(--pims-danger);
-            flex-shrink: 0;
-        }
-
-        .pims-system-alert .alert-close {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            opacity: 0.7;
-            transition: opacity 0.2s ease;
-            z-index: 1;
-            padding: 0.5rem;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.1);
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Responsive Adjustments */
         @media (max-width: 1200px) {
-            .pims-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
+            .pims-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
         }
 
         @media (max-width: 992px) {
-            #pims-page-content {
-                padding-left: 2rem;
-            }
+            #pims-content { padding-left: 2rem; }
         }
 
         @media (max-width: 768px) {
-            .pims-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pims-section-title {
-                font-size: 1.5rem;
-            }
-
-            .pims-dashboard-card p {
-                font-size: 1.75rem;
-            }
-
-            .pims-stats-box {
-                padding: 1.5rem;
-            }
-
-            .pims-stats-box h2 {
-                font-size: 1.25rem;
-            }
+            .pims-grid { grid-template-columns: 1fr; }
+            .pims-section-title { font-size: 1.5rem; }
+            .pims-dashboard-card p { font-size: 1.75rem; }
+            .pims-stats-box { padding: 1.5rem; }
+            .pims-stats-box h2 { font-size: 1.25rem; }
         }
     </style>
 </head>
 <body>
-    <!-- Preloader -->
     @include('components.preloader')
-
-    <!-- Navigation -->
     @include('includes.nav')
-
-    <!-- Sidebar -->
     @include('medical_officer.menu')
 
-    <!-- Main Content -->
-    <div id="pims-page-content">
+    <div id="pims-content">
         <h1 class="pims-section-title">
             <i class="fas fa-user-md"></i> Medical Dashboard
         </h1>
 
-        <!-- Notifications -->
         @if(session('success'))
             <div class="pims-notification pims-notification-success">
                 <i class="fas fa-check-circle"></i>
@@ -526,149 +432,84 @@
             </div>
         @endif
         @if(session('error'))
-            <div class="pims-notification pims-notification-error">
+            <div class="pims-notification pims-error">
                 <i class="fas fa-exclamation-circle"></i>
                 <div>{{ session('error') }}</div>
             </div>
         @endif
 
-        <!-- Urgent Medical Alert -->
-        <div class="pims-system-alert">
-            <div class="alert-content">
-                <i class="fas fa-exclamation-triangle alert-icon"></i>
-                <div>
-                    <strong>URGENT:</strong> 2 prisoners require immediate medical attention
-                </div>
-            </div>
-            <button class="alert-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <!-- Dashboard Cards -->
         <div class="pims-grid">
-            <!-- Total Patients -->
-            <div class="pims-dashboard-card">
-                <div class="pims-card-icon">
-                    <i class="fas fa-procedures"></i>
-                </div>
-                <h3>Total Patients</h3>
-                <p>87</p>
-                <div class="pims-card-footer">
-                    <i class="fas fa-user-injured" style="color: var(--pims-warning);"></i> 5 in critical condition
-                </div>
-            </div>
+           
 
-            <!-- Today's Appointments -->
             <div class="pims-dashboard-card">
                 <div class="pims-card-icon">
                     <i class="fas fa-calendar-check"></i>
                 </div>
                 <h3>Today's Appointments</h3>
-                <p>12</p>
+                <h2>{{ $todaysAppointments }}</h2>
                 <div class="pims-card-footer">
-                    <i class="fas fa-clock" style="color: var(--pims-accent);"></i> 3 upcoming in next hour
+                    <i class="fas fa-clock"></i> 
+                    Scheduled
                 </div>
             </div>
 
-            <!-- Pending Reports -->
-            <div class="pims-dashboard-card">
+            <div class="pims-card-box">
                 <div class="pims-card-icon">
                     <i class="fas fa-file-medical"></i>
                 </div>
-                <h3>Pending Reports</h3>
-                <p>4</p>
-                <div class="pims-card-footer">
-                    <i class="fas fa-exclamation-circle" style="color: var(--pims-danger);"></i> 1 overdue
-                </div>
+                
             </div>
         </div>
 
-        <!-- Appointments Chart -->
         <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-line"></i> Weekly Appointments</h2>
+            <h2><i class="fas fa-chart-pie"></i> Appointment Status Distribution</h2>
             <div class="pims-chart-container">
-                <canvas id="pims-appointments-chart"></canvas>
+                <canvas id="pims-appointment-chart"></canvas>
             </div>
         </div>
 
-        <!-- Recent Appointments -->
         <div class="pims-stats-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2><i class="fas fa-calendar-day"></i> Today's Appointments</h2>
+                <h2><i class="fas fa-calendar-days"></i> Today's Appointments</h2>
                 <div style="display: flex; gap: 1rem;">
                     <div class="pims-search-box">
                         <i class="fas fa-search"></i>
-                        <input type="text" id="pims-appointment-search" placeholder="Search appointments...">
+                        <input type="text" id="pims-search" placeholder="Search appointments...">
                     </div>
-                    <button class="pims-btn pims-btn-primary" id="pims-appointment-reload">
-                        <i class="fas fa-sync-alt"></i> Refresh
+                    <button class="pims-btn pims-btn-primary" id="pims-btn-refresh">
+                        <i class="fas fa-sync"></i> Refresh
                     </button>
                 </div>
             </div>
             
-            <ul>
-                <li>
-                    <i class="fas fa-user-injured" style="color: var(--pims-danger);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>John Doe</strong> - Dental Checkup (URGENT)
+            @if($recentAppointments->isEmpty())
+                <p style="text-align: center; color: var(--pims-text-dark); padding: 2rem;">No appointments scheduled for today.</p>
+            @else
+                <ul>
+                    @foreach($recentAppointments as $appointment)
+                    <li>
+                        <i class="fas fa-user-injured" style="color: {{ $appointment->status === 'cancelled' ? 'var(--pims-danger)' : ($appointment->status === 'completed' ? 'var(--pims-success)' : 'var(--pims-info)') }}">
+                        </i>
+                        <div style="flex-grow: 1;">
+                            <span>
+                                <strong>{{ $appointment->prisoner->first_name }} {{ $appointment->prisoner->last_name }}</strong> - 
+                                {{ $appointment->diagnosis ? Str::limit($appointment->diagnosis, 30) : 'General Checkup' }}
+                            </span>
+                            <span class="status-box {{ $appointment->status }}">
+                                {{ ucfirst($appointment->status) }}
+                            </span>
+                        </div>
+                        <span class="pims-activity-time">
+                            {{ $appointment->appointment_date->format('H:i') }}
                         </span>
-                        <span class="pims-status-tag scheduled">
-                            Scheduled
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        10:30 AM
-                    </span>
-                    <button class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </button>
-                </li>
-                <li>
-                    <i class="fas fa-user-injured" style="color: var(--pims-warning);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Michael Smith</strong> - Routine Physical
-                        </span>
-                        <span class="pims-status-tag completed">
-                            Completed
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        09:15 AM
-                    </span>
-                    <button class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-file-medical"></i> Report
-                    </button>
-                </li>
-                <li>
-                    <i class="fas fa-user-injured" style="color: var(--pims-success);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Robert Johnson</strong> - Psychological Evaluation
-                        </span>
-                        <span class="pims-status-tag scheduled">
-                            Scheduled
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        02:45 PM
-                    </span>
-                    <button class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </button>
-                </li>
-            </ul>
+                       
+                    </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
-        <!-- Medical Cases Distribution -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-pie"></i> Medical Cases Distribution</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-medical-cases-chart"></canvas>
-            </div>
-        </div>
+       
     </div>
 
     @include('includes.footer_js')
@@ -676,23 +517,71 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Preloader
-            const preloader = document.querySelector('.pims-preloader');
+            const preloader = document.querySelector('.pims-progress');
             if (preloader) {
                 setTimeout(() => {
                     preloader.style.display = 'none';
-                }, 1000);
+                }, 100);
             }
 
-            // Weekly Appointments Chart (Line)
-            const appointmentsChart = new Chart(
-                document.getElementById('pims-appointments-chart').getContext('2d'), 
+            // Appointment Status Distribution Chart
+            const appointmentChart = new Chart(
+                document.getElementById('pims-appointment-chart').getContext('2d'),
+                {
+                    type: 'pie',
+                    data: {
+                        labels: ['Scheduled', 'Completed', 'Cancelled'],
+                        datasets: [{
+                            label: 'Appointments',
+                            data: [
+                                {{ $appointmentStatusChartData['scheduled'] }},
+                                {{ $appointmentStatusChartData['completed'] }},
+                                {{ $appointmentStatusChartData['cancelled'] }}
+                            ],
+                            backgroundColor: [
+                                'rgba(139, 233, 253, 0.7)',
+                                'rgba(80, 250, 123, 0.7)',
+                                'rgba(255, 85, 85, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(139, 233, 253, 1)',
+                                'rgba(80, 250, 123, 1)',
+                                'rgba(255, 85, 85, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20,
+                                    font: { weight: '600' }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
+                                titleFont: { weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            );
+
+            // Medical Report Trends Chart
+            const reportTrendsChart = new Chart(
+                document.getElementById('pims-report').getContext('2d'),
                 {
                     type: 'line',
                     data: {
-                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        labels: @json($reportTrendsChartData['labels']),
                         datasets: [{
-                            label: 'Appointments',
-                            data: [8, 12, 10, 14, 16, 5, 3],
+                            label: 'Medical Reports',
+                            data: @json($reportTrendsChartData['reports']),
                             backgroundColor: 'rgba(100, 255, 218, 0.1)',
                             borderColor: 'rgba(100, 255, 218, 1)',
                             borderWidth: 2,
@@ -722,7 +611,8 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' }
+                                grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
+                                ticks: { stepSize: 1 }
                             },
                             x: {
                                 grid: { display: false, drawBorder: false }
@@ -735,60 +625,8 @@
                 }
             );
 
-            // Medical Cases Chart (Pie)
-            const medicalCasesChart = new Chart(
-                document.getElementById('pims-medical-cases-chart').getContext('2d'), 
-                {
-                    type: 'pie',
-                    data: {
-                        labels: ['Physical', 'Dental', 'Psychological', 'Emergency', 'Chronic'],
-                        datasets: [{
-                            data: [35, 25, 20, 10, 10],
-                            backgroundColor: [
-                                'rgba(100, 255, 218, 0.7)',
-                                'rgba(139, 233, 253, 0.7)',
-                                'rgba(255, 184, 108, 0.7)',
-                                'rgba(255, 85, 85, 0.7)',
-                                'rgba(128, 128, 128, 0.7)'
-                            ],
-                            borderColor: [
-                                'rgba(100, 255, 218, 1)',
-                                'rgba(139, 233, 253, 1)',
-                                'rgba(255, 184, 108, 1)',
-                                'rgba(255, 85, 85, 1)',
-                                'rgba(128, 128, 128, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    font: { weight: '600' }
-                                }
-                            },
-                            tooltip: {
-                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
-                                titleFont: { weight: 'bold' }
-                            }
-                        }
-                    }
-                }
-            );
-
-            // Close alert
-            document.querySelector('.alert-close').addEventListener('click', () => {
-                document.querySelector('.pims-system-alert').style.display = 'none';
-            });
-
-            // Search functionality for appointments
-            const searchInput = document.getElementById('pims-appointment-search');
+            // Search functionality
+            const searchInput = document.getElementById('pims-search');
             const appointmentItems = document.querySelectorAll('.pims-stats-box li');
 
             searchInput.addEventListener('input', function() {
@@ -797,10 +635,10 @@
                     const text = item.textContent.toLowerCase();
                     item.style.display = text.includes(filter) ? '' : 'none';
                 });
+            // Reload button
             });
 
-            // Reload button
-            document.getElementById('pims-appointment-reload').addEventListener('click', () => {
+            document.getElementById('pims-btn-refresh').addEventListener('click', () => {
                 window.location.reload();
             });
         });

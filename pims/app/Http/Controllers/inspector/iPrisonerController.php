@@ -19,6 +19,7 @@ use App\Models\Notification;
 use App\Models\Requests;
 use Carbon\Carbon;
 use App\Models\Room;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -47,116 +48,203 @@ class iPrisonerController extends Controller
 
     public function policeofficer()
     {
-        $officers = Account::all();
-        $prisoners = Prisoner::all();
+        $prisonId = session('prison_id');
+        $roleId = 8; 
+
+        $officers = Account::where('prison_id', $prisonId)
+            ->where('role_id', $roleId)
+            ->get();
+
+
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
         $lawyer = Lawyer::where('prison', session('prison_id'))->paginate(9);
         $assignments = PolicePrisonerAssignment::where('prison_id', session('prison_id'))->paginate(9);
         return view('inspector.assign_policeofficer', compact('officers', 'prisoners', 'assignments'));
     }
+
     public function idashboard()
-{
-    try {
-        $prisonId = session('prison_id');
+    {
+        try {
+            $prisonId = session('prison_id');
 
-        // Dashboard Cards
-        $activePrisoners = Prisoner::where('prison_id', $prisonId)
-            ->where('status', 'Active')
-            ->count();
-
-        // Pending assignments (lawyer + police, assuming a status column or recent assignments)
-        $pendingLawyerAssignments = LawyerPrisonerAssignment::where('prison_id', $prisonId)
-            ->where('assignment_date', '>=', now()->subDays(7)) // Proxy for pending
-            ->count();
-        $pendingPoliceAssignments = PolicePrisonerAssignment::where('prison_id', $prisonId)
-            ->where('assignment_date', '>=', now()->subDays(7)) // Proxy for pending
-            ->count();
-        $pendingAssignments = $pendingLawyerAssignments + $pendingPoliceAssignments;
-
-        // Urgent assignments (example: assignments due soon or flagged)
-        $urgentAssignments = LawyerPrisonerAssignment::where('prison_id', $prisonId)
-            ->where('assignment_date', '<=', now()->addDays(1))
-            ->count() +
-            PolicePrisonerAssignment::where('prison_id', $prisonId)
-            ->where('assignment_date', '<=', now()->addDays(1))
-            ->count();
-
-        $lawyerProfiles = Lawyer::where('prison', $prisonId)->count();
-
-        $newLawyerProfiles = Lawyer::where('prison', $prisonId)
-            ->where('created_at', '>=', now()->subDays(30))
-            ->count();
-
-        $policeAssignments = PolicePrisonerAssignment::where('prison_id', $prisonId)
-            ->where('assignment_date', '>=', now()->subDays(30)) // Active assignments
-            ->count();
-
-        $policeAssignmentsInProgress = PolicePrisonerAssignment::where('prison_id', $prisonId)
-            ->where('assignment_date', '>=', now()->subDays(7)) // Proxy for in progress
-            ->count();
-
-        // System Alert
-        $pendingAssignmentsAlert = $pendingAssignments;
-
-        // Assignment Activity Chart (Line)
-        $days = collect(range(6, 0))->map(function ($i) {
-            return now()->subDays($i)->format('D');
-        })->toArray();
-
-        $lawyerAssignmentData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
-            return LawyerPrisonerAssignment::where('prison_id', $prisonId)
-                ->whereDate('assignment_date', now()->subDays($i))
+            // Dashboard Cards
+            $activePrisoners = Prisoner::where('prison_id', $prisonId)
+                ->where('status', 'Active')
                 ->count();
-        })->toArray();
 
-        $policeAssignmentData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
-            return PolicePrisonerAssignment::where('prison_id', $prisonId)
-                ->whereDate('assignment_date', now()->subDays($i))
+            $lawyerAssignmentsThisWeek = LawyerPrisonerAssignment::where('prison_id', $prisonId)
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
                 ->count();
-        })->toArray();
 
-        $assignmentChartData = [
-            'labels' => $days,
-            'lawyerAssignments' => $lawyerAssignmentData,
-            'policeAssignments' => $policeAssignmentData,
-        ];
+            $policeAssignmentsThisWeek = PolicePrisonerAssignment::where('prison_id', $prisonId)
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->count();
 
-        // Assignment Status Chart (Pie)
-        // Assuming a status column exists in assignments; if not, use proxies
-        $assignmentStatusData = [
-            'pending' => $pendingAssignments,
-            'completed' => LawyerPrisonerAssignment::where('prison_id', $prisonId)
-                ->where('assignment_date', '<', now()->subDays(7))
-                ->count() +
-                PolicePrisonerAssignment::where('prison_id', $prisonId)
-                ->where('assignment_date', '<', now()->subDays(7))
-                ->count(),
-            'inProgress' => LawyerPrisonerAssignment::where('prison_id', $prisonId)
-                ->whereBetween('assignment_date', [now()->subDays(7), now()])
-                ->count() +
-                PolicePrisonerAssignment::where('prison_id', $prisonId)
-                ->whereBetween('assignment_date', [now()->subDays(7), now()])
-                ->count(),
-            'cancelled' => 0, // Placeholder; update if cancellation logic exists
-        ];
+            $newPrisonersThisWeek = Prisoner::where('prison_id', $prisonId)
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->count();
 
-        return view('inspector.dashboard', compact(
-            'activePrisoners',
-            'pendingAssignments',
-            'urgentAssignments',
-            'lawyerProfiles',
-            'newLawyerProfiles',
-            'policeAssignments',
-            'policeAssignmentsInProgress',
-            'pendingAssignmentsAlert',
-            'assignmentChartData',
-            'assignmentStatusData'
-        ));
-    } catch (\Exception $e) {
-        Log::error('Failed to load inspector dashboard data', ['error' => $e->getMessage()]);
-        return redirect()->back()->with('error', 'Failed to load dashboard data');
+            $lawyerProfiles = Lawyer::where('prison', $prisonId)->count();
+
+            $newLawyerProfiles = Lawyer::where('prison', $prisonId)
+                ->where('created_at', '>=', now()->subDays(30))
+                ->count();
+
+            $policeAssignments = PolicePrisonerAssignment::where('prison_id', $prisonId)
+                ->where('assignment_date', '>=', now()->subDays(30))
+                ->count();
+
+            $policeAssignmentsInProgress = PolicePrisonerAssignment::where('prison_id', $prisonId)
+                ->where('assignment_date', '>=', now()->subDays(7))
+                ->count();
+
+            $pendingAssignmentsAlert = $lawyerAssignmentsThisWeek + $policeAssignmentsThisWeek;
+
+            $days = collect(range(6, 0))->map(fn($i) => now()->subDays($i)->format('D'))->toArray();
+
+            $fullyAssignedData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
+                $date = now()->subDays($i)->startOfDay();
+                return Prisoner::where('prison_id', $prisonId)
+                    ->where('status', 'Active')
+                    ->whereExists(function ($query) use ($date) {
+                        $query->select(DB::raw(1))
+                            ->from('lawyer_prisoner_assignment')
+                            ->whereColumn('lawyer_prisoner_assignment.prisoner_id', 'prisoners.id')
+                            ->where('prison_id', DB::raw(session('prison_id')))
+                            ->whereDate('created_at', '<=', $date);
+                    })
+                    ->whereExists(function ($query) use ($date) {
+                        $query->select(DB::raw(1))
+                            ->from('police_prisoner_assignment')
+                            ->whereColumn('police_prisoner_assignment.prisoner_id', 'prisoners.id')
+                            ->where('prison_id', DB::raw(session('prison_id')))
+                            ->whereDate('created_at', '<=', $date);
+                    })
+                    ->count();
+            })->toArray();
+
+            $notFullyAssignedData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
+                $date = now()->subDays($i)->startOfDay();
+                return Prisoner::where('prison_id', $prisonId)
+                    ->where('status', 'Active')
+                    ->where(function ($query) use ($date) {
+                        $query->whereNotExists(function ($subQuery) use ($date) {
+                            $subQuery->select(DB::raw(1))
+                                ->from('lawyer_prisoner_assignment')
+                                ->whereColumn('lawyer_prisoner_assignment.prisoner_id', 'prisoners.id')
+                                ->where('prison_id', DB::raw(session('prison_id')))
+                                ->whereDate('created_at', '<=', $date);
+                        })
+                            ->orWhereNotExists(function ($subQuery) use ($date) {
+                                $subQuery->select(DB::raw(1))
+                                    ->from('police_prisoner_assignment')
+                                    ->whereColumn('police_prisoner_assignment.prisoner_id', 'prisoners.id')
+                                    ->where('prison_id', DB::raw(session('prison_id')))
+                                    ->whereDate('created_at', '<=', $date);
+                            });
+                    })
+                    ->count();
+            })->toArray();
+
+            $assignmentChartData = [
+                'labels' => $days,
+                'fullyAssigned' => $fullyAssignedData,
+                'notFullyAssigned' => $notFullyAssignedData,
+            ];
+
+            $fullyAssigned = Prisoner::where('prison_id', $prisonId)
+                ->where('status', 'Active')
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('lawyer_prisoner_assignment')
+                        ->whereColumn('lawyer_prisoner_assignment.prisoner_id', 'prisoners.id')
+                        ->where('prison_id', DB::raw(session('prison_id')));
+                })
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('police_prisoner_assignment')
+                        ->whereColumn('police_prisoner_assignment.prisoner_id', 'prisoners.id')
+                        ->where('prison_id', DB::raw(session('prison_id')));
+                })
+                ->count();
+
+            $partiallyAssigned = Prisoner::where('prison_id', $prisonId)
+                ->where('status', 'Active')
+                ->where(function ($query) {
+                    $query->whereExists(function ($subQuery) {
+                        $subQuery->select(DB::raw(1))
+                            ->from('lawyer_prisoner_assignment')
+                            ->whereColumn('lawyer_prisoner_assignment.prisoner_id', 'prisoners.id')
+                            ->where('prison_id', DB::raw(session('prison_id')));
+                    })->orWhereExists(function ($subQuery) {
+                        $subQuery->select(DB::raw(1))
+                            ->from('police_prisoner_assignment')
+                            ->whereColumn('police_prisoner_assignment.prisoner_id', 'prisoners.id')
+                            ->where('prison_id', DB::raw(session('prison_id')));
+                    });
+                })
+                ->where(function ($query) {
+                    $query->whereNotExists(function ($subQuery) {
+                        $subQuery->select(DB::raw(1))
+                            ->from('lawyer_prisoner_assignment')
+                            ->whereColumn('lawyer_prisoner_assignment.prisoner_id', 'prisoners.id')
+                            ->where('prison_id', DB::raw(session('prison_id')));
+                    })
+                        ->orWhereNotExists(function ($subQuery) {
+                            $subQuery->select(DB::raw(1))
+                                ->from('police_prisoner_assignment')
+                                ->whereColumn('police_prisoner_assignment.prisoner_id', 'prisoners.id')
+                                ->where('prison_id', DB::raw(session('prison_id')));
+                        });
+                })
+                ->count();
+
+            $notAssigned = Prisoner::where('prison_id', $prisonId)
+                ->where('status', 'Active')
+                ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('lawyer_prisoner_assignment')
+                        ->whereColumn('lawyer_prisoner_assignment.prisoner_id', 'prisoners.id')
+                        ->where('prison_id', DB::raw(session('prison_id')));
+                })
+                ->whereNotExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('police_prisoner_assignment')
+                        ->whereColumn('police_prisoner_assignment.prisoner_id', 'prisoners.id')
+                        ->where('prison_id', DB::raw(session('prison_id')));
+                })
+                ->count();
+
+            $assignmentStatusData = [
+                'fullyAssigned' => $fullyAssigned,
+                'partiallyAssigned' => $partiallyAssigned,
+                'notAssigned' => $notAssigned,
+            ];
+
+            Log::info('Inspector dashboard loaded successfully', ['prison_id' => $prisonId]);
+
+            return view('inspector.dashboard', compact(
+                'activePrisoners',
+                'lawyerAssignmentsThisWeek',
+                'policeAssignmentsThisWeek',
+                'newPrisonersThisWeek',
+                'lawyerProfiles',
+                'newLawyerProfiles',
+                'policeAssignments',
+                'policeAssignmentsInProgress',
+                'pendingAssignmentsAlert',
+                'assignmentChartData',
+                'assignmentStatusData'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Failed to load inspector dashboard data', [
+                'error' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile()
+            ]);
+            return redirect()->back()->with('error', 'Failed to load dashboard data.');
+        }
     }
-}
 
     public function lawyer()
     {
@@ -258,7 +346,7 @@ class iPrisonerController extends Controller
             $prisoner->id,
             'prisoner',
             null,
-            'lawyer_prisoner_assignments',
+            'lawyer_prisoner_assignment',
             $assignment->id,
             'Lawyer Assigned',
             "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",
@@ -291,7 +379,7 @@ class iPrisonerController extends Controller
             $prisoner->id,
             'prisoner',
             null,
-            'police_prisoner_assignments',
+            'police_prisoner_assignment',
             $assignment->id,
             'Police Officer Assigned',
             "A prisoner has been assigned to you: {$prisoner->first_name} {$prisoner->last_name}.",

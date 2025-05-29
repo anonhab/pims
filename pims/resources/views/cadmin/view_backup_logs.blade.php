@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Backup/Recovery Logs</title>
+    <title>Backup Logs</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     @include('includes.head')
     
@@ -288,7 +288,7 @@
         <main class="pims-main-content">
             <div class="pims-content-container">
                 <h1 class="pims-page-title">
-                    <i class="fas fa-database"></i> Backup/Recovery Logs
+                    <i class="fas fa-database"></i> Backup Logs
                 </h1>
 
                 @if (session('error'))

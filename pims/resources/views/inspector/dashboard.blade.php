@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
-    <title>PIMS - Inspector Dashboard</title>
+    <title>PIMS - Assignments</title>
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -17,13 +17,12 @@
     <link href="{{ asset('css/menu.css') }}" rel="stylesheet">
 
     <style>
-        /* [Previous CSS styles unchanged; included for completeness] */
         :root {
             --pims-primary: #0a192f;
-            --pims-secondary: #172a45;
-            --pims-accent: #64ffda;
-            --pims-danger: #ff5555;
-            --pims-success: #50fa7b;
+            --pims-secondary: #172a36;
+            --pims-accent: #64bfda;
+            --pims-danger: alert;
+            --pims-success: warning;
             --pims-warning: #ffb86c;
             --pims-info: #8be9fd;
             --pims-text-light: #f8f8f2;
@@ -409,18 +408,7 @@
             <i class="fas fa-user-lock"></i> Inspector Dashboard
         </h1>
 
-        <!-- System Alert -->
-        <div class="pims-system-alert">
-            <div class="alert-content">
-                <i class="fas fa-exclamation-triangle alert-icon"></i>
-                <div>
-                    <strong>URGENT:</strong> {{ $pendingAssignmentsAlert }} pending assignments require immediate review
-                </div>
-            </div>
-            <button class="alert-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+       
 
         <!-- Dashboard Cards -->
         <div class="pims-grid">
@@ -437,16 +425,42 @@
                 </div>
             </div>
 
-            <!-- Pending Assignments -->
+            <!-- Lawyer Assignments This Week -->
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge {{ $urgentAssignments > 0 ? 'alert' : '' }}">ALERT</span>
+                <span class="pims-security-badge {{ $lawyerAssignmentsThisWeek > 0 ? 'alert' : '' }}">NEW</span>
                 <div class="pims-card-icon">
-                    <i class="fas fa-tasks"></i>
+                    <i class="fas fa-gavel"></i>
                 </div>
-                <h3>Pending Assignments</h3>
-                <p>{{ number_format($pendingAssignments) }}</p>
+                <h3>Lawyer Assignments This Week</h3>
+                <p>{{ number_format($lawyerAssignmentsThisWeek) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> {{ $urgentAssignments }} urgent assignment{{ $urgentAssignments != 1 ? 's' : '' }}
+                    <i class="fas fa-tasks" style="color: var(--pims-accent);"></i> Assigned since Monday
+                </div>
+            </div>
+
+            <!-- Police Officer Assignments This Week -->
+            <div class="pims-dashboard-card">
+                <span class="pims-security-badge {{ $policeAssignmentsThisWeek > 0 ? 'alert' : '' }}">NEW</span>
+                <div class="pims-card-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Police Assignments This Week</h3>
+                <p>{{ number_format($policeAssignmentsThisWeek) }}</p>
+                <div class="pims-card-footer">
+                    <i class="fas fa-tasks" style="color: var(--pims-accent);"></i> Assigned since Monday
+                </div>
+            </div>
+
+            <!-- New Prisoners This Week -->
+            <div class="pims-dashboard-card">
+                <span class="pims-security-badge {{ $newPrisonersThisWeek > 0 ? 'alert' : '' }}">NEW</span>
+                <div class="pims-card-icon">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h3>New Prisoners This Week</h3>
+                <p>{{ number_format($newPrisonersThisWeek) }}</p>
+                <div class="pims-card-footer">
+                    <i class="fas fa-user" style="color: var(--pims-accent);"></i> Admitted since Monday
                 </div>
             </div>
 
@@ -465,7 +479,7 @@
 
             <!-- Police Officer Assignments -->
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge">SECURED</span>
+                <span class="pims-security-badge"></span>
                 <div class="pims-card-icon">
                     <i class="fas fa-shield-alt"></i>
                 </div>
@@ -479,7 +493,7 @@
 
         <!-- Data Visualization -->
         <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-bar"></i> Assignment Activity Overview</h2>
+            <h2><i class="fas fa-chart-bar"></i> Prisoner Assignment Activity</h2>
             <div class="pims-chart-container">
                 <canvas id="pims-assignment-chart"></canvas>
             </div>
@@ -487,7 +501,7 @@
 
         <!-- Assignment Status Distribution -->
         <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-pie"></i> Assignment Status Distribution</h2>
+            <h2><i class="fas fa-chart-pie"></i> Prisoner Assignment Status</h2>
             <div class="pims-chart-container">
                 <canvas id="pims-assignment-status-chart"></canvas>
             </div>
@@ -503,19 +517,19 @@
                     labels: @json($assignmentChartData['labels']),
                     datasets: [
                         {
-                            label: 'Lawyer Assignments',
-                            data: @json($assignmentChartData['lawyerAssignments']),
-                            backgroundColor: 'rgba(100, 255, 218, 0.1)',
-                            borderColor: 'rgba(100, 255, 218, 1)',
+                            label: 'Fully Assigned Prisoners',
+                            data: @json($assignmentChartData['fullyAssigned']),
+                            backgroundColor: 'rgba(80, 250, 123, 0.1)',
+                            borderColor: 'rgba(80, 250, 123, 1)',
                             borderWidth: 2,
                             tension: 0.3,
                             fill: true
                         },
                         {
-                            label: 'Police Officer Assignments',
-                            data: @json($assignmentChartData['policeAssignments']),
-                            backgroundColor: 'rgba(80, 250, 123, 0.1)',
-                            borderColor: 'rgba(80, 250, 123, 1)',
+                            label: 'Not Fully Assigned Prisoners',
+                            data: @json($assignmentChartData['notFullyAssigned']),
+                            backgroundColor: 'rgba(255, 184, 108, 0.1)',
+                            borderColor: 'rgba(255, 184, 108, 1)',
                             borderWidth: 2,
                             tension: 0.3,
                             fill: true
@@ -561,25 +575,22 @@
             const assignmentStatusChart = new Chart(document.getElementById('pims-assignment-status-chart').getContext('2d'), {
                 type: 'pie',
                 data: {
-                    labels: ['Pending', 'Completed', 'In Progress', 'Cancelled'],
+                    labels: ['Fully Assigned', 'Partially Assigned', 'Not Assigned'],
                     datasets: [{
                         data: [
-                            {{ $assignmentStatusData['pending'] }},
-                            {{ $assignmentStatusData['completed'] }},
-                            {{ $assignmentStatusData['inProgress'] }},
-                            {{ $assignmentStatusData['cancelled'] }}
+                            {{ $assignmentStatusData['fullyAssigned'] }},
+                            {{ $assignmentStatusData['partiallyAssigned'] }},
+                            {{ $assignmentStatusData['notAssigned'] }}
                         ],
                         backgroundColor: [
-                            'rgba(255, 184, 108, 0.6)',
                             'rgba(80, 250, 123, 0.6)',
                             'rgba(139, 233, 253, 0.6)',
-                            'rgba(255, 85, 85, 0.6)'
+                            'rgba(255, 184, 108, 0.6)'
                         ],
                         borderColor: [
-                            'rgba(255, 184, 108, 1)',
                             'rgba(80, 250, 123, 1)',
                             'rgba(139, 233, 253, 1)',
-                            'rgba(255, 85, 85, 1)'
+                            'rgba(255, 184, 108, 1)'
                         ],
                         borderWidth: 1
                     }]

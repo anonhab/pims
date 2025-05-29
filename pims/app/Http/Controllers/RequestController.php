@@ -10,6 +10,7 @@ use App\Models\LawyerAppointment;
 use App\Models\Notification;
 use App\Models\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RequestController extends Controller
 {
@@ -28,7 +29,93 @@ class RequestController extends Controller
             'prison_id' => $prisonId,
         ]);
     }
-    
+    public function dashboard()
+    {
+        $userId = Session('user_id');
+        $prisonId = Session('prison_id');
+        $roleId = Session('role_id');
+
+        
+      
+            // Dashboard Cards
+            $activePrisoners = Prisoner::where('prison_id', $prisonId)
+                ->where('status', 'Active')
+                ->count();
+
+            $pendingRequests = Requests::where('prison_id', $prisonId)
+                ->where('status', 'pending')
+                ->count();
+
+            $evaluatedRequests = Requests::where('prison_id', $prisonId)
+                ->whereIn('status', ['approved', 'rejected', 'transferred'])
+                ->count();
+
+            
+
+            // Request Evaluation Trends Chart Data
+            $weeklyRequests = Requests::where('prison_id', $prisonId)
+                ->where('created_at', '>=', now()->subWeek()->startOfWeek())
+                ->select(
+                    DB::raw('DAYOFWEEK(created_at) as day'),
+                    DB::raw('status'),
+                    DB::raw('COUNT(*) as count')
+                )
+                ->groupBy('day', 'status')
+                ->get()
+                ->groupBy('status');
+
+            $days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            $approvedData = array_fill(0, 7, 0);
+            $pendingData = array_fill(0, 7, 0);
+            $rejectedData = array_fill(0, 7, 0);
+
+            foreach ($weeklyRequests as $status => $records) {
+                foreach ($records as $record) {
+                    $index = $record->day - 1; // DAYOFWEEK: 1=Sun, 7=Sat
+                    if ($status === 'approved') {
+                        $approvedData[$index] = $record->count;
+                    } elseif ($status === 'pending') {
+                        $pendingData[$index] = $record->count;
+                    } elseif ($status === 'rejected') {
+                        $rejectedData[$index] = $record->count;
+                    }
+                }
+            }
+
+            // Recent Activities
+            $recentActivities = Notification::where('recipient_id', $userId)
+                ->where('recipient_role', 'officer')
+                ->where('related_table', 'requests')
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+
+            Log::info('Discipline officer dashboard data fetched', [
+                'user_id' => $userId,
+                'active_prisoners' => $activePrisoners,
+                'pending_requests' => $pendingRequests,
+                'evaluated_requests' => $evaluatedRequests,
+                'recent_activities_count' => $recentActivities->count(),
+            ]);
+
+            return view('discipline_officer.dashboard', compact(
+                'activePrisoners',
+                'pendingRequests',
+                'evaluatedRequests',
+                'approvedData',
+                'pendingData',
+                'rejectedData',
+                'days',
+                'recentActivities'
+            ));
+       
+            Log::error('Error fetching discipline officer dashboard data', [
+                'error' => $e->getMessage(),
+                'user_id' => $userId
+            ]);
+          
+        
+    }
 
     public function approveRequest(Request $request, $id)
     {

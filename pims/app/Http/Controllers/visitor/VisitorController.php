@@ -12,6 +12,7 @@ use App\Models\Prisoner;
 use App\Models\VisitingRequest;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
@@ -101,9 +102,74 @@ class VisitorController extends Controller
     
     public function dashboard()
     {
-        return view('visitor.dashboard');
+        $visitorId = Session::get('visitor_id');
+        $prisonId = Session::get('prison_id');
+
+        if (!$visitorId) {
+            Log::warning('Unauthorized access to visitor dashboard', ['visitor_id' => $visitorId]);
+            return redirect()->route('visitor.login')->with('error', 'Please log in to access the dashboard.');
+        }
+
+        try {
+            // Dashboard Cards
+          
+
+            $pendingRequests = NewVisitingRequest::where('visitor_id', $visitorId)
+                ->where('status', 'pending')
+                ->count();
+
+            $totalVisits = NewVisitingRequest::where('visitor_id', $visitorId)
+                ->where('status', 'Approved')
+                ->count();
+
+            // Monthly Visits Chart Data
+            $monthlyVisits = NewVisitingRequest::where('visitor_id', $visitorId)
+                ->where('status', 'Approved')
+                ->where('requested_date', '>=', now()->subYear()->startOfYear())
+                ->select(
+                    DB::raw('MONTH(requested_date) as month'),
+                    DB::raw('COUNT(*) as count')
+                )
+                ->groupBy(DB::raw('MONTH(requested_date)'))
+                ->pluck('count', 'month')
+                ->toArray();
+
+            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            $chartData = array_fill(0, 12, 0);
+            foreach ($monthlyVisits as $month => $count) {
+                $chartData[$month - 1] = $count;
+            }
+
+            // Recent Visit Requests
+            $recentRequests = NewVisitingRequest::where('visitor_id', $visitorId)
+                ->with('prison')
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+
+            Log::info('Visitor dashboard data fetched', [
+                'visitor_id' => $visitorId,
+                'pending_requests' => $pendingRequests,
+                'total_visits' => $totalVisits,
+                'monthly_visits' => $chartData,
+                'recent_requests_count' => $recentRequests->count(),
+            ]);
+
+            return view('visitor.dashboard', compact(
+                'pendingRequests',
+                'totalVisits',
+                'chartData',
+                'months',
+                'recentRequests'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Error fetching visitor dashboard data', [
+                'error' => $e->getMessage(),
+                'visitor_id' => $visitorId
+            ]);
+            return redirect()->route('visitor.login')->with('error', 'Failed to load dashboard.');
+        }
     }
-    
     public function createVisiting()
     {
             // Fetch all prisons

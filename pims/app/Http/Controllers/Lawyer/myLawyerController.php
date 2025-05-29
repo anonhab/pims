@@ -11,6 +11,7 @@ use App\Models\Notification;
 use App\Models\LawyerPrisonerAssignment;
 use App\Models\Lawyer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -33,11 +34,113 @@ class myLawyerController extends Controller
 }
 
 
-    public function ldashboard()
-    {
-        $prisoners = Prisoner::where('prison_id', session('prison_id'))->get();
-        return view('lawyer.dashboard', compact('prisoners'));
+public function ldashboard()
+{
+    $lawyerId = session('lawyer_id');
+    $prisonId = session('prison_id');
+    $userId = session('user_id');
+
+    if (!$lawyerId || !$prisonId) {
+        Log::warning('Missing session data for lawyer dashboard', [
+            'lawyer_id' => $lawyerId,
+            'prison_id' => $prisonId,
+            'user_id' => $userId
+        ]);
+        return redirect()->route('login')->with('error', 'Unauthorized access. Please log in.');
     }
+
+   
+        // Dashboard Cards
+        $activeClients = LawyerPrisonerAssignment::where('lawyer_id', $lawyerId)
+            ->where('prison_id', $prisonId)
+            ->count();
+
+        $pendingRequests = Requests::where('lawyer_id', $lawyerId)
+            ->where('prison_id', $prisonId)
+            ->where('status', 'pending')
+            ->count();
+
+        $approvedRequests = Requests::where('lawyer_id', $lawyerId)
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+
+        $rejectedRequests = Requests::where('lawyer_id', $lawyerId)
+            ->where('prison_id', $prisonId)
+            ->where('status', 'rejected')
+            ->count();
+
+        // Recent Appointments (Today's)
+        $recentAppointments = LawyerAppointment::where('lawyer_id', $lawyerId)
+            ->where('prison_id', $prisonId)
+            ->whereDate('appointment_date', now()->startOfDay())
+            ->with(['prisoner', 'lawyer'])
+            ->orderBy('appointment_date')
+            ->take(5)
+            ->get();
+
+        // Request Status Distribution Chart (Pie)
+        $requestStatuses = Requests::where('lawyer_id', $lawyerId)
+            ->where('prison_id', $prisonId)
+            ->select('status', DB::raw('count(*) as count'))
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        $requestStatusChartData = [
+            'pending' => $requestStatuses['pending'] ?? 0,
+            'approved' => $requestStatuses['approved'] ?? 0,
+            'rejected' => $requestStatuses['rejected'] ?? 0,
+        ];
+
+        // Case Activity Trends Chart (Line)
+        $days = collect(range(6, 0))->map(function ($i) {
+            return now()->subDays($i)->format('D');
+        })->toArray();
+
+        $caseTrendsData = collect(range(6, 0))->map(function ($i) use ($lawyerId, $prisonId) {
+            $date = now()->subDays($i)->startOfDay();
+            return Requests::where('lawyer_id', $lawyerId)
+                ->where('prison_id', $prisonId)
+                ->whereDate('created_at', $date)
+                ->count();
+        })->toArray();
+
+        $caseTrendsChartData = [
+            'labels' => $days,
+            'requests' => $caseTrendsData,
+        ];
+
+        Log::info('Lawyer dashboard data fetched', [
+            'lawyer_id' => $lawyerId,
+            'prison_id' => $prisonId,
+            'active_clients' => $activeClients,
+            'pending_requests' => $pendingRequests,
+            'approved_requests' => $approvedRequests,
+            'rejected_requests' => $rejectedRequests,
+            'recent_appointments_count' => $recentAppointments->count(),
+            'request_status_chart_data' => $requestStatusChartData,
+            'case_trends_chart_data' => $caseTrendsChartData,
+        ]);
+
+        return view('lawyer.dashboard', compact(
+            'activeClients',
+            'pendingRequests',
+            'approvedRequests',
+            'rejectedRequests',
+            'recentAppointments',
+            'requestStatusChartData',
+            'caseTrendsChartData'
+        ));
+    
+        Log::error('Error fetching lawyer dashboard data', [
+            'error' => $e->getMessage(),
+            'lawyer_id' => $lawyerId,
+            'prison_id' => $prisonId
+        ]);
+        return redirect()->route('login')->with('error', 'Failed to load dashboard.');
+    
+}
     public function rstore(Request $request)
     {
         // Validate request data

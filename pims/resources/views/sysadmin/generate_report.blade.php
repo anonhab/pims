@@ -660,12 +660,12 @@
 
         function pimsGetReportTypeEnum(reportType) {
             const mapping = {
-                all_accounts: 'daily',
-                staff: 'monthly',
-                prisoners: 'annual',
-                all_prisons: 'incident'
+                all_accounts: 'all_accounts',
+                staff: 'staff',
+                prisoners: 'prisoners',
+                all_prisons: 'all_prisons'
             };
-            return mapping[reportType] || 'daily';
+            return mapping[reportType] || 'all_accounts';
         }
 
         function pimsGetReportTypeName(reportType) {

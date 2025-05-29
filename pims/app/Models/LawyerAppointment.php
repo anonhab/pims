@@ -24,7 +24,8 @@ class LawyerAppointment extends Model
         'appointment_date',
         'status',
         'notes',
-        'created_by'
+        'created_by',
+        'prison_id'
     ];
 
     protected $casts = [

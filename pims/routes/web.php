@@ -36,7 +36,6 @@ Route::get('/allactor', function () {
     return view('dashboard');
 });
 
-Route::get('/sysdashboard', [sAccountController::class, 'dashboard'])->name('system.dashboard');
 Route::get('/pdashboard', function () {
     return view('police_officer.dashboard');
 });
@@ -129,7 +128,7 @@ Route::put('/saccount/update/{id}', [sAccountController::class, 'update'])->name
 Route::delete('/saccount/delete/{id}', [sAccountController::class, 'destroy'])->name('saccount.destroy');
 Route::put('/caccount/update/{id}', [cAccountController::class, 'update'])->name('caccount.update');
 Route::delete('/caccount/delete/{id}', [cAccountController::class, 'destroy'])->name('caccount.destroy');
-
+Route::get('/sysdashboard', [sAccountController::class, 'dashboard'])->name('system.dashboard');
 Route::get('/sysadmin/generate_report', [sAccountController::class, 'generate'])->name('sysadmin.generate_report');
 Route::get('/sreports', [sAccountController::class, 'generateReport'])->name('reports.generate');
 Route::post('/sreports/store', [sAccountController::class, 'storeReport'])->name('reports.store');
@@ -216,6 +215,7 @@ Route::get('/viewmedicalappointments', [MedicalController::class, 'viewAppointme
 Route::get('/viewmedicalreports', [MedicalController::class, 'viewReports'])->name('medical.viewReports');
 Route::post('/appointments/store', [MedicalController::class, 'mstore'])->name('appointments.store');
 Route::post('/medical-reports/store', [MedicalController::class, 'mrstore'])->name('medical-reports.store');
+Route::get('/medicaldashboard', [MedicalController::class, 'dashboard'])->name('medical.dashboard');
 
 Route::prefix('medical-officer')->name('medical.')->group(function () {
     Route::get('/appointments/create', [MedicalController::class, 'createMedicalAppointment'])->name('createAppointment');
@@ -300,12 +300,14 @@ Route::get('/viewprisonerstatus', [SecurityController::class, 'viewprisonerstatu
 Route::post('/updateAppointmentStatus', [SecurityController::class, 'updateStatus'])->name('updateAppointmentStatus');
 Route::get('/discipline_officer/requests/evaluate', [RequestController::class, 'showEvaluationForm'])->name('discipline_officer.evaluate_request');
 Route::get('/show_prisoners', [RequestController::class, 'show_allforin'])->name('showprisoners');
+Route::get('/ddashboard', [RequestController::class, 'dashboard'])->name('disdashboard');
 Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
 Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
 Route::post('/transfer-request/{id}', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
 Route::post('/approve-appointment/{id}', [RequestController::class, 'approve']);
 Route::post('/reject-appointment/{id}', [RequestController::class, 'reject']);
+
 Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
 Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');
 Route::get('/vdashboard', [VisitorController::class, 'dashboard'])->name('visitor.dashboard');

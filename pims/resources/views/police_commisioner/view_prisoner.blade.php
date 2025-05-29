@@ -280,7 +280,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            opacity: 0;
+           
             transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
             backdrop-filter: blur(0px);
             overflow-y: auto;
@@ -589,7 +589,7 @@
                 <p class="pims-modal-card-title">
                     <i class="fas fa-user-lock"></i> Prisoner Details
                 </p>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pims-view-prisoner-modal')">&times;</button>
+                <button class="pims-modal-close" >&times;</button>
             </header>
             <section class="pims-modal-card-body">
                 <div class="columns is-vcentered">
@@ -637,7 +637,7 @@
                 </div>
             </section>
             <footer class="pims-modal-card-foot">
-                <button class="pims-btn pims-btn-secondary" onclick="pimsCloseModal('pims-view-prisoner-modal')">
+                <button class="pims-btn pims-btn-secondary" >
                     <i class="fas fa-times"></i> Close
                 </button>
             </footer>
@@ -647,51 +647,121 @@
     
 
     @include('includes.footer_js')
-
+   
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize view buttons
-            document.querySelectorAll('.pims-view-prisoner').forEach(button => {
-                button.addEventListener('click', function() {
-                    const prisonerId = this.getAttribute('data-id');
-                    
-                    fetch(`/prisoners/${prisonerId}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            // Populate the modal with prisoner data
-                            document.getElementById('pims-view-prisoner-id').textContent = data.id || 'N/A';
-                            document.getElementById('pims-view-prison-id').textContent = data.prison_name || 'N/A';
-                            document.getElementById('pims-view-first-name').textContent = data.first_name || 'N/A';
-                            document.getElementById('pims-view-middle-name').textContent = data.middle_name || '';
-                            document.getElementById('pims-view-last-name').textContent = data.last_name || 'N/A';
-                            document.getElementById('pims-view-dob').textContent = data.dob || 'N/A';
-                            document.getElementById('pims-view-sex').textContent = data.gender || 'N/A';
-                            document.getElementById('pims-view-address').textContent = data.address || 'N/A';
-                            document.getElementById('pims-view-marital-status').textContent = data.marital_status || 'N/A';
-                            document.getElementById('pims-view-crime-committed').textContent = data.crime_committed || 'N/A';
-                            document.getElementById('pims-view-status').textContent = data.status || 'N/A';
-                            document.getElementById('pims-view-time-serve-start').textContent = data.time_serve_start || 'N/A';
-                            document.getElementById('pims-view-time-serve-end').textContent = data.time_serve_end || 'N/A';
-                            document.getElementById('pims-view-emergency-contact-name').textContent = data.emergency_contact_name || 'N/A';
-                            document.getElementById('pims-view-emergency-contact-relation').textContent = data.emergency_contact_relation || 'N/A';
-                            document.getElementById('pims-view-emergency-contact-number').textContent = data.emergency_contact_number || 'N/A';
-                            document.getElementById('pims-view-created-at').textContent = data.created_at || 'N/A';
-                            document.getElementById('pims-view-updated-at').textContent = data.updated_at || 'N/A';
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalId = 'pims-view-prisoner-modal';
+        const modal = document.getElementById(modalId);
 
-                            // Set image source if available
-                            const inmateImage = document.getElementById('pims-view-inmate-image');
-                            if (data.inmate_image) {
-                                inmateImage.src = '/storage/' + data.inmate_image;
-                            } else {
-                                inmateImage.src = '{{ asset("default-profile.png") }}';
-                            }
-
-                            document.getElementById('pims-view-prisoner-modal').classList.add('is-active');
-                        })
-                        .catch(error => console.error('Error fetching prisoner data:', error));
-                });
+        if (modal) {
+            // Close on header close button
+            modal.querySelector('.pims-modal-close')?.addEventListener('click', () => {
+                modal.style.display = 'none';
             });
 
+            // Close on footer close button
+            modal.querySelector('.pims-btn-secondary')?.addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            // Optional: Close when clicking outside the modal card
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    });
+
+    // Optional helper to open modal
+    function pimsOpenModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.style.display = 'block';
+        }
+    }
+</script>
+
+    <script>
+         
+function pimsOpenModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = 'flex'; // Ensure modal is visible
+        modal.classList.add('is-active'); // Add active class for styling
+        console.log(`Opening modal: ${modalId}`); // Debug log
+    } else {
+        console.error(`Modal with ID ${modalId} not found`);
+    }
+}
+
+// Close modal by ID
+function pimsCloseModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.classList.remove('is-active'); // Remove active class
+        modal.style.display = 'none'; // Explicitly hide modal
+        console.log(`Closing modal: ${modalId}`); // Debug log
+    } else {
+        console.error(`Modal with ID ${modalId} not found`);
+    }
+}
+
+// Close modal when clicking outside the modal card
+window.addEventListener('click', function (event) {
+    const modals = document.querySelectorAll('.pims-modal');
+    modals.forEach(function (modal) {
+        if (event.target === modal) {
+            modal.classList.remove('is-active');
+            modal.style.display = 'none';
+            console.log(`Closed modal ${modal.id} by clicking outside`); // Debug log
+        }
+    });
+});
+
+// Ensure view buttons work
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.pims-view-prisoner').forEach(button => {
+        button.addEventListener('click', function() {
+            const prisonerId = this.getAttribute('data-id');
+            console.log(`Fetching prisoner data for ID: ${prisonerId}`); // Debug log
+            
+            fetch(`/prisoners/${prisonerId}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate modal (unchanged)
+                    document.getElementById('pims-view-prisoner-id').textContent = data.id || 'N/A';
+                    document.getElementById('pims-view-prison-id').textContent = data.prison_name || 'N/A';
+                    document.getElementById('pims-view-first-name').textContent = data.first_name || 'N/A';
+                    document.getElementById('pims-view-middle-name').textContent = data.middle_name || '';
+                    document.getElementById('pims-view-last-name').textContent = data.last_name || 'N/A';
+                    document.getElementById('pims-view-dob').textContent = data.dob || 'N/A';
+                    document.getElementById('pims-view-sex').textContent = data.gender || 'N/A';
+                    document.getElementById('pims-view-address').textContent = data.address || 'N/A';
+                    document.getElementById('pims-view-marital-status').textContent = data.marital_status || 'N/A';
+                    document.getElementById('pims-view-crime-committed').textContent = data.crime_committed || 'N/A';
+                    document.getElementById('pims-view-status').textContent = data.status || 'N/A';
+                    document.getElementById('pims-view-time-serve-start').textContent = data.time_serve_start || 'N/A';
+                    document.getElementById('pims-view-time-serve-end').textContent = data.time_serve_end || 'N/A';
+                    document.getElementById('pims-view-emergency-contact-name').textContent = data.emergency_contact_name || 'N/A';
+                    document.getElementById('pims-view-emergency-contact-relation').textContent = data.emergency_contact_relation || 'N/A';
+                    document.getElementById('pims-view-emergency-contact-number').textContent = data.emergency_contact_number || 'N/A';
+                    document.getElementById('pims-view-created-at').textContent = data.created_at || 'N/A';
+                    document.getElementById('pims-view-updated-at').textContent = data.updated_at || 'N/A';
+
+                    // Set image source
+                    const inmateImage = document.getElementById('pims-view-inmate-image');
+                    if (data.inmate_image) {
+                        inmateImage.src = '/storage/' + data.inmate_image;
+                    } else {
+                        inmateImage.src = '{{ asset("default-profile.png") }}';
+                    }
+
+                    pimsOpenModal('pims-view-prisoner-modal'); // Open modal
+                })
+                .catch(error => console.error('Error fetching prisoner data:', error));
+        });
+    });
             // Initialize delete buttons
             document.querySelectorAll('.pims-delete-prisoner').forEach(button => {
                 button.addEventListener('click', function() {

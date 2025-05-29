@@ -6,24 +6,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Visitor Dashboard</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <!-- Chart.js for data visualization -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            --pims-primary: #0a192f; /* Navy blue */
-            --pims-secondary: #172a45; /* Darker navy */
-            --pims-accent: #64ffda; /* Teal accent */
-            --pims-danger: #ff5555; /* Vibrant red */
-            --pims-success: #50fa7b; /* Vibrant green */
-            --pims-warning: #ffb86c; /* Soft orange */
-            --pims-info: #8be9fd; /* Light blue */
-            --pims-text-light: #f8f8f2; /* Off white */
-            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-primary: #0a192f;
+            --pims-secondary: #172a45;
+            --pims-accent: #64ffda;
+            --pims-danger: #ff5555;
+            --pims-success: #50fa7b;
+            --pims-warning: #ffb86c;
+            --pims-info: #8be9fd;
+            --pims-text-light: #f8f8f2;
+            --pims-text-dark: #282a36;
             --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
             --pims-nav-height: 70px;
@@ -37,7 +37,7 @@
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             background-color: #f5f7fa;
             color: var(--pims-text-dark);
             margin: 0;
@@ -46,7 +46,6 @@
             line-height: 1.6;
         }
 
-        /* Header Styles */
         .header {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
@@ -58,7 +57,6 @@
             height: var(--pims-nav-height);
         }
 
-        /* Main Content Area */
         #pims-page-content {
             margin-left: 0;
             padding: 2rem;
@@ -69,7 +67,6 @@
             padding-top: 70px;
         }
 
-        /* Dashboard Cards */
         .pims-dashboard-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -116,7 +113,6 @@
             color: var(--pims-secondary);
             margin-bottom: 0;
             letter-spacing: -0.5px;
-            font-family: 'Inter', sans-serif;
         }
 
         .pims-card-footer {
@@ -130,7 +126,6 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Stats Box */
         .pims-stats-box {
             background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
             border-radius: var(--pims-border-radius);
@@ -157,7 +152,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            position: relative;
             border-bottom: 2px solid rgba(100, 255, 218, 0.2);
         }
 
@@ -179,7 +173,6 @@
             transform: scale(1.1);
         }
 
-        /* Recent Activity List */
         .pims-stats-box ul {
             list-style: none;
             padding: 0;
@@ -242,14 +235,12 @@
             margin-left: auto;
         }
 
-        /* Grid Layout */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* Section Title */
         .pims-section-title {
             font-size: 1.75rem;
             font-weight: 700;
@@ -259,7 +250,6 @@
             padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            font-family: 'Inter', sans-serif;
         }
 
         .pims-section-title::after {
@@ -285,14 +275,12 @@
             justify-content: center;
         }
 
-        /* Chart Container */
         .pims-chart-container {
             position: relative;
             height: 350px;
             margin-top: 1.5rem;
         }
 
-        /* Status Tags */
         .pims-status-tag {
             font-size: 0.75rem;
             padding: 0.3rem 0.75rem;
@@ -323,7 +311,6 @@
             color: var(--pims-info);
         }
 
-        /* Button Styles */
         .pims-btn {
             padding: 0.5rem 1rem;
             border-radius: var(--pims-border-radius);
@@ -360,7 +347,6 @@
             transform: translateY(-2px);
         }
 
-        /* Search Box */
         .pims-search-box {
             position: relative;
             flex-grow: 1;
@@ -390,7 +376,6 @@
             color: var(--pims-accent);
         }
 
-        /* Notification Styles */
         .pims-notification {
             padding: 1rem 1.5rem;
             border-radius: var(--pims-border-radius);
@@ -434,7 +419,6 @@
             color: var(--pims-danger);
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 1200px) {
             .pims-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -471,22 +455,15 @@
     </style>
 </head>
 <body>
-    <!-- Preloader -->
     @include('components.preloader')
-
-    <!-- Navigation -->
     @include('includes.nav')
-
-    <!-- Sidebar -->
     @include('visitor.menu')
 
-    <!-- Main Content -->
     <div id="pims-page-content">
         <h1 class="pims-section-title">
             <i class="fas fa-user-clock"></i> Visitor Dashboard
         </h1>
 
-        <!-- Notifications -->
         @if(session('success'))
             <div class="pims-notification pims-notification-success">
                 <i class="fas fa-check-circle"></i>
@@ -500,46 +477,38 @@
             </div>
         @endif
 
-        <!-- Dashboard Cards -->
         <div class="pims-grid">
-            <!-- Upcoming Visits -->
-            <div class="pims-dashboard-card">
-                <div class="pims-card-icon">
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-                <h3>Upcoming Visits</h3>
-                <p>3</p>
-                <div class="pims-card-footer">
-                    <i class="fas fa-clock" style="color: var(--pims-warning);"></i> 1 visit tomorrow
-                </div>
-            </div>
+           
 
-            <!-- Pending Requests -->
             <div class="pims-dashboard-card">
                 <div class="pims-card-icon">
                     <i class="fas fa-hourglass-half"></i>
                 </div>
                 <h3>Pending Requests</h3>
-                <p>2</p>
+                <p>{{ $pendingRequests }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-exclamation-circle" style="color: var(--pims-danger);"></i> 1 awaiting approval
+                    <i class="fas fa-exclamation-circle" style="color: var(--pims-danger);"></i>
+                    {{ $pendingRequests > 0 ? "$pendingRequests awaiting approval" : 'No pending requests' }}
                 </div>
             </div>
 
-            <!-- Total Visits -->
             <div class="pims-dashboard-card">
                 <div class="pims-card-icon">
                     <i class="fas fa-history"></i>
                 </div>
                 <h3>Total Visits</h3>
-                <p>12</p>
+                <p>{{ $totalVisits }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-chart-line" style="color: var(--pims-success);"></i> 3 this month
+                    <i class="fas fa-chart-line" style="color: var(--pims-success);"></i>
+                    @if ($totalVisits > 0 && $recentRequests->where('status', 'completed')->first())
+    Last visit: {{ \Carbon\Carbon::parse($recentRequests->where('status', 'completed')->first()->requested_date)->format('M d, Y') }}
+@else
+    No visits yet
+@endif
                 </div>
             </div>
         </div>
 
-        <!-- Recent Visits Chart -->
         <div class="pims-stats-box">
             <h2><i class="fas fa-chart-line"></i> Monthly Visits</h2>
             <div class="pims-chart-container">
@@ -547,7 +516,6 @@
             </div>
         </div>
 
-        <!-- Recent Visit Requests -->
         <div class="pims-stats-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                 <h2><i class="fas fa-list"></i> Recent Visit Requests</h2>
@@ -556,82 +524,37 @@
                         <i class="fas fa-search"></i>
                         <input type="text" id="pims-visit-search" placeholder="Search requests...">
                     </div>
-                    <a href="/createVisiting" class="pims-btn pims-btn-primary">
+                    <a href="{{ route('visitor.createVisiting') }}" class="pims-btn pims-btn-primary">
                         <i class="fas fa-plus"></i> New Request
                     </a>
                 </div>
             </div>
-            
-            <ul>
-                <li>
-                    <i class="fas fa-calendar-day" style="color: var(--pims-success);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>John Smith</strong> - Scheduled for May 28, 2025
-                        </span>
-                        <span class="pims-status-tag approved">
-                            Approved
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        10:00 AM - 11:00 AM
-                    </span>
-                    <button class="pims-btn pims-btn-secondary" style="margin-left: 1rem;">
-                        <i class="fas fa-file-download"></i> Pass
-                    </button>
-                </li>
-                <li>
-                    <i class="fas fa-hourglass-half" style="color: var(--pims-warning);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Michael Johnson</strong> - Requested for June 2, 2025
-                        </span>
-                        <span class="pims-status-tag pending">
-                            Pending
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        Submitted: May 22, 2025
-                    </span>
-                    <a href="/visitorvisiting-requests" class="pims-btn pims-btn-secondary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-calendar-times" style="color: var(--pims-danger);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Robert Williams</strong> - Requested for May 20, 2025
-                        </span>
-                        <span class="pims-status-tag rejected">
-                            Rejected
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        Reason: Invalid ID
-                    </span>
-                    <button class="pims-btn pims-btn-secondary" style="margin-left: 1rem;">
-                        <i class="fas fa-redo"></i> Resubmit
-                    </button>
-                </li>
-                <li>
-                    <i class="fas fa-check-circle" style="color: var(--pims-info);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Sarah Davis</strong> - Completed on May 15, 2025
-                        </span>
-                        <span class="pims-status-tag completed">
-                            Completed
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        02:00 PM - 03:00 PM
-                    </span>
-                    <button class="pims-btn pims-btn-secondary" style="margin-left: 1rem;">
-                        <i class="fas fa-file-alt"></i> Details
-                    </button>
-                </li>
-            </ul>
+            @if($recentRequests->isEmpty())
+                <p style="text-align: center; color: var(--pims-text-dark); padding: 2rem;">No recent visit requests found.</p>
+            @else
+                <ul>
+                    @foreach($recentRequests as $request)
+                        <li>
+                            <i class="fas {{ $request->status == 'approved' ? 'fa-calendar-day' : ($request->status == 'pending' ? 'fa-hourglass-half' : ($request->status == 'rejected' ? 'fa-calendar-times' : 'fa-check-circle')) }}"
+                               style="color: {{ $request->status == 'approved' ? 'var(--pims-success)' : ($request->status == 'pending' ? 'var(--pims-warning)' : ($request->status == 'rejected' ? 'var(--pims-danger)' : 'var(--pims-info)')) }}"></i>
+                            <div style="flex-grow: 1;">
+                                <span>
+                                    <strong>{{ $request->prisoner_firstname }} {{ $request->prisoner_lastname }}</strong> - 
+                                    {{ $request->status == 'approved' ? 'Scheduled for ' : ($request->status == 'pending' ? 'Requested for ' : ($request->status == 'rejected' ? 'Rejected for ' : 'Completed on ')) }}
+{{ \Carbon\Carbon::parse($request->requested_date)->format('M d, Y') }}
+                                </span>
+                                <span class="pims-status-tag {{ $request->status }}">
+                                    {{ ucfirst($request->status) }}
+                                </span>
+                            </div>
+                            <span class="pims-activity-time">
+                                {{ $request->status == 'rejected' && $request->note ? "Reason: {$request->note}" : ($request->status == 'pending' ? 'Submitted: ' . $request->created_at->format('M d, Y') : $request->requested_time) }}
+                            </span>
+                            
+                        </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
     </div>
 
@@ -644,19 +567,19 @@
             if (preloader) {
                 setTimeout(() => {
                     preloader.style.display = 'none';
-                }, 1000);
+                }, 100);
             }
 
-            // Monthly Visits Chart (Line)
+            // Monthly Visits Chart
             const visitsChart = new Chart(
-                document.getElementById('pims-visits-chart').getContext('2d'), 
+                document.getElementById('pims-visits-chart').getContext('2d'),
                 {
                     type: 'line',
                     data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        labels: @json($months),
                         datasets: [{
-                            label: 'Approved Visits',
-                            data: [2, 3, 1, 2, 3, 2, 1, 2, 3, 4, 2, 3],
+                            label: 'Completed Visits',
+                            data: @json($chartData),
                             backgroundColor: 'rgba(100, 255, 218, 0.1)',
                             borderColor: 'rgba(100, 255, 218, 1)',
                             borderWidth: 2,
@@ -687,9 +610,7 @@
                             y: {
                                 beginAtZero: true,
                                 grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
-                                ticks: {
-                                    stepSize: 1
-                                }
+                                ticks: { stepSize: 1 }
                             },
                             x: {
                                 grid: { display: false, drawBorder: false }
@@ -702,23 +623,25 @@
                 }
             );
 
-            // Search functionality for visits
+            // Search functionality
             const searchInput = document.getElementById('pims-visit-search');
             const visitItems = document.querySelectorAll('.pims-stats-box li');
-
-            searchInput.addEventListener('input', function() {
-                const filter = searchInput.value.toLowerCase();
-                visitItems.forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(filter) ? '' : 'none';
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const filter = searchInput.value.toLowerCase();
+                    visitItems.forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        item.style.display = text.includes(filter) ? '' : 'none';
+                    });
                 });
-            });
+            }
 
-            // Show fullscreen loader when navigating
+            // Loader for navigation
             document.querySelectorAll('a[href^="/"]').forEach(link => {
                 link.addEventListener('click', function(e) {
                     if (this.getAttribute('href') !== '#') {
-                        document.getElementById('pimsFullscreenLoader').classList.add('active');
+                        const loader = document.getElementById('pimsFullscreenLoader');
+                        if (loader) loader.classList.add('active');
                     }
                 });
             });

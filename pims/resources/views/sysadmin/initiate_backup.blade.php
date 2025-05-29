@@ -16,7 +16,7 @@
             </div>
             <section class="section">
                 <div class="container">
-                    <h1 class="title has-text-centered">Backup and Recovery</h1>
+                    <h1 class="title has-text-centered">Backup   </h1>
 
                     <form>
                         <div class="columns">
@@ -81,7 +81,7 @@
                         <!-- Submit and Reset Button -->
                         <div class="field is-grouped is-grouped-right">
                             <div class="control">
-                                <button class="button is-link">Save Backup and Recovery</button>
+                                <button class="button is-link">Save Backup   </button>
                             </div>
                             <div class="control">
                                 <button class="button is-light" type="reset">Reset</button>

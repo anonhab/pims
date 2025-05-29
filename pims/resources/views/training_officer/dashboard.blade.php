@@ -553,14 +553,7 @@
             </div>
         </div>
 
-        <!-- Certification Status Chart -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-pie"></i> Certification Status Distribution</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-certification-chart"></canvas>
-            </div>
-        </div>
-
+       
         <!-- Recent Certifications -->
         <div class="pims-stats-box">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -608,13 +601,7 @@
             @endif
         </div>
 
-        <!-- Monthly Certifications Chart -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-line"></i> Monthly Certifications</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-monthly-certifications-chart"></canvas>
-            </div>
-        </div>
+       
     </div>
 
     @include('includes.footer_js')
@@ -629,105 +616,7 @@
                 }, 1000);
             }
 
-            // Certification Status Chart (Pie)
-            const certificationStatusChart = new Chart(
-                document.getElementById('pims-certification-chart').getContext('2d'), 
-                {
-                    type: 'pie',
-                    data: {
-                        labels: ['Issued', 'Revoked', 'Pending'],
-                        datasets: [{
-                            data: [
-                                {{ $recentCertifications->where('status', 'issued')->count() }},
-                                {{ $recentCertifications->where('status', 'revoked')->count() }},
-                                {{ $recentCertifications->where('status', 'pending')->count() }}
-                            ],
-                            backgroundColor: [
-                                'rgba(80, 250, 123, 0.7)',
-                                'rgba(255, 85, 85, 0.7)',
-                                'rgba(255, 184, 108, 0.7)'
-                            ],
-                            borderColor: [
-                                'rgba(80, 250, 123, 1)',
-                                'rgba(255, 85, 85, 1)',
-                                'rgba(255, 184, 108, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    font: { weight: '600' }
-                                }
-                            },
-                            tooltip: {
-                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
-                                titleFont: { weight: 'bold' }
-                            }
-                        }
-                    }
-                }
-            );
-
-            // Monthly Certifications Chart (Line)
-            const monthlyCertificationsChart = new Chart(
-                document.getElementById('pims-monthly-certifications-chart').getContext('2d'), 
-                {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        datasets: [{
-                            label: 'Certifications Issued',
-                            data: [12, 19, 15, 22, 18, 25, 20, 23, 27, 30, 28, 35],
-                            backgroundColor: 'rgba(100, 255, 218, 0.1)',
-                            borderColor: 'rgba(100, 255, 218, 1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    font: { weight: '600' }
-                                }
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false,
-                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
-                                titleFont: { weight: 'bold' }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' }
-                            },
-                            x: {
-                                grid: { display: false, drawBorder: false }
-                            }
-                        },
-                        elements: {
-                            point: { radius: 4, hoverRadius: 6 }
-                        }
-                    }
-                }
-            );
-
+            
             // Search functionality for recent certifications
             const searchInput = document.getElementById('pims-table-search');
             const certificationItems = document.querySelectorAll('.pims-stats-box li');

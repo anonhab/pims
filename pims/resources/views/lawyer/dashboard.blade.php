@@ -18,15 +18,15 @@
 
     <style>
         :root {
-            --pims-primary: #0a192f; /* Navy blue */
-            --pims-secondary: #172a45; /* Darker navy */
-            --pims-accent: #64ffda; /* Teal accent */
-            --pims-danger: #ff5555; /* Vibrant red */
-            --pims-success: #50fa7b; /* Vibrant green */
-            --pims-warning: #ffb86c; /* Soft orange */
-            --pims-info: #8be9fd; /* Light blue */
-            --pims-text-light: #f8f8f2; /* Off white */
-            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-primary: #0a192f;
+            --pims-secondary: #172a45;
+            --pims-accent: #64ffda;
+            --pims-danger: #ff5555;
+            --pims-success: #50fa7b;
+            --pims-warning: #ffb86c;
+            --pims-info: #8be9fd;
+            --pims-text-light: #f8f8f2;
+            --pims-text-dark: #282a36;
             --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
             --pims-nav-height: 70px;
@@ -37,11 +37,10 @@
         * {
             box-sizing: border-box;
             margin: 0;
-           
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             background-color: #f5f7fa;
             color: var(--pims-text-dark);
             margin: 0;
@@ -50,7 +49,6 @@
             line-height: 1.6;
         }
 
-        /* Header Styles */
         .header {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
@@ -60,10 +58,8 @@
             top: 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             height: var(--pims-nav-height);
-            
         }
 
-        /* Sidebar Styles */
         .pims-sidebar-container {
             position: fixed;
             top: var(--pims-nav-height);
@@ -78,7 +74,6 @@
             border-right: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Main Content Area */
         #pims-page-content {
             margin-left: 0;
             padding: 2rem;
@@ -89,7 +84,6 @@
             padding-top: 70px;
         }
 
-        /* Dashboard Cards */
         .pims-dashboard-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -136,7 +130,6 @@
             color: var(--pims-secondary);
             margin-bottom: 0;
             letter-spacing: -0.5px;
-            font-family: 'Inter', sans-serif;
         }
 
         .pims-card-footer {
@@ -150,7 +143,6 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Security Elements */
         .pims-security-badge {
             position: absolute;
             top: 15px;
@@ -177,7 +169,6 @@
             100% { box-shadow: 0 0 0 0 rgba(255, 85, 85, 0); }
         }
 
-        /* Stats Box */
         .pims-stats-box {
             background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
             border-radius: var(--pims-border-radius);
@@ -204,7 +195,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            position: relative;
             border-bottom: 2px solid rgba(100, 255, 218, 0.2);
         }
 
@@ -226,18 +216,6 @@
             transform: scale(1.1);
         }
 
-        .pims-stats-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at top left, rgba(100, 255, 218, 0.05), transparent 70%);
-            pointer-events: none;
-        }
-
-        /* Recent Activity List */
         .pims-stats-box ul {
             list-style: none;
             padding: 0;
@@ -300,13 +278,6 @@
             margin-left: auto;
         }
 
-        .pims-stats-box li strong {
-            color: var(--pims-primary);
-            font-weight: 700;
-            letter-spacing: 0.3px;
-        }
-
-        /* System Alert */
         .pims-system-alert {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
@@ -320,17 +291,6 @@
             border-left: 4px solid var(--pims-danger);
             position: relative;
             overflow: hidden;
-        }
-
-        .pims-system-alert::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%);
-            pointer-events: none;
         }
 
         .pims-system-alert .alert-content {
@@ -369,14 +329,12 @@
             background: rgba(255,255,255,0.2);
         }
 
-        /* Grid Layout */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* Section Title */
         .pims-section-title {
             font-size: 1.75rem;
             font-weight: 700;
@@ -386,7 +344,6 @@
             padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            font-family: 'Inter', sans-serif;
         }
 
         .pims-section-title::after {
@@ -412,14 +369,12 @@
             justify-content: center;
         }
 
-        /* Chart Container */
         .pims-chart-container {
             position: relative;
             height: 350px;
             margin-top: 1.5rem;
         }
 
-        /* Status Tags */
         .pims-status-tag {
             font-size: 0.75rem;
             padding: 0.3rem 0.75rem;
@@ -435,17 +390,71 @@
             color: var(--pims-warning);
         }
 
-        .pims-status-tag.completed {
+        .pims-status-tag.approved {
             background-color: rgba(80, 250, 123, 0.1);
             color: var(--pims-success);
         }
 
-        .pims-status-tag.scheduled {
-            background-color: rgba(139, 233, 253, 0.1);
-            color: var(--pims-info);
+        .pims-status-tag.rejected {
+            background-color: rgba(255, 85, 85, 0.1);
+            color: var(--pims-danger);
         }
 
-        /* Responsive Adjustments */
+        .pims-btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--pims-border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--pims-transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: none;
+            font-size: 0.9rem;
+        }
+
+        .pims-btn-primary {
+            background-color: var(--pims-accent);
+            color: var(--pims-primary);
+            font-weight: 700;
+        }
+
+        .pims-btn-primary:hover {
+            background-color: #52e8ca;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(100, 255, 218, 0.3);
+        }
+
+        .pims-search-box {
+            position: relative;
+            flex-grow: 1;
+        }
+
+        .pims-search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--pims-border-radius);
+            font-size: 0.9rem;
+            transition: var(--pims-transition);
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .pims-search-box input:focus {
+            outline: none;
+            border-color: var(--pims-accent);
+            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+        }
+
+        .pims-search-box i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--pims-accent);
+        }
+
         @media (max-width: 1200px) {
             .pims-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -455,14 +464,6 @@
         @media (max-width: 992px) {
             #pims-page-content {
                 padding-left: 2rem;
-            }
-
-            .pims-sidebar-container {
-                transform: translateX(-100%);
-            }
-
-            .pims-sidebar-container.active {
-                transform: translateX(0);
             }
         }
 
@@ -501,249 +502,246 @@
     </style>
 </head>
 <body>
-    <!-- Preloader -->
     @include('components.preloader')
-
-    <!-- Navigation -->
     @include('includes.nav')
-
-    <!-- Sidebar -->
     @include('lawyer.menu')
 
-    <!-- Main Content -->
     <div id="pims-page-content">
         <h1 class="pims-section-title">
             <i class="fas fa-briefcase"></i> Lawyer Dashboard
         </h1>
 
-        <!-- System Alert -->
-        <div class="pims-system-alert">
-            <div class="alert-content">
-                <i class="fas fa-exclamation-triangle alert-icon"></i>
-                <div>
-                    <strong>URGENT:</strong> 2 pending requests require immediate review
+        @if(session('success'))
+            <div class="pims-system-alert" style="border-left-color: var(--pims-success);">
+                <div class="alert-content">
+                    <i class="fas fa-check-circle alert-icon" style="color: var(--pims-success);"></i>
+                    <span>{{ session('success') }}</span>
                 </div>
+                <button class="alert-close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <button class="alert-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+        @endif
+        @if(session('error'))
+            <div class="pims-system-alert">
+                <div class="alert-content">
+                    <i class="fas fa-exclamation-triangle alert-icon"></i>
+                    <span>{{ session('error') }}</span>
+                </div>
+                <button class="alert-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
 
-        <!-- Dashboard Cards -->
         <div class="pims-grid">
-            <!-- Active Clients -->
             <div class="pims-dashboard-card">
                 <span class="pims-security-badge">ACTIVE</span>
                 <div class="pims-card-icon">
                     <i class="fas fa-user-shield"></i>
                 </div>
                 <h3>Active Clients</h3>
-                <p>32</p>
+                <p>{{ $activeClients }}</p>
                 <div class="pims-card-footer">
                     <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All profiles up to date
                 </div>
             </div>
 
-            <!-- Pending Requests -->
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge alert">ALERT</span>
+                <span class="pims-security-badge {{ $pendingRequests > 0 ? 'alert' : '' }}">PENDING</span>
                 <div class="pims-card-icon">
                     <i class="fas fa-file-contract"></i>
                 </div>
                 <h3>Pending Requests</h3>
-                <p>5</p>
+                <p>{{ $pendingRequests }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i> 2 urgent requests
+                    <i class="fas fa-exclamation-triangle" style="color: var(--pims-warning);"></i>
+                    {{ $pendingRequests > 0 ? "$pendingRequests pending action" : "No pending requests" }}
                 </div>
             </div>
 
-            <!-- Upcoming Appointments -->
             <div class="pims-dashboard-card">
                 <span class="pims-security-badge">SCHEDULED</span>
                 <div class="pims-card-icon">
                     <i class="fas fa-calendar-check"></i>
                 </div>
-                <h3>Upcoming Appointments</h3>
-                <p>8</p>
+                <h3>Approved Requests</h3>
+                <p>{{ $approvedRequests }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-clock" style="color: var(--pims-accent);"></i> Next in 2h 15m
+                    <i class="fas fa-clock" style="color: var(--pims-accent);"></i>
+                    {{ $recentAppointments->first() ? 'Next at ' . $recentAppointments->first()->appointment_date->format('H:i') : 'No upcoming appointments' }}
                 </div>
             </div>
 
-            <!-- Case Documents -->
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge">SECURED</span>
+                <span class="pims-security-badge"></span>
                 <div class="pims-card-icon">
                     <i class="fas fa-file-shield"></i>
                 </div>
-                <h3>Case Documents</h3>
-                <p>145</p>
+                <h3>Rejected Requests</h3>
+                <p>{{ $rejectedRequests }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> 3 documents in review
+                    <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> All requests processed
                 </div>
             </div>
         </div>
 
-        <!-- Data Visualization -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-bar"></i> Case Activity Overview</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-case-chart"></canvas>
-            </div>
-        </div>
-
-        <!-- Recent Activity -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-history"></i> Recent Lawyer Activities</h2>
-            <ul>
-                <!-- Placeholder data; replace with actual DB data later -->
-                <li>
-                    <span>John Doe</span> created a <strong>Request</strong> for Case ID: 123
-                    <span class="pims-status-tag pending">Pending</span>
-                    <span class="pims-activity-time">May 21, 2025 06:30</span>
-                </li>
-                <li>
-                    <span>System</span> scheduled an <strong>Appointment</strong> for Client ID: 456
-                    <span class="pims-status-tag scheduled">Scheduled</span>
-                    <span class="pims-activity-time">May 20, 2025 14:45</span>
-                </li>
-                <li>
-                    <span>Jane Smith</span> updated a <strong>Prisoner Profile</strong> for ID: 789
-                    <span class="pims-status-tag completed">Completed</span>
-                    <span class="pims-activity-time">May 20, 2025 09:15</span>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Additional Chart: Request Status Distribution -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-pie"></i> Request Status Distribution</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-request-status-chart"></canvas>
-            </div>
-        </div>
+      
+        
     </div>
 
-    <script src="{{ asset('js/menu.js') }}"></script>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Preloader
+            const preloader = document.querySelector('.pims-progress');
+            if (preloader) {
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 100);
+            }
+
+            // Request Status Distribution Chart
+            const requestStatusChart = new Chart(
+                document.getElementById('pims-request-status-box').getContext('2d'),
+                {
+                    type: 'pie',
+                    data: {
+                        labels: ['Pending', 'Approved', 'Rejected'],
+                        datasets: [{
+                            label: 'Requests',
+                            data: [
+                                {{ $requestStatusChartData['pending'] }},
+                                {{ $requestStatusChartData['approved'] }},
+                                {{ $requestStatusChartData['rejected'] }}
+                            ],
+                            backgroundColor: [
+                                'rgba(255, 184, 108, 0.7)',
+                                'rgba(80, 250, 123, 0.7)',
+                                'rgba(255, 85, 85, 0.7)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 184, 108, 1)',
+                                'rgba(80, 250, 123, 1)',
+                                'rgba(255, 85, 85, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20,
+                                    font: { weight: '600' }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
+                                titleFont: { weight: 'bold' }
+                            }
+                        }
+                    }
+                }
+            );
+
             // Case Activity Chart (Line)
-            const caseChart = new Chart(document.getElementById('pims-case-chart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [
-                        {
-                            label: 'Requests Created',
-                            data: [3, 5, 2, 7, 4, 1, 0],
+            const caseActivityChart = new Chart(
+                document.getElementById('case-activity-chart').getContext('2d'),
+                {
+                    type: 'line',
+                    data: {
+                        labels: @json($caseTrendsChartData['labels']),
+                        datasets: [{
+                            label: 'Requests',
+                            data: @json($caseTrendsChartData['requests']),
                             backgroundColor: 'rgba(100, 255, 218, 0.1)',
                             borderColor: 'rgba(100, 255, 218, 1)',
                             borderWidth: 2,
                             tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Appointments Scheduled',
-                            data: [2, 4, 6, 3, 5, 2, 1],
-                            backgroundColor: 'rgba(80, 250, 123, 0.1)',
-                            borderColor: 'rgba(80, 250, 123, 1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: { weight: '600' }
+                            fill: true,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 20,
+                                    font: { weight: '600' }
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
+                                titleFont: { weight: 'bold' }
                             }
                         },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(26, 42, 58, 0.9)',
-                            titleFont: { weight: 'bold' }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
-                            ticks: { stepSize: 2 }
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
+                                ticks: { stepSize: 2 }
+                            },
+                            x: {
+                                grid: { display: 'none', drawBorder: false }
+                            }
                         },
-                        x: {
-                            grid: { display: false, drawBorder: false }
+                        elements: {
+                            point: {
+                                radius: 4,
+                                hoverRadius: 6,
+                            }
                         }
-                    },
-                    elements: {
-                        point: { radius: 4, hoverRadius: 6 }
                     }
                 }
-            });
+            );
 
-            // Request Status Chart (Pie)
-            const requestStatusChart = new Chart(document.getElementById('pims-request-status-chart').getContext('2d'), {
-                type: 'pie',
-                data: {
-                    labels: ['Pending', 'Completed', 'In Review', 'Rejected'],
-                    datasets: [{
-                        data: [5, 12, 3, 2],
-                        backgroundColor: [
-                            'rgba(255, 184, 108, 0.6)',
-                            'rgba(80, 250, 123, 0.6)',
-                            'rgba(139, 233, 253, 0.6)',
-                            'rgba(255, 85, 85, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 184, 108, 1)',
-                            'rgba(80, 250, 123, 1)',
-                            'rgba(139, 233, 253, 1)',
-                            'rgba(255, 85, 85, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: { weight: '600' }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(26, 42, 58, 0.9)',
-                            titleFont: { weight: 'bold' }
-                        }
-                    }
-                }
+            // Search functionality
+            const searchInput = document.getElementById('input-search-appointments');
+            const appointmentItems = document.querySelectorAll('.pims-stats-box li');
+
+            searchInput && appointmentItems.forEach(item => {
+                searchInput.addEventListener('input', function() => {
+                    const filter = searchInput.value.toLowerCase();
+                    .forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        item.style.display = text.includes(filter) ? '' : 'none';
+                    });
+                }));
+
+            // Refresh button
+            document.getElementById('btn-pims-btn-refresh').addEventListener('click', () => {
+                window.location.reload();
             });
 
             // Close alert
-            document.querySelector('.alert-close').addEventListener('click', () => {
-                document.querySelector('.pims-system-alert').style.display = 'none';
+            document.querySelectorAll('.alert-close').forEach(btn => {
+                button.addEventListener('click', () => {
+                    btn.closest('(.pims-system-alert')).style.display = 'none';
+                });
             });
 
-            // Make security badge pulse
-            const alertBadges = document.querySelectorAll('.pims-security-badge.alert');
-            alertBadges.forEach(badge => {
-                setInterval(() => {
-                    badge.style.opacity = badge.style.opacity === '0.8' ? '1' : '0.8';
-                }, 1000);
+            // Pulse effect for alert
+            const alertBadges = document.querySelectorAll('.selected('.pims-security-badge.alert');
+            'forEach(badge => {
+                badgeBadges => {
+                    setInterval(() => {
+                        badge.style.opacity = badge.style.opacity === '0.8' ? '1' : '0.8';
+                    }, 1000);
+                });
             });
         });
+    }
+}
     </script>
-   
 </body>
 </html>

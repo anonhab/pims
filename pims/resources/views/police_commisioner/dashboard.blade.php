@@ -14,16 +14,17 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* Keep all existing styles unchanged */
         :root {
-            --pims-primary: #0a192f; /* Navy blue */
-            --pims-secondary: #172a45; /* Darker navy */
-            --pims-accent: #64ffda; /* Teal accent */
-            --pims-danger: #ff5555; /* Vibrant red */
-            --pims-success: #50fa7b; /* Vibrant green */
-            --pims-warning: #ffb86c; /* Soft orange */
-            --pims-info: #8be9fd; /* Light blue */
-            --pims-text-light: #f8f8f2; /* Off white */
-            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-primary: #0a192f;
+            --pims-secondary: #172a45;
+            --pims-accent: #64ffda;
+            --pims-danger: #ff5555;
+            --pims-success: #50fa7b;
+            --pims-warning: #ffb86c;
+            --pims-info: #8be9fd;
+            --pims-text-light: #f8f8f2;
+            --pims-text-dark: #282a36;
             --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
             --pims-nav-height: 70px;
@@ -31,10 +32,7 @@
             --pims-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-        }
+        * { box-sizing: border-box; margin: 0; }
 
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -46,7 +44,6 @@
             line-height: 1.6;
         }
 
-        /* Header Styles */
         .header {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
@@ -58,7 +55,6 @@
             height: var(--pims-nav-height);
         }
 
-        /* Main Content Area */
         #pims-page-content {
             margin-left: 0;
             padding: 2rem;
@@ -69,7 +65,6 @@
             padding-top: 70px;
         }
 
-        /* Dashboard Cards */
         .pims-dashboard-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -130,7 +125,6 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Stats Box */
         .pims-stats-box {
             background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
             border-radius: var(--pims-border-radius);
@@ -179,7 +173,6 @@
             transform: scale(1.1);
         }
 
-        /* Recent Activity List */
         .pims-stats-box ul {
             list-style: none;
             padding: 0;
@@ -242,14 +235,12 @@
             margin-left: auto;
         }
 
-        /* Grid Layout */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* Section Title */
         .pims-section-title {
             font-size: 1.75rem;
             font-weight: 700;
@@ -285,14 +276,12 @@
             justify-content: center;
         }
 
-        /* Chart Container */
         .pims-chart-container {
             position: relative;
             height: 350px;
             margin-top: 1.5rem;
         }
 
-        /* Status Tags */
         .pims-status-tag {
             font-size: 0.75rem;
             padding: 0.3rem 0.75rem;
@@ -318,12 +307,11 @@
             color: var(--pims-danger);
         }
 
-        .pims-status-tag.released {
+        .pims-status-tag.transferred {
             background-color: rgba(139, 233, 253, 0.1);
             color: var(--pims-info);
         }
 
-        /* Button Styles */
         .pims-btn {
             padding: 0.5rem 1rem;
             border-radius: var(--pims-border-radius);
@@ -360,7 +348,6 @@
             transform: translateY(-2px);
         }
 
-        /* Search Box */
         .pims-search-box {
             position: relative;
             flex-grow: 1;
@@ -390,7 +377,6 @@
             color: var(--pims-accent);
         }
 
-        /* Notification Styles */
         .pims-notification {
             padding: 1rem 1.5rem;
             border-radius: var(--pims-border-radius);
@@ -434,7 +420,6 @@
             color: var(--pims-danger);
         }
 
-        /* Urgent Alert */
         .pims-system-alert {
             background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
             color: white;
@@ -481,39 +466,20 @@
             justify-content: center;
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 1200px) {
-            .pims-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
+            .pims-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
         }
 
         @media (max-width: 992px) {
-            #pims-page-content {
-                padding-left: 2rem;
-            }
+            #pims-page-content { padding-left: 2rem; }
         }
 
         @media (max-width: 768px) {
-            .pims-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .pims-section-title {
-                font-size: 1.5rem;
-            }
-
-            .pims-dashboard-card p {
-                font-size: 1.75rem;
-            }
-
-            .pims-stats-box {
-                padding: 1.5rem;
-            }
-
-            .pims-stats-box h2 {
-                font-size: 1.25rem;
-            }
+            .pims-grid { grid-template-columns: 1fr; }
+            .pims-section-title { font-size: 1.5rem; }
+            .pims-dashboard-card p { font-size: 1.75rem; }
+            .pims-stats-box { padding: 1.5rem; }
+            .pims-stats-box h2 { font-size: 1.25rem; }
         }
     </style>
 </head>
@@ -547,19 +513,6 @@
             </div>
         @endif
 
-        <!-- Urgent Alert -->
-        <div class="pims-system-alert">
-            <div class="alert-content">
-                <i class="fas fa-exclamation-triangle alert-icon"></i>
-                <div>
-                    <strong>URGENT:</strong> 5 pending requests require your approval
-                </div>
-            </div>
-            <button class="alert-close">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
         <!-- Dashboard Cards -->
         <div class="pims-grid">
             <!-- Total Prisoners -->
@@ -568,9 +521,10 @@
                     <i class="fas fa-user-lock"></i>
                 </div>
                 <h3>Total Prisoners</h3>
-                <p>248</p>
+                <p>{{ $totalPrisoners }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-user-clock" style="color: var(--pims-warning);"></i> 12 awaiting processing
+                    <i class="fas fa-user-clock" style="color: var(--pims-warning);"></i> 
+                    {{ $pendingRequests }} pending requests
                 </div>
             </div>
 
@@ -580,28 +534,30 @@
                     <i class="fas fa-tasks"></i>
                 </div>
                 <h3>Pending Requests</h3>
-                <p>17</p>
+                <p>{{ $pendingRequests }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-exclamation-circle" style="color: var(--pims-danger);"></i> 5 high priority
+                    <i class="fas fa-exclamation-circle" style="color: var(--pims-danger);"></i> 
+                    Review required
                 </div>
             </div>
 
-            <!-- Released Prisoners -->
+            <!-- Released This Month -->
             <div class="pims-dashboard-card">
                 <div class="pims-card-icon">
                     <i class="fas fa-user-check"></i>
                 </div>
                 <h3>Released This Month</h3>
-                <p>23</p>
+                <p>{{ $releasedThisMonth }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-chart-line" style="color: var(--pims-success);"></i> 5% increase from last month
+                    <i class="fas fa-chart-line" style="color: var(--pims-success);"></i> 
+                    Current month
                 </div>
             </div>
         </div>
 
-        <!-- Requests Status Chart -->
+        <!-- Request Status Distribution Chart -->
         <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-pie"></i> Requests Status Distribution</h2>
+            <h2><i class="fas fa-chart-pie"></i> Request Status Distribution</h2>
             <div class="pims-chart-container">
                 <canvas id="pims-requests-chart"></canvas>
             </div>
@@ -622,85 +578,37 @@
                 </div>
             </div>
             
-            <ul>
-                <li>
-                    <i class="fas fa-file-alt" style="color: var(--pims-warning);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Medical Release Request</strong> - Prisoner #1042
+            @if($recentRequests->isEmpty())
+                <p style="text-align: center; color: var(--pims-text-dark); padding: 2rem;">No recent requests found.</p>
+            @else
+                <ul>
+                    @foreach($recentRequests as $request)
+                    <li>
+                        <i class="fas fa-file-alt" style="color: var(--pims-warning);"></i>
+                        <div style="flex-grow: 1;">
+                            <span>
+                                <strong>{{ ucwords(str_replace('_', ' ', $request->request_type)) }}</strong> - 
+                                Prisoner #{{ $request->prisoner->id }} ({{ trim(implode(' ', array_filter([
+                                    $request->prisoner->first_name,
+                                    $request->prisoner->middle_name,
+                                    $request->prisoner->last_name
+                                ]))) }})
+                            </span>
+                            <span class="pims-status-tag {{ $request->status }}">
+                                {{ ucfirst($request->status) }}
+                            </span>
+                        </div>
+                        <span class="pims-activity-time">
+                            {{ $request->created_at->format('Y-m-d H:i') }}
                         </span>
-                        <span class="pims-status-tag pending">
-                            Pending
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        Today, 09:30 AM
-                    </span>
-                    <a href="{{ route('commisinerControler.evaluate_request') }}" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> Review
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-file-contract" style="color: var(--pims-success);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Early Release Request</strong> - Prisoner #982
-                        </span>
-                        <span class="pims-status-tag approved">
-                            Approved
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        Yesterday, 02:15 PM
-                    </span>
-                    <button class="pims-btn pims-btn-secondary" style="margin-left: 1rem;">
-                        <i class="fas fa-file-download"></i> Docs
-                    </button>
-                </li>
-                <li>
-                    <i class="fas fa-file-excel" style="color: var(--pims-danger);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Transfer Request</strong> - Prisoner #1135
-                        </span>
-                        <span class="pims-status-tag rejected">
-                            Rejected
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        Yesterday, 11:45 AM
-                    </span>
-                    <button class="pims-btn pims-btn-secondary" style="margin-left: 1rem;">
-                        <i class="fas fa-file-download"></i> Docs
-                    </button>
-                </li>
-                <li>
-                    <i class="fas fa-file-signature" style="color: var(--pims-info);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Release Order</strong> - Prisoner #876
-                        </span>
-                        <span class="pims-status-tag released">
-                            Released
-                        </span>
-                    </div>
-                    <span class="pims-activity-time">
-                        May 21, 2025
-                    </span>
-                    <a href="{{ route('commisioner.releasedprisoners') }}" class="pims-btn pims-btn-secondary" style="margin-left: 1rem;">
-                        <i class="fas fa-search"></i> Details
-                    </a>
-                </li>
-            </ul>
+                        
+                    </li>
+                    @endforeach
+                </ul>
+            @endif
         </div>
 
-        <!-- Monthly Releases Chart -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-line"></i> Monthly Prisoner Releases</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-releases-chart"></canvas>
-            </div>
-        </div>
+       
     </div>
 
     @include('includes.footer_js')
@@ -715,15 +623,20 @@
                 }, 1000);
             }
 
-            // Requests Status Chart (Pie)
+            // Request Status Distribution Chart (Pie)
             const requestsChart = new Chart(
                 document.getElementById('pims-requests-chart').getContext('2d'), 
                 {
                     type: 'pie',
                     data: {
-                        labels: ['Pending', 'Approved', 'Rejected', 'Processed'],
+                        labels: ['Pending', 'Approved', 'Rejected', 'Transferred'],
                         datasets: [{
-                            data: [17, 42, 8, 23],
+                            data: [
+                                {{ $requestStatusChartData['pending'] }},
+                                {{ $requestStatusChartData['approved'] }},
+                                {{ $requestStatusChartData['rejected'] }},
+                                {{ $requestStatusChartData['transferred'] }}
+                            ],
                             backgroundColor: [
                                 'rgba(255, 184, 108, 0.7)',
                                 'rgba(80, 250, 123, 0.7)',
@@ -760,22 +673,33 @@
                 }
             );
 
-            // Monthly Releases Chart (Line)
-            const releasesChart = new Chart(
-                document.getElementById('pims-releases-chart').getContext('2d'), 
+            // Prisoner Request Activity Chart (Line)
+            const requestActivityChart = new Chart(
+                document.getElementById('pims-request-activity-chart').getContext('2d'), 
                 {
                     type: 'line',
                     data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                        datasets: [{
-                            label: 'Prisoners Released',
-                            data: [18, 22, 25, 20, 23, 19, 21, 24, 27, 30, 28, 35],
-                            backgroundColor: 'rgba(100, 255, 218, 0.1)',
-                            borderColor: 'rgba(100, 255, 218, 1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }]
+                        labels: @json($requestActivityChartData['labels']),
+                        datasets: [
+                            {
+                                label: 'Release Requests',
+                                data: @json($requestActivityChartData['releaseRequests']),
+                                backgroundColor: 'rgba(80, 250, 123, 0.1)',
+                                borderColor: 'rgba(80, 250, 123, 1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                fill: true
+                            },
+                            {
+                                label: 'Transfer Requests',
+                                data: @json($requestActivityChartData['transferRequests']),
+                                backgroundColor: 'rgba(139, 233, 253, 0.1)',
+                                borderColor: 'rgba(139, 233, 253, 1)',
+                                borderWidth: 2,
+                                tension: 0.3,
+                                fill: true
+                            }
+                        ]
                     },
                     options: {
                         responsive: true,
@@ -799,7 +723,8 @@
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' }
+                                grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
+                                ticks: { stepSize: 1 }
                             },
                             x: {
                                 grid: { display: false, drawBorder: false }
@@ -811,11 +736,6 @@
                     }
                 }
             );
-
-            // Close alert
-            document.querySelector('.alert-close').addEventListener('click', () => {
-                document.querySelector('.pims-system-alert').style.display = 'none';
-            });
 
             // Search functionality for requests
             const searchInput = document.getElementById('pims-request-search');

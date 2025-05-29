@@ -462,23 +462,7 @@
                             </div>
                         </div>
                         
-                        <div class="pims-card-footer">
-                            @if(in_array($appointment->status, ['SCHEDULED', 'PENDING']))
-                                <button class="pims-btn pims-btn-primary pims-btn-sm pims-edit-appointment" 
-                                        data-id="{{ $appointment->id }}">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="pims-btn pims-btn-warning pims-btn-sm pims-cancel-appointment"
-                                        data-id="{{ $appointment->id }}">
-                                    <i class="fas fa-times"></i> Cancel
-                                </button>
-                            @endif
-                            
-                            <button class="pims-btn pims-btn-danger pims-btn-sm pims-delete-appointment"
-                                    data-id="{{ $appointment->id }}">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
+                        
                     </div>
                     @endforeach
                 @else

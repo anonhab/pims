@@ -11,6 +11,7 @@ use App\Models\Notification;
 use App\Models\Prison;
 use App\Models\Requests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -34,15 +35,96 @@ class CommisinerControler extends Controller
 
     public function dashboard()
     {
-        $data = [
-            'totalPrisoners' => Prisoner::count(),
-            'releasedThisMonth' => Prisoner::whereMonth('updated_at', now()->month)->count(),
-            'pendingRequests' => ModelsRequest::where('status', 'pending')->count(),
-        ];
+        $prisonId = session('prison_id');
 
-        return view('police_commisioner.dashboard', $data);
+        if (!$prisonId) {
+            Log::warning('No prison_id in session for dashboard');
+            return redirect()->route('home')->with('error', 'Prison ID not set.');
+        }
+
+        try {
+            // Dashboard Cards
+            $totalPrisoners = Prisoner::where('prison_id', $prisonId)->count();
+            $pendingRequests = Requests::where('prison_id', $prisonId)
+                ->where('status', 'pending')
+                ->count();
+            $releasedThisMonth = Prisoner::where('prison_id', $prisonId)
+                ->where('status', 'released')
+                ->whereMonth('release_date', now()->month)
+                ->whereYear('release_date', now()->year)
+                ->count();
+
+            // Recent Requests
+            $recentRequests = Requests::where('prison_id', $prisonId)
+                ->with(['prisoner', 'lawyer', 'user'])
+                ->orderBy('created_at', 'desc')
+                ->take(5)
+                ->get();
+
+            // Prisoner Request Activity Chart (Line)
+            $days = collect(range(6, 0))->map(function ($i) {
+                return now()->subDays($i)->format('D');
+            })->toArray();
+
+            $releaseRequestsData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
+                $date = now()->subDays($i)->startOfDay();
+                return Requests::where('prison_id', $prisonId)
+                    ->where('request_type', 'like', '%release%')
+                    ->whereDate('created_at', $date)
+                    ->count();
+            })->toArray();
+
+            $transferRequestsData = collect(range(6, 0))->map(function ($i) use ($prisonId) {
+                $date = now()->subDays($i)->startOfDay();
+                return Requests::where('prison_id', $prisonId)
+                    ->where('request_type', 'like', '%transfer%')
+                    ->whereDate('created_at', $date)
+                    ->count();
+            })->toArray();
+
+            $requestActivityChartData = [
+                'labels' => $days,
+                'releaseRequests' => $releaseRequestsData,
+                'transferRequests' => $transferRequestsData,
+            ];
+
+            // Request Status Distribution Chart (Pie)
+            $requestStatuses = Requests::where('prison_id', $prisonId)
+                ->select('status', DB::raw('count(*) as count'))
+                ->groupBy('status')
+                ->pluck('count', 'status')
+                ->toArray();
+
+            $requestStatusChartData = [
+                'pending' => $requestStatuses['pending'] ?? 0,
+                'approved' => $requestStatuses['approved'] ?? 0,
+                'rejected' => $requestStatuses['rejected'] ?? 0,
+                'transferred' => $requestStatuses['transferred'] ?? 0,
+            ];
+
+            Log::info('Dashboard data fetched', [
+                'prison_id' => $prisonId,
+                'total_prisoners' => $totalPrisoners,
+                'pending_requests' => $pendingRequests,
+                'released_this_month' => $releasedThisMonth,
+                'recent_requests_count' => $recentRequests->count(),
+                'request_activity_chart_data' => $requestActivityChartData,
+                'request_status_chart_data' => $requestStatusChartData,
+            ]);
+
+            return view('police_commisioner.dashboard', compact(
+                'totalPrisoners',
+                'pendingRequests',
+                'releasedThisMonth',
+                'recentRequests',
+                'requestActivityChartData',
+                'requestStatusChartData'
+            ));
+        } catch (\Exception $e) {
+            Log::error('Error fetching dashboard data', ['error' => $e->getMessage(), 'prison_id' => $prisonId]);
+            return redirect()->route('home')->with('error', 'Failed to load dashboard.');
+        }
     }
-
     public function release_prisoner()
     {
         $prisoners = Prisoner::where('prison_id', session('prison_id'))->paginate(9);
