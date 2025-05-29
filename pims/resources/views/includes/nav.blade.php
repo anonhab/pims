@@ -34,7 +34,7 @@
     position: fixed;
     width: 100%;
     top: 0;
-    z-index: 1000;
+    z-index: 2000;
     border-bottom: 2px solid var(--pims-accent);
 }
 
