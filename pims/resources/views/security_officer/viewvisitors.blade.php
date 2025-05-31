@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
     <style>
         :root {
-            --primary: #2c3e50;
-            --secondary: #34495e;
+            --primary:rgb(179, 63, 50);
+            --secondary: rgb(127, 25, 14);
             --accent: #3498db;
             --light: #ecf0f1;
             --danger: #e74c3c;
@@ -35,13 +35,13 @@
             background: #f5f7fa;
             color: var(--primary);
             font-size: var(--font-size-base);
-            line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
+         
         }
 
         .pims-app-container {
             display: flex;
             min-height: 100vh;
+            padding-top: 70px;
         }
 
         .pims-main-content {
@@ -365,9 +365,10 @@
     </style>
 </head>
 <body>
-    <div class="pims-app-container">
-        @include('includes.nav')
+     @include('includes.nav')
         @include('security_officer.menu')
+        
+    <div class="pims-app-container">
         <main class="pims-main-content">
             <div class="pims-content-container">
                 <div class="pims-page-header">

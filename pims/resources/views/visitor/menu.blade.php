@@ -56,8 +56,7 @@
                     </ul>
                 </li>
 
-                
-
+            
             <!-- Collapse Button -->
             <div class="sidebar-collapse-btn p-4 bg-gray-800 border-t border-gray-700 flex items-center cursor-pointer" id="sidebarCollapse">
                 <i class="fas fa-chevron-right mr-2"></i>
