@@ -20,6 +20,7 @@
         <!-- Sidebar Menu -->
         <aside class="sidebar-menu flex-1 overflow-y-auto">
             <ul class="sidebar-menu-list space-y-2 p-4">
+</br></br>
                 <!-- Dashboard -->
                 <li class="sidebar-menu-item">
                     <a href="{{ route('cadmin.dashboard') }}"  class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
