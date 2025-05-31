@@ -51,7 +51,7 @@
 
         .pims-content-area {
             flex: 1;
-
+            margin-left: var(--pims-sidebar-width);
             padding: 1.5rem;
             transition: var(--pims-transition);
         }
