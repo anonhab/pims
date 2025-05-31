@@ -46,7 +46,7 @@
             display: flex;
             min-height: 100vh;
             padding-top: var(--pims-nav-height);
-            padding-left: 10px;
+              padding-left: 10px;
         }
 
         .pims-content-area {
