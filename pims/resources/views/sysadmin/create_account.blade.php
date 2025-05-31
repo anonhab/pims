@@ -143,7 +143,7 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from {  transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -232,7 +232,7 @@
             position: absolute;
             left: 0;
             top: 0;
-            opacity: 0;
+            
             width: 100%;
             height: 100%;
             cursor: pointer;

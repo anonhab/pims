@@ -203,7 +203,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            opacity: 0;
+            
             transition: opacity 0.3s ease;
         }
 
@@ -291,7 +291,7 @@
             gap: 1rem;
             max-width: 350px;
             transform: translateY(20px);
-            opacity: 0;
+            
             transition: all 0.3s ease;
         }
 

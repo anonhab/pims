@@ -147,7 +147,7 @@
 }
 
 /* User Profile - Redesigned */
-.pims-user-profile {
+.pims-user-profile3 {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -158,11 +158,11 @@
     transition: all 0.3s ease;
 }
 
-.pims-user-profile:hover {
+.pims-user-profile3:hover {
     background-color: rgba(255, 255, 255, 0.1);
 }
 
-.pims-user-avatar {
+.pims-user-avatar3 {
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -171,22 +171,22 @@
     transition: transform 0.3s ease;
 }
 
-.pims-user-profile:hover .pims-user-avatar {
+.pims-user-profile3:hover .pims-user-avatar3 {
     transform: scale(1.05);
 }
 
-.pims-user-info {
+.pims-user-info3 {
     display: flex;
     flex-direction: column;
 }
 
-.pims-user-name {
+.pims-user-name3 {
     font-weight: 500;
     color: var(--pims-text);
     font-size: 0.9rem;
 }
 
-.pims-user-role {
+.pims-user-role3 {
     font-size: 0.7rem;
     color: var(--pims-text-light);
     text-transform: uppercase;
@@ -194,7 +194,7 @@
 }
 
 /* Dropdown Menu - Redesigned */
-.pims-dropdown-menu {
+.pims-dropdown-menu3 {
     position: absolute;
     top: 60px;
     right: 0;
@@ -204,19 +204,19 @@
     width: 250px;
     z-index: 1001;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    opacity: 0;
+    
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
 }
 
-.pims-dropdown-menu[aria-hidden="false"] {
+.pims-dropdown-menu3[aria-hidden="false"] {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
-.pims-dropdown-header {
+.pims-dropdown-header3 {
     padding: 15px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     display: flex;
@@ -225,18 +225,18 @@
     background-color: rgba(0, 0, 0, 0.1);
 }
 
-.pims-dropdown-header img {
+.pims-dropdown-header3 img {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     border: 2px solid var(--pims-accent);
 }
 
-.pims-dropdown-body {
+.pims-dropdown-body3 {
     padding: 10px 0;
 }
 
-.pims-dropdown-item {
+.pims-dropdown-item3 {
     padding: 12px 20px;
     color: var(--pims-text-light);
     display: flex;
@@ -248,19 +248,19 @@
     position: relative;
 }
 
-.pims-dropdown-item:hover {
+.pims-dropdown-item3:hover {
     background-color: rgba(255, 255, 255, 0.1);
     color: var(--pims-text);
     padding-left: 25px;
 }
 
-.pims-dropdown-item i {
+.pims-dropdown-item3 i {
     width: 20px;
     text-align: center;
     color: var(--pims-accent);
 }
 
-.pims-dropdown-item::after {
+.pims-dropdown-item3::after {
     content: '';
     position: absolute;
     left: 0;
@@ -271,7 +271,7 @@
     transition: width 0.3s ease;
 }
 
-.pims-dropdown-item:hover::after {
+.pims-dropdown-item3:hover::after {
     width: 100%;
 }
 
@@ -318,12 +318,12 @@
 }
 
 @keyframes pims-fadeIn {
-    from { opacity: 0; }
+    from {  }
     to { opacity: 1; }
 }
 
 @keyframes pims-scaleIn {
-    0% { transform: scale(0.95); opacity: 0; }
+    0% { transform: scale(0.95);  }
     100% { transform: scale(1); opacity: 1; }
 }
 
@@ -683,15 +683,14 @@
         font-size: 1.5rem;
     }
     
-    .pims-user-name {
+    .pims-user-name3 {
         display: none;
     }
     
-    .pims-user-role {
+    .pims-user-role3 {
         display: none;
     }
 }
-
 
 @media (max-width: 480px) {
     .pims-modal-content {
@@ -720,26 +719,26 @@
 }
 /* Styling for toast notifications */
 .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            padding: 12px 20px;
-            color: white;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            font-size: 14px;
-            z-index: 9999;
-            opacity: 0;
-            transition: opacity 0.3s ease, transform 0.3s ease;
-            transform: translateY(20px);
-            max-width: 300px;
-            word-wrap: break-word;
-        }
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .pims-logo-image {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    color: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    z-index: 9999;
+    
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px);
+    max-width: 300px;
+    word-wrap: break-word;
+}
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+.pims-logo-image {
     height: 50px; /* Adjust as needed */
     width: auto;
     transition: transform 0.3s ease;
@@ -757,10 +756,10 @@
         <div class="pims-navbar">
             <div class="pims-navbar-brand">
                 <div class="pims-logo">
-    <a href="{{ url('/') }}">
-        <img src="{{ asset('assets/img/logo.png') }}" alt="PIMS Logo" class="pims-logo-image">
-    </a>
-</div>
+                    <a href="{{ url('/') }}">
+                        <img src="{{ asset('assets/img/logo.png') }}" alt="PIMS Logo" class="pims-logo-image">
+                    </a>
+                </div>
                 @if(session('prison_id'))
                 <div class="pims-system-title">
                     <strong>{{ session('rolename') }}</strong> | {{ session('prison') }}
@@ -774,22 +773,22 @@
                     <span class="pims-notification-badge" id="notification-badge">0</span>
                 </button>
 
-                <div class="pims-user-profile" id="pimsUserProfile" tabindex="0" aria-haspopup="true" aria-expanded="false">
-                    <img src="{{ asset('storage/' . session('user_image')) }}" alt="User avatar" class="pims-user-avatar">
-                    <div class="pims-user-info">
-                        <span class="pims-user-name">{{ session('first_name') }}</span>
-                        <span class="pims-user-role">{{ session('rolename') }}</span>
+                <div class="pims-user-profile3" id="pimsUserProfile3" tabindex="0" aria-haspopup="true" aria-expanded="false">
+                    <img src="{{ asset('storage/' . session('user_image')) }}" alt="User avatar" class="pims-user-avatar3">
+                    <div class="pims-user-info3">
+                        <span class="pims-user-name3">{{ session('first_name') }}</span>
+                        <span class="pims-user-role3">{{ session('rolename') }}</span>
                     </div>
                     <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
 
-                    <div class="pims-dropdown-menu" id="pimsDropdownMenu" aria-hidden="true">
-                        <div class="pims-dropdown-header">
+                    <div class="pims-dropdown-menu3" id="pimsDropdownMenu3" aria-hidden="true">
+                        <div class="pims-dropdown-header3">
                             <img src="{{ asset('storage/' . session('user_image')) }}" alt="User avatar">
                         </div>
-                        <div class="pims-dropdown-body">
-                            <a href="#" class="pims-dropdown-item" id="pimsViewProfile"><i class="fas fa-user"></i> My Profile</a>
-                            <a href="#" class="pims-dropdown-item" id="pimsChangePassword"><i class="fas fa-key"></i> Change Password</a>
-                            <a href="{{ url('logout') }}" class="pims-dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        <div class="pims-dropdown-body3">
+                            <a href="#" class="pims-dropdown-item3" id="pimsViewProfile3"><i class="fas fa-user"></i> My Profile</a>
+                            <a href="#" class="pims-dropdown-item3" id="pimsChangePassword3"><i class="fas fa-key"></i> Change Password</a>
+                            <a href="{{ url('logout') }}" class="pims-dropdown-item3"><i class="fas fa-sign-out-alt"></i> Logout</a>
                         </div>
                     </div>
                 </div>
@@ -935,10 +934,10 @@ document.addEventListener('DOMContentLoaded', () => {
             closeBtn: $('pimsPasswordModal')?.querySelector('.pims-modal-close')
         },
         userMenu: {
-            user: $('pimsUserProfile'),
-            dropdown: $('pimsDropdownMenu'),
-            viewBtn: $('pimsViewProfile'),
-            passwordBtn: $('pimsChangePassword')
+            user: $('pimsUserProfile3'),
+            dropdown: $('pimsDropdownMenu3'),
+            viewBtn: $('pimsViewProfile3'),
+            passwordBtn: $('pimsChangePassword3')
         }
     };
 
@@ -957,7 +956,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 position: fixed; bottom: 20px; right: 20px; padding: 12px 20px;
                 background: ${color}; color: white; border-radius: 6px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.2); font-size: 14px;
-                opacity: 0; transition: opacity 0.3s; z-index: 9999;
+                 transition: opacity 0.3s; z-index: 9999;
             `
         });
         document.body.appendChild(toast);
@@ -1018,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 credentials: 'same-origin'
             });
 
-            const data = await res.json();
+            const delta = await res.json();
             const list = elements.notification.list;
             const badge = elements.notification.badge;
             const markAll = elements.notification.markAll;
@@ -1026,22 +1025,22 @@ document.addEventListener('DOMContentLoaded', () => {
             list.innerHTML = '';
             let unread = 0;
 
-            if (!res.ok || data.error) {
-                list.innerHTML = `<p class="unique-empty">${data.error || 'Failed to load notifications.'}</p>`;
+            if (!res.ok || delta.error) {
+                list.innerHTML = `<p class="unique-empty">${delta.error || 'Failed to load notifications.'}</p>`;
                 badge.style.display = 'none';
                 markAll.disabled = true;
-                showError(data.error || 'Error fetching notifications');
+                showError(delta.error || 'Error fetching notifications');
                 return;
             }
 
-            if (data.length === 0) {
+            if (delta.length === 0) {
                 list.innerHTML = '<p class="unique-empty">No notifications.</p>';
                 badge.style.display = 'none';
                 markAll.disabled = true;
                 return;
             }
 
-            for (const note of data) {
+            for (const note of delta) {
                 const item = document.createElement('div');
                 item.className = `unique-notification-item ${note.is_read ? 'read' : 'unread'}`;
                 item.innerHTML = `
@@ -1083,8 +1082,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({})
             });
 
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Error marking as read.');
+            const delta = await res.json();
+            if (!res.ok) throw new Error(delta.error || 'Error marking as read.');
 
             await fetchNotifications(true);
             showSuccess('All notifications marked as read.');
@@ -1203,7 +1202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         font-size: 15px;
         min-width: 280px;
         max-width: 100%;
-        opacity: 0;
+        
         transform: translateY(-20px);
         transition: opacity 0.4s ease, transform 0.4s ease;
         pointer-events: auto; /* Enable clicking on toast */
@@ -1250,7 +1249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const closeBtn = document.createElement('button');
         closeBtn.className = 'close-btn';
         closeBtn.setAttribute('aria-label', 'Close notification');
-        closeBtn.innerHTML = '&times;';
+        closeBtn.innerHTML = '×';
         closeBtn.onclick = () => {
             toast.classList.remove('show');
             setTimeout(() => toast.remove(), 300);
@@ -1291,10 +1290,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-
-    
 </script>
-
 
 </body>
 </html>

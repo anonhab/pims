@@ -251,7 +251,7 @@
             width: 100%;
             max-width: 500px;
             transform: scale(0.7);
-            opacity: 0;
+            
             transition: all 0.3s ease;
         }
 
@@ -297,7 +297,7 @@
         @keyframes slideIn {
             from {
                 transform: translateY(-20px);
-                opacity: 0;
+                
             }
             to {
                 transform: translateY(0);

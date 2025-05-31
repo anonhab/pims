@@ -202,7 +202,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            opacity: 0;
+            
             visibility: hidden;
             transition: var(--pims-transition);
         }

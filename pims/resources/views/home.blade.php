@@ -260,7 +260,7 @@
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+            from {  transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -305,7 +305,7 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
-            opacity: 0;
+            
             transition: opacity 0.3s ease;
         }
 
@@ -320,7 +320,7 @@
             color: white;
             font-weight: 500;
             font-size: 1.2rem;
-            opacity: 0;
+            
             transform: translateY(20px);
             transition: all 0.3s ease;
         }
@@ -876,7 +876,7 @@
 <section class="hero" id="home" style="background: linear-gradient(135deg, rgba(26, 37, 47, 0.95), rgba(255, 85, 85, 0.7)), url('{{ asset('assets/img/Federal_Police_Ethiopia.jpg') }}') no-repeat center center/cover;">
     <div class="container">
         <div class="hero-content">
-            <h1>Secure Prison Management for Central Ethiopia</h1>
+            <h1>Prison Information Management System for Central Ethiopia Region</h1>
             <p>Empowering correctional facilities with a robust, secure, and efficient Prison Information Management System.</p>
             
         </div>

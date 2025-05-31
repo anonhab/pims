@@ -12,7 +12,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        opacity: 0;
+        
         transition: opacity 0.5s ease, visibility 0.5s;
         visibility: hidden;
     }
@@ -160,7 +160,6 @@
         <!-- Text -->
         <div class="preloader-text">
             <div class="preloader-text-main">Loading PIMS System</div>
-            <div class="preloader-text-sub">Securing your data...</div>
         </div>
         
         <!-- Progress Bar -->

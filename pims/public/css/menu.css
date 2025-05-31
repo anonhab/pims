@@ -1,11 +1,15 @@
-/* ===== Government Professional Sidebar - Strict Collapse/Expand ===== */
+/* ===== PIMS-Themed Sidebar - Strict Collapse/Expand ===== */
 :root {
-  --sidebar-bg: #d35400; /* Main orange color */
-  --sidebar-accent: #a04000; /* Darker orange for accents */
-  --sidebar-text: #fef5e7; /* Soft off-white for readability */
-  --sidebar-hover: #e67e22; /* Lighter interactive orange */
-  --sidebar-border: #ba4a00; /* Border accent */
-  --sidebar-transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --pims-primary: #1a2a3a; /* Dark blue-gray */
+  --pims-secondary: #2c3e50; /* Darker blue-gray */
+  --pims-accent: #e74c3c; /* Vibrant red */
+  --pims-light: #ecf0f1; /* Light gray */
+  --pims-text: #ffffff; /* White text */
+  --pims-text-light: #bdc3c7; /* Light gray text */
+  --pims-success: #27ae60; /* Green */
+  --pims-danger: #e74c3c; /* Red */
+  --pims-card-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  --sidebar-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===== Core Sidebar Structure ===== */
@@ -14,14 +18,15 @@
   top: 0;
   left: 0;
   height: 100vh;
-  background: var(--sidebar-bg);
-  color: var(--sidebar-text);
+  background: linear-gradient(180deg, var(--pims-primary) 0%, var(--pims-secondary) 100%); /* Gradient for depth */
+  color: var(--pims-text);
   transition: var(--sidebar-transition);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4); /* Stronger shadow for depth */
+  backdrop-filter: blur(4px); /* Subtle glassmorphism effect */
 }
 
 /* ===== Collapsed State (Icons Only) ===== */
@@ -60,26 +65,29 @@
   display: flex;
   align-items: center;
   padding: 1.25rem 1rem;
-  background: var(--sidebar-accent);
-  border-bottom: 1px solid var(--sidebar-border);
+  background: var(--pims-accent); /* Use accent for branding */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2); /* Subtle border */
   min-height: 4.5rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: var(--sidebar-transition);
 }
 
 .sidebar-brand i {
   font-size: 1.75rem;
-  color: white;
+  color: var(--pims-text);
   min-width: 2rem;
   text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Subtle shadow for icons */
 }
 
 .sidebar-brand-text {
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif; /* Match PIMS font */
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   margin-left: 0.75rem;
   white-space: nowrap;
-  color: white;
+  color: var(--pims-text);
+  letter-spacing: 0.5px;
 }
 
 /* ===== Menu Items ===== */
@@ -100,15 +108,18 @@
   align-items: center;
   padding: 0.875rem 1rem;
   border-radius: 0.375rem;
-  color: var(--sidebar-text);
+  color: var(--pims-text-light);
   text-decoration: none;
   transition: var(--sidebar-transition);
   margin: 0.15rem 0;
+  position: relative;
 }
 
 .sidebar-menu-link:hover {
-  background: var(--sidebar-hover);
-  transform: translateX(3px);
+  background: rgba(231, 76, 60, 0.2); /* Semi-transparent accent on hover */
+  color: var(--pims-text);
+  transform: translateX(3px) scale(1.02); /* Slight scale for "pop" */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-menu-icon {
@@ -117,15 +128,17 @@
   justify-content: flex-start;
   width: 2rem;
   font-size: 1.1rem;
-  color: rgba(255,255,255,0.9);
+  color: var(--pims-accent); /* Match PIMS accent */
+  transition: var(--sidebar-transition);
 }
 
 .sidebar-menu-text {
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif; /* Match PIMS font */
   font-size: 0.95rem;
   font-weight: 500;
   margin-left: 0.75rem;
   white-space: nowrap;
+  color: var(--pims-text-light);
 }
 
 /* ===== Submenu System ===== */
@@ -150,15 +163,16 @@
   display: block;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
-  color: rgba(254, 245, 231, 0.8);
+  color: var(--pims-text-light);
   border-radius: 0.25rem;
   transition: var(--sidebar-transition);
 }
 
 .sidebar-submenu-link:hover {
-  background: rgba(230, 126, 34, 0.3);
-  color: white;
+  background: rgba(231, 76, 60, 0.3); /* Match hover with PIMS accent */
+  color: var(--pims-text);
   padding-left: 1.25rem;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 /* ===== Collapse Button ===== */
@@ -166,23 +180,29 @@
   display: flex;
   align-items: center;
   padding: 1rem;
-  background: var(--sidebar-accent);
-  border-top: 1px solid var(--sidebar-border);
+  background: var(--pims-secondary); /* Match PIMS secondary */
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   cursor: pointer;
   transition: var(--sidebar-transition);
-  color: white;
+  color: var(--pims-text);
 }
 
 .sidebar-collapse-btn:hover {
-  background: var(--sidebar-hover);
+  background: var(--pims-accent); /* Hover matches PIMS accent */
+  transform: translateY(-2px); /* Subtle lift effect */
 }
 
 .sidebar-collapse-btn i {
   font-size: 0.9rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-collapsed .sidebar-collapse-btn i {
+  transform: rotate(180deg); /* Rotate icon when collapsed */
 }
 
 .sidebar-collapse-btn span {
-  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Poppins', sans-serif; /* Match PIMS font */
   font-size: 0.9rem;
   margin-left: 0.75rem;
   white-space: nowrap;
@@ -200,9 +220,10 @@
 
 /* ===== Active Menu Item Styles ===== */
 .sidebar-menu-link.active {
-  background: var(--sidebar-hover);
+  background: var(--pims-accent); /* Match PIMS accent */
+  color: var(--pims-text);
   font-weight: 600;
-  box-shadow: inset 3px 0 0 white;
+  box-shadow: inset 3px 0 0 var(--pims-light); /* Light accent for active state */
 }
 
 /* ===== Preloader ===== */
@@ -212,7 +233,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(211, 84, 0, 0.95);
+  background: var(--pims-primary); /* Match PIMS primary */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -220,6 +241,7 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  animation: pims-fadeIn 0.3s ease; /* Match PIMS modal animation */
 }
 
 #preloader.active {
@@ -233,10 +255,10 @@
 }
 
 .sidebar-menu::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.3);
+  background: var(--pims-accent); /* Match PIMS accent */
   border-radius: 3px;
 }
 
 .sidebar-menu::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.5);
+  background: var(--pims-danger); /* Slightly darker red on hover */
 }

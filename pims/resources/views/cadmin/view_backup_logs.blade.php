@@ -213,7 +213,7 @@
             max-height: 90vh;
             overflow-y: auto;
             transform: scale(0.7);
-            opacity: 0;
+            
             transition: all 0.3s ease;
         }
 

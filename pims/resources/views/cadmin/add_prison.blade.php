@@ -243,7 +243,7 @@
             border-radius: var(--pims-border-radius);
             box-shadow: var(--pims-card-shadow);
             transform: translateY(100px);
-            opacity: 0;
+            
             transition: all 0.3s ease;
             z-index: 10000;
             max-width: 350px;

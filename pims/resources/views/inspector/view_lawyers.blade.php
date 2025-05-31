@@ -256,7 +256,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            opacity: 0;
+            
             transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
             backdrop-filter: blur(0px);
             overflow-y: auto;
