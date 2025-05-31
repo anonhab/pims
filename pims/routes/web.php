@@ -92,6 +92,8 @@ Route::get('/chart-data', [cAccountController::class, 'getChartData']);
 Route::get('/login', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout']);
+Route::post('/prisons', [cAccountController::class, 'prisonstore'])->name('prison.store');
+
 Route::middleware('role:3')->group(function () {
     Route::resource('accounts', cAccountController::class);
     Route::get('/dashboard', [cAccountController::class, 'dashboard'])->name('cadmin.dashboard');
@@ -99,7 +101,6 @@ Route::middleware('role:3')->group(function () {
     Route::resource('accounts', cAccountController::class);
     Route::post('/accounts', [RoleController::class, 'store'])->name('accounts.store');
     Route::get('/prisonadd', [cAccountController::class, 'prisonadd'])->name('prison.add');
-    Route::post('/prisons', [cAccountController::class, 'prisonstore'])->name('prison.store');
     Route::get('/prisonsview', [cAccountController::class, 'prisonview'])->name('prison.view');
     Route::get('/prisonassign', [cAccountController::class, 'prisonassign'])->name('prison.assign');
     Route::get('/viewrequests', [cAccountController::class, 'view_requests'])->name('view.requests');

@@ -65,7 +65,7 @@ class NotificationController extends Controller
             // General case for other users
             $notifications = Notification::query()
                 ->where('recipient_id', $userId)
-                ->where('recipient_role', $roleId) // Adjust if needed
+                ->where('role_id', $roleId) // Adjust if needed
                 ->where('prison_id', $prisonId)
                 ->orderByDesc('created_at')
                 ->limit(50)

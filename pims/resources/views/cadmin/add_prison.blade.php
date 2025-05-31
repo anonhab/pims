@@ -314,14 +314,57 @@
                             <div class="pims-form-group">
                                 <label for="location" class="pims-form-label">Location</label>
                                 <div class="pims-select">
-                                    <select id="location" name="location" class="pims-form-control" required>
-                                        <option value="">Select Location</option>
-                                        <option value="Worabe">Worabe</option>
-                                        <option value="silte">Silte</option>
-                                        <option value="kembat">Kembat</option>
-                                        <option value="gurage">Gurage</option>
-                                    </select>
-                                </div>
+    <select id="location" name="location" class="pims-form-control" required>
+        <option value="">Select Location</option>
+
+        <!-- Hadiya Zone -->
+        <optgroup label="Hadiya Zone">
+            <option value="Central Ethiopia, Hosaena">Hosaena (Capital)</option>
+            <option value="Central Ethiopia, Shone">Shone</option>
+            <option value="Central Ethiopia, Gimbichu">Gimbichu</option>
+            <option value="Central Ethiopia, Homecho">Homecho</option>
+        </optgroup>
+
+        <!-- Kembata Tembaro Zone -->
+        <optgroup label="Kembata Tembaro Zone">
+            <option value="Central Ethiopia, Durame">Durame (Capital)</option>
+            <option value="Central Ethiopia, Damboya">Damboya</option>
+            <option value="Central Ethiopia, Angacha">Angacha</option>
+            <option value="Central Ethiopia, Kedida Gamela">Kedida Gamela</option>
+        </optgroup>
+
+        <!-- Gurage Zone -->
+        <optgroup label="Gurage Zone">
+            <option value="Central Ethiopia, Butajira">Butajira (Major Town)</option>
+            <option value="Central Ethiopia, Wolkite">Wolkite (Administrative Center)</option>
+            <option value="Central Ethiopia, Emdibir">Emdibir</option>
+            <option value="Central Ethiopia, Agenna">Agenna</option>
+        </optgroup>
+
+        <!-- Silte Zone -->
+        <optgroup label="Silte Zone">
+            <option value="Central Ethiopia, Worabe">Worabe (Capital)</option>
+            <option value="Central Ethiopia, Kibet">Kibet</option>
+            <option value="Central Ethiopia, Kutere">Kutere</option>
+            <option value="Central Ethiopia, Qebena">Qebena</option>
+        </optgroup>
+
+        <!-- Halaba Zone -->
+        <optgroup label="Halaba Zone">
+            <option value="Central Ethiopia, Alaba Kulito">Alaba Kulito (Capital)</option>
+            <option value="Central Ethiopia, Besheno">Besheno</option>
+            <option value="Central Ethiopia, Dore Bafeno">Dore Bafeno</option>
+        </optgroup>
+
+        <!-- Special Woredas -->
+        <optgroup label="Special Woredas">
+            <option value="Central Ethiopia, Yem Special Woreda">Fofa (Yem Special Woreda Capital)</option>
+            <option value="Central Ethiopia, Alaba Special Woreda">Alaba Kulito (Alaba Special)</option>
+            <option value="Central Ethiopia, Siltie Special Woreda">Worabe (Silte Special)</option>
+        </optgroup>
+    </select>
+</div>
+
                                 <small class="pims-form-help">Select the region where the prison is located</small>
                             </div>
 
