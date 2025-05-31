@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    @include('includes.head')
+ 
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,7 @@
     
     <style>
         :root {
-            --pims-primary: #1a2a3a;
+            --pims-primary: #1a2c3a;
             --pims-secondary: #2c3e50;
             --pims-accent: #2980b9;
             --pims-danger: #c0392b;
@@ -156,6 +155,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
         }
 
         /* Button Styles */
@@ -256,7 +257,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            
             transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
             backdrop-filter: blur(0px);
             overflow-y: auto;
@@ -359,6 +359,14 @@
             grid-column: 1 / -1;
         }
 
+        /* Error Text */
+        .pims-error-text {
+            color: var(--pims-danger);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .pims-sidebar {
@@ -459,7 +467,11 @@
                                             data-dob="{{ $lawyer->date_of_birth }}">
                                             <i class="fas fa-edit"></i> Edit
                                         </button>
-
+                                        <button class="pims-btn pims-btn-secondary pims-btn-sm pims-change-password-lawyer"
+                                            data-id="{{ $lawyer->lawyer_id }}"
+                                            data-name="{{ $lawyer->first_name }} {{ $lawyer->last_name }}">
+                                            <i class="fas fa-key"></i> Change Password
+                                        </button>
                                         @if(isset($lawyer->lawyer_id))
                                         <form action="{{ route('lawyers.destroy', $lawyer->lawyer_id) }}" method="POST" class="pims-delete-form">
                                             @csrf
@@ -487,7 +499,7 @@
                 <p class="pims-modal-card-title">
                     <i class="fas fa-user-edit"></i> Edit Lawyer
                 </p>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pims-edit-lawyer-modal')">&times;</button>
+                <button class="pims-modal-close" onclick="pimsCloseModal('pims-edit-lawyer-modal')">×</button>
             </header>
             <section class="pims-modal-card-body">
                 <form id="pims-edit-lawyer-form" method="POST">
@@ -547,6 +559,42 @@
         </div>
     </div>
 
+    <!-- Change Password Modal -->
+    <div class="pims-modal" id="pims-change-password-modal">
+        <div class="pims-modal-card" style="max-width: 400px;">
+            <header class="pims-modal-card-head">
+                <p class="pims-modal-card-title">
+                    <i class="fas fa-key"></i> Change Password
+                </p>
+                <button class="pims-modal-close" onclick="pimsCloseModal('pims-change-password-modal')">×</button>
+            </header>
+            <section class="pims-modal-card-body">
+                <form id="pims-change-password-form" method="POST">
+                    @csrf
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="lawyer_id" id="pims-change-password-lawyer-id">
+                    <div class="pims-form-group">
+                        <label class="pims-form-label">New Password</label>
+                        <input class="pims-form-control" type="password" name="new_password" id="pims-new-password" required minlength="8">
+                    </div>
+                    <div class="pims-form-group">
+                        <label class="pims-form-label">Confirm Password</label>
+                        <input class="pims-form-control" type="password" name="confirm_password" id="pims-confirm-password" required minlength="8">
+                    </div>
+                    <p class="pims-error-text" id="pims-password-error">Passwords do not match or are too short (minimum 8 characters).</p>
+                </form>
+            </section>
+            <footer class="pims-modal-card-foot">
+                <button class="pims-btn pims-btn-secondary" onclick="pimsCloseModal('pims-change-password-modal')">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button type="submit" form="pims-change-password-form" class="pims-btn pims-btn-primary">
+                    <i class="fas fa-save"></i> Save Password
+                </button>
+            </footer>
+        </div>
+    </div>
+
     <!-- Delete Confirmation Modal -->
     <div class="pims-modal" id="pims-confirm-delete-modal">
         <div class="pims-modal-card" style="max-width: 400px;">
@@ -554,7 +602,7 @@
                 <p class="pims-modal-card-title">
                     <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
                 </p>
-                <button class="pims-modal-close" onclick="pimsCloseModal('pims-confirm-delete-modal')">&times;</button>
+                <button class="pims-modal-close" onclick="pimsCloseModal('pims-confirm-delete-modal')">×</button>
             </header>
             <section class="pims-modal-card-body">
                 <div style="text-align: center;">
@@ -583,8 +631,15 @@
 
     @include('includes.footer_js')
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            if (!csrfToken) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'CSRF token missing. Please check application setup.' });
+                return;
+            }
+
             // Initialize edit buttons
             document.querySelectorAll('.pims-edit-lawyer').forEach(button => {
                 button.addEventListener('click', function() {
@@ -605,11 +660,23 @@
                 });
             });
 
+            // Initialize change password buttons
+            document.querySelectorAll('.pims-change-password-lawyer').forEach(button => {
+                button.addEventListener('click', function() {
+                    const lawyerId = this.getAttribute('data-id');
+                    document.getElementById('pims-change-password-lawyer-id').value = lawyerId;
+                    document.getElementById('pims-new-password').value = '';
+                    document.getElementById('pims-confirm-password').value = '';
+                    document.getElementById('pims-password-error').style.display = 'none';
+                    document.getElementById('pims-change-password-form').action = `/lawyers/change-password/${lawyerId}`;
+                    document.getElementById('pims-change-password-modal').classList.add('is-active');
+                });
+            });
+
             // Initialize delete buttons
             document.querySelectorAll('.pims-delete-form').forEach(form => {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    
                     document.getElementById('pims-confirm-delete-form').action = this.action;
                     document.getElementById('pims-confirm-delete-modal').classList.add('is-active');
                 });
@@ -619,7 +686,6 @@
             document.getElementById('pims-search-lawyer').addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 const lawyerCards = document.querySelectorAll('.pims-lawyer-card');
-
                 lawyerCards.forEach(card => {
                     const cardText = card.textContent.toLowerCase();
                     card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
@@ -631,17 +697,156 @@
                 window.location.reload();
             });
 
-            // Handle form submissions
-            document.getElementById('pims-edit-lawyer-form').addEventListener('submit', function(e) {
-                const submitBtn = this.querySelector('button[type="submit"]');
+            // Handle edit form submission
+            document.getElementById('pims-edit-lawyer-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const form = this;
+                const submitBtn = form.querySelector('button[type="submit"]');
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
                 submitBtn.disabled = true;
+
+                try {
+                    const formData = new FormData(form);
+                    formData.delete('_method');
+                    const data = Object.fromEntries(formData);
+                    data._method = 'PUT';
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        pimsCloseModal('pims-edit-lawyer-modal');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Lawyer updated successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    } else {
+                        throw new Error(result.message || 'Failed to update lawyer');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Update operation not supported. Please ensure backend supports PUT method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                } finally {
+                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+                    submitBtn.disabled = false;
+                }
             });
 
-            document.getElementById('pims-confirm-delete-form').addEventListener('submit', function(e) {
-                const submitBtn = this.querySelector('button[type="submit"]');
+            // Handle change password form submission
+            document.getElementById('pims-change-password-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const form = this;
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const newPassword = document.getElementById('pims-new-password').value;
+                const confirmPassword = document.getElementById('pims-confirm-password').value;
+                const passwordError = document.getElementById('pims-password-error');
+
+                if (newPassword.length < 8 || newPassword !== confirmPassword) {
+                    passwordError.style.display = 'block';
+                    return;
+                }
+
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                submitBtn.disabled = true;
+
+                try {
+                    const formData = new FormData(form);
+                    formData.delete('_method');
+                    const data = Object.fromEntries(formData);
+                    data._method = 'PUT';
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        pimsCloseModal('pims-change-password-modal');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Password updated successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    } else {
+                        throw new Error(result.message || 'Failed to update password');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Password change operation not supported. Please ensure backend supports PUT method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                } finally {
+                    submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Password';
+                    submitBtn.disabled = false;
+                }
+            });
+
+            // Handle delete form submission
+            document.getElementById('pims-confirm-delete-form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const form = this;
+                const submitBtn = form.querySelector('button[type="submit"]');
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
                 submitBtn.disabled = true;
+
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ _method: 'DELETE' })
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        pimsCloseModal('pims-confirm-delete-modal');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Lawyer deleted successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    } else {
+                        throw new Error(result.message || 'Failed to delete lawyer');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Delete operation not supported. Please ensure backend supports DELETE method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                } finally {
+                    submitBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
+                    submitBtn.disabled = false;
+                }
             });
         });
 

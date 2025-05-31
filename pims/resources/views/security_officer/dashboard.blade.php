@@ -3,81 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>PIMS - Security Dashboard</title>
-    
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Chart.js for data visualization -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+    <link href="{{ asset('css/menu.css') }}" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --pims-primary: #0a192f; /* Navy blue */
-            --pims-secondary: #172a45; /* Darker navy */
-            --pims-accent: #64ffda; /* Teal accent */
-            --pims-danger: #ff5555; /* Vibrant red */
-            --pims-success: #50fa7b; /* Vibrant green */
-            --pims-warning: #ffb86c; /* Soft orange */
-            --pims-info: #8be9fd; /* Light blue */
-            --pims-text-light: #f8f8f2; /* Off white */
-            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-primary: #0a192f;
+            --pims-secondary: #172a45;
+            --pims-accent: #64ffda;
+            --pims-danger: #ff5555;
+            --pims-success: #50fa7b;
+            --pims-warning: #ffb86c;
+            --pims-text-light: #f8f8f2;
+            --pims-text-dark: #282a36;
             --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
             --pims-nav-height: 70px;
             --pims-sidebar-width: 280px;
-            --pims-transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --pims-transition: all 0.4s ease;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: #f5f7fa;
             color: var(--pims-text-dark);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
             line-height: 1.6;
         }
 
-        /* Main Content Area */
-        #pims-page-content {
-            margin-left: 0;
-            padding: 2rem;
-            padding-left: calc(var(--pims-sidebar-width) + 2rem);
-            min-height: calc(100vh - var(--pims-nav-height));
-            transition: var(--pims-transition);
-            background-color: #f5f7fa;
-            padding-top: 70px;
+        .pims-app-container {
+            display: flex;
+            min-height: 100vh;
         }
 
-        /* Dashboard Cards */
-        .pims-dashboard-card {
+        #pims-panel-container {
+            margin-left: var(--pims-sidebar-width);
+            padding: 1.5rem;
+            transition: var(--pims-transition);
+            background-color: #f5f7fa;
+            width: 100%;
+        }
+
+        .pims-card {
             background: white;
             border-radius: var(--pims-border-radius);
             box-shadow: var(--pims-card-shadow);
-            transition: var(--pims-transition);
-            height: 100%;
-            border-left: 4px solid var(--pims-accent);
-            position: relative;
-            overflow: hidden;
             padding: 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #f9f9f9 100%);
-            border: 1px solid rgba(0, 0, 0, 0.03);
+            border-left: 4px solid var(--pims-accent);
+            margin-bottom: 1.5rem;
         }
 
-        .pims-dashboard-card:hover {
+        .pims-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .pims-dashboard-card .pims-card-icon {
+        .pims-card-icon {
             font-size: 2rem;
-            margin-bottom: 1rem;
             color: var(--pims-accent);
             background: rgba(100, 255, 218, 0.1);
             width: 60px;
@@ -88,262 +77,94 @@
             justify-content: center;
         }
 
-        .pims-dashboard-card h3 {
+        .pims-card h3 {
             font-size: 1.1rem;
             font-weight: 600;
-            margin-bottom: 0.75rem;
             color: var(--pims-primary);
-            letter-spacing: 0.5px;
         }
 
-        .pims-dashboard-card p {
+        .pims-card p {
             font-size: 2rem;
             font-weight: 700;
             color: var(--pims-secondary);
-            margin-bottom: 0;
-            letter-spacing: -0.5px;
-            font-family: 'Inter', sans-serif;
         }
 
-        .pims-card-footer {
-            font-size: 0.8rem;
-            color: #7f8c8d;
-            margin-top: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding-top: 0.5rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        .pims-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
 
-        /* Stats Box */
         .pims-stats-box {
-            background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
+            background: white;
             border-radius: var(--pims-border-radius);
             padding: 2rem;
             box-shadow: var(--pims-card-shadow);
             margin-top: 2rem;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            position: relative;
-            overflow: hidden;
-            transition: var(--pims-transition);
-        }
-
-        .pims-stats-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
         }
 
         .pims-stats-box h2 {
             font-size: 1.4rem;
             font-weight: 700;
-            margin-bottom: 1.5rem;
             color: var(--pims-primary);
-            padding-bottom: 0.75rem;
             display: flex;
             align-items: center;
             gap: 12px;
-            position: relative;
-            border-bottom: 2px solid rgba(100, 255, 218, 0.2);
+            margin-bottom: 1.5rem;
         }
 
-        .pims-stats-box h2 i {
-            color: var(--pims-accent);
-            background: linear-gradient(135deg, rgba(100, 255, 218, 0.15) 0%, rgba(100, 255, 218, 0.05) 100%);
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .pims-stats-box h2:hover i {
-            transform: scale(1.1);
-        }
-
-        /* Recent Activity List */
         .pims-stats-box ul {
             list-style: none;
             padding: 0;
-            margin: 0;
         }
 
         .pims-stats-box li {
-            padding: 1.25rem 0;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
             display: flex;
             align-items: center;
             gap: 1rem;
-            transition: background 0.3s ease, transform 0.2s ease;
-            position: relative;
-            border-radius: 6px;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
         }
 
-        .pims-stats-box li:hover {
-            background: linear-gradient(90deg, rgba(100, 255, 218, 0.05) 0%, rgba(100, 255, 218, 0.02) 100%);
-            transform: translateX(5px);
-        }
-
-        .pims-stats-box li:last-child {
-            border-bottom: none;
-        }
-
-        .pims-stats-box li::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 4px;
-            height: 60%;
-            background: var(--pims-accent);
-            border-radius: 0 4px 4px 0;
-            opacity: 0.2;
-            transition: opacity 0.3s ease;
-        }
-
-        .pims-stats-box li:hover::before {
-            opacity: 0.8;
-        }
-
-        .pims-stats-box li span {
-            font-weight: 600;
-            color: var(--pims-primary);
-            font-size: 0.95rem;
-        }
-
-        .pims-stats-box li .pims-activity-time {
-            font-size: 0.85rem;
-            color: #6b7280;
-            font-family: 'Roboto Mono', monospace;
-            background: rgba(0, 0, 0, 0.02);
-            padding: 0.25rem 0.75rem;
-            border-radius: 12px;
-            margin-left: auto;
-        }
-
-        /* Grid Layout */
-        .pims-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        /* Section Title */
-        .pims-section-title {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            color: var(--pims-primary);
-            position: relative;
-            padding-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            font-family: 'Inter', sans-serif;
-        }
-
-        .pims-section-title::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, var(--pims-accent) 0%, rgba(100, 255, 218, 0) 100%);
-            border-radius: 2px;
-        }
-
-        .pims-section-title i {
-            margin-right: 12px;
-            color: var(--pims-accent);
-            background: rgba(100, 255, 218, 0.1);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Status Tags */
         .pims-status-tag {
             font-size: 0.75rem;
             padding: 0.3rem 0.75rem;
             border-radius: 20px;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: inline-block;
         }
 
-        .pims-status-tag.approved {
-            background-color: rgba(80, 250, 123, 0.1);
-            color: var(--pims-success);
-        }
+        .pims-status-tag.approved { background-color: rgba(80, 250, 123, 0.1); color: var(--pims-success); }
+        .pims-status-tag.pending { background-color: rgba(255, 184, 108, 0.1); color: var(--pims-warning); }
+        .pims-status-tag.rejected { background-color: rgba(255, 85, 85, 0.1); color: var(--pims-danger); }
 
-        .pims-status-tag.rejected {
-            background-color: rgba(255, 85, 85, 0.1);
-            color: var(--pims-danger);
-        }
-
-        .pims-status-tag.pending {
-            background-color: rgba(255, 184, 108, 0.1);
-            color: var(--pims-warning);
-        }
-
-        /* Button Styles */
         .pims-btn {
             padding: 0.5rem 1rem;
             border-radius: var(--pims-border-radius);
             font-weight: 600;
             cursor: pointer;
-            transition: var(--pims-transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
             border: none;
-            font-size: 0.9rem;
+            transition: var(--pims-transition);
         }
 
         .pims-btn-primary {
             background-color: var(--pims-accent);
             color: var(--pims-primary);
-            font-weight: 700;
         }
 
         .pims-btn-primary:hover {
             background-color: #52e8ca;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(100, 255, 218, 0.3);
         }
 
-        /* Search Box */
         .pims-search-box {
             position: relative;
-            flex-grow: 1;
         }
 
         .pims-search-box input {
-            width: 100%;
             padding: 0.75rem 1rem 0.75rem 2.5rem;
             border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: var(--pims-border-radius);
-            font-size: 0.9rem;
-            transition: var(--pims-transition);
-            background-color: rgba(255, 255, 255, 0.8);
-        }
-
-        .pims-search-box input:focus {
-            outline: none;
-            border-color: var(--pims-accent);
-            box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.2);
+            width: 100%;
         }
 
         .pims-search-box i {
@@ -354,314 +175,427 @@
             color: var(--pims-accent);
         }
 
-        /* Notification Styles */
-        .pims-notification {
-            padding: 1rem 1.5rem;
-            border-radius: var(--pims-border-radius);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            box-shadow: var(--pims-card-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .pims-notification-success {
-            background: rgba(80, 250, 123, 0.1);
-            border-left: 4px solid var(--pims-success);
-        }
-
-        .pims-notification-error {
-            background: rgba(255, 85, 85, 0.1);
-            border-left: 4px solid var(--pims-danger);
-        }
-
-        .pims-notification i {
-            font-size: 1.2rem;
-        }
-
-        .pims-notification-success i {
-            color: var(--pims-success);
-        }
-
-        .pims-notification-error i {
-            color: var(--pims-danger);
-        }
-
-        /* Preloader */
-        .pims-preloader {
+        .pims-modal {
+            display: none;
             position: fixed;
-            top: 0;
+            z-index: 1001;
             left: 0;
+            top: 0;
             width: 100%;
             height: 100%;
-            background: var(--pims-primary);
+            background-color: rgba(0, 0, 0, 0.7);
+            transition: opacity 0.3s ease;
+        }
+
+        .pims-modal.is-active {
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            opacity: 1;
         }
 
-        .pims-preloader i {
-            color: var(--pims-accent);
-            font-size: 2rem;
-            animation: spin 1s linear infinite;
+        .pims-modal-card {
+            background: white;
+            border-radius: var(--pims-border-radius);
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .pims-modal-card-head {
+            padding: 1.5rem;
+            background: rgba(100, 255, 218, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* Responsive Adjustments */
-        @media (max-width: 1200px) {
-            .pims-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            }
+        .pims-modal-close {
+            background: none;
+            border: none;
+            color: var(--pims-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
         }
 
-        @media (max-width: 992px) {
-            #pims-page-content {
-                padding-left: 2rem;
-            }
+        .pims-modal-card-body {
+            padding: 2rem;
         }
+
+        .pims-modal-card-foot {
+            padding: 1.25rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .pims-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .pims-form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .pims-form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: var(--pims-border-radius);
+        }
+
+        .pims-notification {
+            padding: 1rem;
+            border-radius: var(--pims-border-radius);
+            margin-bottom: 1rem;
+        }
+
+        .pims-notification-success { background: rgba(80, 250, 123, 0.1); border-left: 4px solid var(--pims-success); }
+        .pims-notification-error { background: rgba(255, 85, 85, 0.1); border-left: 4px solid var(--pims-danger); }
 
         @media (max-width: 768px) {
+            #pims-panel-container {
+                margin-left: 0;
+                padding: 1rem;
+            }
             .pims-grid {
                 grid-template-columns: 1fr;
-            }
-
-            .pims-section-title {
-                font-size: 1.5rem;
-            }
-
-            .pims-dashboard-card p {
-                font-size: 1.75rem;
-            }
-
-            .pims-stats-box {
-                padding: 1.5rem;
-            }
-
-            .pims-stats-box h2 {
-                font-size: 1.25rem;
             }
         }
     </style>
 </head>
 <body>
     @include('includes.nav')
-
     <div class="pims-app-container">
         @include('security_officer.menu')
 
-    <!-- Main Content -->
-    <div id="pims-page-content">
-        <h1 class="pims-section-title">
-            <i class="fas fa-shield-alt"></i> Security Dashboard
-        </h1>
+        <div id="pims-panel-container">
+            <h1 class="pims-section-title"><i class="fas fa-shield-alt"></i> Security Dashboard</h1>
 
-        <!-- Notifications -->
-        <div class="pims-notification pims-notification-success">
-            <i class="fas fa-check-circle"></i>
-            <div>System updated successfully.</div>
+            <!-- Notifications -->
+            @if(session('success'))
+            <div class="pims-notification pims-notification-success">
+                <i class="fas fa-check-circle"></i> {{ session('success') }}
+            </div>
+            @endif
+            @if($errors->any())
+            <div class="pims-notification pims-notification-error">
+                <i class="fas fa-exclamation-circle"></i> {{ $errors->first() }}
+            </div>
+            @endif
+
+            <!-- Dashboard Cards -->
+            <div class="pims-grid">
+                <div class="pims-card">
+                    <div class="pims-card-icon"><i class="fas fa-users"></i></div>
+                    <h3>Visitors Today</h3>
+                    <p>{{ $visitorsToday ?? 0 }}</p>
+                    <div class="pims-card-footer"><i class="fas fa-user-plus"></i> Currently in facility</div>
+                </div>
+                <div class="pims-card">
+                    <div class="pims-card-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Pending Approvals</h3>
+                    <p>{{ $pendingApprovals ?? 0 }}</p>
+                    <div class="pims-card-footer"><i class="fas fa-exclamation-circle"></i> Require review</div>
+                </div>
+               
+                <div class="pims-card">
+                    <div class="pims-card-icon"><i class="fas fa-user-md"></i></div>
+                    <h3>Pending Medical Appointments</h3>
+                    <p>{{ $pendingMedicalAppointments ?? 0 }}</p>
+                    <div class="pims-card-footer"><i class="fas fa-stethoscope"></i> Awaiting approval</div>
+                </div>
+                <div class="pims-card">
+                    <div class="pims-card-icon"><i class="fas fa-briefcase"></i></div>
+                    <h3>Pending Lawyer Appointments</h3>
+                    <p>{{ $pendingLawyerAppointments ?? 0 }}</p>
+                    <div class="pims-card-footer"><i class="fas fa-gavel"></i> Awaiting approval</div>
+                </div>
+                <div class="pims-card">
+                    <div class="pims-card-icon"><i class="fas fa-user-friends"></i></div>
+                    <h3>Pending Visitor Appointments</h3>
+                    <p>{{ $pendingVisitorAppointments ?? 0 }}</p>
+                    <div class="pims-card-footer"><i class="fas fa-user-check"></i> Awaiting approval</div>
+                </div>
+                <div class="pims-card">
+                    <div class="pims-card-icon"><i class="fas fa-user"></i></div>
+                    <h3>Total Visitors</h3>
+                    <p>{{ $totalVisitors ?? 0 }}</p>
+                    <div class="pims-card-footer"><i class="fas fa-users"></i> Registered visitors</div>
+                </div>
+            </div>
+
+            <!-- Recent Visitors -->
+            <div class="pims-stats-box">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2><i class="fas fa-history"></i> Recent Visitors</h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <div class="pims-search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="pims-table-search" placeholder="Search visitors...">
+                        </div>
+                        <button class="pims-btn pims-btn-primary" id="pims-table-reload"><i class="fas fa-sync-alt"></i> Reload</button>
+                        <button   id="pims-verify-prisoner"></button>
+                    </div>
+                </div>
+                <ul>
+                @forelse($visitors as $visitor)
+    <li>
+        <i class="fas fa-user" style="color: var(--pims-accent);"></i>
+        <div style="flex-grow: 1;">
+            @php
+                $visit = $visitor->visits->first();
+            @endphp
+
+            <span>
+                <strong>{{ $visitor->first_name }} {{ $visitor->last_name }}</strong> - Visiting Prisoner:
+                {{ $visit->prisoner_firstname }} {{ $visit->prisoner_middlename ?? '' }} {{ $visit->prisoner_lastname }}
+            </span>
+
+            <span class="pims-status-tag {{ strtolower($visit->status ?? 'pending') }}">
+                {{ $visit->status ?? 'Pending' }}
+            </span>
+        </div>
+        <span class="pims-activity-time">{{ $visit->visit_time ?? now()->format('Y-m-d H:i') }}</span>
+        <button class="pims-btn pims-btn-primary pims-view-visitor" data-id="{{ $visitor->id }}"><i class="fas fa-eye"></i> View</button>
+    </li>
+@empty
+    <li>No recent visitors found.</li>
+@endforelse
+
+                </ul>
+                <canvas id="visitorTrendsChart" style="margin-top: 2rem; max-height: 400px;"></canvas>
+            </div>
         </div>
 
-        <!-- Dashboard Cards -->
-        <div class="pims-grid">
-            <!-- Total Visitors Today -->
-            <div class="pims-dashboard-card">
-                <div class="pims-card-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <h3>Visitors Today</h3>
-                <p>25</p>
-                <div class="pims-card-footer">
-                    <i class="fas fa-user-plus" style="color: var(--pims-accent);"></i> Currently in facility
-                </div>
-            </div>
-
-            <!-- Pending Approvals -->
-            <div class="pims-dashboard-card">
-                <div class="pims-card-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <h3>Pending Approvals</h3>
-                <p>8</p>
-                <div class="pims-card-footer">
-                    <i class="fas fa-exclamation-circle" style="color: var(--pims-warning);"></i> Require review
-                </div>
-            </div>
-
-            <!-- Security Alerts -->
-            <div class="pims-dashboard-card">
-                <div class="pims-card-icon">
-                    <i class="fas fa-exclamation-triangle"></i>
-                </div>
-                <h3>Security Alerts</h3>
-                <p>3</p>
-                <div class="pims-card-footer">
-                    <i class="fas fa-bell" style="color: var(--pims-danger);"></i> Active alerts
-                </div>
+        <!-- Visitor Details Modal -->
+        <div class="pims-modal" id="pims-view-visitor-modal">
+            <div class="pims-modal-card">
+                <header class="pims-modal-card-head">
+                    <h2 class="pims-modal-card-title"><i class="fas fa-user"></i> Visitor Details</h2>
+                    <button class="pims-modal-close" data-modal="pims-view-visitor-modal"><i class="fas fa-times"></i></button>
+                </header>
+                <section class="pims-modal-card-body">
+                    <div class="pims-card">
+                        <div class="pims-card-body">
+                            <p><strong>Name:</strong> <span id="pims-view-visitor-name">N/A</span></p>
+                            <p><strong>Status:</strong> <span id="pims-view-status">N/A</span></p>
+                            <p><strong>Phone Number:</strong> <span id="pims-view-phone-number">N/A</span></p>
+                            <p><strong>Relationship:</strong> <span id="pims-view-relationship">N/A</span></p>
+                            <p><strong>Address:</strong> <span id="pims-view-address">N/A</span></p>
+                            <p><strong>ID Number:</strong> <span id="pims-view-id-number">N/A</span></p>
+                        </div>
+                    </div>
+                </section>
+                <footer class="pims-modal-card-foot">
+                    <button class="pims-btn pims-btn-primary" data-modal="pims-view-visitor-modal">Close</button>
+                </footer>
             </div>
         </div>
 
-        <!-- Recent Visitors -->
-        <div class="pims-stats-box">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h2><i class="fas fa-history"></i> Recent Visitors</h2>
-                <div style="display: flex; gap: 1rem;">
-                    <div class="pims-search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="pims-table-search" placeholder="Search visitors...">
-                    </div>
-                    <button class="pims-btn pims-btn-primary" id="pims-table-reload">
-                        <i class="fas fa-sync-alt"></i> Reload
-                    </button>
-                </div>
+        <!-- Prisoner Verification Modal -->
+        <div class="pims-modal" id="pims-verify-prisoner-modal">
+            <div class="pims-modal-card">
+                <header class="pims-modal-card-head">
+                    <h2 class="pims-modal-card-title"><i class="fas fa-user-check"></i> Verify Prisoner</h2>
+                    <button class="pims-modal-close" data-modal="pims-verify-prisoner-modal"><i class="fas fa-times"></i></button>
+                </header>
+                <section class="pims-modal-card-body">
+                    <form id="pims-verify-prisoner-form">
+                        <div class="pims-form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="pims-form-group">
+                            <label for="middle_name">Middle Name (Optional)</label>
+                            <input type="text" id="middle_name" name="middle_name">
+                        </div>
+                        <div class="pims-form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" required>
+                        </div>
+                        <div id="pims-verify-message" class="pims-notification" style="display: none;"></div>
+                        <button type="submit" class="pims-btn pims-btn-primary">Verify</button>
+                    </form>
+                </section>
+                <footer class="pims-modal-card-foot">
+                    <button class="pims-btn pims-btn-primary" data-modal="pims-verify-prisoner-modal">Close</button>
+                </footer>
             </div>
-            <ul>
-                <li>
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>John Doe</strong> - Visiting Jane Smith
-                        </span>
-                        <span class="pims-status-tag approved">Approved</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-31 10:30</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Alice Brown</strong> - Visiting Bob Wilson
-                        </span>
-                        <span class="pims-status-tag pending">Pending</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-31 09:15</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Mary Johnson</strong> - Visiting Tom Clark
-                        </span>
-                        <span class="pims-status-tag rejected">Rejected</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-30 14:45</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-            </ul>
-        </div>
-
-        <!-- Security Alerts Section -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-exclamation-triangle"></i> Recent Security Incidents</h2>
-            <ul>
-                <li>
-                    <i class="fas fa-exclamation" style="color: var(--pims-danger);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Unauthorized Access Attempt</strong> - Detected at Gate B
-                        </span>
-                        <span class="pims-status-tag pending">Active</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-31 08:20</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-exclamation" style="color: var(--pims-danger);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Perimeter Breach</strong> - North Fence
-                        </span>
-                        <span class="pims-status-tag approved">Resolved</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-30 16:10</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-            </ul>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Preloader
-            const preloader = document.querySelector('.pims-preloader');
-            if (preloader) {
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 1000);
+            // Modal Functions
+            function openModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.style.display = 'flex';
+                    modal.classList.add('is-active');
+                    console.log(`Opened modal: ${modalId}`);
+                } else {
+                    console.error(`Modal ${modalId} not found`);
+                }
             }
 
-            // Search functionality for recent visitors
-            const searchInput = document.getElementById('pims-table-search');
-            const visitorItems = document.querySelectorAll('.pims-stats-box ul li');
+            function closeModal(modalId) {
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.remove('is-active');
+                    modal.style.display = 'none';
+                    console.log(`Closed modal: ${modalId}`);
+                } else {
+                    console.error(`Modal ${modalId} not found`);
+                }
+            }
 
-            searchInput.addEventListener('input', function() {
-                const filter = searchInput.value.toLowerCase();
-                visitorItems.forEach(item => {
+            // Modal Close Buttons
+            document.querySelectorAll('.pims-modal-close, .pims-btn[data-modal]').forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.stopPropagation();
+                    closeModal(this.getAttribute('data-modal'));
+                });
+            });
+
+            // Close Modal on Outside Click
+            document.querySelectorAll('.pims-modal').forEach(modal => {
+                modal.addEventListener('click', function(event) {
+                    if (event.target === modal) {
+                        closeModal(modal.id);
+                    }
+                });
+            });
+
+            // View Visitor Details
+            document.querySelectorAll('.pims-view-visitor').forEach(button => {
+                button.addEventListener('click', function() {
+                    const visitorId = this.getAttribute('data-id');
+                    fetch(`/security/visitors/${visitorId}`, {
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                            'Accept': 'application/json'
+                        }
+                    })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to fetch visitor');
+                            return response.json();
+                        })
+                        .then(data => {
+                            document.getElementById('pims-view-visitor-name').textContent = `${data.first_name} ${data.last_name}` || 'N/A';
+                            document.getElementById('pims-view-status').textContent = data.visits?.[0]?.status || 'N/A';
+                            document.getElementById('pims-view-phone-number').textContent = data.phone_number || 'N/A';
+                            document.getElementById('pims-view-relationship').textContent = data.relationship || 'N/A';
+                            document.getElementById('pims-view-address').textContent = data.address || 'N/A';
+                            document.getElementById('pims-view-id-number').textContent = data.identification_number || 'N/A';
+                            openModal('pims-view-visitor-modal');
+                        })
+                        .catch(error => {
+                            console.error('Error fetching visitor data:', error);
+                            alert('Failed to load visitor details.');
+                        });
+                });
+            });
+
+            // Prisoner Verification
+            document.getElementById('pims-verify-prisoner').addEventListener('click', () => {
+                openModal('pims-verify-prisoner-modal');
+            });
+
+            document.getElementById('pims-verify-prisoner-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                fetch('/security/verify', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Verification failed');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const messageDiv = document.getElementById('pims-verify-message');
+                        messageDiv.style.display = 'block';
+                        messageDiv.className = `pims-notification pims-notification-${data.success ? 'success' : 'error'}`;
+                        messageDiv.textContent = data.message;
+                        if (data.success) {
+                            console.log(`Prisoner verified: ${data.prisoner.full_name}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error verifying prisoner:', error);
+                        const messageDiv = document.getElementById('pims-verify-message');
+                        messageDiv.style.display = 'block';
+                        messageDiv.className = 'pims-notification pims-notification-error';
+                        messageDiv.textContent = 'Failed to verify prisoner';
+                    });
+            });
+
+            // Search Visitors
+            document.getElementById('pims-table-search')?.addEventListener('input', function() {
+                const filter = this.value.toLowerCase();
+                document.querySelectorAll('.pims-stats-box ul li').forEach(item => {
                     const text = item.textContent.toLowerCase();
                     item.style.display = text.includes(filter) ? '' : 'none';
                 });
             });
 
-            // Reload button
-            document.getElementById('pims-table-reload').addEventListener('click', () => {
+            // Reload Button
+            document.getElementById('pims-table-reload')?.addEventListener('click', () => {
                 window.location.reload();
             });
 
-            // Initialize chart
-            const ctx = document.createElement('canvas');
-            ctx.id = 'visitorTrendsChart';
-            document.querySelector('.pims-stats-box').appendChild(ctx);
-            
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                    datasets: [{
-                        label: 'Visitors This Week',
-                        data: [12, 19, 3, 5, 2, 3, 8],
-                        backgroundColor: 'rgba(100, 255, 218, 0.2)',
-                        borderColor: 'rgba(100, 255, 218, 1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                        }
+            // Chart.js for Visitor Trends
+            const ctx = document.getElementById('visitorTrendsChart')?.getContext('2d');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                        datasets: [{
+                            label: 'Visitors This Week',
+                            data: [
+                                {{ $monData ?? 0 }},
+                                {{ $tueData ?? 0 }},
+                                {{ $wedData ?? 0 }},
+                                {{ $thuData ?? 0 }},
+                                {{ $friData ?? 0 }},
+                                {{ $satData ?? 0 }},
+                                {{ $sunData ?? 0 }}
+                            ],
+                            backgroundColor: 'rgba(100, 255, 218, 0.2)',
+                            borderColor: 'rgba(100, 255, 218, 1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' },
+                            title: { display: true, text: 'Visitor Trends (Weekly)' }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: { display: true, text: 'Number of Visitors' }
+                            },
+                            x: {
+                                title: { display: true, text: 'Day' }
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         });
     </script>
 </body>

@@ -26,6 +26,15 @@ use Illuminate\Support\Facades\Validator;
 
 class iPrisonerController extends Controller
 {
+    public function changePassword(Request $request, $lawyer_id)
+{
+   
+    $lawyer = Lawyer::findOrFail($lawyer_id);
+    $lawyer->password = Hash::make($request->new_password);
+    $lawyer->save();
+
+    return response()->json(['message' => 'Password updated successfully'], 200);
+}
     private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
     {
         Notification::create([

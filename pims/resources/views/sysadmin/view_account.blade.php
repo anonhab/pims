@@ -337,7 +337,7 @@
         }
 
         @keyframes modalFadeIn {
-            from {  transform: translateY(-20px); }
+            from { transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -437,6 +437,13 @@
             margin-bottom: 0.5rem;
         }
 
+        .error-text {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
         @media (max-width: 992px) {
             .main-content { margin-left: 0; }
             .cards-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
@@ -533,6 +540,12 @@
                                             aria-label="Edit account for {{ $account->first_name }} {{ $account->last_name }}">
                                         <i class="fas fa-edit" aria-hidden="true"></i> Edit
                                     </button>
+                                    <button class="btn btn-light change-password-btn"
+                                            data-id="{{ $account->user_id }}"
+                                            data-name="{{ $account->first_name }} {{ $account->last_name }}"
+                                            aria-label="Change password for {{ $account->first_name }} {{ $account->last_name }}">
+                                        <i class="fas fa-key" aria-hidden="true"></i> Change Password
+                                    </button>
                                     <button class="btn btn-danger delete-btn"
                                             data-id="{{ $account->user_id }}"
                                             data-name="{{ $account->first_name }} {{ $account->last_name }}"
@@ -579,6 +592,7 @@
         </main>
     </div>
 
+    <!-- Edit Account Modal -->
     <div class="modal" id="edit-modal" role="dialog" aria-labelledby="edit-modal-title" aria-hidden="true">
         <div class="modal-container">
             <div class="modal-header">
@@ -649,6 +663,39 @@
         </div>
     </div>
 
+    <!-- Change Password Modal -->
+    <div class="modal" id="change-password-modal" role="dialog" aria-labelledby="change-password-modal-title" aria-hidden="true">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="change-password-modal-title">
+                    <i class="fas fa-key" aria-hidden="true"></i> Change Password
+                </h3>
+                <button class="modal-close" aria-label="Close change password modal">×</button>
+            </div>
+            <form id="change-password-form" method="POST">
+                @csrf
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="user_id" id="change-password-user-id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" name="new_password" id="new-password" class="form-control" required minlength="8">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" name="confirm_password" id="confirm-password" class="form-control" required minlength="8">
+                    </div>
+                    <p class="error-text" id="password-error">Passwords do not match or are too short (minimum 8 characters).</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light modal-close-btn" aria-label="Cancel change password">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="save-password-btn">Save Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
     <div class="modal confirm-modal" id="delete-modal" role="dialog" aria-labelledby="delete-modal-title" aria-hidden="true">
         <div class="modal-container">
             <div class="modal-header">
@@ -695,12 +742,15 @@
             };
 
             const editModal = document.getElementById('edit-modal');
+            const changePasswordModal = document.getElementById('change-password-modal');
             const deleteModal = document.getElementById('delete-modal');
 
             const closeAllModals = () => {
                 editModal.classList.remove('active');
+                changePasswordModal.classList.remove('active');
                 deleteModal.classList.remove('active');
                 editModal.setAttribute('aria-hidden', 'true');
+                changePasswordModal.setAttribute('aria-hidden', 'true');
                 deleteModal.setAttribute('aria-hidden', 'true');
             };
 
@@ -713,7 +763,8 @@
                         const email = card.querySelector('.info-item:nth-child(1) span').textContent.toLowerCase();
                         const phone = card.querySelector('.info-item:nth-child(2) span').textContent.toLowerCase();
                         const prison = card.querySelector('.info-item:nth-child(3) span').textContent.toLowerCase();
-                        card.style.display = (name.includes(searchTerm) || email.includes(searchTerm) || phone.includes(searchTerm) || prison.includes(searchTerm)) ? 'block' : 'none';
+                        card.style.display = (name.includes(searchTerm) || email.includes(searchTerm) 
+                            || phone.includes(searchTerm) || prison.includes(searchTerm)) ? 'block' : 'none';
                     });
                 }, 300));
             }
@@ -734,6 +785,19 @@
                     editModal.classList.add('active');
                     editModal.setAttribute('aria-hidden', 'false');
                     document.getElementById('edit-first-name').focus();
+                });
+            });
+
+            document.querySelectorAll('.change-password-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    closeAllModals();
+                    document.getElementById('change-password-user-id').value = btn.dataset.id;
+                    document.getElementById('new-password').value = '';
+                    document.getElementById('confirm-password').value = '';
+                    document.getElementById('password-error').style.display = 'none';
+                    changePasswordModal.classList.add('active');
+                    changePasswordModal.setAttribute('aria-hidden', 'false');
+                    document.getElementById('new-password').focus();
                 });
             });
 
@@ -799,6 +863,57 @@
                 }
             });
 
+            document.getElementById('change-password-form').addEventListener('submit', async e => {
+                e.preventDefault();
+                const form = e.target;
+                const userId = document.getElementById('change-password-user-id').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                const passwordError = document.getElementById('password-error');
+
+                if (newPassword.length < 8 || newPassword !== confirmPassword) {
+                    passwordError.style.display = 'block';
+                    return;
+                }
+
+                try {
+                    const formData = new FormData(form);
+                    formData.delete('_method');
+                    const data = Object.fromEntries(formData);
+                    data._method = 'PUT';
+                    const response = await fetch(`/sysaccount/change-password/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify(data)
+                    });
+                    const result = await response.json();
+                    if (response.ok) {
+                        closeAllModals();
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Password updated successfully!',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => window.location.reload());
+                    } else {
+                        throw new Error(result.message || 'Failed to update password');
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: error.message.includes('405') 
+                            ? 'Password change operation not supported. Please ensure backend supports PUT method.'
+                            : error.message || 'Something went wrong!'
+                    });
+                }
+            });
+
             document.getElementById('delete-form').addEventListener('submit', async e => {
                 e.preventDefault();
                 const form = e.target;
@@ -837,7 +952,7 @@
             });
 
             document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && (editModal.classList.contains('active') || deleteModal.classList.contains('active'))) {
+                if (e.key === 'Escape' && (editModal.classList.contains('active') || changePasswordModal.classList.contains('active') || deleteModal.classList.contains('active'))) {
                     closeAllModals();
                 }
             });

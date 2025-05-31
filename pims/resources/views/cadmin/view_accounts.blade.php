@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -234,7 +233,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            
             transition: opacity 0.3s ease;
         }
 
@@ -428,6 +426,7 @@
         .pims-mb-2 { margin-bottom: 1rem; }
         .pims-mb-3 { margin-bottom: 1.5rem; }
         .pims-text-center { text-align: center; }
+        .pims-text-danger { color: var(--pims-danger); }
     </style>
 </head>
 
@@ -499,7 +498,7 @@
                                         </div>
                                     </div>
                                     <div class="content">
-                                        <p class="pims-account-detail"><strong>Prison:</strong> {{ $account->prison ? $account->prison->name:'N/A' }}</p>
+                                        <p class="pims-account-detail"><strong>Prison:</strong> {{ $account->prison ? $account->prison->name : 'N/A' }}</p>
                                         <p class="pims-account-detail"><strong>Name:</strong> {{ $account->first_name }} {{ $account->last_name }}</p>
                                         <p class="pims-account-detail"><strong>Email:</strong> {{ $account->email }}</p>
                                         <p class="pims-account-detail"><strong>Phone:</strong> {{ $account->phone_number }}</p>
@@ -518,7 +517,11 @@
                                             data-role-name="{{ $account->role ? $account->role->name : 'N/A' }}">
                                             <i class="fas fa-edit"></i> Edit
                                         </button>
-
+                                        <button class="pims-btn pims-btn-secondary pims-btn-sm pims-change-password-btn"
+                                            data-id="{{ $account->user_id }}"
+                                            data-username="{{ $account->username }}">
+                                            <i class="fas fa-key"></i> Change Password
+                                        </button>
                                         <button class="pims-btn pims-btn-danger pims-btn-sm pims-delete-btn"
                                             data-id="{{ $account->user_id }}"
                                             data-username="{{ $account->username }}">
@@ -533,7 +536,6 @@
 
                     <!-- Pagination -->
                     <div class="pims-pagination">
-                        <!-- Previous Button -->
                         @if($accounts->currentPage() > 1)
                         <a class="pims-pagination-link" href="{{ $accounts->previousPageUrl() }}">
                             <i class="fas fa-chevron-left"></i> Previous
@@ -544,14 +546,12 @@
                         </a>
                         @endif
 
-                        <!-- Page Numbers -->
                         @foreach($accounts->getUrlRange(1, $accounts->lastPage()) as $page => $url)
                         <a class="pims-pagination-link {{ $page == $accounts->currentPage() ? 'is-current' : '' }}" href="{{ $url }}">
                             {{ $page }}
                         </a>
                         @endforeach
 
-                        <!-- Next Button -->
                         @if($accounts->hasMorePages())
                         <a class="pims-pagination-link" href="{{ $accounts->nextPageUrl() }}">
                             Next <i class="fas fa-chevron-right"></i>
@@ -575,39 +575,33 @@
                 <p class="pims-modal-card-title">
                     <i class="fas fa-user-edit"></i> Edit Account
                 </p>
-                <button class="pims-modal-close">&times;</button>
+                <button class="pims-modal-close">×</button>
             </header>
             <form id="pims-edit-form" method="POST">
                 @csrf
                 @method('PUT')
                 <section class="pims-modal-card-body">
                     <input type="hidden" name="user_id" id="pims-edit-user-id">
-
                     <div class="pims-form-group">
                         <label for="pims-edit-first-name" class="pims-form-label">First Name</label>
                         <input class="pims-form-control" type="text" name="first_name" id="pims-edit-first-name" required>
                     </div>
-
                     <div class="pims-form-group">
                         <label for="pims-edit-last-name" class="pims-form-label">Last Name</label>
                         <input class="pims-form-control" type="text" name="last_name" id="pims-edit-last-name" required>
                     </div>
-
                     <div class="pims-form-group">
                         <label for="pims-edit-email" class="pims-form-label">Email</label>
                         <input class="pims-form-control" type="email" name="email" id="pims-edit-email" required>
                     </div>
-
                     <div class="pims-form-group">
                         <label for="pims-edit-phone" class="pims-form-label">Phone Number</label>
                         <input class="pims-form-control" type="text" name="phone_number" id="pims-edit-phone">
                     </div>
-
                     <div class="pims-form-group">
                         <label for="pims-edit-address" class="pims-form-label">Address</label>
                         <input class="pims-form-control" type="text" name="address" id="pims-edit-address">
                     </div>
-
                     <div class="pims-form-group">
                         <label for="pims-edit-role" class="pims-form-label">Role</label>
                         <select class="pims-form-control" name="role_id" id="pims-edit-role">
@@ -617,13 +611,51 @@
                         </select>
                     </div>
                 </section>
-
                 <footer class="pims-modal-card-foot">
                     <button type="button" class="pims-btn pims-btn-secondary pims-close-modal">
                         <i class="fas fa-times"></i> Cancel
                     </button>
                     <button type="submit" class="pims-btn pims-btn-primary pims-save-btn">
                         <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="pims-modal" id="pims-change-password-modal">
+        <div class="pims-modal-background"></div>
+        <div class="pims-modal-card">
+            <header class="pims-modal-card-head">
+                <p class="pims-modal-card-title">
+                    <i class="fas fa-key"></i> Change Password
+                </p>
+                <button class="pims-modal-close">×</button>
+            </header>
+            <form id="pims-change-password-form" method="POST">
+                @csrf
+                @method('put')
+                <section class="pims-modal-card-body">
+                    <input type="hidden" name="user_id" id="pims-change-password-user-id">
+                    <div class="pims-form-group">
+                        <label for="pims-new-password" class="pims-form-label">New Password</label>
+                        <input class="pims-form-control" type="password" name="new_password" id="pims-new-password" required minlength="8">
+                    </div>
+                    <div class="pims-form-group">
+                        <label for="pims-confirm-password" class="pims-form-label">Confirm Password</label>
+                        <input class="pims-form-control" type="password" name="confirm_password" id="pims-confirm-password" required minlength="8">
+                    </div>
+                    <p class="pims-text-danger pims-mt-1" id="pims-password-error" style="display: none;">
+                        Passwords do not match or are too short (minimum 8 characters).
+                    </p>
+                </section>
+                <footer class="pims-modal-card-foot">
+                    <button type="button" class="pims-btn pims-btn-secondary pims-close-modal">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="pims-btn pims-btn-primary pims-save-password-btn">
+                        <i class="fas fa-save"></i> Save Password
                     </button>
                 </footer>
             </form>
@@ -638,7 +670,7 @@
                 <p class="pims-modal-card-title">
                     <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
                 </p>
-                <button class="pims-modal-close">&times;</button>
+                <button class="pims-modal-close">×</button>
             </header>
             <section class="pims-modal-card-body">
                 <div class="pims-confirm-icon">
@@ -672,11 +704,23 @@
             // Edit Account Modal
             const editButtons = document.querySelectorAll('.pims-edit-btn');
             const editModal = document.getElementById('pims-edit-modal');
-            const deleteModal = document.getElementById('pims-delete-modal');
-            const closeModalButtons = document.querySelectorAll('.pims-modal-close, .pims-close-modal');
             const editForm = document.getElementById('pims-edit-form');
+
+            // Delete Confirmation Modal
+            const deleteModal = document.getElementById('pims-delete-modal');
             const deleteForm = document.getElementById('pims-delete-form');
             const deleteUsername = document.getElementById('pims-delete-username');
+
+            // Change Password Modal
+            const changePasswordButtons = document.querySelectorAll('.pims-change-password-btn');
+            const changePasswordModal = document.getElementById('pims-change-password-modal');
+            const changePasswordForm = document.getElementById('pims-change-password-form');
+            const passwordError = document.getElementById('pims-password-error');
+            const newPasswordInput = document.getElementById('pims-new-password');
+            const confirmPasswordInput = document.getElementById('pims-confirm-password');
+
+            // Close Modal Buttons
+            const closeModalButtons = document.querySelectorAll('.pims-modal-close, .pims-close-modal');
             let currentDeleteUrl = '';
 
             // Initialize edit buttons
@@ -703,46 +747,66 @@
                 });
             });
 
+            // Initialize change password buttons
+            changePasswordButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const userId = this.dataset.id;
+                    document.getElementById('pims-change-password-user-id').value = userId;
+                    changePasswordForm.action = `/saccount/change-password/${userId}`;
+                    changePasswordModal.classList.add('is-active');
+                    newPasswordInput.value = '';
+                    confirmPasswordInput.value = '';
+                    passwordError.style.display = 'none';
+                });
+            });
+
             // Initialize delete buttons
             document.querySelectorAll('.pims-delete-btn').forEach(button => {
                 button.addEventListener('click', function() {
                     const userId = this.dataset.id;
                     const username = this.dataset.username;
-                    
                     deleteUsername.textContent = username;
                     currentDeleteUrl = `/caccount/${userId}`;
                     deleteModal.classList.add('is-active');
                 });
             });
 
-            // Handle delete form submission
-            deleteForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                
-                // Show loading state
-                const submitBtn = this.querySelector('button[type="submit"]');
-                const originalText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
-                submitBtn.disabled = true;
-                
-                // Set the form action dynamically
-                this.action = currentDeleteUrl;
-                
-                // Submit the form
-                this.submit();
-            });
-
             // Handle edit form submission
             editForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                
-                // Show loading state
                 const submitBtn = this.querySelector('.pims-save-btn');
                 const originalText = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
                 submitBtn.disabled = true;
-                
-                // Submit the form
+                this.submit();
+            });
+
+            // Handle change password form submission
+            changePasswordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const newPassword = newPasswordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+
+                if (newPassword.length < 8 || newPassword !== confirmPassword) {
+                    passwordError.style.display = 'block';
+                    return;
+                }
+
+                const submitBtn = this.querySelector('.pims-save-password-btn');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                submitBtn.disabled = true;
+                this.submit();
+            });
+
+            // Handle delete form submission
+            deleteForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+                submitBtn.disabled = true;
+                this.action = currentDeleteUrl;
                 this.submit();
             });
 
@@ -750,12 +814,13 @@
             closeModalButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     editModal.classList.remove('is-active');
+                    changePasswordModal.classList.remove('is-active');
                     deleteModal.classList.remove('is-active');
                 });
             });
 
             // Close modal when clicking outside
-            [editModal, deleteModal].forEach(modal => {
+            [editModal, changePasswordModal, deleteModal].forEach(modal => {
                 modal.addEventListener('click', function(e) {
                     if (e.target === modal) {
                         modal.classList.remove('is-active');
@@ -772,7 +837,6 @@
             document.getElementById('pims-table-search').addEventListener('input', function() {
                 const searchTerm = this.value.toLowerCase();
                 const accountCards = document.querySelectorAll('.pims-account-card');
-
                 accountCards.forEach(card => {
                     const cardText = card.textContent.toLowerCase();
                     card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
@@ -781,8 +845,6 @@
 
             // Table Length
             document.getElementById('pims-table-length').addEventListener('change', function() {
-                // In a real application, this would trigger an AJAX call to reload data
-                // For now, we'll just reload the page with the new length parameter
                 const url = new URL(window.location.href);
                 url.searchParams.set('length', this.value);
                 window.location.href = url.toString();

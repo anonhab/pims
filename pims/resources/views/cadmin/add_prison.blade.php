@@ -277,23 +277,7 @@
         <div class="pims-content-area">
             <div class="pims-form-container">
                 <!-- Flash Messages -->
-                @if(session('success'))
-                <div class="pims-notification show">
-                    <div class="pims-notification-content">
-                        <i class="fas fa-check-circle"></i>
-                        <span>{{ session('success') }}</span>
-                    </div>
-                </div>
-                @endif
-
-                @if($errors->any())
-                <div class="pims-notification show" style="border-left-color: var(--pims-danger);">
-                    <div class="pims-notification-content">
-                        <i class="fas fa-exclamation-circle" style="color: var(--pims-danger);"></i>
-                        <span>{{ $errors->first() }}</span>
-                    </div>
-                </div>
-                @endif
+                
 
                 <form action="{{ route('prison.store') }}" method="POST">
                     @csrf

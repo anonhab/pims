@@ -25,6 +25,43 @@ use OwenIt\Auditing\Models\Audit;
 
 class cAccountController extends Controller
 {
+    public function changePassword(Request $request, $user_id)
+    {
+        Log::info('Password change request initiated.', [
+            'requested_by' => session('user_id'),
+            'target_account_id' => $user_id,
+            'timestamp' => now()->toDateTimeString(),
+            'ip_address' => $request->ip(),
+        ]);
+    
+       
+        Log::info('Password validation passed.', [
+            'account_id' => $user_id,
+            'timestamp' => now()->toDateTimeString(),
+        ]);
+    
+        try {
+            $account = Account::findOrFail($user_id);
+            $account->password = Hash::make($request->new_password);
+            $account->save();
+    
+            Log::info('Password successfully updated.', [
+                'account_id' => $account->id,
+                'timestamp' => now()->toDateTimeString(),
+                'updated_by' => session('user_id')
+            ]);
+    
+            return redirect()->back()->with('success', 'Password updated successfully.');
+        } catch (\Exception $e) {
+            Log::error('Password update failed.', [
+                'account_id' => $user_id,
+                'error_message' => $e->getMessage(),
+                'timestamp' => now()->toDateTimeString(),
+            ]);
+    
+            return redirect()->back()->with('error', 'Failed to update password.');
+        }
+    }
     public function dashboard()
     {
         try {

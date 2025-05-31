@@ -45,22 +45,6 @@ Route::get('/', function () {
 Route::get('/roles', function () {
     return view('cadmin.add_roles');
 });
-Route::get('/sdashboard', function () {
-    $pendingMedicalAppointments = MedicalAppointment::where('status', 'pending')->count();
-    $pendingLawyerAppointments = LawyerAppointment::where('status', 'pending')->count();
-    $pendingVisitorAppointments = NewVisitingRequest::where('status', 'pending')->count();
-    $totalVisitors = Visitor::count();
-
-
-
-    return view('security_officer.dashboard', compact(
-        'pendingMedicalAppointments',
-        'pendingLawyerAppointments',
-        'pendingVisitorAppointments',
-        'totalVisitors'
-
-    ));
-});
 
 Route::post('/notifications/read/{id}', function ($id) {
     $notification = Notification::find($id);
@@ -122,8 +106,11 @@ Route::middleware('role:3')->group(function () {
     Route::put('/prisons/{id}', [cAccountController::class, 'updateprison'])->name('prison.update');
     Route::delete('/prisons/{id}', [cAccountController::class, 'destroyprison'])->name('prison.destroy');
     Route::delete('/caccount/{user_id}', [cAccountController::class, 'destroyacc'])->name('caccount.destroy');
+    Route::put('/saccount/change-password/{user_id}', [cAccountController::class, 'changePassword'])->name('account.change-password');
 });
 Route::post('/accounts', [cAccountController::class, 'store'])->name('accounts.store');
+
+Route::put('/sysaccount/change-password/{user_id}', [sAccountController::class, 'changePasswordforsystem'])->name('account.change-password');
 
 Route::put('/saccount/update/{id}', [sAccountController::class, 'update'])->name('saccount.update');
 Route::delete('/saccount/delete/{id}', [sAccountController::class, 'destroy'])->name('saccount.destroy');
@@ -183,7 +170,7 @@ Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom
 Route::post('/update-status/{id}', [iPrisonerController::class, 'updateStatus'])->name('update.status')->middleware('role:2');
 Route::post('/prisoners', [iPrisonerController::class, 'store'])->name('prisoners.store');
 Route::get('/idashboard', action: [iPrisonerController::class, 'idashboard'])->name('inspector.idashboard')->middleware('role:2');
-
+Route::put('/lawyers/change-password/{lawyer_id}', [iPrisonerController::class, 'changePasswordd'])->name('lawyers.change-password');
 Route::middleware('middleware')->group(function () {
     Route::get('/myprisoner', [myLawyerController::class, 'myprisoner'])->name('mylawyer.myprisoner');
     Route::get('createlegalappo', [myLawyerController::class, 'createlegalappo'])->name('mylawyer.createlegalappo');
@@ -232,8 +219,10 @@ Route::get('/viewRequests', [PoliceController::class, 'viewRequests'])->name('po
 Route::get('/viewRoomAllocations', [PoliceController::class, 'viewRoomAllocations'])->name('police.viewRoomAllocations');
 Route::get('/createvisitingtime', [SecurityController::class, 'createVisitingTime'])->name('security.createVisitingTime');
 Route::get('/registervisitor', [SecurityController::class, 'registerVisitor'])->name('security.registerVisitor');
+Route::get('/sdashboard', [SecurityController::class, 'dashboard'])->name('security_officer.dashboard');
+Route::get('/security/visitors/{id}', [SecurityController::class, 'showVisitor']);
 Route::get('/registerVisitor', [SecurityController::class, 'registerVisitor'])->name('security_officer.registerVisitor');
-
+Route::put('/security_officer/visitors/change-password/{visitor_id}', [SecurityController::class, 'changePassword'])->name('security_officer.changeVisitorPassword');
 Route::get('/viewvisitors', [SecurityController::class, 'viewVisitors'])->name('security_officer.viewvisitors');
 Route::get('/viewappointments', [SecurityController::class, 'viewAppointments'])->name('security.viewAppointments');
 Route::get('/viewprisoners', [SecurityController::class, 'viewPrisoners'])->name('security.viewPrisoners');
@@ -308,7 +297,7 @@ Route::post('/transfer-request/{id}', [RequestController::class, 'transferReques
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
 Route::post('/approve-appointment/{id}', [RequestController::class, 'approve']);
 Route::post('/reject-appointment/{id}', [RequestController::class, 'reject']);
-
+Route::get('/showprisoners', [RequestController::class, 'show_allforin'])->name('prisoner.showprisoners');
 Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
 Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');
 Route::get('/vdashboard', [VisitorController::class, 'dashboard'])->name('visitor.dashboard');

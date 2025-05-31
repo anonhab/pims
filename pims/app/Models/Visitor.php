@@ -28,6 +28,9 @@ class Visitor extends Authenticatable
         'updated_at' => 'datetime',
     ];
 
-    
+    public function visits()
+{
+    return $this->hasMany(NewVisitingRequest::class, 'visitor_id');
+}
     
 }

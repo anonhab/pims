@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,12 +19,14 @@
             --danger: #e74c3c;
             --success: #2ecc71;
             --radius: 8px;
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
             --font-size-base: clamp(0.9rem, 2vw, 1rem);
         }
 
-        *, *::before, *::after {
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
@@ -108,7 +111,7 @@
         .search input:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         .search i {
@@ -132,7 +135,7 @@
 
         .prison-card:hover .card {
             transform: translateY(-5px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         }
 
         .prison-title {
@@ -254,7 +257,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
         }
 
         .modal.is-active {
@@ -264,7 +267,7 @@
         .modal-card {
             background: #fff;
             border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             max-width: 500px;
             width: 95%;
             max-height: 90vh;
@@ -273,8 +276,14 @@
         }
 
         @keyframes modalFadeIn {
-            from {  transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-card-head {
@@ -346,7 +355,7 @@
         .form-control:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(52,152,219,0.2);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
         }
 
         .select select {
@@ -354,21 +363,38 @@
         }
 
         @media (max-width: 992px) {
-            .content-area { margin-left: 0; }
-            .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+            .content-area {
+                margin-left: 0;
+            }
+
+            .grid {
+                grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            }
         }
 
         @media (max-width: 768px) {
-            .search { max-width: 100%; }
-            .pagination { flex-direction: column; gap: 1rem; }
+            .search {
+                max-width: 100%;
+            }
+
+            .pagination {
+                flex-direction: column;
+                gap: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
-            .card-footer { flex-direction: column; }
-            .card-footer .btn { width: 100%; }
+            .card-footer {
+                flex-direction: column;
+            }
+
+            .card-footer .btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
     @include('includes.nav')
     <div class="app-container">
@@ -397,66 +423,66 @@
                     </div>
                     <div class="grid" id="prison-grid">
                         @foreach($prisons as $prison)
-                            <div class="prison-card" data-searchable="{{ strtolower($prison->name) }} {{ strtolower($prison->location) }}">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-                                            <div>
-                                                <p class="prison-title">{{ $prison->name }}</p>
-                                                <p class="prison-subtitle">{{ $prison->location }}</p>
-                                            </div>
-                                        </div>
+                        <div class="prison-card" data-searchable="{{ strtolower($prison->name) }} {{ strtolower($prison->location) }}">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
                                         <div>
-                                            <p class="prison-detail"><strong>Capacity:</strong> {{ $prison->capacity }}</p>
-                                            <p class="prison-detail"><strong>Status:</strong> 
-                                                <span class="status-badge">Active</span>
-                                            </p>
+                                            <p class="prison-title">{{ $prison->name }}</p>
+                                            <p class="prison-subtitle">{{ $prison->location }}</p>
                                         </div>
                                     </div>
-                                    <div class="card-footer">
-                                        <button class="btn btn-primary btn-sm edit-prison"
-                                                data-id="{{ $prison->id }}"
-                                                data-name="{{ $prison->name }}"
-                                                data-location="{{ $prison->location }}"
-                                                data-capacity="{{ $prison->capacity }}"
-                                                aria-label="Edit prison {{ $prison->name }}">
-                                            <i class="fas fa-edit" aria-hidden="true"></i> Edit
-                                        </button>
-                                        <button class="btn btn-danger btn-sm delete-prison"
-                                                data-id="{{ $prison->id }}"
-                                                data-name="{{ $prison->name }}"
-                                                aria-label="Delete prison {{ $prison->name }}">
-                                            <i class="fas fa-trash" aria-hidden="true"></i> Delete
-                                        </button>
+                                    <div>
+                                        <p class="prison-detail"><strong>Capacity:</strong> {{ $prison->capacity }}</p>
+                                        <p class="prison-detail"><strong>Status:</strong>
+                                            <span class="status-badge">Active</span>
+                                        </p>
                                     </div>
                                 </div>
+                                <div class="card-footer">
+                                    <button class="btn btn-primary btn-sm edit-prison"
+                                        data-id="{{ $prison->id }}"
+                                        data-name="{{ $prison->name }}"
+                                        data-location="{{ $prison->location }}"
+                                        data-capacity="{{ $prison->capacity }}"
+                                        aria-label="Edit prison {{ $prison->name }}">
+                                        <i class="fas fa-edit" aria-hidden="true"></i> Edit
+                                    </button>
+                                    <button class="btn btn-danger btn-sm delete-prison"
+                                        data-id="{{ $prison->id }}"
+                                        data-name="{{ $prison->name }}"
+                                        aria-label="Delete prison {{ $prison->name }}">
+                                        <i class="fas fa-trash" aria-hidden="true"></i> Delete
+                                    </button>
+                                </div>
                             </div>
+                        </div>
                         @endforeach
                     </div>
                     <nav class="pagination" aria-label="Pagination">
                         @if($prisons->currentPage() > 1)
-                            <a class="pagination-link" href="{{ $prisons->previousPageUrl() }}" aria-label="Previous page">
-                                <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
-                            </a>
+                        <a class="pagination-link" href="{{ $prisons->previousPageUrl() }}" aria-label="Previous page">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
+                        </a>
                         @else
-                            <span class="pagination-link is-disabled" aria-disabled="true">
-                                <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
-                            </span>
+                        <span class="pagination-link is-disabled" aria-disabled="true">
+                            <i class="fas fa-chevron-left" aria-hidden="true"></i> Previous
+                        </span>
                         @endif
                         @foreach($prisons->getUrlRange(1, $prisons->lastPage()) as $page => $url)
-                            <a class="pagination-link {{ $page == $prisons->currentPage() ? 'is-current' : '' }}"
-                               href="{{ $url }}"
-                               aria-current="{{ $page == $prisons->currentPage() ? 'page' : 'false' }}"
-                               aria-label="Page {{ $page }}">{{ $page }}</a>
+                        <a class="pagination-link {{ $page == $prisons->currentPage() ? 'is-current' : '' }}"
+                            href="{{ $url }}"
+                            aria-current="{{ $page == $prisons->currentPage() ? 'page' : 'false' }}"
+                            aria-label="Page {{ $page }}">{{ $page }}</a>
                         @endforeach
                         @if($prisons->hasMorePages())
-                            <a class="pagination-link" href="{{ $prisons->nextPageUrl() }}" aria-label="Next page">
-                                Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                            </a>
+                        <a class="pagination-link" href="{{ $prisons->nextPageUrl() }}" aria-label="Next page">
+                            Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </a>
                         @else
-                            <span class="pagination-link is-disabled" aria-disabled="true">
-                                Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
-                            </span>
+                        <span class="pagination-link is-disabled" aria-disabled="true">
+                            Next <i class="fas fa-chevron-right" aria-hidden="true"></i>
+                        </span>
                         @endif
                     </nav>
                 </div>
@@ -483,11 +509,65 @@
                         <label class="form-label" for="add-prison-location">Location</label>
                         <select name="location" id="add-prison-location" class="form-control" required>
                             <option value="">Select Location</option>
-                            <option value="Addis Ababa">Addis Ababa</option>
-                            <option value="Bahir Dar">Bahir Dar</option>
-                            <option value="Gondar">Gondar</option>
-                            <option value="Adama">Adama</option>
-                            <option value="Hawassa">Hawassa</option>
+                            
+            <!-- Hadiya Zone -->
+            <optgroup label="Hadiya Zone">
+              <option value="Central Ethiopia, Hadiya Zone, Hosana">Hosana (Regional Government Seat)</option>
+              <option value="Central Ethiopia, Hadiya Zone, Shone">Shone</option>
+              <option value="Central Ethiopia, Hadiya Zone, Gimbichu">Gimbichu</option>
+              <option value="Central Ethiopia, Hadiya Zone, Homecho">Homecho</option>
+            </optgroup>
+
+            <!-- Kembata Tembaro Zone -->
+            <optgroup label="Kembata Tembaro Zone">
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Durame">Durame (Capital)</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Damboya">Damboya</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Angacha">Angacha</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Kedida Gamela">Kedida Gamela</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Tembaro Special Woreda">Tembaro Special Woreda</option>
+            </optgroup>
+
+            <!-- Gurage Zone (Divided into Sub-Zones and Special Woredas) -->
+            <optgroup label="Gurage Zone - East Gurage Zone">
+              <option value="Central Ethiopia, Gurage Zone, East Gurage Zone">East Gurage Zone (Separate Zone)</option>
+            </optgroup>
+
+            <optgroup label="Gurage Zone - Kebena Special Woreda">
+              <option value="Central Ethiopia, Gurage Zone, Kebena Special Woreda">Kebena Special Woreda</option>
+            </optgroup>
+
+            <optgroup label="Gurage Zone - Mareko Special Woreda">
+              <option value="Central Ethiopia, Gurage Zone, Mareko Special Woreda">Mareko Special Woreda</option>
+            </optgroup>
+
+            <optgroup label="Gurage Zone - Other Woredas and Towns">
+              <option value="Central Ethiopia, Gurage Zone, Butajira">Butajira (Town)</option>
+              <option value="Central Ethiopia, Gurage Zone, Welkite">Welkite (Regional Council Seat)</option>
+              <option value="Central Ethiopia, Gurage Zone, Meskan Woreda">Meskan Woreda</option>
+              <option value="Central Ethiopia, Gurage Zone, East Meskan Woreda">East Meskan Woreda</option>
+              <option value="Central Ethiopia, Gurage Zone, Kebena Woreda">Kebena Woreda (Separate from Special Woreda)</option>
+              <option value="Central Ethiopia, Gurage Zone, Mareko Woreda">Mareko Woreda</option>
+            </optgroup>
+
+            <!-- Silte Zone -->
+            <optgroup label="Silte Zone">
+              <option value="Central Ethiopia, Silte Zone, Worabe">Worabe (Capital)</option>
+              <option value="Central Ethiopia, Silte Zone, Kibet">Kibet</option>
+              <option value="Central Ethiopia, Silte Zone, Kutere">Kutere</option>
+              <option value="Central Ethiopia, Silte Zone, Qebena">Qebena</option>
+            </optgroup>
+
+            <!-- Halaba Zone -->
+            <optgroup label="Halaba Zone">
+              <option value="Central Ethiopia, Halaba Zone, Alaba Kulito">Alaba Kulito (Capital)</option>
+              <option value="Central Ethiopia, Halaba Zone, Besheno">Besheno</option>
+              <option value="Central Ethiopia, Halaba Zone, Dore Bafeno">Dore Bafeno</option>
+            </optgroup>
+
+            <!-- Yem Special Woreda (Elevated to Zone Status) -->
+            <optgroup label="Yem Special Woreda (Now Zone)">
+              <option value="Central Ethiopia, Yem Special Woreda, Fofa">Fofa (Capital)</option>
+            </optgroup>
                         </select>
                     </div>
                     <div class="form-group">
@@ -504,45 +584,108 @@
     </div>
 
     <div class="modal" id="edit-prison-modal" role="dialog" aria-labelledby="edit-modal-title" aria-hidden="true">
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title" id="edit-modal-title">
-                    <i class="fas fa-edit" aria-hidden="true"></i> Edit Prison Facility
-                </p>
-                <button class="modal-close" aria-label="Close edit modal">×</button>
-            </header>
-            <form id="edit-prison-form" method="POST">
-                @csrf
-                <input type="hidden" name="_method" value="PUT">
-                <input type="hidden" name="id" id="edit-prison-id">
-                <section class="modal-card-body">
-                    <div class="form-group">
-                        <label class="form-label" for="edit-prison-name">Prison Name</label>
-                        <input type="text" name="name" id="edit-prison-name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit-prison-location">Location</label>
-                        <select name="location" id="edit-prison-location" class="form-control" required>
-                            <option value="">Select Location</option>
-                            <option value="Addis Ababa">Addis Ababa</option>
-                            <option value="Bahir Dar">Bahir Dar</option>
-                            <option value="Gondar">Gondar</option>
-                            <option value="Adama">Adama</option>
-                            <option value="Hawassa">Hawassa</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="edit-prison-capacity">Capacity</label>
-                        <input type="number" name="capacity" id="edit-prison-capacity" class="form-control" required>
-                    </div>
-                </section>
-                <footer class="modal-card-foot">
-                    <button type="button" class="btn btn-secondary close-modal" aria-label="Cancel edit">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Update Prison</button>
-                </footer>
-            </form>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title" id="edit-modal-title">
+        <i class="fas fa-edit" aria-hidden="true"></i> Edit Prison Facility
+      </p>
+      <button class="modal-close" aria-label="Close edit modal">×</button>
+    </header>
+
+    <form id="edit-prison-form" method="POST">
+      @csrf
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="id" id="edit-prison-id">
+
+      <section class="modal-card-body">
+
+        <div class="form-group">
+          <label class="form-label" for="edit-prison-name">Prison Name</label>
+          <input type="text" name="name" id="edit-prison-name" class="form-control" required>
         </div>
-    </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-prison-location">Location</label>
+          <select name="location" id="edit-prison-location" class="form-control" required>
+            <option value="">Select Location</option>
+
+            <!-- Hadiya Zone -->
+            <optgroup label="Hadiya Zone">
+              <option value="Central Ethiopia, Hadiya Zone, Hosana">Hosana (Regional Government Seat)</option>
+              <option value="Central Ethiopia, Hadiya Zone, Shone">Shone</option>
+              <option value="Central Ethiopia, Hadiya Zone, Gimbichu">Gimbichu</option>
+              <option value="Central Ethiopia, Hadiya Zone, Homecho">Homecho</option>
+            </optgroup>
+
+            <!-- Kembata Tembaro Zone -->
+            <optgroup label="Kembata Tembaro Zone">
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Durame">Durame (Capital)</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Damboya">Damboya</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Angacha">Angacha</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Kedida Gamela">Kedida Gamela</option>
+              <option value="Central Ethiopia, Kembata Tembaro Zone, Tembaro Special Woreda">Tembaro Special Woreda</option>
+            </optgroup>
+
+            <!-- Gurage Zone (Divided into Sub-Zones and Special Woredas) -->
+            <optgroup label="Gurage Zone - East Gurage Zone">
+              <option value="Central Ethiopia, Gurage Zone, East Gurage Zone">East Gurage Zone (Separate Zone)</option>
+            </optgroup>
+
+            <optgroup label="Gurage Zone - Kebena Special Woreda">
+              <option value="Central Ethiopia, Gurage Zone, Kebena Special Woreda">Kebena Special Woreda</option>
+            </optgroup>
+
+            <optgroup label="Gurage Zone - Mareko Special Woreda">
+              <option value="Central Ethiopia, Gurage Zone, Mareko Special Woreda">Mareko Special Woreda</option>
+            </optgroup>
+
+            <optgroup label="Gurage Zone - Other Woredas and Towns">
+              <option value="Central Ethiopia, Gurage Zone, Butajira">Butajira (Town)</option>
+              <option value="Central Ethiopia, Gurage Zone, Welkite">Welkite (Regional Council Seat)</option>
+              <option value="Central Ethiopia, Gurage Zone, Meskan Woreda">Meskan Woreda</option>
+              <option value="Central Ethiopia, Gurage Zone, East Meskan Woreda">East Meskan Woreda</option>
+              <option value="Central Ethiopia, Gurage Zone, Kebena Woreda">Kebena Woreda (Separate from Special Woreda)</option>
+              <option value="Central Ethiopia, Gurage Zone, Mareko Woreda">Mareko Woreda</option>
+            </optgroup>
+
+            <!-- Silte Zone -->
+            <optgroup label="Silte Zone">
+              <option value="Central Ethiopia, Silte Zone, Worabe">Worabe (Capital)</option>
+              <option value="Central Ethiopia, Silte Zone, Kibet">Kibet</option>
+              <option value="Central Ethiopia, Silte Zone, Kutere">Kutere</option>
+              <option value="Central Ethiopia, Silte Zone, Qebena">Qebena</option>
+            </optgroup>
+
+            <!-- Halaba Zone -->
+            <optgroup label="Halaba Zone">
+              <option value="Central Ethiopia, Halaba Zone, Alaba Kulito">Alaba Kulito (Capital)</option>
+              <option value="Central Ethiopia, Halaba Zone, Besheno">Besheno</option>
+              <option value="Central Ethiopia, Halaba Zone, Dore Bafeno">Dore Bafeno</option>
+            </optgroup>
+
+            <!-- Yem Special Woreda (Elevated to Zone Status) -->
+            <optgroup label="Yem Special Woreda (Now Zone)">
+              <option value="Central Ethiopia, Yem Special Woreda, Fofa">Fofa (Capital)</option>
+            </optgroup>
+
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="edit-prison-capacity">Capacity</label>
+          <input type="number" name="capacity" id="edit-prison-capacity" class="form-control" required min="1">
+        </div>
+
+      </section>
+
+      <footer class="modal-card-foot">
+        <button type="button" class="btn btn-secondary close-modal" aria-label="Cancel edit">Cancel</button>
+        <button type="submit" class="btn btn-primary">Update Prison</button>
+      </footer>
+    </form>
+  </div>
+</div>
+
 
     <div class="modal" id="delete-prison-modal" role="dialog" aria-labelledby="delete-modal-title" aria-hidden="true">
         <div class="modal-card" style="max-width: 400px;">
@@ -574,13 +717,17 @@
         </div>
     </div>
 
-   
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
             if (!csrfToken) {
-                Swal.fire({ icon: 'error', title: 'Error', text: 'CSRF token missing. Please check application setup.' });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'CSRF token missing. Please check application setup.'
+                });
                 return;
             }
 
@@ -661,9 +808,10 @@
                 }, 300));
             }
 
-           
-          
+
+
         });
     </script>
 </body>
+
 </html>

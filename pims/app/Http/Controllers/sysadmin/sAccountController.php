@@ -12,6 +12,7 @@ use App\Models\Role;
   use Carbon\Carbon;
   use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -117,6 +118,44 @@ public function getChartData($prisonId = null)
           return view('sysadmin.view_account', compact('accounts', 'prisons','roles'));
       }
 
+      public function changePasswordforsystem(Request $request, $user_id)
+      {
+          Log::info('Password change request initiated.', [
+              'requested_by' => session('user_id'),
+              'target_account_id' => $user_id,
+              'timestamp' => now()->toDateTimeString(),
+              'ip_address' => $request->ip(),
+          ]);
+      
+        
+          try {
+              $account = Account::findOrFail($user_id);
+              $account->password = Hash::make($request->new_password);
+              $account->save();
+      
+              Log::info('Password successfully updated.', [
+                  'account_id' => $account->id,
+                  'timestamp' => now()->toDateTimeString(),
+                  'updated_by' => session('user_id')
+              ]);
+      
+              return response()->json([
+                  'message' => 'Password updated successfully.'
+              ], 200);
+      
+          } catch (\Exception $e) {
+              Log::error('Password update failed.', [
+                  'account_id' => $user_id,
+                  'error_message' => $e->getMessage(),
+                  'timestamp' => now()->toDateTimeString(),
+              ]);
+      
+              return response()->json([
+                  'message' => 'Failed to update password.'
+              ], 500);
+          }
+      }
+      
       public function account_add()
       {
           $account = Account::all();

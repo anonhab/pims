@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
     <style>
         :root {
-            --primary:rgb(179, 63, 50);
+            --primary: rgb(179, 63, 50);
             --secondary: rgb(127, 25, 14);
             --accent: #3498db;
             --light: #ecf0f1;
@@ -35,7 +35,6 @@
             background: #f5f7fa;
             color: var(--primary);
             font-size: var(--font-size-base);
-         
         }
 
         .pims-app-container {
@@ -166,6 +165,7 @@
             gap: 0.5rem;
             padding: 1rem;
             border-top: 1px solid #eee;
+            flex-wrap: wrap;
         }
 
         .pims-btn {
@@ -249,7 +249,7 @@
         }
 
         @keyframes modalFadeIn {
-            from {  transform: translateY(-20px); }
+            from { transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -346,6 +346,13 @@
             margin-bottom: 1.5rem;
         }
 
+        .pims-error-text {
+            color: var(--danger);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
         @media (max-width: 992px) {
             .pims-main-content { margin-left: 0; }
             .pims-cards-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
@@ -365,9 +372,9 @@
     </style>
 </head>
 <body>
-     @include('includes.nav')
-        @include('security_officer.menu')
-        
+    @include('includes.nav')
+    @include('security_officer.menu')
+    
     <div class="pims-app-container">
         <main class="pims-main-content">
             <div class="pims-content-container">
@@ -429,6 +436,12 @@
                                             data-identification-number="{{ $visitor->identification_number }}"
                                             aria-label="Edit visitor {{ $visitor->id }}">
                                         <i class="fas fa-edit" aria-hidden="true"></i> Edit
+                                    </button>
+                                    <button class="pims-btn pims-btn-light pims-change-password-btn"
+                                            data-id="{{ $visitor->id }}"
+                                            data-name="{{ $visitor->first_name }} {{ $visitor->last_name }}"
+                                            aria-label="Change password for visitor {{ $visitor->id }}">
+                                        <i class="fas fa-key" aria-hidden="true"></i> Change Password
                                     </button>
                                     <button class="pims-btn pims-btn-danger pims-delete-btn"
                                             data-id="{{ $visitor->id }}"
@@ -502,6 +515,39 @@
         </div>
     </div>
 
+    <div class="pims-modal" id="pims-change-password-modal" role="dialog" aria-labelledby="change-password-modal-title" aria-hidden="true">
+        <div class="pims-modal-container" style="max-width: 400px;">
+            <div class="pims-modal-header">
+                <h3 id="change-password-modal-title"><i class="fas fa-key" aria-hidden="true"></i> Change Password</h3>
+                <button class="pims-modal-close" aria-label="Close change password modal">×</button>
+            </div>
+            <form id="pims-change-password-form" method="POST">
+                @csrf
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="visitor_id" id="pims-change-password-id">
+                <div class="pims-modal-body">
+                    <div class="pims-form-group">
+                        <label for="pims-new-password" class="pims-form-label">New Password</label>
+                        <input type="password" name="new_password" id="pims-new-password" required minlength="8" class="pims-form-control">
+                    </div>
+                    <div class="pims-form-group">
+                        <label for="pims-confirm-password" class="pims-form-label">Confirm Password</label>
+                        <input type="password" name="confirm_password" id="pims-confirm-password" required minlength="8" class="pims-form-control">
+                    </div>
+                    <p class="pims-error-text" id="pims-password-error">Passwords do not match or are too short (minimum 8 characters).</p>
+                </div>
+                <div class="pims-modal-footer">
+                    <button type="button" class="pims-btn pims-btn-light pims-close-modal" aria-label="Cancel password change">
+                        Cancel
+                    </button>
+                    <button type="submit" class="pims-btn pims-btn-primary" id="pims-save-password-btn">
+                        <i class="fas fa-save" aria-hidden="true"></i> Save Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="pims-modal" id="pims-delete-modal" role="dialog" aria-labelledby="delete-modal-title" aria-hidden="true">
         <div class="pims-modal-container">
             <div class="pims-modal-header">
@@ -542,18 +588,36 @@
             }
 
             const editModal = document.getElementById('pims-edit-modal');
+            const passwordModal = document.getElementById('pims-change-password-modal');
             const deleteModal = document.getElementById('pims-delete-modal');
 
             const closeAllModals = () => {
+                console.log('Closing all modals');
                 editModal.classList.remove('active');
+                passwordModal.classList.remove('active');
                 deleteModal.classList.remove('active');
                 editModal.setAttribute('aria-hidden', 'true');
+                passwordModal.setAttribute('aria-hidden', 'true');
                 deleteModal.setAttribute('aria-hidden', 'true');
                 document.body.style.overflow = '';
+                resetPasswordModal();
+            };
+
+            const resetPasswordModal = () => {
+                console.log('Resetting password modal');
+                const passwordForm = document.getElementById('pims-change-password-form');
+                if (passwordForm) {
+                    passwordForm.reset();
+                    document.getElementById('pims-password-error').style.display = 'none';
+                    const saveBtn = passwordForm.querySelector('.pims-btn-primary');
+                    saveBtn.innerHTML = '<i class="fas fa-save"></i> Save Password';
+                    saveBtn.disabled = false;
+                }
             };
 
             document.querySelectorAll('.pims-edit-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    console.log('Edit button clicked');
                     closeAllModals();
                     const id = btn.dataset.id;
                     document.getElementById('pims-edit-id').value = id;
@@ -571,8 +635,23 @@
                 });
             });
 
+            document.querySelectorAll('.pims-change-password-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    console.log('Change password button clicked');
+                    closeAllModals();
+                    const visitorId = btn.dataset.id;
+                    document.getElementById('pims-change-password-id').value = visitorId;
+                    document.getElementById('pims-change-password-form').action = `/security_officer/visitors/change-password/${visitorId}`;
+                    passwordModal.classList.add('active');
+                    passwordModal.setAttribute('aria-hidden', 'false');
+                    document.body.style.overflow = 'hidden';
+                    document.getElementById('pims-new-password').focus();
+                });
+            });
+
             document.querySelectorAll('.pims-delete-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
+                    console.log('Delete button clicked');
                     closeAllModals();
                     document.getElementById('pims-delete-id').textContent = btn.dataset.id;
                     document.getElementById('pims-delete-form').action = `{{ route('security_officer.deleteVisitor', ':id') }}`.replace(':id', btn.dataset.id);
@@ -594,6 +673,7 @@
 
             document.getElementById('pims-edit-form').addEventListener('submit', async e => {
                 e.preventDefault();
+                console.log('Edit form submission started');
                 const form = e.target;
                 const submitBtn = form.querySelector('button[type="submit"]');
                 const originalText = submitBtn.innerHTML;
@@ -605,6 +685,7 @@
                     formData.delete('_method');
                     const data = Object.fromEntries(formData);
                     data._method = 'PUT';
+                    console.log('Sending edit data:', data);
                     const response = await fetch(form.action, {
                         method: 'POST',
                         headers: {
@@ -615,6 +696,7 @@
                         body: JSON.stringify(data)
                     });
                     const result = await response.json();
+                    console.log('Edit response:', result);
                     if (response.ok) {
                         closeAllModals();
                         Swal.fire({
@@ -628,10 +710,13 @@
                         throw new Error(result.message || 'Failed to update visitor');
                     }
                 } catch (error) {
+                    console.error('Edit error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: error.message.includes('405') 
+                        text: error.message.includes('404') 
+                            ? 'Update route not found. Please check backend configuration.'
+                            : error.message.includes('405') 
                             ? 'Update operation not supported. Please ensure backend supports PUT method.'
                             : error.message || 'Something went wrong!'
                     });
@@ -641,8 +726,93 @@
                 }
             });
 
+            const passwordForm = document.getElementById('pims-change-password-form');
+            if (passwordForm) {
+                passwordForm.addEventListener('submit', async e => {
+                    e.preventDefault();
+                    console.log('Password change form submission started');
+                    const form = e.target;
+                    const submitBtn = form.querySelector('#pims-save-password-btn');
+                    const newPassword = document.getElementById('pims-new-password').value;
+                    const confirmPassword = document.getElementById('pims-confirm-password').value;
+                    const passwordError = document.getElementById('pims-password-error');
+
+                    if (!newPassword || !confirmPassword) {
+                        passwordError.textContent = 'Both password fields are required.';
+                        passwordError.style.display = 'block';
+                        console.log('Validation failed: Empty fields');
+                        return;
+                    }
+
+                    if (newPassword.length < 8) {
+                        passwordError.textContent = 'Password must be at least 8 characters long.';
+                        passwordError.style.display = 'block';
+                        console.log('Validation failed: Password too short');
+                        return;
+                    }
+
+                    if (newPassword !== confirmPassword) {
+                        passwordError.textContent = 'Passwords do not match.';
+                        passwordError.style.display = 'block';
+                        console.log('Validation failed: Passwords do not match');
+                        return;
+                    }
+
+                    passwordError.style.display = 'none';
+
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+                    submitBtn.disabled = true;
+
+                    try {
+                        const formData = new FormData(form);
+                        formData.delete('_method');
+                        const data = Object.fromEntries(formData);
+                        data._method = 'PUT';
+                        console.log('Sending password data:', data);
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+                        console.log('Password response:', result);
+                        if (response.ok) {
+                            closeAllModals();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Password updated successfully!',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => window.location.reload());
+                        } else {
+                            throw new Error(result.message || 'Failed to update password');
+                        }
+                    } catch (error) {
+                        console.error('Password error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.message.includes('404') 
+                                ? 'Password change route not found. Please check backend configuration.'
+                                : error.message.includes('405') 
+                                ? 'Password change operation not supported. Please ensure backend supports PUT method.'
+                                : error.message || 'Something went wrong!'
+                        });
+                    } finally {
+                        submitBtn.innerHTML = '<i class="fas fa-save"></i> Save Password';
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+
             document.getElementById('pims-delete-form').addEventListener('submit', async e => {
                 e.preventDefault();
+                console.log('Delete form submission started');
                 const form = e.target;
                 const submitBtn = form.querySelector('button[type="submit"]');
                 const originalText = submitBtn.innerHTML;
@@ -660,6 +830,7 @@
                         body: JSON.stringify({ _method: 'DELETE' })
                     });
                     const result = await response.json();
+                    console.log('Delete response:', result);
                     if (response.ok) {
                         closeAllModals();
                         Swal.fire({
@@ -673,10 +844,13 @@
                         throw new Error(result.message || 'Failed to delete visitor');
                     }
                 } catch (error) {
+                    console.error('Delete error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: error.message.includes('405') 
+                        text: error.message.includes('404') 
+                            ? 'Delete route not found. Please check backend configuration.'
+                            : error.message.includes('405') 
                             ? 'Delete operation not supported. Please ensure backend supports DELETE method.'
                             : error.message || 'Something went wrong!'
                     });
@@ -687,7 +861,7 @@
             });
 
             document.addEventListener('keydown', e => {
-                if (e.key === 'Escape' && (editModal.classList.contains('active') || deleteModal.classList.contains('active'))) {
+                if (e.key === 'Escape' && (editModal.classList.contains('active') || passwordModal.classList.contains('active') || deleteModal.classList.contains('active'))) {
                     closeAllModals();
                 }
             });

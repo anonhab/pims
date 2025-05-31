@@ -17,6 +17,123 @@ use Illuminate\Support\Facades\Validator;
 
 class SecurityController extends Controller
 {
+    public function showVisitor($id)
+{
+    $visitor = Visitor::with(['visits'])->findOrFail($id);
+
+    return response()->json($visitor);
+}
+    // Dashboard view with visitor metrics
+    public function dashboard()
+{
+    $prisonId = session('prison_id'); // Get current prison ID from session
+
+    // Visitor metrics scoped to prison
+    $visitorsToday = NewVisitingRequest::whereDate('requested_date', today())
+        ->where('prison_id', $prisonId)
+        ->count();
+
+    $pendingApprovals = NewVisitingRequest::where('status', 'pending')
+        ->where('prison_id', $prisonId)
+        ->count();
+
+    $securityAlerts = Notification::where('recipient_role', 'security_officer')
+        ->where('is_read', false)
+        ->where('prison_id', $prisonId)
+        ->count();
+
+    // Load only visitors related to the current prison
+    $prisonId = session('prison_id');
+
+    $visitors = Visitor::whereHas('visits', function ($query) use ($prisonId) {
+        $query->where('prison_id', $prisonId);
+    })
+    ->with(['visits' => function ($query) use ($prisonId) {
+        $query->where('prison_id', $prisonId);
+    }])
+    ->take(10)
+    ->get();
+    
+    $totalVisitors = Visitor::count();
+
+    // Appointment metrics scoped to prison
+    $pendingMedicalAppointments = MedicalAppointment::where('status', 'scheduled')
+        ->where('prison_id', $prisonId)
+        ->count();
+
+    $pendingLawyerAppointments = LawyerAppointment::where('status', 'scheduled')
+        ->where('prison_id', $prisonId)
+        ->count();
+
+    $pendingVisitorAppointments = NewVisitingRequest::where('status', 'pending')
+        ->where('prison_id', $prisonId)
+        ->count();
+
+        $weekStart = today()->startOfWeek();
+
+        $monData = NewVisitingRequest::whereDate('requested_date', $weekStart)
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+        
+        $tueData = NewVisitingRequest::whereDate('requested_date', $weekStart->copy()->addDay())
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+        
+        $wedData = NewVisitingRequest::whereDate('requested_date', $weekStart->copy()->addDays(2))
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+        
+        $thuData = NewVisitingRequest::whereDate('requested_date', $weekStart->copy()->addDays(3))
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+        
+        $friData = NewVisitingRequest::whereDate('requested_date', $weekStart->copy()->addDays(4))
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+        
+        $satData = NewVisitingRequest::whereDate('requested_date', $weekStart->copy()->addDays(5))
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+        
+        $sunData = NewVisitingRequest::whereDate('requested_date', $weekStart->copy()->addDays(6))
+            ->where('prison_id', $prisonId)
+            ->where('status', 'approved')
+            ->count();
+        
+    return view('security_officer.dashboard', compact(
+        'visitorsToday',
+        'pendingApprovals',
+        'securityAlerts',
+        'visitors',
+        'totalVisitors',
+        'pendingMedicalAppointments',
+        'pendingLawyerAppointments',
+        'pendingVisitorAppointments',
+        'monData',
+        'tueData',
+        'wedData',
+        'thuData',
+        'friData',
+        'satData',
+        'sunData'
+    ));
+}
+    public function changePassword(Request $request, $visitor_id)
+{
+   
+
+    $visitor = Visitor::findOrFail($visitor_id);
+    $visitor->password = Hash::make($request->new_password);
+    $visitor->save();
+
+    return response()->json(['message' => 'Password updated successfully'], 200);
+}
     private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
     {
         Notification::create([
@@ -283,10 +400,22 @@ public function updateStatus(Request $request)
     // Delete visitor
     public function deleteVisitor($id)
     {
+       
+    try {
         $visitor = Visitor::findOrFail($id);
         $visitor->delete();
 
-        return redirect()->route('security_officer.viewvisitors')->with('success', 'Visitor deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Visitor deleted successfully.'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Failed to delete visitor.',
+            'error' => $e->getMessage()
+        ], 500);
+    }
     }
 
     // Show form to create a visiting time request
