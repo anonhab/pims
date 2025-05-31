@@ -20,12 +20,12 @@
         <!-- Sidebar Menu -->
         <aside class="sidebar-menu flex-1 overflow-y-auto">
             <ul class="sidebar-menu-list space-y-2 p-4">
-</br></br>
+                <br><br>
                 <!-- Dashboard -->
                 <li class="sidebar-menu-item">
-                    <a href="{{ route('cadmin.dashboard') }}"  class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
+                    <a href="{{ route('cadmin.dashboard') }}" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
                         <span class="sidebar-menu-icon mr-3">
-                            <i class="fas fa-home"></i>
+                            <i class="fas fa-tachometer-alt"></i>
                         </span>
                         <span class="sidebar-menu-text">Dashboard</span>
                     </a>
@@ -35,7 +35,7 @@
                 <li class="sidebar-menu-item sidebar-has-submenu">
                     <a href="#" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
                         <span class="sidebar-menu-icon mr-3">
-                            <i class="fas fa-user"></i>
+                            <i class="fas fa-users-cog"></i>
                         </span>
                         <span class="sidebar-menu-text">Account Management</span>
                         <span class="sidebar-menu-arrow ml-auto">
@@ -56,7 +56,7 @@
                 <li class="sidebar-menu-item sidebar-has-submenu">
                     <a href="#" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
                         <span class="sidebar-menu-icon mr-3">
-                            <i class="fas fa-chart-line"></i>
+                            <i class="fas fa-building"></i>
                         </span>
                         <span class="sidebar-menu-text">Prison Management</span>
                         <span class="sidebar-menu-arrow ml-auto">
@@ -68,17 +68,16 @@
                             <a href="{{ route('prison.add') }}" class="sidebar-submenu-link text-gray-300 hover:text-white text-sm p-2 block">Add/Update Prison</a>
                         </li>
                         <li class="sidebar-submenu-item">
-                            <a  href="{{ route('prison.view') }}" class="sidebar-submenu-link text-gray-300 hover:text-white text-sm p-2 block">View Prison Details</a>
+                            <a href="{{ route('prison.view') }}" class="sidebar-submenu-link text-gray-300 hover:text-white text-sm p-2 block">View Prison Details</a>
                         </li>
                     </ul>
                 </li>
 
-                
-                <!-- Prison Management -->
+                <!-- Prisoner Management -->
                 <li class="sidebar-menu-item sidebar-has-submenu">
                     <a href="#" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
                         <span class="sidebar-menu-icon mr-3">
-                            <i class="fas fa-chart-line"></i>
+                            <i class="fas fa-user-lock"></i>
                         </span>
                         <span class="sidebar-menu-text">Prisoner Management</span>
                         <span class="sidebar-menu-arrow ml-auto">
@@ -96,7 +95,7 @@
                 <li class="sidebar-menu-item sidebar-has-submenu">
                     <a href="#" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
                         <span class="sidebar-menu-icon mr-3">
-                            <i class="fas fa-chart-line"></i>
+                            <i class="fas fa-file-alt"></i>
                         </span>
                         <span class="sidebar-menu-text">Report Generation</span>
                         <span class="sidebar-menu-arrow ml-auto">
