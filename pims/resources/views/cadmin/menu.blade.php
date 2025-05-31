@@ -16,12 +16,7 @@
     @include('components.preloader')
 
     <div class="sidebar-container fixed top-0 left-0 h-full w-20 bg-gray-900 text-white shadow-2xl transition-all duration-300 sidebar-collapsed" id="sidebarMain">
-        <!-- Sidebar Logo/Brand -->
-        <div class="sidebar-brand flex items-center p-4 bg-gray-800 border-b border-gray-700">
-            <i class="fas fa-user-shield text-2xl mr-2"></i>
-            <span class="sidebar-brand-text text-lg font-bold">PIMS Admin</span>
-        </div>
-
+       
         <!-- Sidebar Menu -->
         <aside class="sidebar-menu flex-1 overflow-y-auto">
             <ul class="sidebar-menu-list space-y-2 p-4">

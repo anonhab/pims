@@ -121,7 +121,7 @@ public function getChartData($prisonId = null)
       {
           $account = Account::all();
           $prisons = Prison::all();
-          $roles = Role::whereNotIn('id', [1, 3])->get();
+          $roles = Role::whereNotIn('id', [1, 3,4])->get();
           return view('sysadmin.create_account', compact('account', 'prisons', 'roles'));
       }
 
