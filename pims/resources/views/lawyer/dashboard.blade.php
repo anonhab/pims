@@ -49,36 +49,12 @@
             line-height: 1.6;
         }
 
-        .header {
-            background: linear-gradient(135deg, var(--pims-primary) 0%, var(--pims-secondary) 100%);
-            color: white;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            top: 0;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            height: var(--pims-nav-height);
-        }
-
-        .pims-sidebar-container {
-            position: fixed;
-            top: var(--pims-nav-height);
-            left: 0;
-            width: var(--pims-sidebar-width);
-            height: calc(100vh - var(--pims-nav-height));
-            background: white;
-            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.05);
-            overflow-y: auto;
-            z-index: 900;
-            transition: var(--pims-transition);
-            border-right: 1px solid rgba(0, 0, 0, 0.05);
-        }
+       
 
         #pims-page-content {
             margin-left: 0;
             padding: 2rem;
-            padding-left: calc(var(--pims-sidebar-width) + 2rem);
-            min-height: calc(100vh - var(--pims-nav-height));
+              padding-left: 300px;
             transition: var(--pims-transition);
             background-color: #f5f7fa;
             padding-top: 70px;
@@ -467,42 +443,47 @@
             }
         }
 
-        @media (max-width: 768px) {
-            .pims-grid {
-                grid-template-columns: 1fr;
-            }
+       @media (max-width: 768px) {
+    /* Adjust main content padding for mobile */
+    #pims-page-content {
+        padding-left: 90px !important;
+    }
 
-            .pims-section-title {
-                font-size: 1.5rem;
-            }
+    /* Keep all other mobile styles */
+    .pims-grid {
+        grid-template-columns: 1fr;
+    }
 
-            .pims-dashboard-card p {
-                font-size: 1.75rem;
-            }
+    .pims-section-title {
+        font-size: 1.5rem;
+    }
 
-            .pims-stats-box {
-                padding: 1.5rem;
-            }
+    .pims-dashboard-card p {
+        font-size: 1.75rem;
+    }
 
-            .pims-stats-box h2 {
-                font-size: 1.25rem;
-            }
+    .pims-stats-box {
+        padding: 1.5rem;
+    }
 
-            .pims-stats-box li {
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 1rem;
-            }
+    .pims-stats-box h2 {
+        font-size: 1.25rem;
+    }
 
-            .pims-stats-box li .pims-activity-time {
-                margin-left: 0;
-                margin-top: 0.5rem;
-            }
-        }
+    .pims-stats-box li {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .pims-stats-box li .pims-activity-time {
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+}
     </style>
 </head>
 <body>
-    @include('components.preloader')
     @include('includes.nav')
     @include('lawyer.menu')
 
@@ -593,155 +574,158 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Preloader
-            const preloader = document.querySelector('.pims-progress');
-            if (preloader) {
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                }, 100);
+    // Preloader
+    const preloader = document.querySelector('.pims-progress');
+    if (preloader) {
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500); // Increased timeout for better visibility
+    }
+
+    // Request Status Distribution Chart
+    const requestStatusCanvas = document.getElementById('pims-request-status-box');
+    if (requestStatusCanvas) {
+        const requestStatusChart = new Chart(requestStatusCanvas.getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: ['Pending', 'Approved', 'Rejected'],
+                datasets: [{
+                    label: 'Requests',
+                    data: [
+                        {{ $requestStatusChartData['pending'] }},
+                        {{ $requestStatusChartData['approved'] }},
+                        {{ $requestStatusChartData['rejected'] }}
+                    ],
+                    backgroundColor: [
+                        'rgba(255, 184, 108, 0.7)',
+                        'rgba(80, 250, 123, 0.7)',
+                        'rgba(255, 85, 85, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 184, 108, 1)',
+                        'rgba(80, 250, 123, 1)',
+                        'rgba(255, 85, 85, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { weight: '600' }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(10, 25, 47, 0.9)',
+                        titleFont: { weight: 'bold' }
+                    }
+                }
             }
+        });
+    }
 
-            // Request Status Distribution Chart
-            const requestStatusChart = new Chart(
-                document.getElementById('pims-request-status-box').getContext('2d'),
-                {
-                    type: 'pie',
-                    data: {
-                        labels: ['Pending', 'Approved', 'Rejected'],
-                        datasets: [{
-                            label: 'Requests',
-                            data: [
-                                {{ $requestStatusChartData['pending'] }},
-                                {{ $requestStatusChartData['approved'] }},
-                                {{ $requestStatusChartData['rejected'] }}
-                            ],
-                            backgroundColor: [
-                                'rgba(255, 184, 108, 0.7)',
-                                'rgba(80, 250, 123, 0.7)',
-                                'rgba(255, 85, 85, 0.7)'
-                            ],
-                            borderColor: [
-                                'rgba(255, 184, 108, 1)',
-                                'rgba(80, 250, 123, 1)',
-                                'rgba(255, 85, 85, 1)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'right',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    font: { weight: '600' }
-                                }
-                            },
-                            tooltip: {
-                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
-                                titleFont: { weight: 'bold' }
-                            }
+    // Case Activity Chart (Line)
+    const caseActivityCanvas = document.getElementById('case-activity-chart');
+    if (caseActivityCanvas) {
+        const caseActivityChart = new Chart(caseActivityCanvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: @json($caseTrendsChartData['labels']),
+                datasets: [{
+                    label: 'Requests',
+                    data: @json($caseTrendsChartData['requests']),
+                    backgroundColor: 'rgba(100, 255, 218, 0.1)',
+                    borderColor: 'rgba(100, 255, 218, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { weight: '600' }
                         }
+                    },
+                    tooltip: {
+                        mode: 'index',
+                        intersect: false,
+                        backgroundColor: 'rgba(10, 25, 47, 0.9)',
+                        titleFont: { weight: 'bold' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
+                        ticks: { stepSize: 2 }
+                    },
+                    x: {
+                        grid: { display: false, drawBorder: false }
+                    }
+                },
+                elements: {
+                    point: {
+                        radius: 4,
+                        hoverRadius: 6
                     }
                 }
-            );
+            }
+        });
+    }
 
-            // Case Activity Chart (Line)
-            const caseActivityChart = new Chart(
-                document.getElementById('case-activity-chart').getContext('2d'),
-                {
-                    type: 'line',
-                    data: {
-                        labels: @json($caseTrendsChartData['labels']),
-                        datasets: [{
-                            label: 'Requests',
-                            data: @json($caseTrendsChartData['requests']),
-                            backgroundColor: 'rgba(100, 255, 218, 0.1)',
-                            borderColor: 'rgba(100, 255, 218, 1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true,
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    usePointStyle: true,
-                                    padding: 20,
-                                    font: { weight: '600' }
-                                }
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false,
-                                backgroundColor: 'rgba(10, 25, 47, 0.9)',
-                                titleFont: { weight: 'bold' }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
-                                ticks: { stepSize: 2 }
-                            },
-                            x: {
-                                grid: { display: 'none', drawBorder: false }
-                            }
-                        },
-                        elements: {
-                            point: {
-                                radius: 4,
-                                hoverRadius: 6,
-                            }
-                        }
-                    }
-                }
-            );
-
-            // Search functionality
-            const searchInput = document.getElementById('input-search-appointments');
-            const appointmentItems = document.querySelectorAll('.pims-stats-box li');
-
-            searchInput && appointmentItems.forEach(item => {
-                searchInput.addEventListener('input', function() => {
-                    const filter = searchInput.value.toLowerCase();
-                    .forEach(item => {
-                        const text = item.textContent.toLowerCase();
-                        item.style.display = text.includes(filter) ? '' : 'none';
-                    });
-                }));
-
-            // Refresh button
-            document.getElementById('btn-pims-btn-refresh').addEventListener('click', () => {
-                window.location.reload();
-            });
-
-            // Close alert
-            document.querySelectorAll('.alert-close').forEach(btn => {
-                button.addEventListener('click', () => {
-                    btn.closest('(.pims-system-alert')).style.display = 'none';
-                });
-            });
-
-            // Pulse effect for alert
-            const alertBadges = document.querySelectorAll('.selected('.pims-security-badge.alert');
-            'forEach(badge => {
-                badgeBadges => {
-                    setInterval(() => {
-                        badge.style.opacity = badge.style.opacity === '0.8' ? '1' : '0.8';
-                    }, 1000);
-                });
+    // Search functionality
+    const searchInput = document.getElementById('input-search-appointments');
+    const appointmentItems = document.querySelectorAll('.pims-stats-box li');
+    if (searchInput && appointmentItems.length) {
+        searchInput.addEventListener('input', function() {
+            const filter = searchInput.value.toLowerCase();
+            appointmentItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(filter) ? '' : 'none';
             });
         });
     }
-}
+
+    // Refresh button
+    const refreshButton = document.getElementById('btn-pims-btn-refresh');
+    if (refreshButton) {
+        refreshButton.addEventListener('click', () => {
+            window.location.reload();
+        });
+    }
+
+    // Close alert
+    const alertCloses = document.querySelectorAll('.alert-close');
+    alertCloses.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const alert = btn.closest('.pims-system-alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        });
+    });
+
+    // Pulse effect for alert
+    const alertBadges = document.querySelectorAll('.pims-security-badge.alert');
+    alertBadges.forEach(badge => {
+        setInterval(() => {
+            badge.style.opacity = badge.style.opacity === '0.8' ? '1' : '0.8';
+        }, 1000);
+    });
+});
     </script>
 </body>
 </html>

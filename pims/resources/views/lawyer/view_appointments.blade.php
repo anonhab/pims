@@ -46,24 +46,12 @@
             display: flex;
             min-height: 100vh;
             padding-top: var(--pims-nav-height);
-        }
-
-        .pims-sidebar {
-            width: var(--pims-sidebar-width);
-            background: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
-            position: fixed;
-            top: var(--pims-nav-height);
-            left: 0;
-            bottom: 0;
-            overflow-y: auto;
-            z-index: 900;
-            transition: var(--pims-transition);
+              padding-left: 300px;
         }
 
         .pims-content-area {
             flex: 1;
-            margin-left: var(--pims-sidebar-width);
+
             padding: 1.5rem;
             transition: var(--pims-transition);
         }
@@ -286,6 +274,9 @@
 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
+             .pims-app-container {
+        padding-left: 90px !important;
+    }
             .pims-sidebar {
                 transform: translateX(-100%);
             }
@@ -410,9 +401,9 @@
 <body>
     <!-- Navigation -->
     @include('includes.nav')
-
+      @include('lawyer.menu')
     <div class="pims-app-container">
-        @include('lawyer.menu')
+      
 
         <div class="pims-content-area">
             <div class="pims-content-header">
