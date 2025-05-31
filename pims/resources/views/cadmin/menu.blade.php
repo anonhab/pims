@@ -58,6 +58,28 @@
                         <span class="sidebar-menu-icon mr-3">
                             <i class="fas fa-chart-line"></i>
                         </span>
+                        <span class="sidebar-menu-text">Prison Management</span>
+                        <span class="sidebar-menu-arrow ml-auto">
+                            <i class="fas fa-angle-down"></i>
+                        </span>
+                    </a>
+                    <ul class="sidebar-submenu pl-6 space-y-2">
+                        <li class="sidebar-submenu-item">
+                            <a href="{{ route('prison.add') }}" class="sidebar-submenu-link text-gray-300 hover:text-white text-sm p-2 block">Add/Update Prison</a>
+                        </li>
+                        <li class="sidebar-submenu-item">
+                            <a  href="{{ route('prison.view') }}" class="sidebar-submenu-link text-gray-300 hover:text-white text-sm p-2 block">View Prison Details</a>
+                        </li>
+                    </ul>
+                </li>
+
+                
+                <!-- Prison Management -->
+                <li class="sidebar-menu-item sidebar-has-submenu">
+                    <a href="#" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
+                        <span class="sidebar-menu-icon mr-3">
+                            <i class="fas fa-chart-line"></i>
+                        </span>
                         <span class="sidebar-menu-text">Prisoner Management</span>
                         <span class="sidebar-menu-arrow ml-auto">
                             <i class="fas fa-angle-down"></i>

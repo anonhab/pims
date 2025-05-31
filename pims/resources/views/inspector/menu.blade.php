@@ -77,6 +77,9 @@
                         <li class="sidebar-submenu-item">
                             <a href="{{ route('assignments.view') }}" class="sidebar-submenu-link text-gray-300 hover:text-white text-sm p-2 block">Assign Lawyer to Prisoner</a>
                         </li>
+                        <li class="sidebar-submenu-item">
+                            <a href="/policeofficer" class="sidebar-submenu-link text-gray-300 hover:text-white text-sm p-2 block">Assign Police Officer</a>
+                        </li>
                     </ul>
                 </li>
 
