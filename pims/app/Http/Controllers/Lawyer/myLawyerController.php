@@ -264,7 +264,7 @@ public function ldashboard()
             'prisoner_id' => $request->prisoner_id,
             'lawyer_id' => $request->lawyer_id,
             'appointment_date' => $request->appointment_date,
-            'status' => 'scheduled',
+            'status' => 'pending',
             'notes' => $request->notes,
         ]);
 

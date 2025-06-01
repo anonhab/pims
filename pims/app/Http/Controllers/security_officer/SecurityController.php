@@ -179,17 +179,22 @@ public function validatePrisoner(Request $request)
 
   // Assuming Appointment is your model for storing appointments
 
-    public function viewprisonerstatus()
-    {
-        // Fetch appointments data (you can add more logic here to filter or paginate)
-        $medicalAppointments = MedicalAppointment::all();
-        $lawyerAppointments = LawyerAppointment::all();
-        $visitorAppointments = NewVisitingRequest::where('prison_id', session('prison_id'))->get();
-    
-        // Pass data to the view
-        return view('security_officer.prisoner_status', compact('medicalAppointments', 'lawyerAppointments', 'visitorAppointments'));
-    }
-
+  public function viewprisonerstatus()
+  {
+      $prisonId = session('prison_id');
+  
+      $medicalAppointments = MedicalAppointment::where('prison_id', $prisonId)->get();
+  
+      $lawyerAppointments = LawyerAppointment::where('prison_id', $prisonId)->get();
+  
+      // Filter visitor appointments by prison_id AND status = 'pending'
+      $visitorAppointments = NewVisitingRequest::where('prison_id', $prisonId)
+                                ->where('status', 'pending')
+                                ->get();
+  
+      return view('security_officer.prisoner_status', compact('medicalAppointments', 'lawyerAppointments', 'visitorAppointments'));
+  }
+  
 
 public function verify(Request $request)
 {

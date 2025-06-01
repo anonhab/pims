@@ -3,11 +3,9 @@
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - View Requests</title>
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -49,9 +47,22 @@
             padding-top: var(--pims-nav-height);
         }
 
+        .pims-sidebar {
+            width: var(--pims-sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            top: var(--pims-nav-height);
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            z-index: 900;
+            transition: var(--pims-transition);
+        }
+
         .pims-content-area {
             flex: 1;
-              padding-left: 300px;
+            margin-left: var(--pims-sidebar-width);
             padding: 1.5rem;
             transition: var(--pims-transition);
         }
@@ -247,9 +258,6 @@
 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
-             .pims-app-container {
-        padding-left: 90px !important;
-    }
             .pims-sidebar {
                 transform: translateX(-100%);
             }
@@ -279,7 +287,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            
+            opacity: 0;
             transition: opacity 0.3s ease;
         }
 
@@ -363,9 +371,9 @@
 <body>
     <!-- Navigation -->
     @include('includes.nav')
-@include('lawyer.menu')
+
     <div class="pims-app-container">
-        
+        @include('lawyer.menu')
 
         <div class="pims-content-area">
             <div class="pims-content-header">

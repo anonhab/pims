@@ -913,42 +913,42 @@
                         <i class="fas fa-user-lock"></i>
                     </div>
                     <h3>Inmate Management</h3>
-                    <p>Securely manage inmate records, including personal details, offenses, and incarceration history with real-time updates.</p>
+                    <p>  manage inmate records, including personal details.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-clipboard-check"></i>
                     </div>
-                    <h3>Case Tracking</h3>
-                    <p>Track legal cases, court dates, and judgments with automated notifications for seamless administration.</p>
+                    <h3>Lawyer management </h3>
+                    <p>Lawyer prisoners , Requests, </p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-calendar-alt"></i>
                     </div>
                     <h3>Visitor Management</h3>
-                    <p>Streamline visitor scheduling and security checks with integrated verification protocols.</p>
+                    <p> visitor scheduling and  checks with integrated verification Prisoners.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-heartbeat"></i>
                     </div>
                     <h3>Medical Records</h3>
-                    <p>Maintain comprehensive health records and schedule medical appointments securely.</p>
+                    <p>Maintain comprehensive health records and schedule medical appointments .</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-chart-line"></i>
                     </div>
-                    <h3>Reporting & Analytics</h3>
-                    <p>Access detailed reports and analytics to monitor prison operations and trends.</p>
+                    <h3>Reporting </h3>
+                    <p>Access detailed reports and analytics to monitor prison operations.</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <h3>Security Management</h3>
-                    <p>Monitor incidents, staff assignments, and access controls with advanced security features.</p>
+                    <p>Monitor Prisoners status , Visitor management.</p>
                 </div>
             </div>
         </div>
@@ -977,24 +977,30 @@
     <!-- Stats Section -->
     <section class="section stats">
         <div class="container">
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <h3>30+</h3>
-                    <p>Released Prisoners</p>
-                </div>
-                <div class="stat-item">
-                    <h3>15,000+</h3>
-                    <p>Records Managed</p>
-                </div>
-                <div class="stat-item">
-                    <h3>99.99%</h3>
-                    <p>System Uptime</p>
-                </div>
-                <div class="stat-item">
-                    <h3>75+</h3>
-                    <p>Trained Staff</p>
-                </div>
-            </div>
+        @php
+    use App\Models\Prisoner;
+    use App\Models\Account;
+
+    $releasedPrisonersCount = Prisoner::where('status', 'released')->count();
+    $recordsManagedCount = Prisoner::count();
+    $staffCount = Account::count();
+@endphp
+
+<div class="stats-grid">
+    <div class="stat-item">
+        <h3>{{ $releasedPrisonersCount }}+</h3>
+        <p>Released Prisoners</p>
+    </div>
+    <div class="stat-item">
+        <h3>{{ number_format($recordsManagedCount) }}+</h3>
+        <p>Records Managed</p>
+    </div>
+    <div class="stat-item">
+        <h3>{{ $staffCount }}+</h3>
+        <p>Staff</p>
+    </div>
+</div>
+
         </div>
     </section>
 
