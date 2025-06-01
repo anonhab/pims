@@ -450,11 +450,12 @@
         }
     </style>
 </head>
-<body>
-
-    <!-- Navigation -->
+<!-- Navigation -->
     @include('includes.nav')
         @include('police_officer.menu')
+<body>
+
+    
 
         
     <!-- Main Content -->
@@ -618,7 +619,7 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/menu.js') }}"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Preloader
