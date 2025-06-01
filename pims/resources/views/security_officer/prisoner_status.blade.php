@@ -565,8 +565,8 @@
                             <div class="pims9-card-footer">
                                 <span class="pims9-status-badge 
                                     {{ $appointment->status == 'Pending' ? 'pims9-status-pending' : 
-                                    ($appointment->status == 'Approved' ? 'pims9-status-approved' : 'pims9-status-rejected') }}">
-                                    <i class="fas fa-{{ $appointment->status == 'Pending' ? 'clock' : ($appointment->status == 'Approved' ? 'check' : 'times') }}"></i>
+                                    ($appointment->status == 'completed' ? 'pims9-status-approved' : 'pims9-status-rejected') }}">
+                                    <i class="fas fa-{{ $appointment->status == 'scheduled' ? 'clock' : ($appointment->status == 'completed' ? 'check' : 'times') }}"></i>
                                     {{ $appointment->status }}
                                 </span>
                             </div>
@@ -609,7 +609,7 @@
                             <div class="pims9-card-footer">
                                 <span class="pims9-status-badge 
                                     {{ $appointment->status == 'Pending' ? 'pims9-status-pending' : 
-                                    ($appointment->status == 'Approved' ? 'pims9-status-approved' : 'pims9-status-rejected') }}">
+                                    ($appointment->status == 'completed' ? 'pims9-status-approved' : 'pims9-status-rejected') }}">
                                     <i class="fas fa-{{ $appointment->status == 'scheduled' ? 'clock' : ($appointment->status == 'completed' ? 'check' : 'times') }}"></i>
                                     {{ $appointment->status }}
                                 </span>
