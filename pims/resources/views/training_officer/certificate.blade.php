@@ -23,24 +23,11 @@
             --pims-transition: all 0.3s ease;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f5f7fa;
-            color: var(--pims-primary);
-            line-height: 1.5;
-        }
-
         .pims-app-container {
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            padding: 20px;
+            padding-top: 70px;
         }
 
         .pims-certificate-actions {
