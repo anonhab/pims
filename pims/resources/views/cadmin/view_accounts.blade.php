@@ -248,6 +248,7 @@
             background: white;
             border-radius: var(--pims-border-radius);
             width: 90%;
+            padding-top:30px;
             max-width: 500px;
             max-height: 90vh;
             display: flex;
