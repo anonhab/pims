@@ -64,40 +64,49 @@ class VisitorController extends Controller
 
     public function register(Request $request)
     {
-        // Validate the request
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:20',
-            'relationship' => 'required|string|max:255',
-            'address' => 'required|string',
-            'identification_number' => 'required|string|unique:visitors',
-            'email' => 'required|email|unique:visitors',
-            'password' => 'required|min:6',
-        ]);
+        try {
+            // Validation
+            $request->validate([
+                'first_name' => 'required|string|max:255',
+                'last_name' => 'required|string|max:255',
+                'phone_number' => 'required|string|max:20',
+                'relationship' => 'required|string|max:255',
+                'address' => 'required|string',
+                'identification_number' => 'required|string|unique:visitors',
+                'email' => 'required|email|unique:visitors',
+                'password' => 'required|min:6',
+            ]);
     
-        // Create the visitor
-        $visitor = Visitor::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone_number' => $request->phone_number,
-            'relationship' => $request->relationship,
-            'address' => $request->address,
-            'identification_number' => $request->identification_number,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-        ]);
+            // Create visitor
+            Visitor::create([
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'phone_number' => $request->phone_number,
+                'relationship' => $request->relationship,
+                'address' => $request->address,
+                'identification_number' => $request->identification_number,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
     
-        // Log the visitor registration
-        Log::info('New visitor registered:', [
-            'visitor_id' => $visitor->id,
-            'name' => $visitor->first_name . ' ' . $visitor->last_name,
-            'email' => $visitor->email,
-            'created_at' => $visitor->created_at,
-        ]);
+            return redirect()->route('login')->with('success', 'Visitor registered successfully! Please login.');
+        
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->route('login')
+                             ->with('error', 'Validation failed. Please correct the errors.')
+                             ->withErrors($e->validator)
+                             ->withInput();
     
-        // Redirect to the login page with success message
-        return redirect()->route('login')->with('success', 'Visitor registered successfully! Please login.');
+        } catch (\Illuminate\Database\QueryException $e) {
+            return redirect()->route('login')
+                             ->with('error', 'Database error occurred. Please try again.')
+                             ->withInput();
+    
+        } catch (\Exception $e) {
+            return redirect()->route('login')
+                             ->with('error', 'Something went wrong. Please try again later.')
+                             ->withInput();
+        }
     }
     
     public function dashboard()

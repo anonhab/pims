@@ -3,10 +3,111 @@
 namespace App\Http\Controllers\police_officer;
 
 use App\Http\Controllers\Controller;
+use App\Models\PolicePrisonerAssignment;
+use App\Models\Prisoner;
+use App\Models\Requests;
+use App\Models\Room;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class PoliceController extends Controller
 {
+    public function dashboard()
+    {
+        $userId = Session::get('user_id');
+        $prisonId = Session::get('prison_id');
+
+        // Fetch assigned prisoners
+        $assignments = PolicePrisonerAssignment::where('officer_id', $userId)
+            ->with(['prisoner' => function ($query) {
+                $query->select('id', 'first_name', 'last_name', 'status', 'room_id', 'created_at');
+            }])
+            ->get();
+
+        $assignedPrisonersCount = $assignments->count();
+        $prisonerList = $assignments->map(function ($assignment) {
+            return [
+                'id' => $assignment->prisoner->id,
+                'name' => $assignment->prisoner->first_name . ' ' . $assignment->prisoner->last_name,
+                'status' => $assignment->prisoner->status,
+                'assignment_date' => $assignment->assignment_date,
+                'room_id' => $assignment->prisoner->room_id,
+            ];
+        });
+
+        // Fetch recent requests
+        $requests = Requests::where('prison_id', $prisonId)
+            ->with(['prisoner' => function ($query) {
+                $query->select('id', 'first_name', 'last_name');
+            }])
+            ->latest()
+            ->take(3)
+            ->get()
+            ->map(function ($request) {
+                return [
+                    'type' => $request->request_type,
+                    'prisoner_name' => $request->prisoner ? $request->prisoner->first_name . ' ' . $request->prisoner->last_name : 'N/A',
+                    'status' => $request->status,
+                    'created_at' => $request->created_at->format('Y-m-d H:i'),
+                    'id' => $request->id,
+                ];
+            });
+
+        // Fetch room allocations
+        $rooms = Room::where('prison_id', $prisonId)
+            ->withCount(['prisoners' => function ($query) {
+                $query->where('status', 'Active');
+            }])
+            ->get();
+
+        $roomAllocationCount = $rooms->sum('prisoners_count');
+        $roomAllocationData = [
+            'labels' => $rooms->pluck('room_number')->toArray(),
+            'data' => $rooms->pluck('prisoners_count')->toArray(),
+        ];
+
+        // Fetch pending requests count
+        $pendingRequestsCount = Requests::where('prison_id', $prisonId)
+            ->where('status', 'pending')
+            ->count();
+
+        return view('police_officer.dashboard', compact(
+            'assignedPrisonersCount',
+            'prisonerList',
+            'requests',
+            'roomAllocationCount',
+            'roomAllocationData',
+            'pendingRequestsCount'
+        ));
+    }
+    public function show($id)
+    {
+        $prisoner = Prisoner::with('prison')->findOrFail($id);
+        return response()->json([
+            'id' => $prisoner->id,
+            'first_name' => $prisoner->first_name,
+            'middle_name' => $prisoner->middle_name,
+            'last_name' => $prisoner->last_name,
+            'dob' => $prisoner->dob->format('F j, Y'),
+            'gender' => $prisoner->gender,
+            'marital_status' => $prisoner->marital_status,
+            'crime_committed' => $prisoner->crime_committed,
+            'status' => $prisoner->status,
+            'time_serve_start' => $prisoner->time_serve_start->format('F j, Y'),
+            'time_serve_end' => $prisoner->time_serve_end->format('F j, Y'),
+            'address' => $prisoner->address,
+            'emergency_contact_name' => $prisoner->emergency_contact_name,
+            'emergency_contact_relation' => $prisoner->emergency_contact_relation,
+            'emergency_contact_number' => $prisoner->emergency_contact_number,
+            'inmate_image' => $prisoner->inmate_image,
+            'prison_id' => $prisoner->prison_id,
+            'prison_name' => $prisoner->prison->name ?? 'N/A',
+            'room_id' => $prisoner->room_id,
+            'created_at' => $prisoner->created_at->format('F j, Y, g:i A'),
+            'updated_at' => $prisoner->updated_at->format('F j, Y, g:i A'),
+        ]);
+    }
+    
     // Show form to allocate a room
     public function allocateRoom()
     {

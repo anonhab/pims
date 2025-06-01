@@ -790,7 +790,7 @@
     </header>
     </br></br></br>
 
-    <!-- Visitor Registration Modal -->
+    <!-- Enhanced Visitor Registration Modal -->
     <div class="modal fade" id="visitorRegisterModal" tabindex="-1" aria-labelledby="visitorRegisterModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -837,6 +837,10 @@
                                 </select>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="identification_number" class="form-label">ID Number <span class="text-danger">*</span></label>
+                                <input type="text" name="identification_number" class="form-control" required placeholder="Enter your identification number">
+                            </div>
                         </div>
 
                         <div class="mb-3">
@@ -856,13 +860,6 @@
                                 <input type="password" name="password_confirmation" class="form-control" required placeholder="Confirm your password">
                             </div>
                         </div>
-
-                        <div class="form-check mb-3">
-                            <input class="form-check-input" type="checkbox" id="termsCheck" required>
-                            <label class="form-check-label" for="termsCheck">
-                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">terms and conditions</a>
-                            </label>
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
@@ -872,7 +869,6 @@
             </div>
         </div>
     </div>
-
 <section class="hero" id="home" style="background: linear-gradient(135deg, rgba(26, 37, 47, 0.95), rgba(255, 85, 85, 0.7)), url('{{ asset('assets/img/Federal_Police_Ethiopia.jpg') }}') no-repeat center center/cover;">
     <div class="container">
         <div class="hero-content">

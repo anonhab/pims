@@ -315,39 +315,42 @@
     }
 
     .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-        .modal-content {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            max-width: 800px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .modal-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
-        }
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 5px;
+        max-width: 800px;
+        width: 90%;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+    }
 </style>
 
 
@@ -360,228 +363,72 @@
 
     <!-- Main Content -->
     <div id="pims-page-content">
-    <div class="pims-form-container">
-        <h1 class="pims-form-title">
-            <i class="fas fa-user-lock"></i> Prisoner Registration
-        </h1>
+        <div class="pims-form-container">
+            <h1 class="pims-form-title">
+                <i class="fas fa-user-lock"></i> Prisoner Registration
+            </h1>
 
-        <!-- Input for Prisoner ID and Update Button -->
-        <div class="pims-form-group">
-            <label class="pims-form-label">Prisoner ID</label>
-            <input class="pims-form-input" type="text" id="prisoner_id" placeholder="Enter Prisoner ID">
-            <button class="pims-btn pims-btn-primary" onclick="openUpdateModal()">Update Prisoner</button>
-        </div>
-
-        <form id="prisonerForm" action="{{ route('prisoners.store') }}" method="POST" enctype="multipart/form-data">
-            @csrf
-            <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
-            <input type="hidden" name="_method" id="form_method" value="POST">
-
-            <div class="pims-form-grid">
-                <!-- Personal Information -->
-                <div class="pims-form-card">
-                    <h2 class="pims-form-title is-size-4">
-                        <i class="fas fa-id-card"></i> Personal Information
-                    </h2>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">First Name</label>
-                        <input class="pims-form-input" type="text" name="first_name" placeholder="Enter first name" required>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Middle Name</label>
-                        <input class="pims-form-input" type="text" name="middle_name" placeholder="Enter middle name">
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Last Name</label>
-                        <input class="pims-form-input" type="text" name="last_name" placeholder="Enter last name" required>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Birthday</label>
-                        <input class="pims-form-input" type="date" name="dob" required>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Sex</label>
-                        <select class="pims-form-select" name="sex" required>
-                            <option value="Male" selected>Male</option>
-                            <option value="Female">Female</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Additional Personal Info -->
-                <div class="pims-form-card">
-                    <h2 class="pims-form-title is-size-4">
-                        <i class="fas fa-info-circle"></i> Additional Information
-                    </h2>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Address</label>
-                        <textarea class="pims-form-textarea" name="address" placeholder="Enter address" required></textarea>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Marital Status</label>
-                        <select class="pims-form-select" name="marital_status" required>
-                            <option value="Single">Single</option>
-                            <option value="Married">Married</option>
-                            <option value="Divorced">Divorced</option>
-                            <option value="Widowed">Widowed</option>
-                        </select>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Inmate Image</label>
-                        <div class="pims-file-upload">
-                            <input class="pims-file-input" type="file" name="inmate_image">
-                            <label class="pims-file-label">
-                                <i class="fas fa-camera pims-file-icon"></i>
-                                <span>Click to upload inmate photo</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
+            <!-- Input for Prisoner ID and Update Button -->
+            <div class="pims-form-group">
+                <label class="pims-form-label">Prisoner ID</label>
+                <input class="pims-form-input" type="text" id="prisoner_id" placeholder="Enter Prisoner ID">
+                <button class="pims-btn pims-btn-primary" onclick="openUpdateModal()">Update Prisoner</button>
             </div>
 
-            <!-- Case Details -->
-            <div class="pims-form-card">
-                <h2 class="pims-form-title is-size-4">
-                    <i class="fas fa-gavel"></i> Case Details
-                </h2>
+            <form id="prisonerForm" action="{{ route('prisoners.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
+                <input type="hidden" name="_method" id="form_method" value="POST">
 
                 <div class="pims-form-grid">
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Crime Committed</label>
-                        <select class="pims-form-select" name="crime_committed" id="crime_committed" required>
-                            <option value="" disabled selected>Select Offense</option>
-                            <option value="Theft">Theft</option>
-                            <option value="Assault">Assault</option>
-                            <option value="Drug Possession">Drug Possession</option>
-                            <option value="Fraud">Fraud</option>
-                            <option value="Murder">Murder</option>
-                            <option value="Burglary">Burglary</option>
-                            <option value="Vandalism">Vandalism</option>
-                            <option value="Robbery">Robbery</option>
-                            <option value="Domestic Violence">Domestic Violence</option>
-                            <option value="Rape">Rape</option>
-                            <option value="Arson">Arson</option>
-                            <option value="Money Laundering">Money Laundering</option>
-                            <option value="Kidnapping">Kidnapping</option>
-                            <option value="Tax Evasion">Tax Evasion</option>
-                            <option value="Embezzlement">Embezzlement</option>
-                            <option value="Corruption">Corruption</option>
-                            <option value="Hate Crimes">Hate
-                            <option value="Smuggling">Smuggling</option>
-                            <option value="Child Abuse">Child Abuse</option>
-                            <option value="Bribery">Bribery</option>
-                            <option value="Counterfeiting">Counterfeiting</option>
-                            <option value="Terrorism">Terrorism</option>
-                            <option value="Sexual Harassment">Sexual Harassment</option>
-                            <option value="Public Disorder">Public Disorder</option>
-                            <option value="Other">Other (for any crime not listed above)</option>
-                        </select>
-                    </div>
-
-                    <div class="pims-form-group" id="other-crime-group" style="display: none;">
-                        <label class="pims-form-label">Please specify the crime</label>
-                        <input type="text" class="pims-form-input" name="other_crime" id="other_crime" placeholder="Enter crime">
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Status</label>
-                        <select class="pims-form-select" name="status" required>
-                            <option value="active" selected hidden>Active</option>
-                        </select>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Time Serve Start</label>
-                        <input class="pims-form-input" type="date" name="time_serve_start" id="time_serve_start" required onchange="openModal()">
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Time Serve Ends</label>
-                        <input class="pims-form-input" type="text" name="time_serve_end" id="time_serve_end" readonly>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Emergency Contact -->
-            <div class="pims-form-card">
-                <h2 class="pims-form-title is-size-4">
-                    <i class="fas fa-phone-alt"></i> Emergency Contact
-                </h2>
-
-                <div class="pims-form-grid">
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Name</label>
-                        <input class="pims-form-input" type="text" name="emergency_contact_name" placeholder="Enter emergency contact name" required>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Relation</label>
-                        <input class="pims-form-input" type="text" name="emergency_contact_relation" placeholder="Enter relation" required>
-                    </div>
-
-                    <div class="pims-form-group">
-                        <label class="pims-form-label">Contact #</label>
-                        <input class="pims-form-input" type="tel" name="emergency_contact_number" placeholder="Enter contact number" required>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Form Actions -->
-            <div class="pims-form-actions">
-                <button class="pims-btn pims-btn-secondary" type="reset">Reset</button>
-                <button id="submitButton" class="pims-btn pims-btn-primary" type="submit">Register Prisoner</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Update Modal -->
-    <div id="updateModal" class="modal" style="display: none;">
-        <div class="modal-background"></div>
-        <div class="modal-content">
-            <div class="pims-form-card">
-                <h2 class="pims-form-title is-size-4">Update Prisoner</h2>
-                <form id="updateForm" action="" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <input type="hidden" name="_method" value="PUT">
-                    <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
-
                     <!-- Personal Information -->
-                    <div class="pims-form-grid">
+                    <div class="pims-form-card">
+                        <h2 class="pims-form-title is-size-4">
+                            <i class="fas fa-id-card"></i> Personal Information
+                        </h2>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">First Name</label>
-                            <input class="pims-form-input" type="text" name="first_name" required>
+                            <input class="pims-form-input" type="text" name="first_name" placeholder="Enter first name" required>
                         </div>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Middle Name</label>
-                            <input class="pims-form-input" type="text" name="middle_name">
+                            <input class="pims-form-input" type="text" name="middle_name" placeholder="Enter middle name">
                         </div>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Last Name</label>
-                            <input class="pims-form-input" type="text" name="last_name" required>
+                            <input class="pims-form-input" type="text" name="last_name" placeholder="Enter last name" required>
                         </div>
+
+                        <!-- Birthday Input -->
                         <div class="pims-form-group">
                             <label class="pims-form-label">Birthday</label>
-                            <input class="pims-form-input" type="date" name="dob" required>
+                            <input class="pims-form-input" type="date" name="dob" id="dob" required>
                         </div>
+
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Sex</label>
                             <select class="pims-form-select" name="sex" required>
-                                <option value="Male">Male</option>
+                                <option value="Male" selected>Male</option>
                                 <option value="Female">Female</option>
                             </select>
                         </div>
+                    </div>
+
+                    <!-- Additional Personal Info -->
+                    <div class="pims-form-card">
+                        <h2 class="pims-form-title is-size-4">
+                            <i class="fas fa-info-circle"></i> Additional Information
+                        </h2>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Address</label>
-                            <textarea class="pims-form-textarea" name="address" required></textarea>
+                            <textarea class="pims-form-textarea" name="address" placeholder="Enter address" required></textarea>
                         </div>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Marital Status</label>
                             <select class="pims-form-select" name="marital_status" required>
@@ -591,6 +438,7 @@
                                 <option value="Widowed">Widowed</option>
                             </select>
                         </div>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Inmate Image</label>
                             <div class="pims-file-upload">
@@ -601,10 +449,20 @@
                                 </label>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Case Details -->
+                <div class="pims-form-card">
+                    <h2 class="pims-form-title is-size-4">
+                        <i class="fas fa-gavel"></i> Case Details
+                    </h2>
+
+                    <div class="pims-form-grid">
                         <div class="pims-form-group">
                             <label class="pims-form-label">Crime Committed</label>
-                            <select class="pims-form-select" name="crime_committed" id="modal_crime_committed" required>
-                                <option value="" disabled>Select Offense</option>
+                            <select class="pims-form-select" name="crime_committed" id="crime_committed" required>
+                                <option value="" disabled selected>Select Offense</option>
                                 <option value="Theft">Theft</option>
                                 <option value="Assault">Assault</option>
                                 <option value="Drug Possession">Drug Possession</option>
@@ -621,7 +479,7 @@
                                 <option value="Tax Evasion">Tax Evasion</option>
                                 <option value="Embezzlement">Embezzlement</option>
                                 <option value="Corruption">Corruption</option>
-                                <option value="Hate Crimes">Hate Crimes</option>
+                                <option value="Hate Crimes">Hate
                                 <option value="Smuggling">Smuggling</option>
                                 <option value="Child Abuse">Child Abuse</option>
                                 <option value="Bribery">Bribery</option>
@@ -632,52 +490,199 @@
                                 <option value="Other">Other (for any crime not listed above)</option>
                             </select>
                         </div>
-                        <div class="pims-form-group" id="modal_other_crime_group" style="display: none;">
+
+                        <div class="pims-form-group" id="other-crime-group" style="display: none;">
                             <label class="pims-form-label">Please specify the crime</label>
-                            <input type="text" class="pims-form-input" name="other_crime" id="modal_other_crime" placeholder="Enter crime">
+                            <input type="text" class="pims-form-input" name="other_crime" id="other_crime" placeholder="Enter crime">
                         </div>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Status</label>
                             <select class="pims-form-select" name="status" required>
-                                <option value="active">Active</option>
+                                <option value="active" selected hidden>Active</option>
                             </select>
                         </div>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Time Serve Start</label>
-                            <input class="pims-form-input" type="date" name="time_serve_start" required>
+                            <input class="pims-form-input" type="date" name="time_serve_start" id="time_serve_start" required onchange="openModal()">
                         </div>
+
                         <div class="pims-form-group">
                             <label class="pims-form-label">Time Serve Ends</label>
-                            <input class="pims-form-input" type="date" name="time_serve_end" required>
-                        </div>
-                        <div class="pims-form-group">
-                            <label class="pims-form-label">Emergency Contact Name</label>
-                            <input class="pims-form-input" type="text" name="emergency_contact_name" required>
-                        </div>
-                        <div class="pims-form-group">
-                            <label class="pims-form-label">Emergency Contact Relation</label>
-                            <input class="pims-form-input" type="text" name="emergency_contact_relation" required>
-                        </div>
-                        <div class="pims-form-group">
-                            <label class="pims-form-label">Emergency Contact Number</label>
-                            <input class="pims-form-input" type="tel" name="emergency_contact_number" required>
+                            <input class="pims-form-input" type="text" name="time_serve_end" id="time_serve_end" readonly>
                         </div>
                     </div>
+                </div>
 
-                    <div class="pims-form-actions">
-                        <button type="button" class="pims-btn pims-btn-secondary" onclick="closeUpdateModal()">Cancel</button>
-                        <button type="submit" class="pims-btn pims-btn-primary">Update Prisoner</button>
+                <!-- Emergency Contact -->
+                <div class="pims-form-card">
+                    <h2 class="pims-form-title is-size-4">
+                        <i class="fas fa-phone-alt"></i> Emergency Contact
+                    </h2>
+
+                    <div class="pims-form-grid">
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Name</label>
+                            <input class="pims-form-input" type="text" name="emergency_contact_name" placeholder="Enter emergency contact name" required>
+                        </div>
+
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Relation</label>
+                            <input class="pims-form-input" type="text" name="emergency_contact_relation" placeholder="Enter relation" required>
+                        </div>
+
+                        <div class="pims-form-group">
+                            <label class="pims-form-label">Contact #</label>
+                            <input class="pims-form-input" type="tel" name="emergency_contact_number" placeholder="Enter contact number" required>
+                        </div>
                     </div>
-                </form>
-            </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="pims-form-actions">
+                    <button class="pims-btn pims-btn-secondary" type="reset">Reset</button>
+                    <button id="submitButton" class="pims-btn pims-btn-primary" type="submit">Register Prisoner</button>
+                </div>
+            </form>
         </div>
-        <button class="modal-close is-large" aria-label="close" onclick="closeUpdateModal()"></button>
+
+        <!-- Update Modal -->
+        <div id="updateModal" class="modal" style="display: none;">
+            <div class="modal-background"></div>
+            <div class="modal-content">
+                <div class="pims-form-card">
+                    <h2 class="pims-form-title is-size-4">Update Prisoner</h2>
+                    <form id="updateForm" action="" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="_method" value="PUT">
+                        <input type="hidden" name="prison_id" value="{{ session('prison_id') }}">
+
+                        <!-- Personal Information -->
+                        <div class="pims-form-grid">
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">First Name</label>
+                                <input class="pims-form-input" type="text" name="first_name" required>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Middle Name</label>
+                                <input class="pims-form-input" type="text" name="middle_name">
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Last Name</label>
+                                <input class="pims-form-input" type="text" name="last_name" required>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Birthday</label>
+                                <input class="pims-form-input" type="date" name="dob" id="dob" required>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Sex</label>
+                                <select class="pims-form-select" name="sex" required>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                </select>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Address</label>
+                                <textarea class="pims-form-textarea" name="address" required></textarea>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Marital Status</label>
+                                <select class="pims-form-select" name="marital_status" required>
+                                    <option value="Single">Single</option>
+                                    <option value="Married">Married</option>
+                                    <option value="Divorced">Divorced</option>
+                                    <option value="Widowed">Widowed</option>
+                                </select>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Inmate Image</label>
+                                <div class="pims-file-upload">
+                                    <input class="pims-file-input" type="file" name="inmate_image">
+                                    <label class="pims-file-label">
+                                        <i class="fas fa-camera pims-file-icon"></i>
+                                        <span>Click to upload inmate photo</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Crime Committed</label>
+                                <select class="pims-form-select" name="crime_committed" id="modal_crime_committed" required>
+                                    <option value="" disabled>Select Offense</option>
+                                    <option value="Theft">Theft</option>
+                                    <option value="Assault">Assault</option>
+                                    <option value="Drug Possession">Drug Possession</option>
+                                    <option value="Fraud">Fraud</option>
+                                    <option value="Murder">Murder</option>
+                                    <option value="Burglary">Burglary</option>
+                                    <option value="Vandalism">Vandalism</option>
+                                    <option value="Robbery">Robbery</option>
+                                    <option value="Domestic Violence">Domestic Violence</option>
+                                    <option value="Rape">Rape</option>
+                                    <option value="Arson">Arson</option>
+                                    <option value="Money Laundering">Money Laundering</option>
+                                    <option value="Kidnapping">Kidnapping</option>
+                                    <option value="Tax Evasion">Tax Evasion</option>
+                                    <option value="Embezzlement">Embezzlement</option>
+                                    <option value="Corruption">Corruption</option>
+                                    <option value="Hate Crimes">Hate Crimes</option>
+                                    <option value="Smuggling">Smuggling</option>
+                                    <option value="Child Abuse">Child Abuse</option>
+                                    <option value="Bribery">Bribery</option>
+                                    <option value="Counterfeiting">Counterfeiting</option>
+                                    <option value="Terrorism">Terrorism</option>
+                                    <option value="Sexual Harassment">Sexual Harassment</option>
+                                    <option value="Public Disorder">Public Disorder</option>
+                                    <option value="Other">Other (for any crime not listed above)</option>
+                                </select>
+                            </div>
+                            <div class="pims-form-group" id="modal_other_crime_group" style="display: none;">
+                                <label class="pims-form-label">Please specify the crime</label>
+                                <input type="text" class="pims-form-input" name="other_crime" id="modal_other_crime" placeholder="Enter crime">
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Status</label>
+                                <select class="pims-form-select" name="status" required>
+                                    <option value="active">Active</option>
+                                </select>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Time Serve Start</label>
+                                <input class="pims-form-input" type="date" name="time_serve_start" required>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Time Serve Ends</label>
+                                <input class="pims-form-input" type="date" name="time_serve_end" required>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Emergency Contact Name</label>
+                                <input class="pims-form-input" type="text" name="emergency_contact_name" required>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Emergency Contact Relation</label>
+                                <input class="pims-form-input" type="text" name="emergency_contact_relation" required>
+                            </div>
+                            <div class="pims-form-group">
+                                <label class="pims-form-label">Emergency Contact Number</label>
+                                <input class="pims-form-input" type="tel" name="emergency_contact_number" required>
+                            </div>
+                        </div>
+
+                        <div class="pims-form-actions">
+                            <button type="button" class="pims-btn pims-btn-secondary" onclick="closeUpdateModal()">Cancel</button>
+                            <button type="submit" class="pims-btn pims-btn-primary">Update Prisoner</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close" onclick="closeUpdateModal()"></button>
+        </div>
+
+
+
+
     </div>
-
-    
-
-  
-</div>
     <!-- Modal -->
     <div id="sentenceModal" class="modal">
         <div class="modal-content">
@@ -696,31 +701,59 @@
         </div>
     </div>
     <script>
-        document.getElementById('prisonerForm').addEventListener('submit', function(e) {
-    const crimeSelect = document.getElementById('crime_committed');
-    const otherCrimeInput = document.getElementById('other_crime');
-    
-    if (crimeSelect.value === 'Other') {
-        const otherCrimeValue = otherCrimeInput.value.trim();
-        if (otherCrimeValue === '') {
-            e.preventDefault();
-            alert('Please specify the crime.');
-            otherCrimeInput.focus();
-            return;
-        }
-        // Create a hidden input to override the crime_committed value with other_crime
-        let hiddenInput = document.createElement('input');
-        hiddenInput.type = 'hidden';
-        hiddenInput.name = 'crime_committed';
-        hiddenInput.value = otherCrimeValue;
+        document.addEventListener("DOMContentLoaded", function() {
+            const dobInput = document.getElementById("dob");
 
-        // Remove the original select's name attribute so it doesn't submit
-        crimeSelect.removeAttribute('name');
-        this.appendChild(hiddenInput);
-    }
-});
+            // Set max date to today minus 18 years
+            const today = new Date();
+            const year = today.getFullYear() - 18;
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const maxDate = `${year}-${month}-${day}`;
+            dobInput.max = maxDate;
+
+            // Optional: Prevent form submission if age < 18
+            document.getElementById("prisonerForm").addEventListener("submit", function(e) {
+                const dob = new Date(dobInput.value);
+                const age = today.getFullYear() - dob.getFullYear();
+                const m = today.getMonth() - dob.getMonth();
+                const isBirthdayPassed = m > 0 || (m === 0 && today.getDate() >= dob.getDate());
+
+                const actualAge = isBirthdayPassed ? age : age - 1;
+                if (actualAge < 18) {
+                    e.preventDefault();
+                    alert("Prisoner must be at least 18 years old.");
+                }
+            });
+        });
     </script>
-  <!-- JavaScript for Modal and Form Handling -->
+
+    <script>
+        document.getElementById('prisonerForm').addEventListener('submit', function(e) {
+            const crimeSelect = document.getElementById('crime_committed');
+            const otherCrimeInput = document.getElementById('other_crime');
+
+            if (crimeSelect.value === 'Other') {
+                const otherCrimeValue = otherCrimeInput.value.trim();
+                if (otherCrimeValue === '') {
+                    e.preventDefault();
+                    alert('Please specify the crime.');
+                    otherCrimeInput.focus();
+                    return;
+                }
+                // Create a hidden input to override the crime_committed value with other_crime
+                let hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'crime_committed';
+                hiddenInput.value = otherCrimeValue;
+
+                // Remove the original select's name attribute so it doesn't submit
+                crimeSelect.removeAttribute('name');
+                this.appendChild(hiddenInput);
+            }
+        });
+    </script>
+    <!-- JavaScript for Modal and Form Handling -->
     <script>
         function openUpdateModal() {
             const prisonerId = document.getElementById('prisoner_id').value;

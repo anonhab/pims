@@ -13,15 +13,15 @@
 
     <style>
         :root {
-            --pims-primary: #0a192f; /* Navy blue */
-            --pims-secondary: #172a45; /* Darker navy */
-            --pims-accent: #64ffda; /* Teal accent */
-            --pims-danger: #ff5555; /* Vibrant red */
-            --pims-success: #50fa7b; /* Vibrant green */
-            --pims-warning: #ffb86c; /* Soft orange */
-            --pims-info: #8be9fd; /* Light blue */
-            --pims-text-light: #f8f8f2; /* Off white */
-            --pims-text-dark: #282a36; /* Dark gray */
+            --pims-primary: #0a192f;
+            --pims-secondary: #172a45;
+            --pims-accent: #64ffda;
+            --pims-danger: #ff5555;
+            --pims-success: #50fa7b;
+            --pims-warning: #ffb86c;
+            --pims-info: #8be9fd;
+            --pims-text-light: #f8f8f2;
+            --pims-text-dark: #282a36;
             --pims-card-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             --pims-border-radius: 8px;
             --pims-nav-height: 70px;
@@ -44,7 +44,6 @@
             line-height: 1.6;
         }
 
-        /* Main Content Area */
         #pims-page-content {
             margin-left: 0;
             padding: 2rem;
@@ -55,7 +54,6 @@
             padding-top: 70px;
         }
 
-        /* Dashboard Cards */
         .pims-dashboard-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -116,7 +114,6 @@
             border-top: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* Stats Box */
         .pims-stats-box {
             background: linear-gradient(145deg, #ffffff 0%, #f7faff 100%);
             border-radius: var(--pims-border-radius);
@@ -165,7 +162,6 @@
             transform: scale(1.1);
         }
 
-        /* Recent Activity List */
         .pims-stats-box ul {
             list-style: none;
             padding: 0;
@@ -228,14 +224,12 @@
             margin-left: auto;
         }
 
-        /* Grid Layout */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1.5rem;
         }
 
-        /* Section Title */
         .pims-section-title {
             font-size: 1.75rem;
             font-weight: 700;
@@ -271,7 +265,6 @@
             justify-content: center;
         }
 
-        /* Status Tags */
         .pims-status-tag {
             font-size: 0.75rem;
             padding: 0.3rem 0.75rem;
@@ -297,7 +290,6 @@
             color: var(--pims-warning);
         }
 
-        /* Button Styles */
         .pims-btn {
             padding: 0.5rem 1rem;
             border-radius: var(--pims-border-radius);
@@ -324,7 +316,6 @@
             box-shadow: 0 4px 12px rgba(100, 255, 218, 0.3);
         }
 
-        /* Search Box */
         .pims-search-box {
             position: relative;
             flex-grow: 1;
@@ -354,7 +345,6 @@
             color: var(--pims-accent);
         }
 
-        /* Notification Styles */
         .pims-notification {
             padding: 1rem 1.5rem;
             border-radius: var(--pims-border-radius);
@@ -389,7 +379,6 @@
             color: var(--pims-danger);
         }
 
-        /* Preloader */
         .pims-preloader {
             position: fixed;
             top: 0;
@@ -414,7 +403,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Responsive Adjustments */
         @media (max-width: 1200px) {
             .pims-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -450,14 +438,11 @@
         }
     </style>
 </head>
-<!-- Navigation -->
-    @include('includes.nav')
-        @include('police_officer.menu')
 <body>
+    <!-- Navigation -->
+    @include('includes.nav')
+    @include('police_officer.menu')
 
-    
-
-        
     <!-- Main Content -->
     <div id="pims-page-content">
         <h1 class="pims-section-title">
@@ -465,10 +450,18 @@
         </h1>
 
         <!-- Notifications -->
-        <div class="pims-notification pims-notification-success">
-            <i class="fas fa-check-circle"></i>
-            <div>System updated successfully. You have 3 new assignments.</div>
-        </div>
+        @if(session('success'))
+            <div class="pims-notification pims-notification-success">
+                <i class="fas fa-check-circle"></i>
+                <div>{{ session('success') }}</div>
+            </div>
+        @endif
+        @if(session('error'))
+            <div class="pims-notification pims-notification-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>{{ session('error') }}</div>
+            </div>
+        @endif
 
         <!-- Dashboard Cards -->
         <div class="pims-grid">
@@ -478,7 +471,7 @@
                     <i class="fas fa-user-lock"></i>
                 </div>
                 <h3>Assigned Prisoners</h3>
-                <p>5</p>
+                <p>{{ $assignedPrisonersCount }}</p>
                 <div class="pims-card-footer">
                     <i class="fas fa-user" style="color: var(--pims-accent);"></i> Currently under supervision
                 </div>
@@ -490,7 +483,7 @@
                     <i class="fas fa-file-signature"></i>
                 </div>
                 <h3>Pending Requests</h3>
-                <p>3</p>
+                <p>{{ $pendingRequestsCount }}</p>
                 <div class="pims-card-footer">
                     <i class="fas fa-clock" style="color: var(--pims-warning);"></i> Awaiting approval
                 </div>
@@ -502,7 +495,7 @@
                     <i class="fas fa-door-open"></i>
                 </div>
                 <h3>Room Allocations</h3>
-                <p>8</p>
+                <p>{{ $roomAllocationCount }}</p>
                 <div class="pims-card-footer">
                     <i class="fas fa-home" style="color: var(--pims-accent);"></i> Active allocations
                 </div>
@@ -524,45 +517,23 @@
                 </div>
             </div>
             <ul>
-                <li>
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>John Doe</strong> - ID: PR-2023-001
-                        </span>
-                        <span class="pims-status-tag approved">Active</span>
-                    </div>
-                    <span class="pims-activity-time">Assigned: 2025-05-28</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Alice Brown</strong> - ID: PR-2023-045
-                        </span>
-                        <span class="pims-status-tag pending">Evaluation</span>
-                    </div>
-                    <span class="pims-activity-time">Assigned: 2025-05-25</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Michael Smith</strong> - ID: PR-2023-112
-                        </span>
-                        <span class="pims-status-tag approved">Active</span>
-                    </div>
-                    <span class="pims-activity-time">Assigned: 2025-05-20</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
+                @forelse($prisonerList as $prisoner)
+                    <li>
+                        <i class="fas fa-user" style="color: var(--pims-accent);"></i>
+                        <div style="flex-grow: 1;">
+                            <span>
+                                <strong>{{ $prisoner['name'] }}</strong> - ID: {{ $prisoner['id'] }}
+                            </span>
+                            <span class="pims-status-tag {{ $prisoner['status'] == 'active' ? 'approved' : ($prisoner['status'] == 'pending' ? 'pending' : 'rejected') }}">
+                                {{ ucfirst($prisoner['status']) }}
+                            </span>
+                        </div>
+                        <span class="pims-activity-time">Assigned: {{ \Carbon\Carbon::parse($prisoner['assignment_date'])->format('Y-m-d') }}</span>
+                       
+                    </li>
+                @empty
+                    <li>No assigned prisoners found.</li>
+                @endforelse
             </ul>
         </div>
 
@@ -570,45 +541,23 @@
         <div class="pims-stats-box">
             <h2><i class="fas fa-file-contract"></i> Recent Requests</h2>
             <ul>
-                <li>
-                    <i class="fas fa-file-alt" style="color: var(--pims-info);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Medical Request</strong> - Prisoner: John Doe
-                        </span>
-                        <span class="pims-status-tag pending">Pending</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-30 14:30</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-file-alt" style="color: var(--pims-info);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Visitor Approval</strong> - Prisoner: Alice Brown
-                        </span>
-                        <span class="pims-status-tag approved">Approved</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-29 11:15</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
-                <li>
-                    <i class="fas fa-file-alt" style="color: var(--pims-info);"></i>
-                    <div style="flex-grow: 1;">
-                        <span>
-                            <strong>Transfer Request</strong> - Prisoner: Michael Smith
-                        </span>
-                        <span class="pims-status-tag rejected">Rejected</span>
-                    </div>
-                    <span class="pims-activity-time">2025-05-28 09:45</span>
-                    <a href="#" class="pims-btn pims-btn-primary" style="margin-left: 1rem;">
-                        <i class="fas fa-eye"></i> View
-                    </a>
-                </li>
+                @forelse($requests as $request)
+                    <li>
+                        <i class="fas fa-file-alt" style="color: var(--pims-info);"></i>
+                        <div style="flex-grow: 1;">
+                            <span>
+                                <strong>{{ $request['type'] }}</strong> - Prisoner: {{ $request['prisoner_name'] }}
+                            </span>
+                            <span class="pims-status-tag {{ $request['status'] == 'approved' ? 'approved' : ($request['status'] == 'pending' ? 'pending' : 'rejected') }}">
+                                {{ ucfirst($request['status']) }}
+                            </span>
+                        </div>
+                        <span class="pims-activity-time">{{ $request['created_at'] }}</span>
+                         
+                    </li>
+                @empty
+                    <li>No recent requests found.</li>
+                @endforelse
             </ul>
         </div>
 
@@ -619,7 +568,6 @@
         </div>
     </div>
 
-    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Preloader
@@ -652,24 +600,12 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Block A', 'Block B', 'Block C', 'Block D', 'Special Block'],
+                    labels: @json($roomAllocationData['labels']),
                     datasets: [{
                         label: 'Prisoners Allocated',
-                        data: [12, 19, 8, 15, 5],
-                        backgroundColor: [
-                            'rgba(100, 255, 218, 0.7)',
-                            'rgba(100, 255, 218, 0.7)',
-                            'rgba(100, 255, 218, 0.7)',
-                            'rgba(100, 255, 218, 0.7)',
-                            'rgba(100, 255, 218, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(100, 255, 218, 1)',
-                            'rgba(100, 255, 218, 1)',
-                            'rgba(100, 255, 218, 1)',
-                            'rgba(100, 255, 218, 1)',
-                            'rgba(100, 255, 218, 1)'
-                        ],
+                        data: @json($roomAllocationData['data']),
+                        backgroundColor: 'rgba(100, 255, 218, 0.7)',
+                        borderColor: 'rgba(100, 255, 218, 1)',
                         borderWidth: 1
                     }]
                 },
