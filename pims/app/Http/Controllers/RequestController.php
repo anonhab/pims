@@ -19,7 +19,7 @@ class RequestController extends Controller
 {
     $appointment = LawyerAppointment::findOrFail($id);
     $appointment->update([
-        'status' => 'pending',
+        'status' => 'scheduled',
         'notes' => $request->input('evaluation', $appointment->notes),
     ]);
     return response()->json(['success' => true, 'message' => 'Appointment approved successfully']);
@@ -29,7 +29,7 @@ public function rejectLawyerAppointment($id, Request $request)
 {
     $appointment = LawyerAppointment::findOrFail($id);
     $appointment->update([
-        'status' => 'rejected',
+        'status' => 'cancelled',
         'notes' => $request->input('evaluation', $appointment->notes),
     ]);
     return response()->json(['success' => true, 'message' => 'Appointment rejected successfully']);
@@ -378,32 +378,40 @@ public function rejectRequest(Request $request, $id)
         $appointment->save();
         return response()->json(['success' => true]);
     }
-public function show($id)
-{
-    $prisoner = Prisoner::findOrFail($id);
+    public function show($id)
+    {
+        $prisoner = Prisoner::with('prison')->findOrFail($id);
+    
+        $timeServeEnd = in_array(strtolower($prisoner->time_serve_end), ['life sentence', 'death'])
+            ? ucfirst(strtolower($prisoner->time_serve_end))
+            : ($prisoner->time_serve_end ? Carbon::parse($prisoner->time_serve_end)->translatedFormat('F j, Y') : null);
+    
+        return response()->json([
+            'id' => $prisoner->id,
+            'first_name' => $prisoner->first_name,
+            'middle_name' => $prisoner->middle_name,
+            'last_name' => $prisoner->last_name,
+            'dob' => $prisoner->dob ? Carbon::parse($prisoner->dob)->translatedFormat('F j, Y') : null,
+            'gender' => $prisoner->gender,
+            'marital_status' => $prisoner->marital_status,
+            'crime_committed' => $prisoner->crime_committed,
+            'status' => $prisoner->status,
+            'time_serve_start' => $prisoner->time_serve_start ? Carbon::parse($prisoner->time_serve_start)->translatedFormat('F j, Y') : null,
+            'time_serve_end' => $timeServeEnd,
+            'address' => $prisoner->address,
+            'emergency_contact_name' => $prisoner->emergency_contact_name,
+            'emergency_contact_relation' => $prisoner->emergency_contact_relation,
+            'emergency_contact_number' => $prisoner->emergency_contact_number,
+            'inmate_image' => $prisoner->inmate_image,
+            'prison_id' => $prisoner->prison_id,
+            'prison_name' => $prisoner->prison ? $prisoner->prison->name : 'N/A', // Assuming Prison model has a 'name' field
+            'room_id' => $prisoner->room_id,
+            'created_at' => $prisoner->created_at ? $prisoner->created_at->format('F j, Y, g:i A') : null,
+'updated_at' => $prisoner->updated_at ? $prisoner->updated_at->format('F j, Y, g:i A') : null,
 
-    return response()->json([
-        'id' => $prisoner->id,
-        'first_name' => $prisoner->first_name,
-        'middle_name' => $prisoner->middle_name,
-        'last_name' => $prisoner->last_name,
-        'dob' => $prisoner->dob ? Carbon::parse($prisoner->dob)->translatedFormat('F j, Y') : null,
-        'gender' => $prisoner->gender,
-        'marital_status' => $prisoner->marital_status,
-        'crime_committed' => $prisoner->crime_committed,
-        'status' => $prisoner->status,
-        'time_serve_start' => $prisoner->time_serve_start ? Carbon::parse($prisoner->time_serve_start)->translatedFormat('F j, Y') : null,
-        'time_serve_end' => $prisoner->time_serve_end ? Carbon::parse($prisoner->time_serve_end)->translatedFormat('F j, Y') : null,
-        'address' => $prisoner->address,
-        'emergency_contact_name' => $prisoner->emergency_contact_name,
-        'emergency_contact_relation' => $prisoner->emergency_contact_relation,
-        'emergency_contact_number' => $prisoner->emergency_contact_number,
-        'inmate_image' => $prisoner->inmate_image,
-        'prison_id' => $prisoner->prison_id,
-        'room_id' => $prisoner->room_id
-        
-    ]);
-}
+        ]);
+    }
+    
 
 
     // View prisoner-related notifications

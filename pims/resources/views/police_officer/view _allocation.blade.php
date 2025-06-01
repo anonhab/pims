@@ -292,7 +292,6 @@
                                     </div>
                                     <div class="content">
                                         <p class="pims-prisoner-detail"><strong>Crime:</strong> {{ $prisoner->crime_committed }}</p>
-                                        <p class="pims-prisoner-detail"><strong>Room ID:</strong> {{ $prisoner->room_id ?? 'N/A' }}</p>
                                         <p class="pims-prisoner-detail"><strong>Room Number:</strong> {{ $prisoner->room->room_number ?? 'N/A' }}</p>
                                     </div>
                                 </div>

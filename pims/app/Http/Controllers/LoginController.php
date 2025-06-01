@@ -80,7 +80,7 @@ class LoginController extends Controller
                     8 => view('police_officer.dashboard'),
                     6 => redirect()->to('/tdashboard'),
                     9 => redirect()->to('/medicaldashboard'),
-                    10 => view('security_officer.dashboard'),
+                    10 => redirect()->to('sdashboard'),
                     11 => redirect()->to('ddashboard'),
                     5 => redirect()->to('cdashboard'),
                     default => redirect()->intended('/dashboard'),
