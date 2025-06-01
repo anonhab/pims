@@ -409,7 +409,7 @@
             </div>
             
             <div class="pims-certificate-header">
-                <img src="{{ asset('images/prison-logo.png') }}" alt="Prison Logo">
+                <img src="{{ asset('assets/img/logo.png') }}" alt="Prison Logo">
                 <h1>Prison Information Management System</h1>
                 <h2>Certificate of {{ $certification_type }}</h2>
             </div>
