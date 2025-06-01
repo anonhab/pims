@@ -446,6 +446,9 @@
 
         /* Responsive Design */
         @media (max-width: 992px) {
+             .pims9-app-container{
+                padding-left:70px;
+            }
             .pims9-main-content {
                 margin-left: 0;
                 padding: 1.5rem;
@@ -469,6 +472,9 @@
         }
 
         @media (max-width: 768px) {
+             .pims9-app-container{
+                padding-left:70px;
+            }
             .pims9-card-grid {
                 grid-template-columns: 1fr;
             }
@@ -489,6 +495,9 @@
         }
 
         @media (max-width: 576px) {
+             .pims9-app-container{
+                padding-left:70px;
+            }
             .pims9-page-title {
                 font-size: 1.5rem;
             }
@@ -503,10 +512,8 @@
 <body>
     <!-- Navigation -->
     @include('includes.nav')
-
+@include('security_officer.menu')
     <div class="pims9-app-container">
-        @include('security_officer.menu')
-
         <main class="pims9-main-content">
             <div class="pims9-content-container">
                 <h1 class="pims9-page-title">

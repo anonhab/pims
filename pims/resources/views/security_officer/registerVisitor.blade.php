@@ -146,6 +146,9 @@
 
         /* Responsive Styles */
         @media (max-width: 992px) {
+             .pims9-app-container{
+                padding-left:70px;
+            }
             .pims-main-content {
                 margin-left: 0;
                 padding: 1.5rem;
@@ -153,6 +156,9 @@
         }
 
         @media (max-width: 768px) {
+             .pims-app-container{
+                padding-left:70px;
+            }
             .pims-form-card {
                 padding: 1.5rem;
             }
@@ -163,6 +169,9 @@
         }
 
         @media (max-width: 480px) {
+             .pims-app-container{
+                padding-left:70px;
+            }
             .pims-form-card {
                 padding: 1rem;
             }
@@ -179,12 +188,13 @@
     </style>
 </head>
 <body>
-    <div class="pims-app-container">
-        <!-- Navigation -->
-        @include('includes.nav')
+     @include('includes.nav')
         
         <!-- Sidebar -->
         @include('security_officer.menu')
+    <div class="pims-app-container">
+        <!-- Navigation -->
+       
         
         <main class="pims-main-content">
             <div class="pims-content-container">

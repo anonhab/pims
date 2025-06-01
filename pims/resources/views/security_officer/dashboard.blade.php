@@ -257,6 +257,9 @@
         .pims-notification-error { background: rgba(255, 85, 85, 0.1); border-left: 4px solid var(--pims-danger); }
 
         @media (max-width: 768px) {
+            .pims-app-container{
+                padding-left:70px;
+            }
             #pims-panel-container {
                 margin-left: 0;
                 padding: 1rem;
@@ -269,9 +272,8 @@
 </head>
 <body>
     @include('includes.nav')
+    @include('security_officer.menu')
     <div class="pims-app-container">
-    
-        @include('security_officer.menu')
 
         <div id="pims-panel-container">
             </br></br></br>

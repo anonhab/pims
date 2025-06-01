@@ -467,10 +467,8 @@
 <body>
     <!-- Navigation -->
     @include('includes.nav')
-@include('lawyer.menu')
+    @include('lawyer.menu')
     <div class="pims-app-container">
-        
-
         <div class="pims-content-area">
             <!-- Flash Messages -->
             <div class="pims-card">
@@ -511,7 +509,8 @@
                         @foreach ($prisoners as $prisoner)
                         <div class="pims-prisoner-card" 
                              data-status="{{ $prisoner->status }}"
-                             data-searchable="{{ strtolower($prisoner->first_name) }} {{ strtolower($prisoner->middle_name) }} {{ strtolower($prisoner->last_name) }} {{ strtolower($prisoner->crime_committed) }}">
+                             data-name="{{ strtolower($prisoner->first_name) }} {{ strtolower($prisoner->middle_name) }} {{ strtolower($prisoner->last_name) }}"
+                             data-crime="{{ strtolower($prisoner->crime_committed) }}">
                             <div class="pims-card">
                                 <div class="pims-card-body" style="text-align: center;">
                                     <img src="{{ asset('storage/' . $prisoner->inmate_image) }}" 
@@ -642,25 +641,22 @@
                 window.location.reload();
             });
 
-            // Search and filter functionality
+            // Search functionality
             const searchInput = document.getElementById('pims-prisoner-search');
-            const statusFilter = document.getElementById('pims-status-filter');
             const prisonerCards = document.querySelectorAll('#pims-prisoner-grid .pims-prisoner-card');
             const prisonerGrid = document.getElementById('pims-prisoner-grid');
 
-            function filterPrisoners() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const status = statusFilter.value;
+            function searchPrisoners() {
+                const searchTerm = searchInput.value.toLowerCase().trim();
                 let visibleCards = 0;
 
                 prisonerCards.forEach(card => {
-                    const searchableText = card.getAttribute('data-searchable');
-                    const prisonerStatus = card.getAttribute('data-status');
+                    const name = card.getAttribute('data-name');
+                    const crime = card.getAttribute('data-crime');
                     
-                    const matchesSearch = searchableText.includes(searchTerm);
-                    const matchesStatus = status === '' || prisonerStatus === status;
+                    const matchesSearch = name.includes(searchTerm) || crime.includes(searchTerm);
 
-                    if (matchesSearch && matchesStatus) {
+                    if (searchTerm === '' || matchesSearch) {
                         card.style.display = '';
                         visibleCards++;
                     } else {
@@ -673,16 +669,18 @@
                 if (!noDataMessage && visibleCards === 0) {
                     noDataMessage = document.createElement('div');
                     noDataMessage.className = 'pims-no-data';
-                    noDataMessage.textContent = 'No prisoners found matching your criteria';
+                    noDataMessage.textContent = 'No prisoners found matching your search';
                     prisonerGrid.appendChild(noDataMessage);
                 } else if (noDataMessage && visibleCards > 0) {
                     noDataMessage.remove();
                 }
             }
 
-            // Attach event listeners
-            searchInput.addEventListener('input', filterPrisoners);
-            statusFilter.addEventListener('change', filterPrisoners);
+            // Attach event listener
+            searchInput.addEventListener('input', searchPrisoners);
+            
+            // Initial search in case there's already text in the input
+            searchPrisoners();
         });
     </script>
 </body>

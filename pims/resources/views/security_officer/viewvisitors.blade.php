@@ -354,17 +354,26 @@
         }
 
         @media (max-width: 992px) {
+            .pims-app-container{ 
+                padding-left:70px;
+            }
             .pims-main-content { margin-left: 0; }
             .pims-cards-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
         }
 
         @media (max-width: 768px) {
+            .pims-app-container{ 
+                padding-left:70px;
+            }
             .pims-form-grid { grid-template-columns: 1fr; }
             .pims-card-footer { flex-direction: column; }
             .pims-card-footer .pims-btn { width: 100%; }
         }
 
         @media (max-width: 480px) {
+            .pims-app-container{ 
+                padding-left:70px;
+            }
             .pims-info-item { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
             .pims-modal-footer { flex-direction: column; }
             .pims-modal-footer .pims-btn { width: 100%; }
