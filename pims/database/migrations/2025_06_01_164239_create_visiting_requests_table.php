@@ -22,6 +22,7 @@ class CreateVisitingRequestsTable extends Migration
             $table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             $table->index('approved_by');
             $table->index('prison_id', 'idx_prison_id');
+            $table->index('visitor_id');
         });
     }
 

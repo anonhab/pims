@@ -3,7 +3,6 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class CreateBackupsTable extends Migration
@@ -18,7 +17,7 @@ class CreateBackupsTable extends Migration
             $table->timestamps();
             $table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             $table->index('initiated_by', 'fk_backups_user');
-            $table->index('prison_id', 'fk_rbackups_prison_id');
+            $table->index('prison_id', 'fk_backups_prison_id');
         });
     }
 

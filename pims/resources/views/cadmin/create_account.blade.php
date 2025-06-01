@@ -173,7 +173,7 @@
 
     /* Form Elements */
     .field {
-        margin-bottom: 1.25rem;
+        margin-bottom: 1.35rem;
     }
 
     .label {
@@ -186,7 +186,7 @@
     .input,
     .select select {
         width: 100%;
-        padding: 0.75rem;
+        padding:0.6rem;
         border: 1px solid #ddd;
         border-radius: var(--pims-border-radius);
         transition: all 0.3s ease;

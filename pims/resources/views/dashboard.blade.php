@@ -202,10 +202,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>85%</span>
+                    <span>100%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 85%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -222,10 +222,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>80%</span>
+                    <span>100%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 80%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -242,10 +242,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>68%</span>
+                    <span>100% except search </span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 68%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -262,10 +262,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>55%</span>
+                    <span>100%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 55%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -342,10 +342,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>70%</span>
+                    <span>100%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 70%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>

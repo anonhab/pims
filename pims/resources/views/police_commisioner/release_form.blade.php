@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <!-- Local fallback (uncomment if CDN fails) -->
+    <!-- <link href="{{ asset('css/select2.min.css') }}" rel="stylesheet" /> -->
     <style>
         :root {
             --pims-primary: #2c3e50;
@@ -35,6 +39,67 @@
             line-height: 1.6;
         }
 
+        /* Select2 Custom Styles */
+        .select2-container {
+            width: 100% !important;
+            z-index: 10000;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #ddd;
+            border-radius: var(--pims-border-radius);
+            padding: 0.75rem 1rem;
+            height: auto;
+            background-color: white;
+        }
+
+        .select2-container--default .select2-selection--single:focus {
+            outline: none;
+            border-color: var(--pims-accent);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: var(--pims-primary);
+            line-height: 1.6;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 100%;
+            right: 10px;
+        }
+
+        .select2-dropdown {
+            border: 1px solid #ddd;
+            border-radius: var(--pims-border-radius);
+            box-shadow: var(--pims-box-shadow);
+            z-index: 10001;
+        }
+
+        .select2-search--dropdown {
+            padding: 0.5rem;
+            display: block !important; /* Ensure search bar is not hidden */
+        }
+
+        .select2-search__field {
+            width: 100% !important;
+            padding: 0.5rem !important;
+            border: 1px solid #ddd !important;
+            border-radius: var(--pims-border-radius) !important;
+            font-family: 'Poppins', sans-serif !important;
+        }
+
+        .select2-results__option {
+            padding: 0.75rem 1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .select2-results__option--highlighted {
+            background-color: var(--pims-light) !important;
+            color: var(--pims-primary) !important;
+        }
+
+        /* Rest of the existing styles (unchanged) */
         .pims-app-container {
             padding-top: 70px;
             display: flex;
@@ -251,7 +316,6 @@
             width: 100%;
             max-width: 500px;
             transform: scale(0.7);
-            
             transition: all 0.3s ease;
         }
 
@@ -297,7 +361,6 @@
         @keyframes slideIn {
             from {
                 transform: translateY(-20px);
-                
             }
             to {
                 transform: translateY(0);
@@ -420,92 +483,144 @@
         </div>
     </div>
 
+    <!-- Dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- Local fallbacks (uncomment if CDN fails) -->
+    <!-- <script src="{{ asset('js/jquery.min.js') }}"></script> -->
+    <!-- <script src="{{ asset('js/select2.min.js') }}"></script> -->
     <script>
-        function showMessage(message, type = 'success') {
-            const messageDiv = document.getElementById('pims-system-message');
-            messageDiv.className = `pims-alert pims-alert-${type}`;
-            messageDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
-            messageDiv.scrollIntoView({ behavior: 'smooth' });
-            setTimeout(() => {
-                messageDiv.className = 'pims-alert pims-alert-hidden';
-            }, 5000);
-        }
-
-        function setPrisonerId() {
-            const prisonerSelect = document.getElementById('pims-prisoner-select');
-            const selectedOption = prisonerSelect.options[prisonerSelect.selectedIndex];
-            const prisonerId = selectedOption.value;
-            const sentenceEndDate = selectedOption.getAttribute('data-sentence-end');
-            const prisonerName = selectedOption.getAttribute('data-name');
-
-            document.getElementById('prisoner-id').value = prisonerId;
-            document.getElementById('confirm-prisoner-name').textContent = prisonerName || 'the selected prisoner';
-
-            const currentDate = new Date();
-            const endDate = new Date(sentenceEndDate);
-            const checkbox = document.getElementById('pims-sentence-completed');
-            const releaseBtn = document.getElementById('release-btn');
-
-            if (prisonerId && endDate <= currentDate) {
-                checkbox.checked = true;
-                checkbox.disabled = false;
-                document.getElementById('sentence-completed').value = 1;
-                releaseBtn.disabled = false;
-                showMessage('Prisoner is eligible for release.', 'success');
-            } else if (prisonerId) {
-                checkbox.checked = false;
-                checkbox.disabled = true;
-                document.getElementById('sentence-completed').value = 0;
-                releaseBtn.disabled = true;
-                showMessage('Prisoner is not yet eligible for release.', 'danger');
-            } else {
-                checkbox.checked = false;
-                checkbox.disabled = true;
-                releaseBtn.disabled = true;
-                document.getElementById('sentence-completed').value = 0;
+        // Use jQuery noConflict to avoid conflicts with other scripts
+        (function($) {
+            function showMessage(message, type = 'success') {
+                const messageDiv = document.getElementById('pims-system-message');
+                messageDiv.className = `pims-alert pims-alert-${type}`;
+                messageDiv.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i> ${message}`;
+                messageDiv.scrollIntoView({ behavior: 'smooth' });
+                setTimeout(() => {
+                    messageDiv.className = 'pims-alert pims-alert-hidden';
+                }, 5000);
             }
-        }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('release-prisoner-form');
-            const prisonerSelect = document.getElementById('pims-prisoner-select');
-            const releaseBtn = document.getElementById('release-btn');
-            const confirmModal = document.getElementById('pims-confirm-modal');
-            const confirmReleaseBtn = document.getElementById('confirm-release-btn');
+            function setPrisonerId() {
+                const prisonerSelect = document.getElementById('pims-prisoner-select');
+                const selectedOption = prisonerSelect.options[prisonerSelect.selectedIndex];
+                const prisonerId = selectedOption ? selectedOption.value : '';
+                const sentenceEndDate = selectedOption ? selectedOption.getAttribute('data-sentence-end') : '';
+                const prisonerName = selectedOption ? selectedOption.getAttribute('data-name') : '';
 
-            prisonerSelect.addEventListener('change', setPrisonerId);
+                document.getElementById('prisoner-id').value = prisonerId;
+                document.getElementById('confirm-prisoner-name').textContent = prisonerName || 'the selected prisoner';
 
-            releaseBtn.addEventListener('click', () => {
-                if (!prisonerSelect.value) {
-                    showMessage('Please select a prisoner.', 'danger');
+                const currentDate = new Date();
+                const endDate = sentenceEndDate ? new Date(sentenceEndDate) : null;
+                const checkbox = document.getElementById('pims-sentence-completed');
+                const releaseBtn = document.getElementById('release-btn');
+
+                if (prisonerId && endDate && endDate <= currentDate) {
+                    checkbox.checked = true;
+                    checkbox.disabled = false;
+                    document.getElementById('sentence-completed').value = 1;
+                    releaseBtn.disabled = false;
+                    showMessage('Prisoner is eligible for release.', 'success');
+                } else if (prisonerId) {
+                    checkbox.checked = false;
+                    checkbox.disabled = true;
+                    document.getElementById('sentence-completed').value = 0;
+                    releaseBtn.disabled = true;
+                    showMessage('Prisoner is not yet eligible for release.', 'danger');
+                } else {
+                    checkbox.checked = false;
+                    checkbox.disabled = true;
+                    releaseBtn.disabled = true;
+                    document.getElementById('sentence-completed').value = 0;
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM fully loaded, initializing Select2...');
+
+                // Verify jQuery is available
+                if (typeof $ === 'undefined') {
+                    console.error('jQuery is not loaded');
+                    showMessage('jQuery failed to load. Please check your internet connection or use local files.', 'danger');
                     return;
                 }
-                confirmModal.classList.add('active');
-            });
 
-            confirmReleaseBtn.addEventListener('click', () => {
-                form.submit();
-            });
+                // Verify Select2 is available
+                if (typeof $.fn.select2 === 'undefined') {
+                    console.error('Select2 is not loaded');
+                    showMessage('Select2 failed to load. Please check your internet connection or use local files.', 'danger');
+                    return;
+                }
 
-            document.querySelectorAll('.pims-modal-close, .pims-modal-close-btn').forEach(button => {
-                button.addEventListener('click', () => {
-                    confirmModal.classList.remove('active');
+                // Verify the select element exists
+                const $prisonerSelect = $('#pims-prisoner-select');
+                if ($prisonerSelect.length === 0) {
+                    console.error('Select element #pims-prisoner-select not found');
+                    showMessage('Prisoner select element not found. Please check the HTML.', 'danger');
+                    return;
+                }
+
+                // Initialize Select2
+                try {
+                    $prisonerSelect.select2({
+                        placeholder: "-- Select a Prisoner --",
+                        allowClear: true,
+                        minimumInputLength: 0,
+                        minimumResultsForSearch: 1, // Show search bar even with 1 option
+                        width: '100%',
+                        dropdownCssClass: 'select2-dropdown',
+                        searchInputPlaceholder: 'Search prisoners...'
+                    });
+                    console.log('Select2 initialized successfully for #pims-prisoner-select');
+                } catch (error) {
+                    console.error('Error initializing Select2:', error);
+                    showMessage('Failed to initialize prisoner selection. Please try again.', 'danger');
+                    return;
+                }
+
+                const form = document.getElementById('release-prisoner-form');
+                const prisonerSelect = document.getElementById('pims-prisoner-select');
+                const releaseBtn = document.getElementById('release-btn');
+                const confirmModal = document.getElementById('pims-confirm-modal');
+                const confirmReleaseBtn = document.getElementById('confirm-release-btn');
+
+                // Handle Select2 change events
+                $prisonerSelect.on('select2:select select2:unselect', setPrisonerId);
+
+                releaseBtn.addEventListener('click', () => {
+                    if (!prisonerSelect.value) {
+                        showMessage('Please select a prisoner.', 'danger');
+                        return;
+                    }
+                    confirmModal.classList.add('active');
+                });
+
+                confirmReleaseBtn.addEventListener('click', () => {
+                    form.submit();
+                });
+
+                document.querySelectorAll('.pims-modal-close, .pims-modal-close-btn').forEach(button => {
+                    button.addEventListener('click', () => {
+                        confirmModal.classList.remove('active');
+                    });
+                });
+
+                confirmModal.addEventListener('click', e => {
+                    if (e.target === confirmModal) {
+                        confirmModal.classList.remove('active');
+                    }
+                });
+
+                form.addEventListener('submit', (e) => {
+                    if (!prisonerSelect.value) {
+                        e.preventDefault();
+                        showMessage('Please select a prisoner.', 'danger');
+                    }
                 });
             });
-
-            confirmModal.addEventListener('click', e => {
-                if (e.target === confirmModal) {
-                    confirmModal.classList.remove('active');
-                }
-            });
-
-            form.addEventListener('submit', (e) => {
-                if (!prisonerSelect.value) {
-                    e.preventDefault();
-                    showMessage('Please select a prisoner.', 'danger');
-                }
-            });
-        });
+        })(jQuery.noConflict());
     </script>
     @include('includes.footer_js')
 </body>

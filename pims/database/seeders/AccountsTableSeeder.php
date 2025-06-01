@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AccountsTableSeeder extends Seeder
 {
@@ -11,22 +12,23 @@ class AccountsTableSeeder extends Seeder
     {
         DB::table('accounts')->insert([
             [
-                'id' => 1,
-                'email' => 'central@gmail.com',
-                'password' => '$2y$12$cOF4CjekXagW.ukYjXb.6urD3zD6efSt/9bugfgUHsWOoP.4rWdQC',
-                'role_id' => 1,
-                'first_name' => 'Habtamu',
-                'last_name' => 'Gashu',
-                'alternate_email' => 'Habtsha2021zz@gmail.com',
-                'profile_image' => 'user_images/8C2VnRFEJWwNVtKYQQs9I7IS4wH0Ko1oPCpbdJs9.png',
-                'phone' => '0909029295',
-                'dob' => '2025-03-15',
+                'user_id' => 1,
+                'username' => 'centraladmin',
+               'password' => Hash::make('password123'),
+                'role_id' => 2,
+                'first_name' => 'John',
+                'last_name' => 'Doe',
+                'email' => 'centraladmin@example.com',
+                'user_image' => 'profile1.jpg',
+                'phone_number' => '1234567890',
+                'dob' => '1990-01-01',
                 'gender' => 'male',
-                'address' => 'Addis Ababa, Bole',
-                'created_at' => '2025-03-30 22:57:39',
-                'updated_at' => '2025-03-30 22:57:39',
-                'age' => 18,
+                'address' => 'central ethiopia, City',
+                'created_at' => now(),
+                'updated_at' => now(),
+                'prison_id' => 1,
             ]
+            
         ]);
     }
 }

@@ -58,6 +58,6 @@ class PasswordController extends Controller
     session()->flush();
 
     // Redirect to login page with success message
-    return redirect()->route('login')->with('success', 'Password updated successfully. Please log in again.');
+    return redirect()->route(route: 'login')->with('success', 'Password updated successfully. Please log in again.');
 }
 }

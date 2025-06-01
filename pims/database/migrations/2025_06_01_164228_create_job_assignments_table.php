@@ -16,7 +16,7 @@ class CreateJobAssignmentsTable extends Migration
             $table->string('job_title', 100)->nullable();
             $table->text('job_description')->nullable();
             $table->date('assigned_date')->nullable();
-            $table->date('end_date');
+            $table->date('end_date')->nullable();
             $table->enum('status', ['active', 'completed', 'terminated'])->nullable();
             $table->timestamps();
             $table->index('prisoner_id', 'fk_job_assignments_prisoner');

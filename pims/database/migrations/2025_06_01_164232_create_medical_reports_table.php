@@ -21,11 +21,12 @@ class CreateMedicalReportsTable extends Migration
             $table->foreignId('appointment_id')->nullable()->constrained('medical_appointments')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('follow_up_date')->nullable();
-            $table->text('notes');
+            $table->text('notes')->nullable();
             $table->text('follow_up')->nullable();
             $table->index('prisoner_id', 'fk_medical_reports_prisoner');
             $table->index('doctor_id', 'fk_medical_reports_doctor');
             $table->index('appointment_id', 'fk_appointment');
+            $table->index('prison_id');
         });
     }
 

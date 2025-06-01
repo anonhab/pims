@@ -195,9 +195,9 @@ class CreateLawyersTable extends Migration
             \$table->string('license_number', 100)->unique();
             \$table->integer('cases_handled')->default(0);
             \$table->timestamps();
-            \$table->foreignId('prison')->nullable()->constrained('prisons')->onDelete('cascade')->onUpdate('cascade');
+            \$table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             \$table->string('profile_image', 255)->nullable();
-            \$table->index('prison', 'fk_lawyer_prisons');
+            \$table->index('prison_id', 'fk_lawyer_prisons');
         });
     }
 
@@ -225,8 +225,8 @@ class CreateVisitorsTable extends Migration
             \$table->string('phone_number', 20)->nullable();
             \$table->string('relationship', 50)->nullable();
             \$table->text('address')->nullable();
-            \$table->string('identification_number', 100)->nullable()->unique();
-            \$table->text('email');
+            \$table->string('identification_number', 50)->nullable()->unique();
+            \$table->string('email');
             \$table->string('password', 255);
             \$table->timestamps();
         });
@@ -289,8 +289,7 @@ class CreateNotificationsTable extends Migration
             \$table->string('title', 255)->nullable();
             \$table->text('message')->nullable();
             \$table->boolean('is_read')->default(0);
-            \$table->timestamps();
-            \$table->datetime('updated_at')->default('0000-00-00 00:00:00');
+            \$ escreveu->timestamps();
             \$table->index('prison_id', 'fk_notifications_prison_id');
         });
     }
@@ -387,11 +386,9 @@ class CreateBackupsTable extends Migration
             \$table->datetime('backup_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             \$table->enum('backup_status', ['in_progress', 'completed', 'failed'])->nullable();
             \$table->timestamps();
-            \$table->datetime('created_at')->default('0000-00-00 00:00:00');
-            \$table->datetime('updated_at')->default('0000-00-00 00:00:00');
             \$table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             \$table->index('initiated_by', 'fk_backups_user');
-            \$table->index('prison_id', 'fk_rbackups_prison_id');
+            \$table->index('prison_id', 'fk_backups_prison_id');
         });
     }
 
@@ -450,7 +447,7 @@ class CreateJobAssignmentsTable extends Migration
             \$table->string('job_title', 100)->nullable();
             \$table->text('job_description')->nullable();
             \$table->date('assigned_date')->nullable();
-            \$table->date('end_date');
+            \$table->date('end_date')->nullable();
             \$table->enum('status', ['active', 'completed', 'terminated'])->nullable();
             \$table->timestamps();
             \$table->index('prisoner_id', 'fk_job_assignments_prisoner');
@@ -478,7 +475,7 @@ class CreateLawyerAppointmentsTable extends Migration
         Schema::create('lawyer_appointments', function (Blueprint \$table) {
             \$table->id();
             \$table->foreignId('prisoner_id')->nullable()->constrained()->onDelete('cascade');
-            \$table->foreignId('lawyer_id')->nullable()->constrained('accounts', 'user_id')->onDelete('cascade');
+            \$table->foreignId('lawyer_id')->nullable()->constrained('lawyers', 'lawyer_id')->onDelete('cascade');
             \$table->datetime('appointment_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             \$table->enum('status', ['scheduled', 'completed', 'cancelled'])->nullable();
             \$table->text('notes')->nullable();
@@ -486,6 +483,7 @@ class CreateLawyerAppointmentsTable extends Migration
             \$table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             \$table->index('prisoner_id', 'fk_lawyer_appointments_prisoner');
             \$table->index('lawyer_id', 'fk_lawyer_appointments_lawyer');
+            \$table->index('prison_id');
         });
     }
 
@@ -585,11 +583,12 @@ class CreateMedicalReportsTable extends Migration
             \$table->foreignId('appointment_id')->nullable()->constrained('medical_appointments')->onDelete('cascade')->onUpdate('cascade');
             \$table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             \$table->date('follow_up_date')->nullable();
-            \$table->text('notes');
+            \$table->text('notes')->nullable();
             \$table->text('follow_up')->nullable();
             \$table->index('prisoner_id', 'fk_medical_reports_prisoner');
             \$table->index('doctor_id', 'fk_medical_reports_doctor');
             \$table->index('appointment_id', 'fk_appointment');
+            \$table->index('prison_id');
         });
     }
 
@@ -684,7 +683,6 @@ class CreateReportsTable extends Migration
             \$table->text('content')->nullable();
             \$table->text('report_type');
             \$table->timestamps();
-            \$table->datetime('updated_at')->default('0000-00-00 00:00:00');
             \$table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             \$table->index('generated_by', 'fk_reports_generated_by');
             \$table->index('prison_id', 'fk_reports_prison_id');
@@ -817,6 +815,7 @@ class CreateVisitingRequestsTable extends Migration
             \$table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade');
             \$table->index('approved_by');
             \$table->index('prison_id', 'idx_prison_id');
+            \$table->index('visitor_id');
         });
     }
 

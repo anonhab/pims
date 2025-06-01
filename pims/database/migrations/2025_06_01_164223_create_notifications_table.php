@@ -20,7 +20,6 @@ class CreateNotificationsTable extends Migration
             $table->string('title', 255)->nullable();
             $table->text('message')->nullable();
             $table->boolean('is_read')->default(0);
-            $table->timestamps();
             $table->index('prison_id', 'fk_notifications_prison_id');
         });
     }

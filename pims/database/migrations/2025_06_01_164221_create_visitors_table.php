@@ -16,8 +16,8 @@ class CreateVisitorsTable extends Migration
             $table->string('phone_number', 20)->nullable();
             $table->string('relationship', 50)->nullable();
             $table->text('address')->nullable();
-            $table->string('identification_number', 100)->nullable()->unique();
-            $table->text('email');
+            $table->string('identification_number', 50)->nullable()->unique();
+            $table->string('email');
             $table->string('password', 255);
             $table->timestamps();
         });

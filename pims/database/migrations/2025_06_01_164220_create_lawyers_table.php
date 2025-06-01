@@ -21,9 +21,9 @@ class CreateLawyersTable extends Migration
             $table->string('license_number', 100)->unique();
             $table->integer('cases_handled')->default(0);
             $table->timestamps();
-            $table->foreignId('prison')->nullable()->constrained('prisons')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('prison_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('profile_image', 255)->nullable();
-            $table->index('prison', 'fk_lawyer_prisons');
+            $table->index('prison_id', 'fk_lawyer_prisons');
         });
     }
 

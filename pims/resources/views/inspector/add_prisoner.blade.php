@@ -474,7 +474,7 @@
                             <option value="Tax Evasion">Tax Evasion</option>
                             <option value="Embezzlement">Embezzlement</option>
                             <option value="Corruption">Corruption</option>
-                            <option value="Hate Crimes">Hate。就
+                            <option value="Hate Crimes">Hate
                             <option value="Smuggling">Smuggling</option>
                             <option value="Child Abuse">Child Abuse</option>
                             <option value="Bribery">Bribery</option>

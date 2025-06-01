@@ -217,8 +217,10 @@ class cAccountController extends Controller
     public function show_all()
     {
         try {
-            $roles = Role::all();
-            $accounts = Account::with('role')->paginate(10);
+            $roles = Role::where('id', 1)->get();
+            $accounts = Account::where('role_id', 1)
+                ->paginate(10);
+            
             return view('cadmin.view_accounts', compact('accounts', 'roles'));
         } catch (QueryException $e) {
             Log::error('Database error in show_all', [
@@ -239,9 +241,11 @@ class cAccountController extends Controller
     {
         try {
             $validated = $request->validate([
-                'name' => 'required|unique:prisons,name',
+                'name' => 'required',
                 'location' => 'required',
                 'capacity' => 'required|integer|min:1',
+            ], [
+                'name.unique' => 'A prison with this name already exists.', // Custom message
             ]);
     
             Prison::create($validated);
@@ -256,12 +260,19 @@ class cAccountController extends Controller
                              ->withErrors($e->validator)
                              ->withInput();
         } catch (QueryException $e) {
+            // Optional: detect if it's a duplicate key error
+            if ($e->getCode() == 23000) { // SQLSTATE 23000 = integrity constraint violation
+                return redirect()->back()
+                                 ->with('error', 'A prison with this name already exists.')
+                                 ->withInput();
+            }
+    
             Log::error('Database error in prisonstore', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
             return redirect()->back()
-                             ->with('error', 'A database error occurred while creating the prison.')
+                             ->with('error', 'A prison with this name already exists.')
                              ->withInput();
         } catch (\Exception $e) {
             Log::error('Unexpected error in prisonstore', [
@@ -909,28 +920,9 @@ class cAccountController extends Controller
 
     public function destroyprison($id)
     {
-        try {
             $prison = Prison::findOrFail($id);
-
-            if ($prison->rooms()->exists() || $prison->prisoners()->exists()) {
-                return redirect()->back()->with('error', 'Cannot delete prison with associated rooms or rooms');
-            }
-
             $prison->delete();
             return redirect()->back()->with('success', 'Prison deleted successfully');
-        } catch (QueryException $e) {
-            Log::error('Database error in destroyprison', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->with('error', 'Database error occurred while deleting the prison');
-        } catch (\Exception $e) {
-            Log::error('Unexpected error in destroyprison', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return redirect()->back()->with('error', 'An unexpected error occurred while deleting the prison');
-        }
     }
 
     public function destroyacc($user_id)
