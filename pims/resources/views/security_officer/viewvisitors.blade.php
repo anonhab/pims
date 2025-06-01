@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" defer>
     <style>
         :root {
-            --primary: rgb(179, 63, 50);
-            --secondary: rgb(127, 25, 14);
+            --primary: #2c3e50;
+            --secondary: #2c3e50;
             --accent: #3498db;
             --light: #ecf0f1;
             --danger: #e74c3c;

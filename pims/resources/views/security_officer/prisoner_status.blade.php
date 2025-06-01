@@ -13,8 +13,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --pims9-primary:rgb(179, 63, 50);
-            --pims9-secondary: rgb(127, 25, 14);
+            --pims9-primary: #2c3e50;
+            --pims9-secondary: #2c3e50;
             --pims9-accent: #3498db;
             --pims9-light: #ecf0f1;
             --pims9-lighter: #f8f9fa;

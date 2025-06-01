@@ -558,8 +558,6 @@
     @include('includes.nav')
     @include('inspector.menu')
     <div class="pims-app-container9">
-
-
         <div class="pims-content-area9">
             <div class="pims-card9">
                 <div class="pims-card-header9">
@@ -576,7 +574,7 @@
                 <div class="pims-card-filter9">
                     <div class="pims-form-group9" style="flex-grow: 1; max-width: 300px;">
                         <div class="control has-icons-left">
-                            <input class="pims-form-control9" id="pims-search-prisoner9" type="text" placeholder="Search prisoners...">
+                            <input class="pims-form-control9" id="pims-search-prisoner9" type="text" placeholder="Search by name or crime...">
                             <span class="icon is-left" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">
                                 <i class="fas fa-search"></i>
                             </span>
@@ -592,7 +590,7 @@
 
                 <div class="pims-card-body9">
                     <!-- Prisoner Cards Grid -->
-                    <div class="pims-grid9">
+                    <div class="pims-grid9" id="prisoner-grid">
                         @if($prisoners->isEmpty())
                         <div class="pims-empty-state9">
                             <i class="fas fa-user-slash" style="font-size: 3rem; color: var(--pims-accent); margin-bottom: 1rem;"></i>
@@ -600,7 +598,7 @@
                         </div>
                         @else
                         @foreach($prisoners as $prisoner)
-                        <div class="pims-prisoner-card9">
+                        <div class="pims-prisoner-card9" data-name="{{ strtolower($prisoner->first_name . ' ' . $prisoner->last_name) }}" data-crime="{{ strtolower($prisoner->crime_committed) }}">
                             <div class="pims-card9">
                                 <div class="pims-card-body9">
                                     <div class="media" style="display: flex; align-items: center; margin-bottom: 1rem;">
@@ -647,8 +645,6 @@
                                             <i class="fas fa-user-check"></i> Reactivate
                                         </button>
                                         @endif
-
-
                                     </div>
                                 </div>
                             </div>
@@ -694,35 +690,35 @@
             </div>
         </div>
     </div>
-<!-- Reactivation Modal -->
-<div id="reactivateModal" class="pims-reactivate-modal9">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2>Reactivate Prisoner</h2>
-            <button class="modal-close" onclick="closeReactivateModal()">×</button>
+
+    <!-- Reactivation Modal -->
+    <div id="reactivateModal" class="pims-reactivate-modal9">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Reactivate Prisoner</h2>
+                <button class="modal-close" onclick="closeReactivateModal()">×</button>
+            </div>
+
+            <form id="reactivateForm" method="POST">
+                @csrf
+                @method('PATCH')
+
+                <p><strong id="reactivatePrisonerName"></strong></p>
+
+                <div>
+                    <label for="durationInput">Enter sentence duration in years, or type "life" or "death":</label>
+                    <input type="text" id="durationInput" name="duration" class="pims-form-input" placeholder="e.g., 10 or life or death" required>
+                </div>
+
+                <input type="hidden" id="calculatedEndDate" name="time_serve_end">
+
+                <div class="modal-footer">
+                    <button type="button" onclick="setEndDate()">Set End Date</button>
+                    <button type="button" onclick="closeReactivateModal()">Cancel</button>
+                </div>
+            </form>
         </div>
-
-        <form id="reactivateForm" method="POST">
-            @csrf
-            @method('PATCH')
-
-            <p><strong id="reactivatePrisonerName"></strong></p>
-
-            <div>
-                <label for="durationInput">Enter sentence duration in years, or type "life" or "death":</label>
-                <input type="text" id="durationInput" name="duration" class="pims-form-input" placeholder="e.g., 10 or life or death" required>
-            </div>
-
-            <input type="hidden" id="calculatedEndDate" name="time_serve_end">
-
-            <div class="modal-footer">
-                <button type="button" onclick="setEndDate()">Set End Date</button>
-                <button type="button" onclick="closeReactivateModal()">Cancel</button>
-            </div>
-        </form>
     </div>
-</div>
-
 
     <!-- Prisoner Details Modal -->
     <div class="pims-modal9" id="pims-view-prisoner-modal9">
@@ -787,64 +783,71 @@
     </div>
 
 
-
     @include('includes.footer_js')
     <script>
-    let currentPrisonerId = null;
+        let currentPrisonerId = null;
 
-    function openReactivateModal(prisonerId, prisonerName) {
-        currentPrisonerId = prisonerId;
-        console.log(`Opening modal for Prisoner ID: ${prisonerId}, Name: ${prisonerName}`);
-
-        document.querySelector('.pims-reactivate-modal9').style.display = 'block';
-        document.getElementById('reactivatePrisonerName').innerText = prisonerName;
-        document.getElementById('reactivateForm').action = `/prisoners/${prisonerId}/toggle-status`;
-
-        console.log(`Form action set to: /prisoners/${prisonerId}/toggle-status`);
-    }
-
-    function closeReactivateModal() {
-        console.log('Closing reactivation modal');
-
-        document.querySelector('.pims-reactivate-modal9').style.display = 'none';
-        document.getElementById('durationInput').value = '';
-    }
-
-    function setEndDate() {
-        const duration = document.getElementById('durationInput').value.trim().toLowerCase();
-        console.log(`Duration input received: ${duration}`);
-
-        const form = document.getElementById('reactivateForm');
-        let endDate;
-
-        if (duration === 'life') {
-            endDate = 'Life Sentence';
-            console.log('Setting end date as Life Sentence');
-        } else if (duration === 'death') {
-            endDate = 'Death';
-            console.log('Setting end date as Death');
-        } else if (!isNaN(duration)) {
-            const years = parseInt(duration);
-            const now = new Date();
-            now.setFullYear(now.getFullYear() + years);
-            endDate = now.toISOString().split('T')[0];
-            console.log(`Calculated end date from duration (${years} years): ${endDate}`);
-        } else {
-            alert('Invalid input. Please enter a number, "life", or "death".');
-            console.warn('Invalid duration input');
-            return;
+        function openReactivateModal(prisonerId, prisonerName) {
+            currentPrisonerId = prisonerId;
+            document.querySelector('.pims-reactivate-modal9').style.display = 'block';
+            document.getElementById('reactivatePrisonerName').innerText = prisonerName;
+            document.getElementById('reactivateForm').action = `/prisoners/${prisonerId}/toggle-status`;
         }
 
-        document.getElementById('calculatedEndDate').value = endDate;
-        console.log(`Final end date set in hidden input: ${endDate}`);
+        function closeReactivateModal() {
+            document.querySelector('.pims-reactivate-modal9').style.display = 'none';
+            document.getElementById('durationInput').value = '';
+        }
 
-        form.submit();
-        console.log('Form submitted');
-    }
-</script>
-    <script>
-        
+        function setEndDate() {
+            const duration = document.getElementById('durationInput').value.trim().toLowerCase();
+            const form = document.getElementById('reactivateForm');
+            let endDate;
+
+            if (duration === 'life') {
+                endDate = 'Life Sentence';
+            } else if (duration === 'death') {
+                endDate = 'Death';
+            } else if (!isNaN(duration)) {
+                const years = parseInt(duration);
+                const now = new Date();
+                now.setFullYear(now.getFullYear() + years);
+                endDate = now.toISOString().split('T')[0];
+            } else {
+                alert('Invalid input. Please enter a number, "life", or "death".');
+                return;
+            }
+
+            document.getElementById('calculatedEndDate').value = endDate;
+            form.submit();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality - searches by both name and crime
+            document.getElementById('pims-search-prisoner9').addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase().trim();
+                const prisonerCards = document.querySelectorAll('.pims-prisoner-card9');
+                let hasVisibleCards = false;
+
+                prisonerCards.forEach(card => {
+                    const name = card.getAttribute('data-name');
+                    const crime = card.getAttribute('data-crime');
+                    
+                    if (name.includes(searchTerm) || crime.includes(searchTerm)) {
+                        card.style.display = 'block';
+                        hasVisibleCards = true;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                // Show empty state if no matches found
+                const emptyState = document.querySelector('.pims-empty-state9');
+                if (emptyState) {
+                    emptyState.style.display = hasVisibleCards ? 'none' : 'block';
+                }
+            });
+
             // Initialize view buttons
             document.querySelectorAll('.pims-view-prisoner9').forEach(button => {
                 button.addEventListener('click', function() {
@@ -906,17 +909,6 @@
                 submitBtn.disabled = true;
             });
 
-            // Search functionality
-            document.getElementById('pims-search-prisoner9').addEventListener('input', function() {
-                const searchTerm = this.value.toLowerCase();
-                const prisonerCards = document.querySelectorAll('.pims-prisoner-card9');
-
-                prisonerCards.forEach(card => {
-                    const cardText = card.textContent.toLowerCase();
-                    card.style.display = cardText.includes(searchTerm) ? 'block' : 'none';
-                });
-            });
-
             // Refresh button
             document.getElementById('pims-reload-prisoners9').addEventListener('click', function() {
                 window.location.reload();
@@ -928,5 +920,4 @@
         }
     </script>
 </body>
-
 </html>

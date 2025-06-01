@@ -270,9 +270,11 @@
 <body>
     @include('includes.nav')
     <div class="pims-app-container">
+    
         @include('security_officer.menu')
 
         <div id="pims-panel-container">
+            </br></br></br>
             <h1 class="pims-section-title"><i class="fas fa-shield-alt"></i> Security Dashboard</h1>
 
             <!-- Notifications -->
