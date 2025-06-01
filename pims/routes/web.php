@@ -158,6 +158,8 @@ Route::post('/police-assignments', [iPrisonerController::class, 'assignpolice'])
 Route::put('/police-assignments/{assignment_id}', [iPrisonerController::class, 'updateasspolice'])->name('police.assignments.update');
 Route::delete('/police-assignments/{assignment_id}', [iPrisonerController::class, 'destroyasspolice'])->name('police.assignments.destroy');
 });
+Route::patch('/prisoners/{id}/toggle-status', [iPrisonerController::class, 'toggleStatus'])->name('prisoners.toggleStatus');
+
 Route::get('/lawyershowall', [iPrisonerController::class, 'lawyershowall'])->name('lawyer.lawyershowall')->middleware('role:2');
 Route::post('/assignments', [iPrisonerController::class, 'assignlawyer'])->name('assignments.store');
 Route::get('/assignments', [iPrisonerController::class, 'asslawyer'])->name('assignments.view');
@@ -189,6 +191,7 @@ Route::get('/viewrequestpolice', [myLawyerController::class, 'viewrequestpolice'
 Route::get('/prisoners', [iPrisonerController::class, 'show_all'])
     ->name('prisoner.showAll')
     ->middleware('role:2,8,5');
+    Route::put('/prisoners/{id}', [iPrisonerController::class, 'updatepr'])->name('prisoners.update');
 Route::post('prisoner/allocate-room', [iPrisonerController::class, 'allocateRoom'])->name('prisoner.allocate_room')->middleware('role:8');
 Route::delete('/rooms/{id}', [iPrisonerController::class, 'roomdestroy'])->name('rooms.destroy');
 
@@ -291,15 +294,15 @@ Route::post('/updateAppointmentStatus', [SecurityController::class, 'updateStatu
 Route::get('/discipline_officer/requests/evaluate', [RequestController::class, 'showEvaluationForm'])->name('discipline_officer.evaluate_request');
 Route::get('/show_prisoners', [RequestController::class, 'show_allforin'])->name('showprisoners');
 Route::get('/ddashboard', [RequestController::class, 'dashboard'])->name('disdashboard');
-Route::post('/approve-request/{id}', [RequestController::class, 'approveRequest'])->name('approve.request');
-Route::post('/reject-request/{id}', [RequestController::class, 'rejectRequest'])->name('reject.request');
-Route::post('/transfer-request/{id}', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
+Route::post('/requests/{id}/approve', [RequestController::class, 'approveRequest'])->name('approve.request');
+Route::post('/requests/{id}/reject', [RequestController::class, 'rejectRequest'])->name('reject.request');
+Route::post('/requests/{id}/transfer', [RequestController::class, 'transferRequest'])->name(name: 'transfer.request');
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
 Route::post('/approve-appointment/{id}', [RequestController::class, 'approve']);
 Route::post('/reject-appointment/{id}', [RequestController::class, 'reject']);
-Route::post('/lawyer-approve-request/{id}', [RequestController::class, 'approveLawyerAppointment'])->name('lawyer-approve-request');
-Route::post('/lawyer-reject-request/{id}', [RequestController::class, 'rejectLawyerAppointment'])->name('lawyer-reject-request');
-Route::post('/lawyer-transfer-request/{id}', [RequestController::class, 'transferLawyerAppointment'])->name('lawyer-transfer-request');
+Route::post('/appointments/{id}/approve', [RequestController::class, 'approveLawyerAppointment'])->name('lawyer-approve-request');
+Route::post('/appointments/{id}/reject', [RequestController::class, 'rejectLawyerAppointment'])->name('lawyer-reject-request');
+Route::post('/appointments/{id}/transfer', [RequestController::class, 'transferLawyerAppointment'])->name('lawyer-transfer-request');
 Route::get('/showprisoners', [RequestController::class, 'show_allforin'])->name('prisoner.showprisoners');
 Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
 Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');

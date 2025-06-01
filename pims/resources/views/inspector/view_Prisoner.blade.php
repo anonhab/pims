@@ -7,10 +7,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Prisoner Management</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -48,7 +48,7 @@
             padding-top: 100px;
         }
 
-       
+
         .pims-content-area9 {
             flex: 1;
             margin-left: var(--pims-sidebar-width);
@@ -422,11 +422,11 @@
 
         /* Responsive Adjustments */
         @media (max-width: 768px) {
-            .pims-app-container9{
-                padding-left:70px;
+            .pims-app-container9 {
+                padding-left: 70px;
             }
-            
-       
+
+
             .pims-sidebar9 {
                 transform: translateX(-100%);
             }
@@ -449,15 +449,116 @@
                 grid-template-columns: 1fr;
             }
         }
+        /* Modal overlay */
+.pims-reactivate-modal9 {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.5); /* Black with opacity */
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* Modal content box */
+.pims-reactivate-modal9 .modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 2rem;
+    border: 1px solid #ccc;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: fadeInModal 0.3s ease-in-out;
+}
+
+/* Modal header */
+.pims-reactivate-modal9 .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+/* Close button */
+.pims-reactivate-modal9 .modal-close {
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #666;
+}
+
+/* Input field */
+.pims-reactivate-modal9 .pims-form-input {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+/* Modal footer buttons */
+.pims-reactivate-modal9 .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.pims-reactivate-modal9 .modal-footer button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.pims-reactivate-modal9 .modal-footer button:first-child {
+    background-color: #007bff;
+    color: white;
+}
+
+.pims-reactivate-modal9 .modal-footer button:first-child:hover {
+    background-color: #0056b3;
+}
+
+.pims-reactivate-modal9 .modal-footer button:last-child {
+    background-color: #dc3545;
+    color: white;
+}
+
+.pims-reactivate-modal9 .modal-footer button:last-child:hover {
+    background-color: #a71d2a;
+}
+
+/* Animation */
+@keyframes fadeInModal {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
     </style>
 </head>
 
 <body>
     <!-- Navigation -->
     @include('includes.nav')
- @include('inspector.menu')
+    @include('inspector.menu')
     <div class="pims-app-container9">
-       
+
 
         <div class="pims-content-area9">
             <div class="pims-card9">
@@ -471,7 +572,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <div class="pims-card-filter9">
                     <div class="pims-form-group9" style="flex-grow: 1; max-width: 300px;">
                         <div class="control has-icons-left">
@@ -481,68 +582,78 @@
                             </span>
                         </div>
                     </div>
-                    
+
                     <div class="buttons">
                         <a href="{{ route('prisoner.add') }}" class="pims-btn9 pims-btn-primary9">
                             <i class="fas fa-plus"></i> Create Prisoner
                         </a>
                     </div>
                 </div>
-                
+
                 <div class="pims-card-body9">
                     <!-- Prisoner Cards Grid -->
                     <div class="pims-grid9">
                         @if($prisoners->isEmpty())
-                            <div class="pims-empty-state9">
-                                <i class="fas fa-user-slash" style="font-size: 3rem; color: var(--pims-accent); margin-bottom: 1rem;"></i>
-                                <h3 class="pims-content-title9">No prisoners found</h3>
-                            </div>
+                        <div class="pims-empty-state9">
+                            <i class="fas fa-user-slash" style="font-size: 3rem; color: var(--pims-accent); margin-bottom: 1rem;"></i>
+                            <h3 class="pims-content-title9">No prisoners found</h3>
+                        </div>
                         @else
-                            @foreach($prisoners as $prisoner)
-                            <div class="pims-prisoner-card9">
-                                <div class="pims-card9">
-                                    <div class="pims-card-body9">
-                                        <div class="media" style="display: flex; align-items: center; margin-bottom: 1rem;">
-                                            <div class="media-left" style="margin-right: 1rem;">
-                                                <figure class="image is-48x48">
-                                                    @if($prisoner->inmate_image)
-                                                        <img src="{{ asset('storage/' . $prisoner->inmate_image) }}" alt="Prisoner Image" class="pims-prisoner-image9">
-                                                    @else
-                                                        <img src="{{ asset('default-profile.png') }}" alt="Default Image" class="pims-prisoner-image9">
-                                                    @endif
-                                                </figure>
-                                            </div>
-                                            <div class="media-content">
-                                                <p class="pims-prisoner-title9">{{ $prisoner->first_name }} {{ $prisoner->last_name }}</p>
-                                                <p class="pims-prisoner-subtitle9">ID: {{ $prisoner->id }}</p>
-                                                <span class="pims-status-badge9 
+                        @foreach($prisoners as $prisoner)
+                        <div class="pims-prisoner-card9">
+                            <div class="pims-card9">
+                                <div class="pims-card-body9">
+                                    <div class="media" style="display: flex; align-items: center; margin-bottom: 1rem;">
+                                        <div class="media-left" style="margin-right: 1rem;">
+                                            <figure class="image is-48x48">
+                                                @if($prisoner->inmate_image)
+                                                <img src="{{ asset('storage/' . $prisoner->inmate_image) }}" alt="Prisoner Image" class="pims-prisoner-image9">
+                                                @else
+                                                <img src="{{ asset('default-profile.png') }}" alt="Default Image" class="pims-prisoner-image9">
+                                                @endif
+                                            </figure>
+                                        </div>
+                                        <div class="media-content">
+                                            <p class="pims-prisoner-title9">{{ $prisoner->first_name }} {{ $prisoner->last_name }}</p>
+                                            <p class="pims-prisoner-subtitle9">ID: {{ $prisoner->id }}</p>
+                                            <span class="pims-status-badge9 
                                                     @if($prisoner->status == 'Active') pims-status-active9
                                                     @elseif($prisoner->status == 'Inactive') pims-status-inactive9
                                                     @else pims-status-pending9 @endif">
-                                                    {{ ucfirst($prisoner->status) }}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div class="content">
-                                            <p class="pims-prisoner-detail9"><strong>Crime:</strong> {{ $prisoner->crime_committed }}</p>
-                                            <p class="pims-prisoner-detail9"><strong>Gender:</strong> {{ ucfirst($prisoner->gender) }}</p>
+                                                {{ ucfirst($prisoner->status) }}
+                                            </span>
                                         </div>
                                     </div>
-                                    <div class="pims-card-footer9" style="padding: 1rem; border-top: 1px solid rgba(0, 0, 0, 0.05);">
-                                        <div class="buttons" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
-                                            <button class="pims-btn9 pims-btn-text9 pims-btn-sm9 pims-view-prisoner9" data-id="{{ $prisoner->id }}">
-                                                <i class="fas fa-eye"></i> View
+                                    <div class="content">
+                                        <p class="pims-prisoner-detail9"><strong>Crime:</strong> {{ $prisoner->crime_committed }}</p>
+                                        <p class="pims-prisoner-detail9"><strong>Gender:</strong> {{ ucfirst($prisoner->gender) }}</p>
+                                    </div>
+                                </div>
+                                <div class="pims-card-footer9" style="padding: 1rem; border-top: 1px solid rgba(0, 0, 0, 0.05);">
+                                    <div class="buttons" style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                                        <button class="pims-btn9 pims-btn-text9 pims-btn-sm9 pims-view-prisoner9" data-id="{{ $prisoner->id }}">
+                                            <i class="fas fa-eye"></i> View
+                                        </button>
+                                        @if($prisoner->status === 'Active')
+                                        <form action="{{ route('prisoners.toggleStatus', $prisoner->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to deactivate this prisoner?');">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="pims-btn9 pims-btn-danger9 pims-btn-sm9">
+                                                <i class="fas fa-user-slash"></i> Deactivate
                                             </button>
-                                            <button class="pims-btn9 pims-btn-danger9 pims-btn-sm9 pims-delete-prisoner9"
-                                                data-id="{{ $prisoner->prisoner_id }}"
-                                                data-name="{{ $prisoner->first_name }} {{ $prisoner->last_name }}">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
-                                        </div>
+                                        </form>
+                                        @else
+                                        <button class="pims-btn9 pims-btn-success9 pims-btn-sm9" onclick="openReactivateModal({{ $prisoner->id }}, '{{ $prisoner->first_name }} {{ $prisoner->last_name }}')">
+                                            <i class="fas fa-user-check"></i> Reactivate
+                                        </button>
+                                        @endif
+
+
                                     </div>
                                 </div>
                             </div>
-                            @endforeach
+                        </div>
+                        @endforeach
                         @endif
                     </div>
 
@@ -583,6 +694,35 @@
             </div>
         </div>
     </div>
+<!-- Reactivation Modal -->
+<div id="reactivateModal" class="pims-reactivate-modal9">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Reactivate Prisoner</h2>
+            <button class="modal-close" onclick="closeReactivateModal()">×</button>
+        </div>
+
+        <form id="reactivateForm" method="POST">
+            @csrf
+            @method('PATCH')
+
+            <p><strong id="reactivatePrisonerName"></strong></p>
+
+            <div>
+                <label for="durationInput">Enter sentence duration in years, or type "life" or "death":</label>
+                <input type="text" id="durationInput" name="duration" class="pims-form-input" placeholder="e.g., 10 or life or death" required>
+            </div>
+
+            <input type="hidden" id="calculatedEndDate" name="time_serve_end">
+
+            <div class="modal-footer">
+                <button type="button" onclick="setEndDate()">Set End Date</button>
+                <button type="button" onclick="closeReactivateModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
 
     <!-- Prisoner Details Modal -->
     <div class="pims-modal9" id="pims-view-prisoner-modal9">
@@ -646,50 +786,70 @@
         </div>
     </div>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="pims-modal9" id="pims-delete-prisoner-modal9">
-        <div class="pims-modal-card9" style="max-width: 400px;">
-            <header class="pims-modal-card-head9">
-                <p class="pims-modal-card-title9">
-                    <i class="fas fa-exclamation-triangle"></i> Confirm Deletion
-                </p>
-                <button class="pims-modal-close9" onclick="pimsCloseModal9('pims-delete-prisoner-modal9')">×</button>
-            </header>
-            <section class="pims-modal-card-body9">
-                <div style="text-align: center;">
-                    <div class="pims-confirm-icon9">
-                        <i class="fas fa-trash-alt" style="font-size: 2.5rem; color: var(--pims-danger);"></i>
-                    </div>
-                    <p class="pims-confirm-message9">
-                        Are you sure you want to delete prisoner <strong id="pims-delete-prisoner-name9"></strong>?
-                        This action cannot be undone.
-                    </p>
-                </div>
-            </section>
-            <footer class="pims-modal-card-foot9" style="justify-content: center;">
-                <button class="pims-btn9 pims-btn-secondary9" onclick="pimsCloseModal9('pims-delete-prisoner-modal9')">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <form id="pims-delete-prisoner-form9" method="POST" style="display: inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="pims-btn9 pims-btn-danger9">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
-                </form>
-            </footer>
-        </div>
-    </div>
+
 
     @include('includes.footer_js')
-
     <script>
+    let currentPrisonerId = null;
+
+    function openReactivateModal(prisonerId, prisonerName) {
+        currentPrisonerId = prisonerId;
+        console.log(`Opening modal for Prisoner ID: ${prisonerId}, Name: ${prisonerName}`);
+
+        document.querySelector('.pims-reactivate-modal9').style.display = 'block';
+        document.getElementById('reactivatePrisonerName').innerText = prisonerName;
+        document.getElementById('reactivateForm').action = `/prisoners/${prisonerId}/toggle-status`;
+
+        console.log(`Form action set to: /prisoners/${prisonerId}/toggle-status`);
+    }
+
+    function closeReactivateModal() {
+        console.log('Closing reactivation modal');
+
+        document.querySelector('.pims-reactivate-modal9').style.display = 'none';
+        document.getElementById('durationInput').value = '';
+    }
+
+    function setEndDate() {
+        const duration = document.getElementById('durationInput').value.trim().toLowerCase();
+        console.log(`Duration input received: ${duration}`);
+
+        const form = document.getElementById('reactivateForm');
+        let endDate;
+
+        if (duration === 'life') {
+            endDate = 'Life Sentence';
+            console.log('Setting end date as Life Sentence');
+        } else if (duration === 'death') {
+            endDate = 'Death';
+            console.log('Setting end date as Death');
+        } else if (!isNaN(duration)) {
+            const years = parseInt(duration);
+            const now = new Date();
+            now.setFullYear(now.getFullYear() + years);
+            endDate = now.toISOString().split('T')[0];
+            console.log(`Calculated end date from duration (${years} years): ${endDate}`);
+        } else {
+            alert('Invalid input. Please enter a number, "life", or "death".');
+            console.warn('Invalid duration input');
+            return;
+        }
+
+        document.getElementById('calculatedEndDate').value = endDate;
+        console.log(`Final end date set in hidden input: ${endDate}`);
+
+        form.submit();
+        console.log('Form submitted');
+    }
+</script>
+    <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize view buttons
             document.querySelectorAll('.pims-view-prisoner9').forEach(button => {
                 button.addEventListener('click', function() {
                     const prisonerId = this.getAttribute('data-id');
-                    
+
                     fetch(`/prisoners/${prisonerId}`)
                         .then(response => response.json())
                         .then(data => {
@@ -732,7 +892,7 @@
                 button.addEventListener('click', function() {
                     const prisonerId = this.getAttribute('data-id');
                     const prisonerName = this.getAttribute('data-name');
-                    
+
                     document.getElementById('pims-delete-prisoner-name9').textContent = prisonerName;
                     document.getElementById('pims-delete-prisoner-form9').action = `/prisoners/${prisonerId}`;
                     document.getElementById('pims-delete-prisoner-modal9').classList.add('is-active');
@@ -768,4 +928,5 @@
         }
     </script>
 </body>
+
 </html>

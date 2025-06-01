@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -81,6 +80,10 @@
             border-left: 4px solid var(--pims-accent);
         }
 
+        .pims-lawyer-appointment-card {
+            border-left: 4px solid var(--pims-warning);
+        }
+
         .pims-card-header {
             padding: 1.25rem;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
@@ -104,13 +107,13 @@
             padding: 1.25rem;
         }
 
-        /* Request Card Styles */
-        .pims-request-card {
+        /* Request and Appointment Card Styles */
+        .pims-request-card, .pims-lawyer-appointment-card {
             transition: var(--pims-transition);
             margin-bottom: 1.5rem;
         }
 
-        .pims-request-card:hover {
+        .pims-request-card:hover, .pims-lawyer-appointment-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
@@ -259,6 +262,11 @@
             color: #f1c40f;
         }
 
+        .pims-status-transferred {
+            background-color: rgba(41, 128, 185, 0.1);
+            color: var(--pims-accent);
+        }
+
         /* Modal Styles */
         .pims-modal-header {
             background-color: var(--pims-primary);
@@ -292,9 +300,19 @@
         /* Toast Styles */
         .pims-toast-container {
             position: fixed;
-            bottom: 1rem;
-            right: 1rem;
-            z-index: 1100;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 20px;
+    color: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+    z-index: 9999;
+    
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(20px);
+    max-width: 300px;
+    word-wrap: break-word;
         }
 
         .pims-toast {
@@ -352,7 +370,6 @@
     </style>
 </head>
 
-
 <body>
     <!-- Navigation -->
     @include('includes.nav')
@@ -361,6 +378,7 @@
         @include('discipline_officer.menu')
 
         <div class="pims-content-area">
+            <!-- Pending Requests Section -->
             <div class="pims-card">
                 <div class="pims-card-header">
                     <h2 class="pims-card-title">
@@ -426,6 +444,87 @@
                                 <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-accent);"></i>
                                 <h5 class="pims-card-title">No Pending Requests</h5>
                                 <p class="text-muted">There are currently no pending requests to evaluate.</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Pending Lawyer Appointments Section -->
+            <div class="pims-card">
+                <div class="pims-card-header">
+                    <h2 class="pims-card-title">
+                        <i class="fas fa-gavel"></i> Pending Lawyer Appointments
+                    </h2>
+                </div>
+                <div class="pims-card-body">
+                    @if(isset($lawyerAppointments) && $lawyerAppointments->isNotEmpty())
+                        @foreach($lawyerAppointments as $appointment)
+                            <div class="pims-card pims-lawyer-appointment-card" data-lawyer-appointment-id="{{ $appointment->id }}">
+                                <div class="pims-card-body">
+                                    <h5 class="pims-request-title">
+                                        <i class="fas fa-calendar-alt"></i> Appointment Information
+                                    </h5>
+                                    
+                                    <div class="pims-detail-item">
+                                        <span class="pims-field-label">Prisoner ID:</span>
+                                        <span class="pims-field-value">{{ $appointment->prisoner_id }}</span>
+                                        <button class="pims-btn pims-btn-outline-primary pims-btn-sm pims-view-prisoner-details ms-2" 
+                                                data-pims-id="{{ $appointment->prisoner_id }}">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="pims-detail-item">
+                                        <span class="pims-field-label">Lawyer:</span>
+                                        <span class="pims-field-value">
+                                            {{ $appointment->lawyer ? $appointment->lawyer->full_name : 'N/A' }}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="pims-detail-item">
+                                        <span class="pims-field-label">Appointment Date:</span>
+                                        <span class="pims-field-value">
+                                            {{ $appointment->appointment_date ? $appointment->appointment_date->format('M d, Y H:i') : 'N/A' }}
+                                        </span>
+                                    </div>
+                                    
+                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                                        <span class="pims-field-label">Notes:</span>
+                                        <div class="pims-field-value p-3 bg-light rounded" style="width: 100%;">
+                                            {{ $appointment->notes ?: 'No notes provided' }}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                                        <label class="pims-field-label">Evaluation:</label>
+                                        <textarea class="pims-evaluation-textarea" 
+                                                  placeholder="Enter your evaluation comments for this appointment..." 
+                                                  required></textarea>
+                                    </div>
+                                    
+                                    <input type="hidden" class="pims-appointment-id" value="{{ $appointment->id }}">
+                                    
+                                    <div class="d-flex justify-content-end gap-2 mt-3">
+                                        <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve-appointment" disabled>
+                                            <i class="fas fa-check"></i> Approve
+                                        </button>
+                                        <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject-appointment" disabled>
+                                            <i class="fas fa-times"></i> Reject
+                                        </button>
+                                        <button class="pims-btn pims-btn-primary pims-btn-action pims-btn-transfer-appointment" disabled>
+                                            <i class="fas fa-exchange-alt"></i> Transfer
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="pims-card">
+                            <div class="pims-card-body text-center py-4">
+                                <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-warning);"></i>
+                                <h5 class="pims-card-title">No Pending Lawyer Appointments</h5>
+                                <p class="text-muted">There are currently no pending lawyer appointments to evaluate.</p>
                             </div>
                         </div>
                     @endif
@@ -510,18 +609,26 @@
     
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Enable/Disable evaluation buttons based on textarea input
-            document.querySelectorAll('.pims-evaluation-textarea').forEach(textarea => {
-                const card = textarea.closest('.pims-request-card');
-                const approveBtn = card.querySelector('.pims-btn-approve');
-                const rejectBtn = card.querySelector('.pims-btn-reject');
-                const transferBtn = card.querySelector('.pims-btn-transfer');
-                
-                textarea.addEventListener('input', () => {
-                    const evaluation = textarea.value.trim();
-                    approveBtn.disabled = rejectBtn.disabled = transferBtn.disabled = evaluation === '';
+            // Get CSRF token from meta tag
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            // Enable/Disable action buttons based on textarea input
+            function setupTextareaListeners() {
+                document.querySelectorAll('.pims-evaluation-textarea').forEach(textarea => {
+                    const card = textarea.closest('.pims-request-card, .pims-lawyer-appointment-card');
+                    const actionButtons = card.querySelectorAll('.pims-btn-action');
+                    
+                    textarea.addEventListener('input', function() {
+                        const hasText = this.value.trim().length > 0;
+                        actionButtons.forEach(button => {
+                            button.disabled = !hasText;
+                        });
+                    });
                 });
-            });
+            }
+            
+            // Initialize textarea listeners
+            setupTextareaListeners();
             
             // Prisoner details modal
             document.querySelectorAll('.pims-view-prisoner-details').forEach(button => {
@@ -545,7 +652,12 @@
                     
                     try {
                         // Fetch prisoner details
-                        const response = await fetch(`/prisoners/${prisonerId}`);
+                        const response = await fetch(`/prisoners/${prisonerId}/details`, {
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken
+                            }
+                        });
                         
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
@@ -556,8 +668,8 @@
                         // Update modal with prisoner data
                         modalBody.innerHTML = `
                             <div class="text-center">
-                                <img src="${data.inmate_image ? `/storage/${data.inmate_image}` : 'https://via.placeholder.com/300x300?text=No+Image'}" 
-                                     alt="${data.first_name ? `${data.first_name} ${data.last_name}'s Image` : 'Prisoner Image'}" 
+                                <img src="${data.image || 'https://via.placeholder.com/150?text=No+Image'}" 
+                                     alt="${data.first_name || 'Prisoner'} Image" 
                                      class="pims-prisoner-image">
                             </div>
                             
@@ -573,7 +685,7 @@
                                     </div>
                                     <div class="pims-detail-item">
                                         <span class="pims-prisoner-detail-label">Date of Birth:</span>
-                                        <span>${data.dob || '-'}</span>
+                                        <span>${data.dob ? new Date(data.dob).toLocaleDateString() : '-'}</span>
                                     </div>
                                     <div class="pims-detail-item">
                                         <span class="pims-prisoner-detail-label">Gender:</span>
@@ -595,14 +707,11 @@
                                     </div>
                                     <div class="pims-detail-item">
                                         <span class="pims-prisoner-detail-label">Sentence Period:</span>
-                                        <span>${data.time_serve_start || '-'} to ${data.time_serve_end || '-'}</span>
+                                        <span>${data.time_serve_start ? new Date(data.time_serve_start).toLocaleDateString() : '-'} to ${data.time_serve_end ? new Date(data.time_serve_end).toLocaleDateString() : '-'}</span>
                                     </div>
                                     <div class="pims-detail-item">
                                         <span class="pims-prisoner-detail-label">Emergency Contact:</span>
-                                        <span>${data.emergency_contact_name ? 
-                                            `${data.emergency_contact_name} (${data.emergency_contact_relation}) - ${data.emergency_contact_number}` : 
-                                            '-'}
-                                        </span>
+                                        <span>${data.emergency_contact_name ? `${data.emergency_contact_name} (${data.emergency_contact_relation}) - ${data.emergency_contact_number}` : '-'}</span>
                                     </div>
                                     <div class="pims-detail-item">
                                         <span class="pims-prisoner-detail-label">Facility:</span>
@@ -625,106 +734,171 @@
                 });
             });
             
-            // Handle request approval/rejection/transfer
+            // Handle request actions
             document.querySelectorAll('.pims-request-card').forEach(card => {
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
                 const transferBtn = card.querySelector('.pims-btn-transfer');
                 
-                approveBtn.addEventListener('click', async () => {
-                    await pimsHandleRequestAction(card, 'approve');
-                });
+                if (approveBtn) {
+                    approveBtn.addEventListener('click', async () => {
+                        await handleRequestAction(card, 'approve');
+                    });
+                }
                 
-                rejectBtn.addEventListener('click', async () => {
-                    await pimsHandleRequestAction(card, 'reject');
-                });
+                if (rejectBtn) {
+                    rejectBtn.addEventListener('click', async () => {
+                        await handleRequestAction(card, 'reject');
+                    });
+                }
                 
-                transferBtn.addEventListener('click', async () => {
-                    await pimsHandleRequestAction(card, 'transfer');
-                });
+                if (transferBtn) {
+                    transferBtn.addEventListener('click', async () => {
+                        await handleRequestAction(card, 'transfer');
+                    });
+                }
+            });
+
+            // Handle lawyer appointment actions
+            document.querySelectorAll('.pims-lawyer-appointment-card').forEach(card => {
+                const approveBtn = card.querySelector('.pims-btn-approve-appointment');
+                const rejectBtn = card.querySelector('.pims-btn-reject-appointment');
+                const transferBtn = card.querySelector('.pims-btn-transfer-appointment');
+                
+                if (approveBtn) {
+                    approveBtn.addEventListener('click', async () => {
+                        await handleAppointmentAction(card, 'approve');
+                    });
+                }
+                
+                if (rejectBtn) {
+                    rejectBtn.addEventListener('click', async () => {
+                        await handleAppointmentAction(card, 'reject');
+                    });
+                }
+                
+                if (transferBtn) {
+                    transferBtn.addEventListener('click', async () => {
+                        await handleAppointmentAction(card, 'transfer');
+                    });
+                }
             });
             
-            async function pimsHandleRequestAction(card, action) {
+            async function handleRequestAction(card, action) {
                 const requestId = card.querySelector('.pims-request-id').value;
-                const textarea = card.querySelector('.pims-evaluation-textarea');
-                const evaluation = textarea.value.trim();
+                const evaluation = card.querySelector('.pims-evaluation-textarea').value.trim();
                 
                 if (!evaluation) {
-                    pimsShowToast('error', 'Please provide an evaluation before submitting!');
+                    showToast('error', 'Please provide an evaluation before submitting!');
                     return;
                 }
                 
-                const actionVerb = action === 'approve' ? 'approved' : action === 'reject' ? 'rejected' : 'transferred';
-                const btnClass = action === 'approve' ? 'success' : action === 'reject' ? 'danger' : 'primary';
-                
                 try {
-                    const response = await fetch(`/${action}-request/${requestId}`, {
+                    const response = await fetch(`/requests/${requestId}/${action}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-CSRF-TOKEN': csrfToken,
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ evaluation: evaluation })
+                        body: JSON.stringify({ evaluation })
                     });
-                    
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
                     
                     const data = await response.json();
                     
                     if (data.success) {
-                        // Show success message
-                        pimsShowToast('success', `Request ${actionVerb} successfully!`);
-                        
-                        // Update UI
-                        card.style.opacity = '0.7';
-                        card.querySelector('.pims-btn-approve').disabled = true;
-                        card.querySelector('.pims-btn-reject').disabled = true;
-                        card.querySelector('.pims-btn-transfer').disabled = true;
-                        card.querySelector('.pims-evaluation-textarea').readOnly = true;
-                        
-                        // Change button to show status
-                        const buttonsDiv = card.querySelector('.d-flex');
-                        buttonsDiv.innerHTML = `
-                            <span class="pims-status-badge pims-status-${action} p-2">
-                                <i class="fas fa-${action === 'approve' ? 'check' : action === 'reject' ? 'times' : 'exchange-alt'} me-1"></i>
-                                Request ${actionVerb}
-                            </span>
-                        `;
+                        updateCardAfterAction(card, action, 'Request');
+                        showToast('success', `Request ${getActionPastTense(action)} successfully!`);
                     } else {
                         throw new Error(data.message || 'Action failed');
                     }
                 } catch (error) {
                     console.error(`Error ${action}ing request:`, error);
-                    pimsShowToast('error', `Failed to ${action} request: ${error.message || 'Unknown error'}`);
+                    showToast('error', `Failed to ${action} request: ${error.message || 'Unknown error'}`);
                 }
             }
             
-            function pimsShowToast(type, message) {
-                const toastContainer = document.createElement('div');
-                toastContainer.className = 'pims-toast-container';
+            async function handleAppointmentAction(card, action) {
+                const appointmentId = card.querySelector('.pims-appointment-id').value;
+                const evaluation = card.querySelector('.pims-evaluation-textarea').value.trim();
                 
-                const toast = document.createElement('div');
-                toast.className = `pims-toast pims-toast-${type}`;
-                toast.innerHTML = `
-                    <div class="pims-toast-header">
-                        <strong class="me-auto">${type === 'success' ? 'Success' : 'Error'}</strong>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                        ${message}
-                    </div>
-                `;
+                if (!evaluation) {
+                    showToast('error', 'Please provide an evaluation before submitting!');
+                    return;
+                }
                 
-                toastContainer.appendChild(toast);
-                document.body.appendChild(toastContainer);
+                try {
+                    const response = await fetch(`/appointments/${appointmentId}/${action}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({ evaluation })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        updateCardAfterAction(card, action, 'Appointment');
+                        showToast('success', `Appointment ${getActionPastTense(action)} successfully!`);
+                    } else {
+                        throw new Error(data.message || 'Action failed');
+                    }
+                } catch (error) {
+                    console.error(`Error ${action}ing appointment:`, error);
+                    showToast('error', `Failed to ${action} appointment: ${error.message || 'Unknown error'}`);
+                }
+            }
+            
+            function updateCardAfterAction(card, action, type) {
+                // Disable all buttons and textarea
+                const buttons = card.querySelectorAll('.pims-btn-action');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                });
                 
-                // Remove toast after 3 seconds
-                setTimeout(() => {
-                    toastContainer.remove();
-                }, 3000);
+                const textarea = card.querySelector('.pims-evaluation-textarea');
+                if (textarea) {
+                    textarea.readOnly = true;
+                }
+                
+                // Replace buttons with status badge
+                const buttonsDiv = card.querySelector('.d-flex');
+                if (buttonsDiv) {
+                    buttonsDiv.innerHTML = `
+                        <span class="pims-status-badge pims-status-${action} p-2">
+                            <i class="fas fa-${getActionIcon(action)} me-1"></i>
+                            ${type} ${getActionPastTense(action)}
+                        </span>
+                    `;
+                }
+                
+                // Visual feedback
+                card.style.opacity = '0.7';
+                card.style.pointerEvents = 'none';
+            }
+            
+            function getActionPastTense(action) {
+                return {
+                    'approve': 'approved',
+                    'reject': 'rejected',
+                    'transfer': 'transferred'
+                }[action] || action;
+            }
+            
+            function getActionIcon(action) {
+                return {
+                    'approve': 'check',
+                    'reject': 'times',
+                    'transfer': 'exchange-alt'
+                }[action] || 'info-circle';
+            }
+            
+            function showToast(type, message) {
+               
+                
             }
         });
     </script>
