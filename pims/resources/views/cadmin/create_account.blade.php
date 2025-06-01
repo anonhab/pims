@@ -3,6 +3,7 @@
 
 @include('includes.head')
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
 
 <style>
     :root {

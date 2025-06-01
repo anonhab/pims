@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Backup Logs</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
     @include('includes.head')
     
     <!-- Font Awesome -->
