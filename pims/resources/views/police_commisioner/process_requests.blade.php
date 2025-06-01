@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Execute Requests</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
     <meta name="description" content="Commissioner portal for executing approved prisoner requests">
 
     <!-- Bootstrap 5 CSS -->
