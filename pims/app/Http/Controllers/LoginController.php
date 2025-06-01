@@ -77,7 +77,7 @@ class LoginController extends Controller
 
                     2 => redirect()->to('/idashboard'),
                     1 => redirect()->route('system.dashboard'),   
-                    8 => view('police_officer.dashboard'),
+                    8 => redirect()->to('pdashboard'),
                     6 => redirect()->to('/tdashboard'),
                     9 => redirect()->to('/medicaldashboard'),
                     10 => redirect()->to('sdashboard'),

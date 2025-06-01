@@ -783,69 +783,55 @@ public function assignpolice(Request $request)
             return response()->json(['success' => false, 'message' => 'Error updating prisoner status.']);
         }
     }
+ 
+
     public function store(Request $request)
-{
-    // Validate the request
-    $validated = $request->validate([
-        'prison_id' => 'required|exists:prisons,id',
-        'first_name' => 'required|string|max:255',
-        'middle_name' => 'nullable|string|max:255',
-        'last_name' => 'required|string|max:255',
-        'dob' => 'required|date',
-        'sex' => 'required|in:Male,Female',
-        'address' => 'required|string',
-        'marital_status' => 'required|in:Single,Married,Divorced,Widowed',
-        'crime_committed' => 'required|string|max:255',
-        'other_crime' => 'nullable|string|max:255|required_if:crime_committed,Other',
-        'status' => 'required|in:active',
-        'time_serve_start' => 'required|date',
-        'time_serve_end' => 'required|string',
-        'emergency_contact_name' => 'required|string|max:255',
-        'emergency_contact_relation' => 'required|string|max:255',
-        'emergency_contact_number' => 'required|string|max:20',
-        'inmate_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // Restrict to images, max 2MB
-    ]);
-
-    // Handle "Other" crime
-    $crime = $request->crime_committed === 'Other' && $request->filled('other_crime')
-        ? $request->other_crime
-        : $request->crime_committed;
-
-    // Handle image upload
-    $imagePath = null;
-    if ($request->hasFile('inmate_image')) {
-        $imagePath = $request->file('inmate_image')->store('inmate_images', 'public');
-        Log::info('Inmate image uploaded successfully.', ['image_path' => $imagePath]);
-    } else {
-        Log::warning('No inmate image uploaded.');
+    {
+        // Check age
+        $dob = Carbon::parse($request->dob);
+        $age = $dob->age;
+    
+        if ($age < 18) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Prisoner must be at least 18 years old.');
+        }
+    
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('inmate_image')) {
+            $imagePath = $request->file('inmate_image')->store('inmate_images', 'public'); // Saves in storage/app/public/inmate_images
+            Log::info('Inmate image uploaded successfully.', ['image_path' => $imagePath]);
+        } else {
+            Log::warning('No inmate image uploaded.');
+        }
+    
+        try {
+            Prisoner::create([
+                'prison_id' => $request->prison_id,
+                'first_name' => $request->first_name,
+                'middle_name' => $request->middle_name,
+                'last_name' => $request->last_name,
+                'dob' => $request->dob,
+                'gender' => $request->sex,
+                'address' => $request->address,
+                'marital_status' => $request->marital_status,
+                'crime_committed' => $request->crime_committed,
+                'status' => $request->status,
+                'time_serve_start' => $request->time_serve_start,
+                'time_serve_end' => $request->time_serve_end,
+                'emergency_contact_name' => $request->emergency_contact_name,
+                'emergency_contact_relation' => $request->emergency_contact_relation,
+                'emergency_contact_number' => $request->emergency_contact_number,
+                'inmate_image' => $imagePath, // Store image path
+            ]);
+    
+            return redirect()->back()->with('success', 'Prisoner registered successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to register prisoner.');
+        }
     }
-
-    try {
-        Prisoner::create([
-            'prison_id' => $request->prison_id,
-            'first_name' => $request->first_name,
-            'middle_name' => $request->middle_name,
-            'last_name' => $request->last_name,
-            'dob' => $request->dob,
-            'gender' => $request->sex, // Map 'sex' from form to 'gender' in DB
-            'address' => $request->address,
-            'marital_status' => $request->marital_status,
-            'crime_committed' => $crime, // Use resolved crime value
-            'status' => $request->status,
-            'time_serve_start' => $request->time_serve_start,
-            'time_serve_end' => $request->time_serve_end,
-            'emergency_contact_name' => $request->emergency_contact_name,
-            'emergency_contact_relation' => $request->emergency_contact_relation,
-            'emergency_contact_number' => $request->emergency_contact_number,
-            'inmate_image' => $imagePath,
-        ]);
-
-        return redirect()->back()->with('success', 'Prisoner registered successfully!');
-    } catch (\Exception $e) {
-        Log::error('Failed to register prisoner.', ['error' => $e->getMessage()]);
-        return redirect()->back()->with('error', 'Failed to register prisoner: ' . $e->getMessage());
-    }
-}
+    
     public function showroom()
     {
         $rooms = Room::where('prison_id', session('prison_id'))->paginate(9);

@@ -31,4 +31,9 @@ class Room extends Model
     {
         return $this->belongsTo(Prison::class, 'prison_id', 'id');
     } 
+    public function prisoners()
+{
+    return $this->hasMany(Prisoner::class);
+}
+
 }

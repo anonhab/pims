@@ -36,9 +36,7 @@ Route::get('/allactor', function () {
     return view('dashboard');
 });
 
-Route::get('/pdashboard', function () {
-    return view('police_officer.dashboard');
-});
+
 Route::get('/', function () {
     return view('dashboard');
 });
@@ -213,6 +211,9 @@ Route::prefix('medical-officer')->name('medical.')->group(function () {
     Route::post('/appointments', [MedicalController::class, 'store'])->name('appointments.store');
     Route::put('/appointments/{id}', [MedicalController::class, 'update'])->name('appointments.update');
 });
+
+Route::get('/pdashboard', [PoliceController::class, 'dashboard'])->name('police_officer.dashboard')->middleware('role:8');
+Route::get('/requests/{id}', [PoliceController::class, 'show'])->name('requests.show');
 Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom')->middleware('role:8');
 Route::post('/storeRoomAllocation', [PoliceController::class, 'storeRoomAllocation'])->name('police.storeRoomAllocation');
 Route::get('/createRequest', [PoliceController::class, 'createRequest'])->name('police.createRequest');
