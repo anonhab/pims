@@ -586,18 +586,7 @@ body {
         </div>
     </div>
 
-    <!-- Backup  -->
-    <div class="pims-dashboard-card">
-        <span class="pims-security-badge"></span>
-        <div class="pims-card-icon">
-            <i class="fas fa-database"></i>
-        </div>
-        <h3>System Backups</h3>
-        <p>{{ number_format($backupCount) }}</p>
-        <div class="pims-card-footer">
-            <i class="fas fa-clock" style="color: var(--pims-accent);"></i> Next backup in {{ $nextBackupFormatted }}
-        </div>
-    </div>
+    
 </div>
 
          <!-- Data Visualization -->

@@ -297,6 +297,9 @@ Route::post('/transfer-request/{id}', [RequestController::class, 'transferReques
 Route::get('/prisoners/{id}', [RequestController::class, 'show'])->name('prisoners.show');
 Route::post('/approve-appointment/{id}', [RequestController::class, 'approve']);
 Route::post('/reject-appointment/{id}', [RequestController::class, 'reject']);
+Route::post('/lawyer-approve-request/{id}', [RequestController::class, 'approveLawyerAppointment'])->name('lawyer-approve-request');
+Route::post('/lawyer-reject-request/{id}', [RequestController::class, 'rejectLawyerAppointment'])->name('lawyer-reject-request');
+Route::post('/lawyer-transfer-request/{id}', [RequestController::class, 'transferLawyerAppointment'])->name('lawyer-transfer-request');
 Route::get('/showprisoners', [RequestController::class, 'show_allforin'])->name('prisoner.showprisoners');
 Route::get('/visitor/register', [VisitorController::class, 'showRegistrationForm'])->name('visitor.register');
 Route::post('/visitor/register', [VisitorController::class, 'register'])->name('visitor.register.submit');

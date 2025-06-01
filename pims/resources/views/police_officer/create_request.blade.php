@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Request Management</title>
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -262,7 +263,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.7);
-            
+
             transition: opacity 0.3s ease;
         }
 
@@ -337,6 +338,7 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     @include('includes.nav')
@@ -351,12 +353,7 @@
                 </h1>
             </div>
 
-            <!-- Success Notification -->
-            @if(session('success'))
-            <div class="pims-notification pims-notification-success">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
-            </div>
-            @endif
+           
 
             <!-- Request Form -->
             <form method="POST" action="{{ route('requestsfrompolice.store') }}">
@@ -389,17 +386,21 @@
                             <div class="pims-form-group">
                                 <label class="pims-form-label">Request Type</label>
                                 <div class="pims-select">
-                                    <select name="request_type" id="pims-request-type" class="pims-form-control" required>
+                                    <select name="request_type" id="pims-request-type" class="pims-form-control" required onchange="toggleOtherRequestInput(this)">
                                         <option value="" disabled selected>Select a Request Type</option>
-                                        <option value="case_review">Case Review Request</option>
-                                        <option value="medical_assistance">Medical Assistance Request</option>
                                         <option value="prison_transfer">Prison Transfer Request</option>
-                                        <option value="appeal_filing">Appeal Filing Request</option>
-                                        <option value="visitation_approval">Visitation Approval Request</option>
                                         <option value="human_rights_violation">Report Human Rights Violation</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
                             </div>
+
+                            <!-- Custom Request Type (only shown when "Other" is selected) -->
+                            <div class="pims-form-group" id="other-request-type-group" style="display: none;">
+                                <label class="pims-form-label">Specify Other Request</label>
+                                <input type="text" name="other_request_type" id="other-request-type" class="pims-form-control" placeholder="Enter your custom request type">
+                            </div>
+
 
                             <!-- Hidden Fields -->
                             <input type="hidden" class="pims-hidden" name="approved_by">
@@ -417,8 +418,8 @@
                         <div class="pims-card-body">
                             <div class="pims-form-group">
                                 <label class="pims-form-label">Request Description</label>
-                                <textarea class="pims-form-control pims-textarea" name="request_details" 
-                                          placeholder="Provide details about the request" required></textarea>
+                                <textarea class="pims-form-control pims-textarea" name="request_details"
+                                    placeholder="Provide details about the request" required></textarea>
                             </div>
 
                             <!-- Hidden Requester IDs -->
@@ -464,24 +465,37 @@
             </footer>
         </div>
     </div>
+    <script>
+    function toggleOtherRequestInput(selectElement) {
+        const otherGroup = document.getElementById('other-request-type-group');
+        if (selectElement.value === 'other') {
+            otherGroup.style.display = 'block';
+            document.getElementById('other-request-type').required = true;
+        } else {
+            otherGroup.style.display = 'none';
+            document.getElementById('other-request-type').required = false;
+        }
+    }
+</script>
 
     @include('includes.footer_js')
     <script>
+        
         document.addEventListener('DOMContentLoaded', function() {
             // Form submission confirmation
             const form = document.querySelector('form');
             const confirmModal = document.getElementById('pims-confirmation-modal');
             const confirmSubmitBtn = document.getElementById('pims-confirm-submit');
-            
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 confirmModal.classList.add('is-active');
             });
-            
+
             confirmSubmitBtn.addEventListener('click', function() {
                 form.submit();
             });
-            
+
             // Close modal functionality
             document.querySelectorAll('.pims-modal-close, .pims-modal-background, .pims-close-modal').forEach(element => {
                 element.addEventListener('click', function() {
@@ -490,7 +504,7 @@
                     });
                 });
             });
-            
+
             // Request type change handler
             const requestTypeSelect = document.getElementById('pims-request-type');
             requestTypeSelect.addEventListener('change', function() {
@@ -500,4 +514,5 @@
         });
     </script>
 </body>
+
 </html>

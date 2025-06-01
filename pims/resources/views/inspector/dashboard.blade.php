@@ -421,7 +421,7 @@
                 <h3>Active Prisoners</h3>
                 <p>{{ number_format($activePrisoners) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-check-circle" style="color: var(--pims-success);"></i> All profiles verified
+                    <i class="fas fa-check-circle" style="color: var(--pims-success);"></i>  
                 </div>
             </div>
 
@@ -434,7 +434,7 @@
                 <h3>Lawyer Assignments This Week</h3>
                 <p>{{ number_format($lawyerAssignmentsThisWeek) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-tasks" style="color: var(--pims-accent);"></i> Assigned since Monday
+                    <i class="fas fa-tasks" style="color: var(--pims-accent);"></i>  
                 </div>
             </div>
 
@@ -447,7 +447,7 @@
                 <h3>Police Assignments This Week</h3>
                 <p>{{ number_format($policeAssignmentsThisWeek) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-tasks" style="color: var(--pims-accent);"></i> Assigned since Monday
+                    <i class="fas fa-tasks" style="color: var(--pims-accent);"></i>  
                 </div>
             </div>
 
@@ -460,20 +460,20 @@
                 <h3>New Prisoners This Week</h3>
                 <p>{{ number_format($newPrisonersThisWeek) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i> Admitted since Monday
+                    <i class="fas fa-user" style="color: var(--pims-accent);"></i>  
                 </div>
             </div>
 
             <!-- Lawyer Profiles -->
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge">VERIFIED</span>
+                
                 <div class="pims-card-icon">
                     <i class="fas fa-gavel"></i>
                 </div>
                 <h3>Lawyer Profiles</h3>
                 <p>{{ number_format($lawyerProfiles) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-user" style="color: var(--pims-accent);"></i> {{ $newLawyerProfiles }} new profile{{ $newLawyerProfiles != 1 ? 's' : '' }} added
+                    <i class="fas fa-user" style="color: var(--pims-accent);"></i> {{ $newLawyerProfiles }} new profile{{ $newLawyerProfiles != 1 ? 's' : '' }} 
                 </div>
             </div>
 
@@ -486,135 +486,22 @@
                 <h3>Police Officer Assignments</h3>
                 <p>{{ number_format($policeAssignments) }}</p>
                 <div class="pims-card-footer">
-                    <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> {{ $policeAssignmentsInProgress }} assignment{{ $policeAssignmentsInProgress != 1 ? 's' : '' }} in progress
+                    <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> {{ $policeAssignmentsInProgress }} assignment{{ $policeAssignmentsInProgress != 1 ? 's' : '' }}  
                 </div>
             </div>
         </div>
 
-        <!-- Data Visualization -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-bar"></i> Prisoner Assignment Activity</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-assignment-chart"></canvas>
-            </div>
-        </div>
-
-        <!-- Assignment Status Distribution -->
-        <div class="pims-stats-box">
-            <h2><i class="fas fa-chart-pie"></i> Prisoner Assignment Status</h2>
-            <div class="pims-chart-container">
-                <canvas id="pims-assignment-status-chart"></canvas>
-            </div>
-        </div>
+       
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Assignment Activity Chart (Line)
             const assignmentChart = new Chart(document.getElementById('pims-assignment-chart').getContext('2d'), {
-                type: 'line',
-                data: {
-                    labels: @json($assignmentChartData['labels']),
-                    datasets: [
-                        {
-                            label: 'Fully Assigned Prisoners',
-                            data: @json($assignmentChartData['fullyAssigned']),
-                            backgroundColor: 'rgba(80, 250, 123, 0.1)',
-                            borderColor: 'rgba(80, 250, 123, 1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        },
-                        {
-                            label: 'Not Fully Assigned Prisoners',
-                            data: @json($assignmentChartData['notFullyAssigned']),
-                            backgroundColor: 'rgba(255, 184, 108, 0.1)',
-                            borderColor: 'rgba(255, 184, 108, 1)',
-                            borderWidth: 2,
-                            tension: 0.3,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: { weight: '600' }
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false,
-                            backgroundColor: 'rgba(26, 42, 58, 0.9)',
-                            titleFont: { weight: 'bold' }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { drawBorder: false, color: 'rgba(0,0,0,0.05)' },
-                            ticks: { stepSize: 2 }
-                        },
-                        x: {
-                            grid: { display: false, drawBorder: false }
-                        }
-                    },
-                    elements: {
-                        point: { radius: 4, hoverRadius: 6 }
-                    }
-                }
+                 
             });
 
-            // Assignment Status Chart (Pie)
-            const assignmentStatusChart = new Chart(document.getElementById('pims-assignment-status-chart').getContext('2d'), {
-                type: 'pie',
-                data: {
-                    labels: ['Fully Assigned', 'Partially Assigned', 'Not Assigned'],
-                    datasets: [{
-                        data: [
-                            {{ $assignmentStatusData['fullyAssigned'] }},
-                            {{ $assignmentStatusData['partiallyAssigned'] }},
-                            {{ $assignmentStatusData['notAssigned'] }}
-                        ],
-                        backgroundColor: [
-                            'rgba(80, 250, 123, 0.6)',
-                            'rgba(139, 233, 253, 0.6)',
-                            'rgba(255, 184, 108, 0.6)'
-                        ],
-                        borderColor: [
-                            'rgba(80, 250, 123, 1)',
-                            'rgba(139, 233, 253, 1)',
-                            'rgba(255, 184, 108, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                usePointStyle: true,
-                                padding: 20,
-                                font: { weight: '600' }
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(26, 42, 58, 0.9)',
-                            titleFont: { weight: 'bold' }
-                        }
-                    }
-                }
-            });
-
+             
             // Close alert
             document.querySelector('.alert-close').addEventListener('click', () => {
                 document.querySelector('.pims-system-alert').style.display = 'none';

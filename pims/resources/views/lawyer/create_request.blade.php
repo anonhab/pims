@@ -343,13 +343,7 @@
                 </h1>
             </div>
 
-            <!-- Success Notification -->
-            @if(session('success'))
-            <div class="pims-notification pims-notification-success">
-                <i class="fas fa-check-circle"></i> {{ session('success') }}
-            </div>
-            @endif
-
+            
             <!-- Request Form -->
             <form method="POST" action="{{ route('requests.store') }}">
                 @csrf
@@ -378,19 +372,23 @@
                             </div>
 
                             <!-- Request Type -->
+                            <!-- Request Type -->
                             <div class="pims-form-group">
                                 <label class="pims-form-label">Request Type</label>
                                 <div class="pims-select">
-                                    <select name="request_type" id="pims-request-type" class="pims-form-control" required>
+                                    <select name="request_type" id="pims-request-type" class="pims-form-control" required onchange="toggleOtherRequestInput(this)">
                                         <option value="" disabled selected>Select a Request Type</option>
-                                        <option value="case_review">Case Review Request</option>
-                                        <option value="medical_assistance">Medical Assistance Request</option>
                                         <option value="prison_transfer">Prison Transfer Request</option>
-                                        <option value="appeal_filing">Appeal Filing Request</option>
-                                        <option value="visitation_approval">Visitation Approval Request</option>
                                         <option value="human_rights_violation">Report Human Rights Violation</option>
+                                        <option value="other">Other</option>
                                     </select>
                                 </div>
+                            </div>
+
+                            <!-- Custom Request Type (only shown when "Other" is selected) -->
+                            <div class="pims-form-group" id="other-request-type-group" style="display: none;">
+                                <label class="pims-form-label">Specify Other Request</label>
+                                <input type="text" name="other_request_type" id="other-request-type" class="pims-form-control" placeholder="Enter your custom request type">
                             </div>
 
                             <!-- Hidden Fields -->
@@ -456,7 +454,18 @@
             </footer>
         </div>
     </div>
-
+    <script>
+    function toggleOtherRequestInput(selectElement) {
+        const otherGroup = document.getElementById('other-request-type-group');
+        if (selectElement.value === 'other') {
+            otherGroup.style.display = 'block';
+            document.getElementById('other-request-type').required = true;
+        } else {
+            otherGroup.style.display = 'none';
+            document.getElementById('other-request-type').required = false;
+        }
+    }
+</script>
     @include('includes.footer_js')
     <script>
         document.addEventListener('DOMContentLoaded', function() {

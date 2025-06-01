@@ -454,9 +454,7 @@
                     <button id="pims-generateReportBtn" class="pims-btn pims-btn-primary" onclick="pimsGenerateReport()">
                         <i class="fas fa-play"></i> Generate Report
                     </button>
-                    <button id="pims-initiateBackupBtn" class="pims-btn pims-btn-secondary" onclick="pimsInitiateBackup()">
-                        <i class="fas fa-download"></i> Initiate Backup
-                    </button>
+                  
                 </div>
                 
                 <div class="pims-tabs">

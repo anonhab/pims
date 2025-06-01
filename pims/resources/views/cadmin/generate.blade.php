@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,16 +14,19 @@
       padding: 0;
       box-sizing: border-box;
     }
+
     body {
       font-family: 'Poppins', sans-serif;
       background: linear-gradient(135deg, #e6e9f0 0%, #eef1f5 100%);
       min-height: 100vh;
       padding: 20px;
     }
+
     .pims-app-container {
       max-width: 1400px;
       margin: 0 auto;
     }
+
     .pims-content-area {
       background: #ffffff;
       border-radius: 12px;
@@ -30,6 +34,7 @@
       padding: 30px;
       margin-bottom: 20px;
     }
+
     .pims-report-title {
       font-size: 28px;
       font-weight: 600;
@@ -39,6 +44,7 @@
       gap: 10px;
       margin-bottom: 25px;
     }
+
     .pims-form {
       background: #f8fafc;
       border-radius: 10px;
@@ -49,6 +55,7 @@
       margin-bottom: 30px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
+
     .pims-form label {
       font-size: 14px;
       font-weight: 500;
@@ -56,7 +63,9 @@
       margin-bottom: 8px;
       display: block;
     }
-    .pims-form select, .pims-form input {
+
+    .pims-form select,
+    .pims-form input {
       width: 250px;
       padding: 10px;
       border: 1px solid #d1d9e6;
@@ -65,14 +74,18 @@
       background: #fff;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
-    .pims-form select:focus, .pims-form input:focus {
+
+    .pims-form select:focus,
+    .pims-form input:focus {
       border-color: #3f51b5;
       box-shadow: 0 0 8px rgba(63, 81, 181, 0.2);
       outline: none;
     }
+
     .pims-form select[multiple] {
       height: 120px;
     }
+
     .pims-form button {
       padding: 10px 24px;
       background: #3f51b5;
@@ -84,19 +97,23 @@
       cursor: pointer;
       transition: background 0.3s;
     }
+
     .pims-form button:hover:not(:disabled) {
       background: #303f9f;
     }
+
     .pims-form button:disabled {
       background: #b0bec5;
       cursor: not-allowed;
     }
+
     .pims-tabs {
       display: flex;
       border-bottom: 2px solid #e0e7ff;
       margin-bottom: 25px;
       overflow-x: auto;
     }
+
     .pims-tablink {
       padding: 12px 24px;
       background: #e8eaf6;
@@ -108,17 +125,22 @@
       transition: all 0.3s;
       white-space: nowrap;
     }
-    .pims-tablink:hover, .pims-tablink.active {
+
+    .pims-tablink:hover,
+    .pims-tablink.active {
       background: #3f51b5;
       color: #fff;
       border-radius: 6px 6px 0 0;
     }
+
     .pims-report-content {
       display: none;
     }
+
     .pims-report-content.active {
       display: block;
     }
+
     .pims-actions {
       display: flex;
       justify-content: space-between;
@@ -127,11 +149,13 @@
       flex-wrap: wrap;
       gap: 15px;
     }
+
     .pims-search {
       position: relative;
       width: 300px;
       max-width: 100%;
     }
+
     .pims-search-icon {
       position: absolute;
       left: 12px;
@@ -140,6 +164,7 @@
       color: #90a4ae;
       font-size: 16px;
     }
+
     .pims-search-input {
       width: 100%;
       padding: 10px 10px 10px 40px;
@@ -148,16 +173,19 @@
       font-size: 14px;
       transition: border-color 0.3s, box-shadow 0.3s;
     }
+
     .pims-search-input:focus {
       border-color: #3f51b5;
       box-shadow: 0 0 8px rgba(63, 81, 181, 0.2);
       outline: none;
     }
+
     .pims-action-buttons {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
     }
+
     .pims-btn {
       padding: 10px 20px;
       border: none;
@@ -170,20 +198,25 @@
       gap: 8px;
       transition: background 0.3s;
     }
+
     .pims-btn-export {
       background: #2ecc71;
       color: #fff;
     }
+
     .pims-btn-export:hover {
       background: #27ae60;
     }
+
     .pims-btn-pdf {
       background: #e74c3c;
       color: #fff;
     }
+
     .pims-btn-pdf:hover {
       background: #c0392b;
     }
+
     .pims-report-table {
       width: 100%;
       border-collapse: separate;
@@ -193,12 +226,15 @@
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     }
-    .pims-report-table th, .pims-report-table td {
+
+    .pims-report-table th,
+    .pims-report-table td {
       padding: 12px 14px;
       text-align: left;
       border-bottom: 1px solid #e0e7ff;
       font-size: 13px;
     }
+
     .pims-report-table th {
       background: #e8eaf6;
       color: #1a237e;
@@ -207,9 +243,11 @@
       top: 0;
       z-index: 10;
     }
+
     .pims-report-table tbody tr:hover {
       background: #f8fafc;
     }
+
     .pims-status-badge {
       padding: 6px 12px;
       border-radius: 12px;
@@ -218,43 +256,62 @@
       color: #fff;
       display: inline-block;
     }
-    .pims-status-resolved { background: #2ecc71; }
-    .pims-status-pending { background: #f1c40f; }
-    .pims-status-banned { background: #e74c3c; }
+
+    .pims-status-resolved {
+      background: #2ecc71;
+    }
+
+    .pims-status-pending {
+      background: #f1c40f;
+    }
+
+    .pims-status-banned {
+      background: #e74c3c;
+    }
+
     .pims-pdf-header {
       margin-bottom: 20px;
       font-family: 'Poppins', sans-serif;
     }
+
     .pims-pdf-header h1 {
       font-size: 18px;
       font-weight: 600;
       color: #1a237e;
       margin-bottom: 10px;
     }
+
     .pims-pdf-header p {
       font-size: 12px;
       color: #34495e;
       margin: 5px 0;
     }
+
     @media (max-width: 768px) {
       .pims-form {
         flex-direction: column;
         align-items: stretch;
       }
-      .pims-form select, .pims-form input {
+
+      .pims-form select,
+      .pims-form input {
         width: 100%;
       }
+
       .pims-actions {
         flex-direction: column;
         align-items: stretch;
       }
+
       .pims-search {
         width: 100%;
       }
+
       .pims-tabs {
         flex-wrap: nowrap;
         overflow-x: auto;
       }
+
       .pims-report-table {
         display: block;
         overflow-x: auto;
@@ -262,8 +319,9 @@
     }
   </style>
 </head>
+
 <body>
-@include('includes.nav');
+  @include('includes.nav');
   <div class="pims-app-container">
     @include('cadmin.menu');
     <div class="pims-content-area">
@@ -289,6 +347,9 @@
           <button id="generateReportBtn" onclick="generateReport()">
             <i class="fas fa-play"></i> Generate Report
           </button>
+          <button id="pims-initiateBackupBtn" class="pims-btn pims-btn-secondary" onclick="pimsInitiateBackup()">
+            <i class="fas fa-download"></i> Initiate Backup
+          </button>
         </div>
         <div class="pims-tabs">
           <button class="pims-tablink active" onclick="pimsOpenReport(event, 'allAccounts')">
@@ -308,9 +369,9 @@
           <div class="pims-actions">
             <div class="pims-search">
               <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchAllAccounts" class="pims-search-input" 
-                     placeholder="Search all accounts..." 
-                     onkeyup="pimsSearchTable('pimsAllAccountsTable', 'pimsSearchAllAccounts')">
+              <input type="text" id="pimsSearchAllAccounts" class="pims-search-input"
+                placeholder="Search all accounts..."
+                onkeyup="pimsSearchTable('pimsAllAccountsTable', 'pimsSearchAllAccounts')">
             </div>
             <div class="pims-action-buttons">
               <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsAllAccountsTable', 'PIMS_All_Accounts.csv')">
@@ -339,9 +400,9 @@
           <div class="pims-actions">
             <div class="pims-search">
               <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchStaff" class="pims-search-input" 
-                     placeholder="Search staff..." 
-                     onkeyup="pimsSearchTable('pimsStaffTable', 'pimsSearchStaff')">
+              <input type="text" id="pimsSearchStaff" class="pims-search-input"
+                placeholder="Search staff..."
+                onkeyup="pimsSearchTable('pimsStaffTable', 'pimsSearchStaff')">
             </div>
             <div class="pims-action-buttons">
               <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsStaffTable', 'PIMS_Staff.csv')">
@@ -370,9 +431,9 @@
           <div class="pims-actions">
             <div class="pims-search">
               <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchPrisoners" class="pims-search-input" 
-                     placeholder="Search prisoners..." 
-                     onkeyup="pimsSearchTable('pimsPrisonersTable', 'pimsSearchPrisoners')">
+              <input type="text" id="pimsSearchPrisoners" class="pims-search-input"
+                placeholder="Search prisoners..."
+                onkeyup="pimsSearchTable('pimsPrisonersTable', 'pimsSearchPrisoners')">
             </div>
             <div class="pims-action-buttons">
               <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsPrisonersTable', 'PIMS_Prisoners.csv')">
@@ -401,9 +462,9 @@
           <div class="pims-actions">
             <div class="pims-search">
               <i class="fas fa-search pims-search-icon"></i>
-              <input type="text" id="pimsSearchPrisons" class="pims-search-input" 
-                     placeholder="Search prisons..." 
-                     onkeyup="pimsSearchTable('pimsPrisonsTable', 'pimsSearchPrisons')">
+              <input type="text" id="pimsSearchPrisons" class="pims-search-input"
+                placeholder="Search prisons..."
+                onkeyup="pimsSearchTable('pimsPrisonsTable', 'pimsSearchPrisons')">
             </div>
             <div class="pims-action-buttons">
               <button class="pims-btn pims-btn-export" onclick="pimsExportCSV('pimsPrisonsTable', 'PIMS_All_Prisons.csv')">
@@ -417,7 +478,7 @@
           <table class="pims-report-table" id="pimsPrisonsTable">
             <thead>
               <tr>
-                <tr>
+              <tr>
                 <th>Prison ID</th>
                 <th>Name</th>
                 <th>Location</th>
@@ -439,54 +500,56 @@
     const CURRENT_USER = "{{ session('user_name') ?? 'Unknown User' }}";
     let lastReportRequest = 0;
     const DEBOUNCE_MS = 1000; // 1 second debounce
+    const PIMS_BASE_URL = 'http://127.0.0.1:8000/';
+    const PIMS_CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const PIMS_CURRENT_USER = "{{ session('user_name') ?? 'Unknown User' }}";
+    let PIMS_lastReportRequest = 0;
+    const PIMS_DEBOUNCE_MS = 1000;
 
-    // Backup functionality
-    async function initiateBackup() {
-        const btn = document.getElementById('initiateBackupBtn');
-        btn.disabled = true;
-
-        let percent = 0;
-        const progressInterval = setInterval(() => {
-            percent += Math.floor(Math.random() * 10) + 5; // simulate random progress
-            if (percent >= 100) {
-                percent = 100;
-                clearInterval(progressInterval);
-            }
-            btn.textContent = `Backing Up... (${CURRENT_USER}) ${percent}%`;
-        }, 300);
-
-        try {
-            const response = await fetch(`${BASE_URL}initiate_backup`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRF-TOKEN': csrfToken
-                }
-            });
-
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.error || 'Backup failed');
-            }
-
-            const filename = response.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] || 'backup.sql';
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            a.click();
-            window.URL.revokeObjectURL(url);
-            alert('Backup downloaded: ' + filename);
-        } catch (error) {
-            console.error('Backup error:', error.message);
-            alert('Backup failed: ' + error.message);
-        } finally {
-            clearInterval(progressInterval);
-            btn.disabled = false;
-            btn.textContent = 'Initiate Backup';
+    async function pimsInitiateBackup() {
+      const btn = document.getElementById('pims-initiateBackupBtn');
+      btn.disabled = true;
+      let percent = 0;
+      const progressInterval = setInterval(() => {
+        percent += Math.floor(Math.random() * 10) + 5;
+        if (percent >= 100) {
+          percent = 100;
+          clearInterval(progressInterval);
         }
-    }
+        btn.textContent = `Backing Up... (${PIMS_CURRENT_USER}) ${percent}%`;
+      }, 300);
 
+      try {
+        const response = await fetch(`${PIMS_BASE_URL}sinitiate_backup`, {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': PIMS_CSRF_TOKEN
+          }
+        });
+
+        if (!response.ok) {
+          const data = await response.json();
+          throw new Error(data.error || 'Backup failed');
+        }
+
+        const filename = response.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] || 'backup.sql';
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        alert('Backup downloaded: ' + filename);
+      } catch (error) {
+        console.error('Backup error:', error.message);
+        alert('Backup failed: ' + error.message);
+      } finally {
+        clearInterval(progressInterval);
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-download"></i> Initiate Backup';
+      }
+    }
     // Report functionality
     function getReportTypeEnum(reportType) {
       const mapping = {
@@ -511,9 +574,9 @@
     function getSelectedPrisonNames() {
       const prisonSelect = document.getElementById('prisonSelect');
       const selectedOptions = Array.from(prisonSelect.selectedOptions);
-      return selectedOptions.length > 0
-        ? selectedOptions.map(opt => opt.text).join(', ')
-        : 'All Prisons';
+      return selectedOptions.length > 0 ?
+        selectedOptions.map(opt => opt.text).join(', ') :
+        'All Prisons';
     }
 
     async function trackReport(reportType, content) {
@@ -586,7 +649,10 @@
         }
         params.append('report_type', reportType);
 
-        console.log('Generating report:', { reportType, prisonIds });
+        console.log('Generating report:', {
+          reportType,
+          prisonIds
+        });
 
         const response = await fetch(`${BASE_URL}reports?${params.toString()}`, {
           headers: {
@@ -641,7 +707,9 @@
                 </tr>
               `;
             });
-            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="allAccounts"]') }, 'allAccounts');
+            pimsOpenReport({
+              currentTarget: document.querySelector('button[onclick*="allAccounts"]')
+            }, 'allAccounts');
             break;
           case 'staff':
             const staffBody = document.getElementById('staffBody');
@@ -656,7 +724,9 @@
                 </tr>
               `;
             });
-            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="staffInPrison"]') }, 'staffInPrison');
+            pimsOpenReport({
+              currentTarget: document.querySelector('button[onclick*="staffInPrison"]')
+            }, 'staffInPrison');
             break;
           case 'prisoners':
             const prisonersBody = document.getElementById('prisonersBody');
@@ -671,7 +741,9 @@
                 </tr>
               `;
             });
-            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="prisonersInPrison"]') }, 'prisonersInPrison');
+            pimsOpenReport({
+              currentTarget: document.querySelector('button[onclick*="prisonersInPrison"]')
+            }, 'prisonersInPrison');
             break;
           case 'all_prisons':
             const prisonsBody = document.getElementById('prisonsBody');
@@ -687,7 +759,9 @@
                 </tr>
               `;
             });
-            pimsOpenReport({ currentTarget: document.querySelector('button[onclick*="allPrisons"]') }, 'allPrisons');
+            pimsOpenReport({
+              currentTarget: document.querySelector('button[onclick*="allPrisons"]')
+            }, 'allPrisons');
             break;
           default:
             alert('Invalid report type selected.');
@@ -778,7 +852,9 @@
         };
         trackReport(reportType, content);
         const csvContent = csv.join('\n');
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob([csvContent], {
+          type: 'text/csv;charset=utf-8;'
+        });
         const link = document.createElement('a');
         link.href = URL.createObjectURL(blob);
         link.download = filename;
@@ -858,9 +934,18 @@
         const opt = {
           margin: [10, 10, 10, 10],
           filename: filename,
-          image: { type: 'jpeg', quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          image: {
+            type: 'jpeg',
+            quality: 0.98
+          },
+          html2canvas: {
+            scale: 2
+          },
+          jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+          }
         };
         html2pdf().set(opt).from(pdfContainer).save();
         console.log('PDF exported successfully:', filename);
@@ -873,6 +958,7 @@
     window.onload = () => {
       loadPrisonDropdown();
     };
-</script>
+  </script>
 </body>
+
 </html>

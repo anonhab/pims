@@ -9,11 +9,41 @@ use App\Models\Account;
 use App\Models\LawyerAppointment;
 use App\Models\Notification;
 use App\Models\Requests;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class RequestController extends Controller
 {
+    public function approveLawyerAppointment($id, Request $request)
+{
+    $appointment = LawyerAppointment::findOrFail($id);
+    $appointment->update([
+        'status' => 'pending',
+        'notes' => $request->input('evaluation', $appointment->notes),
+    ]);
+    return response()->json(['success' => true, 'message' => 'Appointment approved successfully']);
+}
+
+public function rejectLawyerAppointment($id, Request $request)
+{
+    $appointment = LawyerAppointment::findOrFail($id);
+    $appointment->update([
+        'status' => 'rejected',
+        'notes' => $request->input('evaluation', $appointment->notes),
+    ]);
+    return response()->json(['success' => true, 'message' => 'Appointment rejected successfully']);
+}
+
+public function transferLawyerAppointment($id, Request $request)
+{
+    $appointment = LawyerAppointment::findOrFail($id);
+    $appointment->update([
+        'status' => 'transferred',
+        'notes' => $request->input('evaluation', $appointment->notes),
+    ]);
+    return response()->json(['success' => true, 'message' => 'Appointment transferred successfully']);
+}
     // Helper method to create prisoner-related notifications
     private function createNotification($recipientId, $recipientRole, $roleId, $relatedTable, $relatedId, $title, $message, $prisonId)
     {
@@ -324,17 +354,15 @@ public function rejectRequest(Request $request, $id)
         ])->get();
         $prisonId = session('prison_id');
 
-        $appointments = Requests::where([
+        $lawyerAppointments = LawyerAppointment::where([
             ['status', '=', 'pending'],
             ['prison_id', '=', $prisonId]
         ])->get();
         
        
     
-       
-    
      
-        return view('discipline_officer.evaluate_request', compact('requests','appointments'));
+        return view('discipline_officer.evaluate_request', compact('requests','lawyerAppointments'));
     }
     public function approve(Request $request, $id) {
         $appointment = LawyerAppointment::findOrFail($id);
@@ -350,31 +378,33 @@ public function rejectRequest(Request $request, $id)
         $appointment->save();
         return response()->json(['success' => true]);
     }
-    public function show($id)
-    {
-        $prisoner = Prisoner::findOrFail($id);
+public function show($id)
+{
+    $prisoner = Prisoner::findOrFail($id);
 
-        return response()->json([
-            'id' => $prisoner->id,
-            'first_name' => $prisoner->first_name,
-            'middle_name' => $prisoner->middle_name,
-            'last_name' => $prisoner->last_name,
-            'dob' => $prisoner->dob,
-            'gender' => $prisoner->gender,
-            'marital_status' => $prisoner->marital_status,
-            'crime_committed' => $prisoner->crime_committed,
-            'status' => $prisoner->status,
-            'time_serve_start' => $prisoner->time_serve_start,
-            'time_serve_end' => $prisoner->time_serve_end,
-            'address' => $prisoner->address,
-            'emergency_contact_name' => $prisoner->emergency_contact_name,
-            'emergency_contact_relation' => $prisoner->emergency_contact_relation,
-            'emergency_contact_number' => $prisoner->emergency_contact_number,
-            'inmate_image' => $prisoner->inmate_image,
-            'prison_id' => $prisoner->prison_id,
-            'room_id' => $prisoner->room_id
-        ]);
-    }
+    return response()->json([
+        'id' => $prisoner->id,
+        'first_name' => $prisoner->first_name,
+        'middle_name' => $prisoner->middle_name,
+        'last_name' => $prisoner->last_name,
+        'dob' => $prisoner->dob ? Carbon::parse($prisoner->dob)->translatedFormat('F j, Y') : null,
+        'gender' => $prisoner->gender,
+        'marital_status' => $prisoner->marital_status,
+        'crime_committed' => $prisoner->crime_committed,
+        'status' => $prisoner->status,
+        'time_serve_start' => $prisoner->time_serve_start ? Carbon::parse($prisoner->time_serve_start)->translatedFormat('F j, Y') : null,
+        'time_serve_end' => $prisoner->time_serve_end ? Carbon::parse($prisoner->time_serve_end)->translatedFormat('F j, Y') : null,
+        'address' => $prisoner->address,
+        'emergency_contact_name' => $prisoner->emergency_contact_name,
+        'emergency_contact_relation' => $prisoner->emergency_contact_relation,
+        'emergency_contact_number' => $prisoner->emergency_contact_number,
+        'inmate_image' => $prisoner->inmate_image,
+        'prison_id' => $prisoner->prison_id,
+        'room_id' => $prisoner->room_id
+        
+    ]);
+}
+
 
     // View prisoner-related notifications
     public function viewNotifications(Request $request)

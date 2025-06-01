@@ -586,7 +586,7 @@ class cAccountController extends Controller
 
                     return response()->json([
                         'staff' => $accounts->map(fn($account) => [
-                            'id' => $account->id,
+                            'id' => $account->user_id,
                             'name' => $account->first_name . ' ' . $account->last_name,
                             'role' => $account->role ? $account->role->name : 'Unknown',
                             'status' => 'Active',
@@ -609,7 +609,7 @@ class cAccountController extends Controller
 
                     return response()->json(
                         $accounts->map(fn($account) => [
-                            'id' => $account->id,
+                            'id' => $account->user_id,
                             'name' => $account->first_name . ' ' . $account->last_name,
                             'role' => $account->role ? $account->role->name : 'Unknown',
                             'status' => 'Active',

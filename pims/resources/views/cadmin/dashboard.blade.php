@@ -585,7 +585,7 @@ body {
         <h3>Secure Reports</h3>
         <p>{{ number_format($reportCount) }}</p>
         <div class="pims-card-footer">
-            <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> {{ $reportsInProgress }} reports in progress
+            <i class="fas fa-sync-alt" style="color: var(--pims-accent);"></i> {{ $reportsInProgress }}  
         </div>
     </div>
 
@@ -598,7 +598,7 @@ body {
         <h3>System Backups</h3>
         <p>{{ number_format($backupCount) }}</p>
         <div class="pims-card-footer">
-            <i class="fas fa-clock" style="color: var(--pims-accent);"></i> Next backup in {{ $nextBackupFormatted }}
+            <i class="fas fa-clock" style="color: var(--pims-accent);"></i> 
         </div>
     </div>
 </div>
@@ -611,23 +611,7 @@ body {
     </div>
 </div>
 
-         <!-- Recent Activity -->
-         <div class="pims-stats-box mt-4">
-             <h2><i class="fas fa-history"></i> Recent Security Events</h2>
-
-             <ul>
-                 @foreach($activities as $activity)
-                 <li>
-                     {{ $activity->user?->first_name ?? 'System' }}
-                     {{ $activity->event }}
-                     {{ class_basename($activity->auditable_type) }}
-                     (ID: {{ $activity->auditable_id }})
-                     on {{ $activity->created_at->format('M d, Y H:i') }}
-                 </li>
-                 @endforeach
-             </ul>
-
-         </div>
+         
      </div>
 
 
