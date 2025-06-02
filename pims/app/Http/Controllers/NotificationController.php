@@ -16,10 +16,11 @@ class NotificationController extends Controller
         $prisonId = session('prison_id');
         $roleName = session('rolename');
         $userId = session('user_id');
+        $visitor_id =session('visitor_id');
         $roleId = session('role_id');
-
+    
         Log::info('Fetching notifications', compact('lawyerId', 'prisonId', 'roleName', 'userId', 'roleId'));
-
+    
         if ($roleName === 'lawyer' && $lawyerId) {
             // Lawyer case
             $prisonerIds = DB::table('lawyer_prisoner_assignment')
@@ -27,9 +28,9 @@ class NotificationController extends Controller
                 ->where('prison_id', $prisonId)
                 ->pluck('prisoner_id')
                 ->toArray();
-
+    
             Log::info('Lawyer assigned prisoner IDs', $prisonerIds);
-
+    
             $notifications = Notification::query()
                 ->whereIn('recipient_id', $prisonerIds)
                 ->whereIn('recipient_role', ['prisoner', 'lawyer'])
@@ -37,9 +38,21 @@ class NotificationController extends Controller
                 ->orderByDesc('created_at')
                 ->limit(50)
                 ->get(['id', 'title', 'message', 'is_read', 'created_at']);
-
+    
             return response()->json($notifications);
-        }  elseif ($userId && $roleId && $prisonId) {
+    
+        } elseif ($roleName === 'visitor' && $visitor_id ) {
+            // Visitor case
+            $notifications = Notification::query()
+                ->where('recipient_id', $visitor_id)
+                ->where('recipient_role', 'visitor')
+                ->orderByDesc('created_at')
+                ->limit(50)
+                ->get(['id', 'title', 'message', 'is_read', 'created_at']);
+    
+            return response()->json($notifications);
+    
+        } elseif ($userId && $roleId && $prisonId) {
             // Case for police officer with role_id 8
             if ($roleId == 8) {
                 // Get all prisoners assigned to this police officer in this prison
@@ -48,9 +61,9 @@ class NotificationController extends Controller
                     ->where('prison_id', $prisonId)
                     ->pluck('prisoner_id')
                     ->toArray();
-        
+    
                 Log::info('Police officer assigned prisoner IDs', $prisonerIds);
-        
+    
                 $notifications = Notification::query()
                     ->whereIn('recipient_id', $prisonerIds)
                     ->whereIn('recipient_role', ['prisoner', 'police_officer']) // Adjust role name as stored
@@ -58,10 +71,10 @@ class NotificationController extends Controller
                     ->orderByDesc('created_at')
                     ->limit(50)
                     ->get(['id', 'title', 'message', 'is_read', 'created_at']);
-        
+    
                 return response()->json($notifications);
             }
-        
+    
             // General case for other users
             $notifications = Notification::query()
                 ->where('recipient_id', $userId)
@@ -70,11 +83,12 @@ class NotificationController extends Controller
                 ->orderByDesc('created_at')
                 ->limit(50)
                 ->get(['id', 'title', 'message', 'is_read', 'created_at']);
-        
+    
             return response()->json($notifications);
         } else {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
+    
 
     } catch (\Exception $e) {
         Log::error('Error fetching notifications', [
@@ -95,25 +109,23 @@ class NotificationController extends Controller
 public function markAllAsRead(Request $request)
 {
     try {
-        // Get user info from session
-        $userId = session('user_id') ?? session('lawyer_id') ?? session('visitor_id');
-        $roleId = session('role_id');
+        $lawyerId = session('lawyer_id');
         $prisonId = session('prison_id');
         $roleName = session('rolename');
+        $userId = session('user_id');
+        $visitorId = session('visitor_id');
+        $roleId = session('role_id');
 
-        if (!$userId || !$roleId || !$prisonId) {
-            Log::warning('Missing session data for markAllAsRead', [
-                'session' => $request->session()->all()
-            ]);
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
+        // Determine effective user ID for notifications
+        $effectiveUserId = $userId ?? $lawyerId ?? $visitorId;
+ 
 
-        Log::info('Marking notifications as read', compact('userId', 'roleId', 'roleName', 'prisonId'));
+        Log::info('Marking notifications as read', compact('effectiveUserId', 'roleId', 'roleName', 'prisonId'));
 
-        // Special case: lawyer
-        if ($roleName === 'lawyer') {
+        if ($roleName === 'lawyer' && $lawyerId) {
+            // Lawyer: mark notifications for all prisoners assigned to this lawyer
             $prisonerIds = DB::table('lawyer_prisoner_assignment')
-                ->where('lawyer_id', $userId)
+                ->where('lawyer_id', $lawyerId)
                 ->where('prison_id', $prisonId)
                 ->pluck('prisoner_id')
                 ->toArray();
@@ -128,8 +140,19 @@ public function markAllAsRead(Request $request)
             return response()->json(['success' => true, 'updated' => $updated]);
         }
 
-        // Special case: police officer with assigned prisoners
-        if ($roleId == 8) {
+        if ($roleName === 'visitor' && $visitorId) {
+            // Visitor: mark their own notifications as read
+            $updated = Notification::query()
+                ->where('recipient_id', $visitorId)
+                ->where('recipient_role', 'visitor')
+                ->where('is_read', false)
+                ->update(['is_read' => true]);
+
+            return response()->json(['success' => true, 'updated' => $updated]);
+        }
+
+        if ($roleId == 8 && $userId) {
+            // Police officer: mark notifications for prisoners assigned to this officer
             $prisonerIds = DB::table('police_prisoner_assignment')
                 ->where('officer_id', $userId)
                 ->where('prison_id', $prisonId)
@@ -146,10 +169,9 @@ public function markAllAsRead(Request $request)
             return response()->json(['success' => true, 'updated' => $updated]);
         }
 
-        // General case
+        // General case for other users
         $updated = Notification::query()
-            ->where('recipient_id', $userId)
-            ->where('recipient_role', $roleId)
+            ->where('recipient_id', $effectiveUserId)
             ->where('prison_id', $prisonId)
             ->where('is_read', false)
             ->update(['is_read' => true]);

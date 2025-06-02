@@ -524,7 +524,7 @@
             let failedAttempts = parseInt(localStorage.getItem("failedAttempts") || "0");
             let isLockedOut = localStorage.getItem("isLockedOut") === "true";
             let lockoutStartTime = parseInt(localStorage.getItem("lockoutStartTime") || "0");
-            const lockoutDuration = 60 * 1000; // 1 minute in milliseconds
+            const lockoutDuration = 60 * 1000; 
 
             function isLockoutActive() {
                 const currentTime = Date.now();
