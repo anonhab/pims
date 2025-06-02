@@ -560,7 +560,7 @@
                                 </div>
                                 <div class="pims9-card-field">
                                     <span class="pims9-card-label">Reason:</span>
-                                    <span class="pims9-card-value">{{ $appointment->reason ?? 'Not specified' }}</span>
+                                    <span class="pims9-card-value">{{ $appointment->treatment ?? 'Not specified' }}</span>
                                 </div>
                             </div>
                             <div class="pims9-card-footer">
@@ -604,7 +604,9 @@
                                 </div>
                                 <div class="pims9-card-field">
                                     <span class="pims9-card-label">Lawyer:</span>
-                                    <span class="pims9-card-value">{{ $appointment->lawyer->first_name }} {{ $appointment->lawyer->last_name }}</span>
+                                    <span class="pims9-card-value">
+    {{ $appointment->lawyer ? $appointment->lawyer->first_name . ' ' . $appointment->lawyer->last_name : 'N/A' }}
+</span>
                                 </div>
                             </div>
                             <div class="pims9-card-footer">
