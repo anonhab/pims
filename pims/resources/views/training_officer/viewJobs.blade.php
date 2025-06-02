@@ -342,12 +342,7 @@
         @include('training_officer.menu')
 
         <div class="pims-content-area">
-            <!-- Success Notification -->
-            @if(session('success'))
-                <div class="pims-notification-success">
-                    <i class="fas fa-check-circle"></i> {{ session('success') }}
-                </div>
-            @endif
+          
 
             <!-- Create Job Button -->
             <button class="pims-btn pims-btn-primary" id="pims-create-record-button" style="margin-bottom: 1rem;">

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     @include('includes.head')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -7,13 +8,13 @@
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logo.png') }}">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PIMS - Request Evaluation</title>
-    
+
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -109,12 +110,14 @@
         }
 
         /* Request and Appointment Card Styles */
-        .pims-request-card, .pims-lawyer-appointment-card {
+        .pims-request-card,
+        .pims-lawyer-appointment-card {
             transition: var(--pims-transition);
             margin-bottom: 1.5rem;
         }
 
-        .pims-request-card:hover, .pims-lawyer-appointment-card:hover {
+        .pims-request-card:hover,
+        .pims-lawyer-appointment-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
@@ -301,19 +304,19 @@
         /* Toast Styles */
         .pims-toast-container {
             position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 12px 20px;
-    color: white;
-    border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    font-size: 14px;
-    z-index: 9999;
-    
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    transform: translateY(20px);
-    max-width: 300px;
-    word-wrap: break-word;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            color: white;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            z-index: 9999;
+
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(20px);
+            max-width: 300px;
+            word-wrap: break-word;
         }
 
         .pims-toast {
@@ -388,65 +391,65 @@
                 </div>
                 <div class="pims-card-body">
                     @if($requests->isNotEmpty())
-                        @foreach($requests as $request)
-                            <div class="pims-card pims-request-card" data-pims-request-id="{{ $request->id }}">
-                                <div class="pims-card-body">
-                                    <h5 class="pims-request-title">
-                                        <i class="fas fa-file-alt"></i> Request Information
-                                    </h5>
-                                    
-                                    <div class="pims-detail-item">
-                                        <span class="pims-field-label">Request Type:</span>
-                                        <span class="pims-field-value">{{ $request->request_type }}</span>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item">
-                                        <span class="pims-field-label">Prisoner ID:</span>
-                                        <span class="pims-field-value">{{ $request->prisoner_id }}</span>
-                                        <button class="pims-btn pims-btn-outline-primary pims-btn-sm pims-view-prisoner-details ms-2" 
-                                                data-pims-id="{{ $request->prisoner_id }}">
-                                            <i class="fas fa-eye"></i> View Details
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
-                                        <span class="pims-field-label">Request Details:</span>
-                                        <div class="pims-field-value p-3 bg-light rounded" style="width: 100%;">
-                                            {{ $request->request_details }}
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
-                                        <label class="pims-field-label">Evaluation:</label>
-                                        <textarea class="pims-evaluation-textarea" 
-                                                  placeholder="Enter your evaluation comments here..." 
-                                                  required></textarea>
-                                    </div>
-                                    
-                                    <input type="hidden" class="pims-request-id" value="{{ $request->id }}">
-                                    
-                                    <div class="d-flex justify-content-end gap-2 mt-3">
-                                        <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve" disabled>
-                                            <i class="fas fa-check"></i> Approve
-                                        </button>
-                                        <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject" disabled>
-                                            <i class="fas fa-times"></i> Reject
-                                        </button>
-                                        <button class="pims-btn pims-btn-primary pims-btn-action pims-btn-transfer" disabled>
-                                            <i class="fas fa-exchange-alt"></i> Transfer
-                                        </button>
-                                    </div>
+                    @foreach($requests as $request)
+                    <div class="pims-card pims-request-card" data-pims-request-id="{{ $request->id }}">
+                        <div class="pims-card-body">
+                            <h5 class="pims-request-title">
+                                <i class="fas fa-file-alt"></i> Request Information
+                            </h5>
+
+                            <div class="pims-detail-item">
+                                <span class="pims-field-label">Request Type:</span>
+                                <span class="pims-field-value">{{ $request->request_type }}</span>
+                            </div>
+
+                            <div class="pims-detail-item">
+                                <span class="pims-field-label">Prisoner ID:</span>
+                                <span class="pims-field-value">{{ $request->prisoner_id }}</span>
+                                <button class="pims-btn pims-btn-outline-primary pims-btn-sm pims-view-prisoner-details ms-2"
+                                    data-pims-id="{{ $request->prisoner_id }}">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+
+                            <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                                <span class="pims-field-label">Request Details:</span>
+                                <div class="pims-field-value p-3 bg-light rounded" style="width: 100%;">
+                                    {{ $request->request_details }}
                                 </div>
                             </div>
-                        @endforeach
-                    @else
-                        <div class="pims-card">
-                            <div class="pims-card-body text-center py-4">
-                                <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-accent);"></i>
-                                <h5 class="pims-card-title">No Pending Requests</h5>
-                                <p class="text-muted">There are currently no pending requests to evaluate.</p>
+
+                            <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                                <label class="pims-field-label">Evaluation:</label>
+                                <textarea class="pims-evaluation-textarea"
+                                    placeholder="Enter your evaluation comments here..."
+                                    required></textarea>
+                            </div>
+
+                            <input type="hidden" class="pims-request-id" value="{{ $request->id }}">
+
+                            <div class="d-flex justify-content-end gap-2 mt-3">
+                                <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve" disabled>
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject" disabled>
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+                                <button class="pims-btn pims-btn-primary pims-btn-action pims-btn-transfer" disabled>
+                                    <i class="fas fa-exchange-alt"></i> Transfer
+                                </button>
                             </div>
                         </div>
+                    </div>
+                    @endforeach
+                    @else
+                    <div class="pims-card">
+                        <div class="pims-card-body text-center py-4">
+                            <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-accent);"></i>
+                            <h5 class="pims-card-title">No Pending Requests</h5>
+                            <p class="text-muted">There are currently no pending requests to evaluate.</p>
+                        </div>
+                    </div>
                     @endif
                 </div>
             </div>
@@ -460,80 +463,80 @@
                 </div>
                 <div class="pims-card-body">
                     @if(isset($lawyerAppointments) && $lawyerAppointments->isNotEmpty())
-                        @foreach($lawyerAppointments as $appointment)
-                            <div class="pims-card pims-lawyer-appointment-card" data-lawyer-appointment-id="{{ $appointment->id }}">
-                                <div class="pims-card-body">
-                                    <h5 class="pims-request-title">
-                                        <i class="fas fa-calendar-alt"></i> Appointment Information
-                                    </h5>
-                                    
-                                    <div class="pims-detail-item">
-                                        <span class="pims-field-label">Prisoner ID:</span>
-                                        <span class="pims-field-value">{{ $appointment->prisoner_id }}</span>
-                                        <button class="pims-btn pims-btn-outline-primary pims-btn-sm pims-view-prisoner-details ms-2" 
-                                                data-pims-id="{{ $appointment->prisoner_id }}">
-                                            <i class="fas fa-eye"></i> View Details
-                                        </button>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item">
-                                        <span class="pims-field-label">Lawyer:</span>
-                                        <span class="pims-field-value">
-                                            {{ $appointment->lawyer ? $appointment->lawyer->full_name : 'N/A' }}
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item">
-                                        <span class="pims-field-label">Appointment Date:</span>
-                                        <span class="pims-field-value">
-                                            {{ $appointment->appointment_date ? $appointment->appointment_date->format('M d, Y H:i') : 'N/A' }}
-                                        </span>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
-                                        <span class="pims-field-label">Notes:</span>
-                                        <div class="pims-field-value p-3 bg-light rounded" style="width: 100%;">
-                                            {{ $appointment->notes ?: 'No notes provided' }}
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
-                                        <label class="pims-field-label">Evaluation:</label>
-                                        <textarea class="pims-evaluation-textarea" 
-                                                  placeholder="Enter your evaluation comments for this appointment..." 
-                                                  required></textarea>
-                                    </div>
-                                    
-                                    <input type="hidden" class="pims-appointment-id" value="{{ $appointment->id }}">
-                                    
-                                    <div class="d-flex justify-content-end gap-2 mt-3">
-                                        <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve-appointment" disabled>
-                                            <i class="fas fa-check"></i> Approve
-                                        </button>
-                                        <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject-appointment" disabled>
-                                            <i class="fas fa-times"></i> Reject
-                                        </button>
-                                        <button class="pims-btn pims-btn-primary pims-btn-action pims-btn-transfer-appointment" disabled>
-                                            <i class="fas fa-exchange-alt"></i> Transfer
-                                        </button>
-                                    </div>
+                    @foreach($lawyerAppointments as $appointment)
+                    <div class="pims-card pims-lawyer-appointment-card" data-lawyer-appointment-id="{{ $appointment->id }}">
+                        <div class="pims-card-body">
+                            <h5 class="pims-request-title">
+                                <i class="fas fa-calendar-alt"></i> Appointment Information
+                            </h5>
+
+                            <div class="pims-detail-item">
+                                <span class="pims-field-label">Prisoner ID:</span>
+                                <span class="pims-field-value">{{ $appointment->prisoner_id }}</span>
+                                <button class="pims-btn pims-btn-outline-primary pims-btn-sm pims-view-prisoner-details ms-2"
+                                    data-pims-id="{{ $appointment->prisoner_id }}">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
+                            </div>
+
+                            <div class="pims-detail-item">
+                                <span class="pims-field-label">Lawyer:</span>
+                                <span class="pims-field-value">
+    {{ $appointment->lawyer ? "{$appointment->lawyer->first_name} {$appointment->lawyer->last_name}" : 'N/A' }}
+</span>
+
+
+                            </div>
+
+                            <div class="pims-detail-item">
+                                <span class="pims-field-label">Appointment Date:</span>
+                                <span class="pims-field-value">
+                                    {{ $appointment->appointment_date ? $appointment->appointment_date->format('M d, Y H:i') : 'N/A' }}
+                                </span>
+                            </div>
+
+                            <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                                <span class="pims-field-label">Notes:</span>
+                                <div class="pims-field-value p-3 bg-light rounded" style="width: 100%;">
+                                    {{ $appointment->notes ?: 'No notes provided' }}
                                 </div>
                             </div>
-                        @endforeach
-                    @else
-                        <div class="pims-card">
-                            <div class="pims-card-body text-center py-4">
-                                <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-warning);"></i>
-                                <h5 class="pims-card-title">No Pending Lawyer Appointments</h5>
-                                <p class="text-muted">There are currently no pending lawyer appointments to evaluate.</p>
+
+                            <div class="pims-detail-item" style="flex-direction: column; align-items: flex-start;">
+                                <label class="pims-field-label">Evaluation:</label>
+                                <textarea class="pims-evaluation-textarea"
+                                    placeholder="Enter your evaluation comments for this appointment..."
+                                    required></textarea>
+                            </div>
+
+                            <input type="hidden" class="pims-appointment-id" value="{{ $appointment->id }}">
+
+                            <div class="d-flex justify-content-end gap-2 mt-3">
+                                <button class="pims-btn pims-btn-success pims-btn-action pims-btn-approve-appointment" disabled>
+                                    <i class="fas fa-check"></i> Approve
+                                </button>
+                                <button class="pims-btn pims-btn-danger pims-btn-action pims-btn-reject-appointment" disabled>
+                                    <i class="fas fa-times"></i> Reject
+                                </button>
+
                             </div>
                         </div>
+                    </div>
+                    @endforeach
+                    @else
+                    <div class="pims-card">
+                        <div class="pims-card-body text-center py-4">
+                            <i class="fas fa-info-circle fa-2x mb-3" style="color: var(--pims-warning);"></i>
+                            <h5 class="pims-card-title">No Pending Lawyer Appointments</h5>
+                            <p class="text-muted">There are currently no pending lawyer appointments to evaluate.</p>
+                        </div>
+                    </div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
-    
+
     <!-- Prisoner Details Modal -->
     <div class="modal fade" id="pims-prisoner-detail-modal" tabindex="-1" aria-labelledby="pims-prisoner-modal-label" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -548,7 +551,7 @@
                     <div class="text-center">
                         <img id="pims-prisoner-image" src="" alt="Prisoner Image" class="pims-prisoner-image">
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6">
                             <div class="pims-detail-item">
@@ -607,18 +610,18 @@
 
     <!-- Bootstrap Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Get CSRF token from meta tag
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
+
             // Enable/Disable action buttons based on textarea input
             function setupTextareaListeners() {
                 document.querySelectorAll('.pims-evaluation-textarea').forEach(textarea => {
                     const card = textarea.closest('.pims-request-card, .pims-lawyer-appointment-card');
                     const actionButtons = card.querySelectorAll('.pims-btn-action');
-                    
+
                     textarea.addEventListener('input', function() {
                         const hasText = this.value.trim().length > 0;
                         actionButtons.forEach(button => {
@@ -627,17 +630,17 @@
                     });
                 });
             }
-            
+
             // Initialize textarea listeners
             setupTextareaListeners();
-            
+
             // Prisoner details modal
             document.querySelectorAll('.pims-view-prisoner-details').forEach(button => {
                 button.addEventListener('click', async function() {
                     const prisonerId = this.getAttribute('data-pims-id');
                     const modalElement = document.getElementById('pims-prisoner-detail-modal');
                     const modal = new bootstrap.Modal(modalElement);
-                    
+
                     // Show loading state
                     const modalBody = modalElement.querySelector('.modal-body');
                     modalBody.innerHTML = `
@@ -648,24 +651,24 @@
                             <p class="mt-3">Loading prisoner details...</p>
                         </div>
                     `;
-                    
+
                     modal.show();
-                    
+
                     try {
                         // Fetch prisoner details
-                        const response = await fetch(`/prisoners/${prisonerId}/details`, {
+                        const response = await fetch(`/prisoners/${prisonerId}`, {
                             headers: {
                                 'Accept': 'application/json',
                                 'X-CSRF-TOKEN': csrfToken
                             }
                         });
-                        
+
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
-                        
+
                         const data = await response.json();
-                        
+
                         // Update modal with prisoner data
                         modalBody.innerHTML = `
                             <div class="text-center">
@@ -734,25 +737,25 @@
                     }
                 });
             });
-            
+
             // Handle request actions
             document.querySelectorAll('.pims-request-card').forEach(card => {
                 const approveBtn = card.querySelector('.pims-btn-approve');
                 const rejectBtn = card.querySelector('.pims-btn-reject');
                 const transferBtn = card.querySelector('.pims-btn-transfer');
-                
+
                 if (approveBtn) {
                     approveBtn.addEventListener('click', async () => {
                         await handleRequestAction(card, 'approve');
                     });
                 }
-                
+
                 if (rejectBtn) {
                     rejectBtn.addEventListener('click', async () => {
                         await handleRequestAction(card, 'reject');
                     });
                 }
-                
+
                 if (transferBtn) {
                     transferBtn.addEventListener('click', async () => {
                         await handleRequestAction(card, 'transfer');
@@ -765,35 +768,35 @@
                 const approveBtn = card.querySelector('.pims-btn-approve-appointment');
                 const rejectBtn = card.querySelector('.pims-btn-reject-appointment');
                 const transferBtn = card.querySelector('.pims-btn-transfer-appointment');
-                
+
                 if (approveBtn) {
                     approveBtn.addEventListener('click', async () => {
                         await handleAppointmentAction(card, 'approve');
                     });
                 }
-                
+
                 if (rejectBtn) {
                     rejectBtn.addEventListener('click', async () => {
                         await handleAppointmentAction(card, 'reject');
                     });
                 }
-                
+
                 if (transferBtn) {
                     transferBtn.addEventListener('click', async () => {
                         await handleAppointmentAction(card, 'transfer');
                     });
                 }
             });
-            
+
             async function handleRequestAction(card, action) {
                 const requestId = card.querySelector('.pims-request-id').value;
                 const evaluation = card.querySelector('.pims-evaluation-textarea').value.trim();
-                
+
                 if (!evaluation) {
                     showToast('error', 'Please provide an evaluation before submitting!');
                     return;
                 }
-                
+
                 try {
                     const response = await fetch(`/requests/${requestId}/${action}`, {
                         method: 'POST',
@@ -802,11 +805,13 @@
                             'X-CSRF-TOKEN': csrfToken,
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ evaluation })
+                        body: JSON.stringify({
+                            evaluation
+                        })
                     });
-                    
+
                     const data = await response.json();
-                    
+
                     if (data.success) {
                         updateCardAfterAction(card, action, 'Request');
                         showToast('success', `Request ${getActionPastTense(action)} successfully!`);
@@ -818,16 +823,16 @@
                     showToast('error', `Failed to ${action} request: ${error.message || 'Unknown error'}`);
                 }
             }
-            
+
             async function handleAppointmentAction(card, action) {
                 const appointmentId = card.querySelector('.pims-appointment-id').value;
                 const evaluation = card.querySelector('.pims-evaluation-textarea').value.trim();
-                
+
                 if (!evaluation) {
                     showToast('error', 'Please provide an evaluation before submitting!');
                     return;
                 }
-                
+
                 try {
                     const response = await fetch(`/appointments/${appointmentId}/${action}`, {
                         method: 'POST',
@@ -836,11 +841,13 @@
                             'X-CSRF-TOKEN': csrfToken,
                             'Accept': 'application/json'
                         },
-                        body: JSON.stringify({ evaluation })
+                        body: JSON.stringify({
+                            evaluation
+                        })
                     });
-                    
+
                     const data = await response.json();
-                    
+
                     if (data.success) {
                         updateCardAfterAction(card, action, 'Appointment');
                         showToast('success', `Appointment ${getActionPastTense(action)} successfully!`);
@@ -852,19 +859,19 @@
                     showToast('error', `Failed to ${action} appointment: ${error.message || 'Unknown error'}`);
                 }
             }
-            
+
             function updateCardAfterAction(card, action, type) {
                 // Disable all buttons and textarea
                 const buttons = card.querySelectorAll('.pims-btn-action');
                 buttons.forEach(btn => {
                     btn.disabled = true;
                 });
-                
+
                 const textarea = card.querySelector('.pims-evaluation-textarea');
                 if (textarea) {
                     textarea.readOnly = true;
                 }
-                
+
                 // Replace buttons with status badge
                 const buttonsDiv = card.querySelector('.d-flex');
                 if (buttonsDiv) {
@@ -875,33 +882,34 @@
                         </span>
                     `;
                 }
-                
+
                 // Visual feedback
                 card.style.opacity = '0.7';
                 card.style.pointerEvents = 'none';
             }
-            
+
             function getActionPastTense(action) {
                 return {
                     'approve': 'approved',
                     'reject': 'rejected',
                     'transfer': 'transferred'
-                }[action] || action;
+                } [action] || action;
             }
-            
+
             function getActionIcon(action) {
                 return {
                     'approve': 'check',
                     'reject': 'times',
                     'transfer': 'exchange-alt'
-                }[action] || 'info-circle';
+                } [action] || 'info-circle';
             }
-            
+
             function showToast(type, message) {
-               
-                
+
+
             }
         });
     </script>
 </body>
+
 </html>

@@ -24,6 +24,7 @@ class LawyerAppointment extends Model
         'appointment_date',
         'status',
         'notes',
+        'evaluation',
         'created_by',
         'prison_id'
     ];
@@ -43,8 +44,9 @@ class LawyerAppointment extends Model
     // Relationship with Account (Lawyer)
     public function lawyer()
     {
-        return $this->belongsTo(Account::class, 'lawyer_id', 'user_id');
+        return $this->belongsTo(Lawyer::class, 'lawyer_id', 'lawyer_id');
     }
+    
 
     // Relationship with Account (Created By)
     public function createdBy()

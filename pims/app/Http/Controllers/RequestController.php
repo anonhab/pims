@@ -20,7 +20,7 @@ class RequestController extends Controller
     $appointment = LawyerAppointment::findOrFail($id);
     $appointment->update([
         'status' => 'scheduled',
-        'notes' => $request->input('evaluation', $appointment->notes),
+        'evaluation' => $request->input('evaluation', $appointment->evaluation),
     ]);
     return response()->json(['success' => true, 'message' => 'Appointment approved successfully']);
 }
@@ -30,7 +30,7 @@ public function rejectLawyerAppointment($id, Request $request)
     $appointment = LawyerAppointment::findOrFail($id);
     $appointment->update([
         'status' => 'cancelled',
-        'notes' => $request->input('evaluation', $appointment->notes),
+        'evaluation' => $request->input('evaluation', $appointment->notes),
     ]);
     return response()->json(['success' => true, 'message' => 'Appointment rejected successfully']);
 }
@@ -40,7 +40,7 @@ public function transferLawyerAppointment($id, Request $request)
     $appointment = LawyerAppointment::findOrFail($id);
     $appointment->update([
         'status' => 'transferred',
-        'notes' => $request->input('evaluation', $appointment->notes),
+        'evaluation' => $request->input('evaluation', $appointment->notes),
     ]);
     return response()->json(['success' => true, 'message' => 'Appointment transferred successfully']);
 }

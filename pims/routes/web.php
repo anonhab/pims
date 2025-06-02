@@ -212,6 +212,7 @@ Route::prefix('medical-officer')->name('medical.')->group(function () {
     Route::put('/appointments/{id}', [MedicalController::class, 'update'])->name('appointments.update');
 });
 
+Route::post('/police-officer/prisoners/{prisonerId}/unallocate', [PoliceController::class, 'unallocatePrisoner'])->name('police_officer.unallocate_prisoner');
 Route::get('/pdashboard', [PoliceController::class, 'dashboard'])->name('police_officer.dashboard')->middleware('role:8');
 Route::get('/requests/{id}', [PoliceController::class, 'show'])->name('requests.show');
 Route::get('/allocateRoom', [PoliceController::class, 'allocateRoom'])->name('police.allocateRoom')->middleware('role:8');

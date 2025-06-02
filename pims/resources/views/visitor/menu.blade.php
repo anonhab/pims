@@ -28,7 +28,7 @@
             <ul class="sidebar-menu-list space-y-2 p-4">
                 <!-- Dashboard -->
                 <li class="sidebar-menu-item">
-                    <a href="{{ route('mylawyer.ldashboard') }}" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
+                    <a href="/vdashboard" class="sidebar-menu-link flex items-center p-3 rounded-lg text-gray-200 hover:text-white transition-all duration-200">
                         <span class="sidebar-menu-icon mr-3">
                             <i class="fas fa-tachometer-alt"></i>
                         </span>

@@ -282,10 +282,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>88%</span>
+                    <span>100%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 88%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -362,10 +362,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>60%</span>
+                    <span>100%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 60%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -382,10 +382,10 @@
             <div class="progress-container">
                 <div class="progress-label">
                     <span>Progress</span>
-                    <span>15%</span>
+                    <span>100%</span>
                 </div>
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: 15%;"></div>
+                    <div class="progress-fill" style="width: 100%;"></div>
                 </div>
             </div>
         </div>
@@ -404,10 +404,10 @@
                             <div class="progress-container">
                                 <div class="progress-label">
                                     <span>Progress</span>
-                                    <span>65%</span>
+                                    <span>100%</span>
                                 </div>
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 75%"></div>
+                                    <div class="progress-fill" style="width: 100%"></div>
                                 </div>
                             </div>
                         </div>

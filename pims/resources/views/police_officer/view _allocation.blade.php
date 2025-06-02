@@ -11,6 +11,10 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         :root {
             --pims-primary: #1a2a3a;
@@ -41,7 +45,6 @@
             line-height: 1.6;
         }
 
-        /* Layout Structure */
         .pims-app-container {
             display: flex;
             min-height: 100vh;
@@ -68,7 +71,6 @@
             transition: var(--pims-transition);
         }
 
-        /* Header Styles */
         .pims-content-header {
             display: flex;
             justify-content: space-between;
@@ -87,7 +89,6 @@
             gap: 0.75rem;
         }
 
-        /* Card Styles */
         .pims-card {
             background: white;
             border-radius: var(--pims-border-radius);
@@ -117,7 +118,6 @@
             padding: 1.25rem;
         }
 
-        /* Prisoner Card Styles */
         .pims-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -157,7 +157,6 @@
             font-weight: 600;
         }
 
-        /* Status Badges */
         .pims-status-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
@@ -183,7 +182,6 @@
             color: #f1c40f;
         }
 
-        /* Pagination */
         .pims-pagination {
             display: flex;
             justify-content: center;
@@ -225,7 +223,28 @@
             transform: none !important;
         }
 
-        /* Responsive Adjustments */
+        .pims-btn {
+            padding: 0.5rem 1rem;
+            border-radius: var(--pims-border-radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--pims-transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pims-btn-danger {
+            background-color: var(--pims-danger);
+            color: white;
+        }
+
+        .pims-btn-danger:hover {
+            background-color: #a93226;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .pims-sidebar {
                 transform: translateX(-100%);
@@ -275,7 +294,7 @@
                     <!-- Prisoner Cards Grid -->
                     <div class="pims-grid">
                         @foreach($prisoners as $prisoner)
-                        <div class="pims-prisoner-card">
+                        <div class="pims-prisoner-card" data-prisoner-id="{{ $prisoner->id }}">
                             <div class="pims-card">
                                 <div class="pims-card-body">
                                     <div class="media" style="display: flex; align-items: center; margin-bottom: 1rem;">
@@ -292,8 +311,11 @@
                                     </div>
                                     <div class="content">
                                         <p class="pims-prisoner-detail"><strong>Crime:</strong> {{ $prisoner->crime_committed }}</p>
-                                        <p class="pims-prisoner-detail"><strong>Room Number:</strong> {{ $prisoner->room->room_number ?? 'N/A' }}</p>
+                                        <p class="pims-prisoner-detail room-number"><strong>Room Number:</strong> {{ $prisoner->room->room_number ?? 'N/A' }}</p>
                                     </div>
+                                    <button class="pims-btn pims-btn-danger unallocate-btn" data-prisoner-id="{{ $prisoner->id }}">
+                                        <i class="fas fa-door-open"></i> Unallocate
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -302,7 +324,6 @@
 
                     <!-- Pagination -->
                     <div class="pims-pagination">
-                        <!-- Previous Button -->
                         @if($prisoners->currentPage() > 1)
                         <a class="pims-pagination-link" href="{{ $prisoners->previousPageUrl() }}">
                             <i class="fas fa-chevron-left"></i> Previous
@@ -313,14 +334,12 @@
                         </a>
                         @endif
 
-                        <!-- Page Numbers -->
                         @foreach($prisoners->getUrlRange(1, $prisoners->lastPage()) as $page => $url)
                         <a class="pims-pagination-link {{ $page == $prisoners->currentPage() ? 'is-current' : '' }}" href="{{ $url }}">
                             {{ $page }}
                         </a>
                         @endforeach
 
-                        <!-- Next Button -->
                         @if($prisoners->hasMorePages())
                         <a class="pims-pagination-link" href="{{ $prisoners->nextPageUrl() }}">
                             Next <i class="fas fa-chevron-right"></i>
@@ -343,6 +362,72 @@
             // Refresh button functionality
             document.getElementById('pims-reload-prisoners').addEventListener('click', function() {
                 window.location.reload();
+            });
+
+            // Unallocate button functionality
+            document.querySelectorAll('.unallocate-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const prisonerId = this.getAttribute('data-prisoner-id');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: `You are about to unallocate prisoner ID: ${prisonerId} from their room.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#27ae60',
+                        cancelButtonColor: '#c0392b',
+                        confirmButtonText: 'Yes, unallocate',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Send AJAX request
+                            fetch(`/police-officer/prisoners/${prisonerId}/unallocate`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                },
+                                body: JSON.stringify({ prisoner_id: prisonerId }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: data.message,
+                                        icon: 'success',
+                                        confirmButtonColor: '#27ae60'
+                                    });
+
+                                    // Update UI: Hide the card or update room number
+                                    const prisonerCard = document.querySelector(`.pims-prisoner-card[data-prisoner-id="${prisonerId}"]`);
+                                    if (prisonerCard) {
+                                        prisonerCard.style.display = 'none'; // Hide card
+                                        // Alternatively, update room number:
+                                        // const roomDetail = prisonerCard.querySelector('.room-number');
+                                        // roomDetail.innerHTML = '<strong>Room Number:</strong> N/A';
+                                    }
+                                } else {
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: data.message,
+                                        icon: 'error',
+                                        confirmButtonColor: '#c0392b'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'An error occurred while processing your request.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#c0392b'
+                                });
+                                console.error('Error:', error);
+                            });
+                        }
+                    });
+                });
             });
         });
     </script>

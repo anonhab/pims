@@ -481,16 +481,13 @@
                                     </div>
 
                                     <div class="pims-form-group">
-                                        <label class="pims-form-label">Follow-Up Needed</label>
-                                        <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                            <input type="checkbox" name="follow_up" id="pims-follow-up-checkbox" style="width: auto;">
-                                            <label for="pims-follow-up-checkbox">Yes, schedule a follow-up</label>
+                                         <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                            <input type="none" name="follow_up" id="pims-follow-up-checkbox" style="width: auto;" style="display: none;">
                                         </div>
                                     </div>
 
                                     <div class="pims-form-group" id="pims-follow-up-date-field" style="display: none;">
-                                        <label class="pims-form-label">Follow-Up Date</label>
-                                        <div style="position: relative;">
+                                         <div style="position: relative;">
                                             <input class="pims-form-control" type="date" name="follow_up_date" min="{{ date('Y-m-d', strtotime('+1 day')) }}" style="padding-left: 2.25rem;">
                                             <span style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%);">
                                                 <i class="fas fa-calendar-check"></i>

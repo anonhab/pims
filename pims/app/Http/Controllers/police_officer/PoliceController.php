@@ -12,6 +12,37 @@ use Illuminate\Support\Facades\Session;
 
 class PoliceController extends Controller
 {
+    public function unallocatePrisoner(Request $request, $prisonerId)
+    {
+        // Validate the prisoner ID
+        $request->validate([
+            'prisoner_id' => 'required|exists:prisoners,id',
+        ]);
+
+        // Ensure the prisoner belongs to the officer's prison
+        $prisonId = Session::get('prison_id');
+        $prisoner = Prisoner::where('id', $prisonerId)
+            ->where('prison_id', $prisonId)
+            ->firstOrFail();
+
+        // Check if prisoner is allocated to a room
+        if (!$prisoner->room_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Prisoner is not allocated to any room.',
+            ], 400);
+        }
+
+        // Unallocate by setting room_id to null
+        $prisoner->room_id = null;
+        $prisoner->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Prisoner unallocated successfully.',
+            'prisoner_id' => $prisoner->id,
+        ]);
+    }
     public function dashboard()
     {
         $userId = Session::get('user_id');

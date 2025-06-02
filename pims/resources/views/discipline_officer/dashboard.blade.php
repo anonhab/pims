@@ -524,7 +524,6 @@
 
         <div class="pims-grid">
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge">ACTIVE</span>
                 <div class="pims-card-icon">
                     <i class="fas fa-user-check"></i>
                 </div>
@@ -532,12 +531,12 @@
                 <p>{{ $activePrisoners }}</p>
                 <div class="pims-card-footer">
                     <i class="fas fa-check-circle" style="color: var(--pims-success);"></i>
-                    {{ $activePrisoners > 0 ? 'All profiles verified' : 'No active prisoners' }}
+                    {{ $activePrisoners > 0 ? 'Active prisoners' : 'No active prisoners' }}
                 </div>
             </div>
 
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge {{ $pendingRequests > 0 ? 'alert' : '' }}">ALERT</span>
+                <span class="pims-security-badge {{ $pendingRequests > 0 ? 'alert' : '' }}"></span>
                 <div class="pims-card-icon">
                     <i class="fas fa-tasks"></i>
                 </div>
@@ -550,7 +549,6 @@
             </div>
 
             <div class="pims-dashboard-card">
-                <span class="pims-security-badge">PROCESSED</span>
                 <div class="pims-card-icon">
                     <i class="fas fa-clipboard-check"></i>
                 </div>
