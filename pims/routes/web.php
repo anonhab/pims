@@ -34,15 +34,16 @@ use App\Models\Visitor;
 Route::get('/login', [LoginController::class, 'showLoginForm']);
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 Route::get('/logout', [LoginController::class, 'logout']);
-Route::middleware(['checkUserSession'])->group(function () {
+Route::get('/', function () {
+    return view('dashboard');
+});
+
 Route::get('/allactor', function () {
     return view('dashboard');
 });
 
 
-Route::get('/', function () {
-    return view('dashboard');
-});
+
 Route::get('/roles', function () {
     return view('cadmin.add_roles');
 });
@@ -353,4 +354,3 @@ Route::get('/test-session', function () {
 });
 Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])
     ->name('notifications.markAllRead');
-});
